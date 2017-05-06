@@ -45,9 +45,11 @@ public class MainController extends BaseController {
 		Map params = new HashMap();
 		return toPage("main/main", params);
 	}
-
-	public static void main(String[] args) {
-
+	
+	@RequestMapping("/home")
+	public ModelAndView toHome(){
+		Map params = new HashMap();
+		return toPage("main/home", params);
 	}
-
+	
 }

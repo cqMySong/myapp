@@ -1,0 +1,28 @@
+﻿<meta http-equiv=Content-Type content="text/html;charset=utf-8">
+<meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black">
+<meta name="format-detection" content="telephone=no">
+<meta name="apple-touch-fullscreen" content="yes">
+<meta name="description" content="个人应用框架开发实践">
+<meta name="author" content="mySong">
+<meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0,minimum-scale=1.0,user-scalable=no" >
+
+<link rel="shortcut icon" href="./assets/images/favicon.png" type="image/png">
+<link rel="stylesheet" href="./assets/lib/fontawesome/css/font-awesome.css"/>
+<link rel="stylesheet" href="./assets/css/quirk.css"/>
+
+<!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
+<!--[if lt IE 9]>
+	<script src="./assets/lib/html5shiv/html5shiv.js"></script>
+	<script src="./assets/lib/respond/respond.src.js"></script>
+ <![endif]-->
+
+<script type="text/javascript">
+    
+</script>
+<script src="./assets/lib/jquery/jquery.js"></script>
+<script src="./assets/lib/bootstrap/js/bootstrap.js"></script>
+<script src="./assets/lib/jquery-toggles/toggles.js"></script>
+<script src="./assets/js/quirk.js"></script>

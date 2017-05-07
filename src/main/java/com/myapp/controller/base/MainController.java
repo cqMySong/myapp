@@ -1,7 +1,6 @@
 package com.myapp.controller.base;
 
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 import javax.annotation.Resource;
@@ -11,11 +10,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.ModelAndView;
 
 import com.myapp.core.base.controller.BaseController;
-import com.myapp.core.entity.BaseOrgInfo;
-import com.myapp.core.entity.UserInfo;
-import com.myapp.core.enums.BillState;
-import com.myapp.core.enums.Sex;
-import com.myapp.core.service.BaseService;
 import com.myapp.core.service.OrgService;
 import com.myapp.core.service.UserService;
 
@@ -28,20 +22,16 @@ import com.myapp.core.service.UserService;
  *-----------MySong---------------
  */
 @Controller
-@RequestMapping("/")
+@RequestMapping("/main")
 public class MainController extends BaseController {
 	@Resource
 	public OrgService orgService;
 	@Resource
 	public UserService userService;
 	
-	@RequestMapping("/")
-	public ModelAndView index(){
-		return redirectAction("main", null);
-	}
 	
-	@RequestMapping("/main")
-	public ModelAndView toMain(){
+	@RequestMapping("/index")
+	public ModelAndView index(){
 		Map params = new HashMap();
 		return toPage("main/main", params);
 	}

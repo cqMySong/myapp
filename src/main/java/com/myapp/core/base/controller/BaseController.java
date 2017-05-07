@@ -25,9 +25,9 @@ public class BaseController {
 	/**
 	 * jsp 与 controller 数据交互的 状态码
 	 */
-	protected static Integer STATUSCODE_INFO = 0; // 提示
+	protected static Integer STATUSCODE_INFO = 1; // 提示
 	protected static Integer STATUSCODE_ERROR = -1; // 错误类
-	protected static Integer STATUSCODE_SUCCESS = 1; // 成功类
+	protected static Integer STATUSCODE_SUCCESS = 0; // 成功类
 	protected static Integer STATUSCODE_EXCEPTION = -100; // 异常类
 	protected static Integer STATUSCODE_WARNING = 100; // 警告类
     protected int stateCode = STATUSCODE_SUCCESS;//默认值

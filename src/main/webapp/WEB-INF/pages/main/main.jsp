@@ -3,9 +3,9 @@
 <html lang="en">
 	<head>
 		<title>mysong</title>
-		<link rel="stylesheet" href="./assets/css/main.css"/>
 	</head>
 	<%@include file="../inc/webBase.inc"%>
+	<link rel="stylesheet" href="<%=appRoot%>/assets/css/main.css"/>
 	<body>
 		<div class="headerpanel">
 			<div class="logopanel">
@@ -70,7 +70,7 @@
 						<li>
 							<div class="btn-group">
 								<button type="button" class="btn btn-logged" data-toggle="dropdown">
-									<img src="./assets/images/photos/loggeduser.png" alt="" /> mySong
+									<img src="<%=appRoot%>/assets/images/photos/loggeduser.png" alt="" /> mySong
 									<span class="caret"></span>
 								</button>
 								<ul class="dropdown-menu pull-right">
@@ -94,7 +94,7 @@
 				<div class="media leftpanel-profile">
 					<div class="media-left">
 						<a href="#">
-							<img src="./assets/images/photos/loggeduser.png" alt="" class="media-object img-circle">
+							<img src="<%=appRoot%>/assets/images/photos/loggeduser.png" alt="" class="media-object img-circle">
 						</a>
 					</div>
 					<div class="media-body">
@@ -140,12 +140,12 @@
 				<ul class="nav nav-tabs nav-justified nav-sidebar">
 					<li class="tooltips active" data-toggle="tooltip" title="主菜单">
 						<a data-toggle="tab" data-target="#mainmenu">
-							<i class="tooltips fa fa-home"></i>
+							<i class=" fa fa-home"></i>
 						</a>
 					</li>
 					<li class="tooltips" data-toggle="tooltip" title="个人邮箱">
 						<a data-toggle="tab" data-target="#emailmenu">
-							<i class="tooltips fa fa-envelope"></i>
+							<i class="fa fa-envelope"></i>
 							<span class="badge badge-warning" style="background-color: #259dab;top: 1px;right:1px;float: left;position: absolute;">10</span>
 						</a>
 					</li>
@@ -175,13 +175,18 @@
 	            				<button class="btn btn-default" type="button"><i class="fa fa-search"></i></button>
 	          				</span>
 						</div>
-						<div class="nav-wrapper white">
-	              			<ul class="nav nav-pills nav-stacked nav-quirk ">
+						<div class="my-pill-menu" data-opt="{menus:[{title:'首页',icon:'fa fa-home'},
+																{title:'系统管理',icon:'fa fa-cogs',child:[
+																	{title:'组织管理',icon:'fa fa-cogs'},{title:'人员管理'}]},
+																{title:'门户管理',icon:'fa fa-home',child:[{title:'菜单管理'}]},
+																{title:'安全管理',icon:'fa fa-star',child:[{title:'用户管理',active:true,url:'user/toUsers'},{title:'权限管理'},{title:'角色管理'}]}	
+																]}">
+	              			<!-- <ul class="nav nav-pills nav-stacked nav-quirk ">
 				                <li><a href="#"><i class="fa fa-home"></i> <span>首页</span></a></li>
 				                <li class="nav-parent">
 				                	<a href="#"><i class="fa fa-cogs"></i> <span>系统管理</span></a>
 				                	<ul class="children">
-					                    <li><a href="www.baid.com">组织管理</a></li>
+					                    <li ><a href="www.baid.com"><i class="fa fa-cogs"></i> <span>组织管理</span></a></li>
 					                    <li><a href="">人员管理</a></li>
 				                  	</ul>
 				                </li>
@@ -195,7 +200,7 @@
 				                <li class="nav-parent active">
 				                  <a href=""><i class="fa fa-star"></i> <span>安全管理</span></a>
 				                  <ul class="children">
-				                  	<li class=""><a class="leftMenu" target="" href="user/toUsers">用户管理</a></li>
+				                  	<li class="active"><a  href="user/toUsers">用户管理</a></li>
 				                    <li ><a href="">权限管理</a></li>
 				                    <li ><a href="">用户角色</a></li>
 				                  </ul>
@@ -208,7 +213,7 @@
 				                  </ul>
 				                </li>
 				                <li><a href="#"><i class="fa fa-envelope"></i> <span>Contact Us</span></a></li>
-				             </ul>
+				             </ul >-->
             			</div>
 					</div>
 					<!-- tab-pane -->
@@ -264,7 +269,7 @@
 										<li class="media">
 											<a href="#">
 												<div class="media-left">
-													<img class="media-object img-circle" src="./assets/images/photos/user1.png" alt="">
+													<img class="media-object img-circle" src="<%=appRoot%>/assets/images/photos/user1.png" alt="">
 												</div>
 												<div class="media-body">
 													<h4 class="media-heading">张三</h4>
@@ -275,7 +280,7 @@
 										<li class="media">
 											<a href="#">
 												<div class="media-left">
-													<img class="media-object img-circle" src="./assets/images/photos/user2.png" alt="">
+													<img class="media-object img-circle" src="<%=appRoot%>/assets/images/photos/user2.png" alt="">
 												</div>
 												<div class="media-body">
 													<h4 class="media-heading">李四</h4>
@@ -291,7 +296,7 @@
 										<li class="media">
 											<a href="#">
 												<div class="media-left">
-													<img class="media-object img-circle" src="./assets/images/photos/user1.png" alt="">
+													<img class="media-object img-circle" src="<%=appRoot%>/assets/images/photos/user1.png" alt="">
 												</div>
 												<div class="media-body">
 													<h4 class="media-heading">张三</h4>
@@ -302,7 +307,7 @@
 										<li class="media">
 											<a href="#">
 												<div class="media-left">
-													<img class="media-object img-circle" src="./assets/images/photos/user2.png" alt="">
+													<img class="media-object img-circle" src="<%=appRoot%>/assets/images/photos/user2.png" alt="">
 												</div>
 												<div class="media-body">
 													<h4 class="media-heading">王五</h4>
@@ -350,19 +355,30 @@
 		<!-- leftpanel -->
 
 		<div class="mainpanel" >
-			<div class="contentpanel" style="padding: 0px;margin: 0px;">
+			<div class="contentpanel" style="padding: 0px;margin: 0px;" id="mainTab">
 				<ul class="nav nav-tabs nav-primary" >
 					<li class="active">
-						<a href="#userList" data-toggle="tab">
-							<i class="fa fa-home" style="font-size: 14px;"></i>
-							<strong>用户信息</strong>
-						</a>
-					</li>
+							<a href="#homeIndex" data-toggle="tab">
+								<i class="fa fa-home" style="font-size: 14px;"></i>
+								<strong>首页<i class="fa fa-remove " style="font-size: 10px;"></i></strong>
+							</a>
+						</li>
+						
+						<li class="">
+							<a href="#userList" data-toggle="tab">
+								<i class="fa fa-home" style="font-size: 14px;"></i>
+								<strong>用户信息</strong>
+							</a>
+						</li>
 				</ul>
 				<div class="tab-content">
-					<div class="tab-pane active" style="padding: 5px 5px 0px 0px;" id="userList">
-						<iframe src="user/toUsers" id="userList_ifm"  width="100%" scrolling="no" marginheight="0" marginwidth="0"
-							frameborder="0" onload="setIframeHeight(this.id)" ></iframe>
+					<div class="tab-pane active" style="padding: 5px 5px 0px 0px;" id="homeIndex">
+						<iframe src="<%=appRoot%>/user/toUsers" id="userList_ifm"  width="100%" scrolling="no" marginheight="0" marginwidth="0"
+							frameborder="0" onclick="setIframeHeight(this.id)" onload="setIframeHeight(this.id)" ></iframe>
+					</div>
+					<div class="tab-pane" style="padding: 5px 5px 0px 0px;" id="userList">
+						<iframe src="<%=appRoot%>/main/home" id="userList_ifm"  width="100%" scrolling="no" marginheight="0" marginwidth="0"
+							frameborder="0" onclick="setIframeHeight(this.id)" ></iframe>
 					</div>
 				</div>
 			</div>
@@ -379,7 +395,6 @@
 	    ifrm.style.visibility = 'visible'; 
 	    $("#"+id).parent('div').height(ifrm.style.height);
 	} 
-	 
 	function getDocHeight(doc) { 
 	    doc = doc || document; 
 	    var body = doc.body, html = doc.documentElement; 
@@ -387,7 +402,6 @@
 	        html.clientHeight, html.scrollHeight, html.offsetHeight ); 
 	    return height; 
 	} 
-	
 </script>
-
+<script src="<%=appRoot%>/assets/app/js/myapp.main.js" type="text/javascript"></script>
 </html>

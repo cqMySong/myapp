@@ -175,45 +175,12 @@
 	            				<button class="btn btn-default" type="button"><i class="fa fa-search"></i></button>
 	          				</span>
 						</div>
-						<div class="my-pill-menu" data-opt="{menus:[{title:'首页',icon:'fa fa-home'},
+						<div class="my-pill-menu" id="sysMenus" data-opt="{menus:[{title:'首页',icon:'fa fa-home'},
 																{title:'系统管理',icon:'fa fa-cogs',child:[
 																	{title:'组织管理',icon:'fa fa-cogs'},{title:'人员管理'}]},
 																{title:'门户管理',icon:'fa fa-home',child:[{title:'菜单管理'}]},
 																{title:'安全管理',icon:'fa fa-star',child:[{title:'用户管理',active:true,url:'user/toUsers'},{title:'权限管理'},{title:'角色管理'}]}	
 																]}">
-	              			<!-- <ul class="nav nav-pills nav-stacked nav-quirk ">
-				                <li><a href="#"><i class="fa fa-home"></i> <span>首页</span></a></li>
-				                <li class="nav-parent">
-				                	<a href="#"><i class="fa fa-cogs"></i> <span>系统管理</span></a>
-				                	<ul class="children">
-					                    <li ><a href="www.baid.com"><i class="fa fa-cogs"></i> <span>组织管理</span></a></li>
-					                    <li><a href="">人员管理</a></li>
-				                  	</ul>
-				                </li>
-				                <li class="nav-parent">
-				                	<a href="#"><i class="fa fa-home"></i> <span>门户管理</span></a>
-				                	<ul class="children">
-					                    <li><a href="">菜单管理</a></li>
-					                    <li><a href="">porlet管理</a></li>
-				                  	</ul>
-				                </li>
-				                <li class="nav-parent active">
-				                  <a href=""><i class="fa fa-star"></i> <span>安全管理</span></a>
-				                  <ul class="children">
-				                  	<li class="active"><a  href="user/toUsers">用户管理</a></li>
-				                    <li ><a href="">权限管理</a></li>
-				                    <li ><a href="">用户角色</a></li>
-				                  </ul>
-				                </li>
-				                <li class="nav-parent">
-				                  <a href=""><i class="fa fa-file"></i> <span>Blog</span></a>
-				                  <ul class="children">
-				                    <li><a href="">Recent</a></li>
-				                    <li><a href="">Popular</a></li>
-				                  </ul>
-				                </li>
-				                <li><a href="#"><i class="fa fa-envelope"></i> <span>Contact Us</span></a></li>
-				             </ul >-->
             			</div>
 					</div>
 					<!-- tab-pane -->
@@ -355,53 +322,17 @@
 		<!-- leftpanel -->
 
 		<div class="mainpanel" >
-			<div class="contentpanel" style="padding: 0px;margin: 0px;" id="mainTab">
-				<ul class="nav nav-tabs nav-primary" >
-					<li class="active">
-							<a href="#homeIndex" data-toggle="tab">
-								<i class="fa fa-home" style="font-size: 14px;"></i>
-								<strong>首页<i class="fa fa-remove " style="font-size: 10px;"></i></strong>
-							</a>
-						</li>
-						
-						<li class="">
-							<a href="#userList" data-toggle="tab">
-								<i class="fa fa-home" style="font-size: 14px;"></i>
-								<strong>用户信息</strong>
-							</a>
-						</li>
-				</ul>
-				<div class="tab-content">
-					<div class="tab-pane active" style="padding: 5px 5px 0px 0px;" id="homeIndex">
-						<iframe src="<%=appRoot%>/user/toUsers" id="userList_ifm"  width="100%" scrolling="no" marginheight="0" marginwidth="0"
-							frameborder="0" onclick="setIframeHeight(this.id)" onload="setIframeHeight(this.id)" ></iframe>
-					</div>
-					<div class="tab-pane" style="padding: 5px 5px 0px 0px;" id="userList">
-						<iframe src="<%=appRoot%>/main/home" id="userList_ifm"  width="100%" scrolling="no" marginheight="0" marginwidth="0"
-							frameborder="0" onclick="setIframeHeight(this.id)" ></iframe>
-					</div>
-				</div>
+			<div class="contentpanel my-nav-tabs" style="padding: 0px;margin: 0px;" 
+				id="mainTab" data-opt="{items:[{id:'homeIdex',title:'主页',icon:'fa fa-home',enColse:false,url:'main/home'}]}">
 			</div>
 		</div>
 	</body>
 	
 <script type="text/javascript">
-	function setIframeHeight(id) { 
-	    var ifrm = document.getElementById(id); 
-	    var doc = ifrm.contentDocument? ifrm.contentDocument:ifrm.contentWindow.document; 
-	    ifrm.style.visibility = 'hidden'; 
-	    ifrm.style.height = "10px"; 
-	    ifrm.style.height = getDocHeight( doc ) + 4+ "px"; 
-	    ifrm.style.visibility = 'visible'; 
-	    $("#"+id).parent('div').height(ifrm.style.height);
-	} 
-	function getDocHeight(doc) { 
-	    doc = doc || document; 
-	    var body = doc.body, html = doc.documentElement; 
-	    var height = Math.max( body.scrollHeight, body.offsetHeight,  
-	        html.clientHeight, html.scrollHeight, html.offsetHeight ); 
-	    return height; 
-	} 
+$(document).ready(function() {
+	myPillTreeMenu.init('#sysMenus');
+	myNavTab.init('#mainTab');
+})
 </script>
-<script src="<%=appRoot%>/assets/app/js/myapp.main.js" type="text/javascript"></script>
+
 </html>

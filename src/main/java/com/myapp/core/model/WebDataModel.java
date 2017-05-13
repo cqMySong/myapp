@@ -8,21 +8,23 @@ package com.myapp.core.model;
  *-----------MySong---------------
  */
 public class WebDataModel {
-	private int stateCode;
-	private String mesg;
+	private int statusCode;
+	private String statusMesg;
 	private Object data;
 	private Object other;
-	public int getStateCode() {
-		return stateCode;
+	
+	public int getStatusCode() {
+		return statusCode;
 	}
-	public void setStateCode(int stateCode) {
-		this.stateCode = stateCode;
+	public void setStatusCode(int statusCode) {
+		this.statusCode = statusCode;
 	}
-	public String getMesg() {
-		return mesg;
+	
+	public String getStatusMesg() {
+		return statusMesg;
 	}
-	public void setMesg(String mesg) {
-		this.mesg = mesg;
+	public void setStatusMesg(String statusMesg) {
+		this.statusMesg = statusMesg;
 	}
 	public Object getData() {
 		return data;

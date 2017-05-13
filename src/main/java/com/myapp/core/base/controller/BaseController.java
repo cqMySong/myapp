@@ -30,7 +30,7 @@ public class BaseController {
 	protected static Integer STATUSCODE_SUCCESS = 0; // 成功类
 	protected static Integer STATUSCODE_EXCEPTION = -100; // 异常类
 	protected static Integer STATUSCODE_WARNING = 100; // 警告类
-    protected int stateCode = STATUSCODE_SUCCESS;//默认值
+    protected int statusCode = STATUSCODE_SUCCESS;//默认值
     protected String statusMesg = "";
     protected Object data;
     @Autowired
@@ -70,13 +70,13 @@ public class BaseController {
      * 默认 初始化
      */
     public void onLoad(){
-    	this.stateCode = STATUSCODE_SUCCESS;
+    	this.statusCode = STATUSCODE_SUCCESS;
 		this.statusMesg = "";
 		this.data = null;
     }
     
     public void setMesg(int code,String mesg){
-    	this.stateCode = code;
+    	this.statusCode = code;
 		this.statusMesg = mesg;
     }
     
@@ -99,8 +99,8 @@ public class BaseController {
     public WebDataModel ajaxModel(){
     	WebDataModel wdm = new WebDataModel();
     	wdm.setData(data);
-    	wdm.setMesg(statusMesg);
-    	wdm.setStateCode(stateCode);
+    	wdm.setStatusMesg(statusMesg);
+    	wdm.setStatusCode(statusCode);
     	wdm.setOther(getOtherData());
     	return wdm;
     }

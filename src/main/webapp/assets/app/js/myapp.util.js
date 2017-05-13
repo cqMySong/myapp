@@ -2,9 +2,12 @@
  *  一些通用的工具类
  */
 
-var ajax_defaultOpt = {type:"POST",url:"",data:"",dataType:"json",success:function(data){}};
+var ajax_defaultOpt = {type:"POST",url:"",data:"",contentType:"application/json; charset=utf-8",dataType:"json",success:function(data){}};
 var webUtil = {
 	isEmpty:function(obj){
+		if($.isNumeric(obj)&&(obj ==0 || obj=='0')){
+			return false;
+		}
 		if(obj){
 			return false;
 		}else{
@@ -57,6 +60,9 @@ var webUtil = {
 				}
 			}
 		},complete:function(){}
+		,error:function(){
+			alert('请求失败');
+		}
 		});
 	},
 	numberFormatter:function(num, precision, separator){
@@ -93,6 +99,24 @@ var webUtil = {
 			_$dom = $(_$dom);
 		}
 		return _$dom;
+	},
+	getDomHeight:function(dom){
+		dom = dom || document; 
+	    var body = dom.body, html = dom.documentElement; 
+	    return Math.max(body.scrollHeight, body.offsetHeight,  
+	        html.clientHeight, html.scrollHeight, html.offsetHeight ); 
+	},
+	setIframeAutoHeight:function(elId){
+		 var ifrm = document.getElementById(elId); 
+		 var dom = ifrm.contentDocument? ifrm.contentDocument:ifrm.contentWindow.document; 
+		 ifrm.style.visibility = 'hidden'; 
+		 ifrm.style.height = "10px"; 
+		 ifrm.style.height = webUtil.getDomHeight(dom) + 4+ "px"; 
+		 ifrm.style.visibility = 'visible'; 
+		 var _parent = $("#"+elId).parent('div');
+		 if(!webUtil.isEmpty(_parent)){
+			 _parent.height(ifrm.style.height);
+		 }
 	}
 };
 

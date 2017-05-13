@@ -2244,7 +2244,7 @@ pre code {
   }
 }
 table {
-  background-color: #f0f1f4;
+/*   background-color: #f0f1f4; */
 }
 caption {
   padding-top: 10px 15px;
@@ -2269,7 +2269,7 @@ th {
   padding: 10px 15px;
   line-height: 1.42857143;
   vertical-align: top;
-  border-top: 1px solid #ffffff;
+  border-top: 1px solid #d9edf7;
 }
 .table > thead > tr > th {
   vertical-align: bottom;
@@ -7971,7 +7971,7 @@ fieldset[disabled] .btn-info.active {
   text-transform: uppercase;
   letter-spacing: .5px;
   font-family: 'Open Sans', 'Helvetica Neue', Helvetica, sans-serif;
-  background-color: #d8dce3;
+ background-color: #d8dce3; 
   color: #3b4354;
   font-size: 12px;
 }
@@ -8075,6 +8075,8 @@ fieldset[disabled] .btn-info.active {
 .table-bordered > thead > tr:first-child > th {
   border-top: 0;
 }
+
+
 /***** TYPE *****/
 .text-success {
   color: #259dab;

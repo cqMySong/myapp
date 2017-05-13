@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.myapp.core.base.controller.BaseController;
@@ -31,8 +32,8 @@ public abstract class BaseListController extends BaseController {
 
 	public abstract String querySQL();
 
+	@RequestMapping(value="/list",method = RequestMethod.POST)
 	@ResponseBody
-	@RequestMapping("/list")
 	public WebDataModel toList() {
 		try {
 			onLoad();
@@ -78,6 +79,10 @@ public abstract class BaseListController extends BaseController {
 	}
 
 	public Integer getCurPage() {
+		String cpage = request.getParameter("curPage");
+		if(!BaseUtil.isEmpty(cpage)){
+			curPage = Integer.valueOf(cpage);
+		}
 		if (curPage == null)
 			curPage = SystemConstant.DEF_PAGE_BEG;
 		return curPage;
@@ -88,12 +93,17 @@ public abstract class BaseListController extends BaseController {
 	}
 
 	public Integer getPageSize() {
+		String pgsize = request.getParameter("pageSize");
+		if(!BaseUtil.isEmpty(pgsize)){
+			pageSize = Integer.valueOf(pgsize);
+		}
 		if (pageSize == null)
 			pageSize = SystemConstant.DEF_PAGE_SIZE;
 		return pageSize;
 	}
 
 	public void setPageSize(Integer pageSize) {
+		
 		this.pageSize = pageSize;
 	}
 

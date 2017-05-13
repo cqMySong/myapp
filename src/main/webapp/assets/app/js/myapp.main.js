@@ -1,10 +1,7 @@
 /**
  * 主要针对main 首页写的一些js，不代表通用性
  */
-//{tabs:[{title:"主菜单",id:"",icon:"",active:true}]}
-var mainTabsMenu = function(el,option){
-	
-}
+
 /**
  * pillmenu 只是支持两级菜单
  */
@@ -13,7 +10,7 @@ var mainTabsMenu = function(el,option){
 //theme : white,quirk 只有这两种主题
 var _def_pillmenu = {theme:"white",skin:""};
 var _def_pillmenu_item ={title:"我的标题",url:"",target:"#mainTab",icon:"",active:false,child:[]};
-var mainLeftMenu = {
+var myPillTreeMenu = {
 	init:function(el){
 		var _$dom = webUtil.getJqueryDom(el,'.my-pill-menu');
 		_$dom.each(function () {
@@ -21,9 +18,9 @@ var mainLeftMenu = {
 			var _menu = _$this.data('opt');
 			if(!webUtil.isEmpty(_menu)){
 				_menu = eval('('+_menu+')');
-				mainLeftMenu.initStyle(_$this,_menu);
+				myPillTreeMenu.initStyle(_$this,_menu);
 	        }
-			mainLeftMenu.addClickEvent(_$this);
+			myPillTreeMenu.addClickEvent(_$this);
 		});
 	},
 	initStyle:function(el,_menu){
@@ -48,7 +45,7 @@ var mainLeftMenu = {
         _$dom.append(_ul);
         var _menus = _opt.menus;
         if(!webUtil.isEmpty(_menus)){
-        	mainLeftMenu.addMenuList(_ul,_menus);
+        	myPillTreeMenu.addMenuList(_ul,_menus);
         }
 	},
 	addMenuList:function(ul_el,_menus){//这是加第一级的方法
@@ -57,16 +54,16 @@ var mainLeftMenu = {
 				&&$.isArray(_menus)&&_menus.length>0){
 			for(var i=0;i<_menus.length;i++){
 				var _menuItem = _menus[i];
-				var _li = mainLeftMenu.getLiMenum(_menuItem);
-				mainLeftMenu.addMenuItem(_li,_menuItem.child);
+				var _li = myPillTreeMenu.getLiMenum(_menuItem);
+				myPillTreeMenu.addMenuItem(_li,_menuItem.child);
 				_$dom.append(_li);
 			}
 		}
 	},
 	getLiMenum:function(_item){
 		var _menuItem = {};
-		$.extend(true,_menuItem,_def_pillmenu_item);;
-		$.extend(true,_menuItem,_item);;
+		$.extend(true,_menuItem,_def_pillmenu_item);
+		$.extend(true,_menuItem,_item);
 		var _li = $('<li>');
 		if(_menuItem.active){
 			_li.addClass('active');
@@ -78,6 +75,10 @@ var mainLeftMenu = {
 		if(!webUtil.isEmpty(_menuItem.title)){
 			_li_a.append('<span>'+_menuItem.title+'</span>');
 		}
+		if(webUtil.isEmpty(_menuItem.id)){
+			_menuItem.id = webUtil.getRandomWord(6);
+		}
+		_li_a.attr("id",_menuItem.id);
 		_li.append(_li_a);
 		_li_a.data('menuItem',_menuItem);
 		return _li;
@@ -89,7 +90,7 @@ var mainLeftMenu = {
 			var _li_ul_child = $('<ul>');
 			_li_ul_child.addClass('children');
 			for(var i=0;i<_child.length;i++){
-				var _li_ul_child_li = mainLeftMenu.getLiMenum(_child[i]);
+				var _li_ul_child_li = myPillTreeMenu.getLiMenum(_child[i]);
 				_li_ul_child.append(_li_ul_child_li);
 				if(_li_ul_child_li.hasClass('active')){
 					_li.addClass('active');
@@ -130,19 +131,396 @@ var mainLeftMenu = {
 				}
 				var _menuItem = thisA.data('menuItem');
 				if(!webUtil.isEmpty(_menuItem.url)){
-					if(_menuItem.target=="mainTab"){
-						
+					var $targetDom = $(_menuItem.target)
+					if(!webUtil.isEmpty($targetDom)){
+						if($targetDom.hasClass('my-nav-tabs')){//以tab为目标
+							var _tabItem = {id:_menuItem.id+"_tab",title:_menuItem.title,icon:_menuItem.icon,url:_menuItem.url};
+							myNavTab.addTab($targetDom, _tabItem);
+						}
 					}
 				}
 			});
 		});
 	}
 };
-var mainTabs = {
-	addTab :function(el,_opt){
-		var _$dom = webUtil.getJqueryDom(el,'my-pill-menu');
+var def_tab = {theme:"nav-primary",items:[]};
+var def_tab_item = {id:"",title:"主页",icon:"",enColse:true,url:"",content:"",active:true};
+var myNavTab = {
+	init:function(el,_opt){
+		var _$dom = webUtil.getJqueryDom(el,'.my-nav-tabs');
+		_$dom.each(function () {
+			var _$this = $(this);
+			var _tabs = {};
+			$.extend(true,_tabs,def_tab);
+			var _tabs_opt = _$this.data('opt');
+			if(!webUtil.isEmpty(_tabs_opt)){
+				_tabs_opt = eval('('+_tabs_opt+')');
+				$.extend(true,_tabs,_tabs_opt);
+	        }
+			if(!webUtil.isEmpty(_opt)){
+				$.extend(true,_tabs,_opt);
+			}
+			myNavTab.tabsCheck(_$this,_tabs);
+			var _items = _tabs.items;
+			if(!webUtil.isEmpty(_items)&&$.isArray(_items)&&_items.length>0){
+				for(var i=0;i<_items.length;i++){
+					myNavTab.addTab(_$this,_items[i]);
+				}
+			}
+		});
+	},
+	tabsCheck:function(el,_opt){
+		var _opts = {theme:"nav-primary"};
+		if(!webUtil.isEmpty(_opt)){
+			$.extend(true,_opts,_opt);
+		}
+		var _$this = webUtil.getJqueryDom(el,null);
+		if(!webUtil.isEmpty(_$this)&&_$this.length>0){
+			var _tab_ul = _$this.find('ul');
+			if(webUtil.isEmpty(_tab_ul)||_tab_ul.length<=0){
+				_tab_ul = $('<ul class="nav nav-tabs"></ul>');
+				_$this.append(_tab_ul);
+			}
+			if(!_tab_ul.hasClass('nav')) _tab_ul.addClass('nav');
+			if(!_tab_ul.hasClass('nav-tabs')) _tab_ul.addClass('nav-tabs');
+			if(!webUtil.isEmpty(_opts.theme)){
+				_tab_ul.addClass(_opts.theme);
+			}
+			var _tab_content = _$this.find('div');
+			if(webUtil.isEmpty(_tab_content)||_tab_content.length<=0){
+				_tab_content = $('<div>');
+				_$this.append(_tab_content);
+			}
+			if(!_tab_content.hasClass('tab-content')) _tab_content.addClass('tab-content');
+		}
+	},
+	addTab:function(el,_opt){
+		var _$dom = webUtil.getJqueryDom(el,'.my-nav-tabs');
+		if(!webUtil.isEmpty(_$dom)){
+			var _tabItem = {};
+			$.extend(true,_tabItem,def_tab_item);
+			$.extend(true,_tabItem,_opt);
+			if(webUtil.isEmpty(_tabItem.id)){
+				_tabItem.id = webUtil.getRandomWord(6);
+			}
+			
+			var _tab_obj = myNavTab.getTabItemById(_tabItem.id );
+			if(webUtil.isEmpty(_tab_obj)||_tab_obj.length<=0){//不存在此tab内容
+				var _tab_li = myNavTab.initTabHeadItem(_tabItem); //initHead
+				var _tab_conten_pane = myNavTab.initTabContentItem(_tabItem); //initTabContent
+				myNavTab.tabsCheck(_$dom,_tabItem);
+				_$dom.find('ul.nav-tabs').append(_tab_li);
+			    _$dom.find('div.tab-content').append(_tab_conten_pane);
+				var _curTab = myNavTab.getTabItemById(_tabItem.id );
+				if(_tabItem.active&&!webUtil.isEmpty(_curTab)){
+					_tab_obj = _curTab;
+				}
+				_curTab.click(function(){
+					myNavTab.setTabSelected(this);
+				});
+			}
+			myNavTab.setTabSelected(_tab_obj);
+		}
+	},
+	removeTabItem:function(_itemId){
+		if(!webUtil.isEmpty(_itemId)){
+			var _$tabHead = myNavTab.getTabItemById(_itemId);
+			var _$tab_ul = _$tabHead.parent('li').parent('ul');
+			(_$tabHead.parent('li')).remove();
+			$('#'+_itemId).remove();
+			myNavTab.setTabSelected(myNavTab.getTabItemByIndex(_$tab_ul, -1));
+		}
+	},
+	getTabCount:function(el){
+		var _$tab_ul = webUtil.getJqueryDom(el,null); //ul dom
+		if(!webUtil.isEmpty(_$tab_ul)&&_$tab_ul.length>0){
+			return _$tab_ul.find('li').length;
+		}
+		return -1;
+	},
+	getTabItemByIndex:function(el,index){
+		//返回对应的 a 的item
+		var _$tab_ul = webUtil.getJqueryDom(el,null); //ul dom
+		if(!webUtil.isEmpty(_$tab_ul)&&_$tab_ul.length>0){
+			if(!webUtil.isEmpty(index)&&$.isNumeric(index)){
+				if(index>0){
+					index = index-1;
+				}
+				return _$tab_ul.find('li').eq(index).children('a');
+			}
+		}
+		return null;
+	},
+	setTabSelected:function(_tabItem$){
+		if(!webUtil.isEmpty(_tabItem$)&&_tabItem$.length>0){
+			var _ul_li = _tabItem$.parent('li');
+			if(!_ul_li.hasClass('active')){
+				var _ul = _ul_li.parent('ul');
+				_ul.parent().find('.active').removeClass('active');
+				_ul_li.addClass('active');
+				var tabItem = _tabItem$.data('tabItem');
+				var _itemId = tabItem.id;
+				$('#'+_itemId).addClass('in active');
+				var _ifm_tabContent = $('#'+_itemId+"_ifm");
+				if(!webUtil.isEmpty(_ifm_tabContent)&&_ifm_tabContent.length>0){
+					var _curUrl = _ifm_tabContent.attr('src');
+					var tabUrl = tabItem.url;
+					if(webUtil.isEmpty(_curUrl)&&!webUtil.isEmpty(tabUrl))
+						_ifm_tabContent.attr("src",app.root+"/"+tabUrl);
+					_ifm_tabContent.load(function(){
+						webUtil.setIframeAutoHeight(_itemId+"_ifm");
+					});
+				}
+			}
+		}
+	},
+	getTabItemById:function(_itemId){
+		if(!webUtil.isEmpty(_itemId)){
+			return $("#"+_itemId+"_head_a");
+		}
+		return null;
+	},
+	initTabHeadItem:function(_tabItem){
+		var _tab_li = $('<li>');
+		var _tab_li_a = $('<a href="#'+_tabItem.id+'" data-toggle="tab"></a>');
+		_tab_li_a.attr("id",_tabItem.id+"_head_a");
+		var _this_icon = _tabItem.icon;
+		if(!webUtil.isEmpty(_this_icon)){
+			_tab_li_a.append('<i class="'+_this_icon+'" style="font-size: 14px;"></i>');
+		}
+		
+		var _tab_li_a_text = $('<strong>'+_tabItem.title+'</strong>');
+		if(_tabItem.enColse){
+			var _tab_colse$ = $($.parseHTML('<a style="cursor: pointer;" id="">&nbsp;&nbsp;<i class="fa fa-remove" style="font-size: 12px;"></i></a>'));
+			_tab_li_a_text.append(_tab_colse$)
+			_tab_colse$.click(_tabItem,function(e){
+				myNavTab.removeTabItem(e.data.id);
+			});
+		}
+		_tab_li_a.append(_tab_li_a_text);
+		_tab_li_a.data('tabItem',_tabItem);
+		_tab_li.append(_tab_li_a);
+		return _tab_li;
+	},
+	initTabContentItem:function(_tabItem){
+		var _tab_conten_pane = $('<div class="tab-pane fade" style="padding:0px;" id="'+_tabItem.id+'"></div>');
+		var _url = _tabItem.url;
+		var _content = _tabItem.content;
+		if(!webUtil.isEmpty(_url)){
+			_content = '<iframe src="" id="'+_tabItem.id+'_ifm" width="100%" scrolling="no" marginheight="0" marginwidth="0" frameborder="0"></iframe>';
+		}
+		_tab_conten_pane.append(_content);
+		return _tab_conten_pane;
 	}
 }
-$(document).ready(function() {
-	mainLeftMenu.init();
-})
+/**
+ * btnGroup 插件方法 
+ * 其他方法待补充
+ */
+;(function($, window, document,undefined) {
+var MyBtnGroups = function(ele, opt){
+	 this.$element = ele,
+	 this.defaults = {};
+     this.options = $.extend({}, this.defaults, opt);
+}
+MyBtnGroups.prototype = {
+	addBtn:function(opt,index){
+		var _idx = -1;
+		if($.isNumeric(index)){
+			_idx = index;
+		}
+		var defaults = {theme: 'btn-success', icon: '',text:'按钮',clickFun:undefined};
+		var _opt = $.extend({}, defaults, opt);
+		var _$btn = $('<button type="button">'+_opt.text+'</button>');
+		_$btn.addClass("btn btn-success");
+		if(!webUtil.isEmpty(_opt.icon)){
+			_$btn.prepend($('<span>').addClass(_opt.icon));
+		}
+		if(_idx<0){
+			 this.$element.append(_$btn);
+		}else{
+			var $btnObj = this.$element.find('button.btn').eq(_idx);
+			if(!webUtil.isEmpty($btnObj)&&$btnObj.length>0){
+				$btnObj.before(_$btn);
+			}else{
+				this.$element.append(_$btn);
+			}
+		}
+		if(!webUtil.isEmpty(_opt.clickFun)
+				&&$.isFunction(_opt.clickFun)){
+			_$btn.click(_opt,function(e){
+				_opt.clickFun(e.data);
+			});
+		}
+	},
+	addSearch:function(_opt){
+		var _def_Search = {theme:"btn-success",css:{"width":"360px","margin-left":"10px"},items:undefined,dataChange:undefined};
+		var _def_searchItem = {key:undefined,text:undefined};
+		var _search = $.extend({}, _def_Search, _opt);
+		var _input_group = $('<div class="input-group"></div>');
+		_input_group.css(_search.css);
+		var _input = $('<input class="form-control" type="text">');
+		if(!webUtil.isEmpty(_search.items)
+				&&$.isArray(_search.items)&& _search.items.length>0){
+			var _group_btn = $('<div class="input-group-btn"></div>');
+			var _btn = $('<button class="btn dropdown-toggle" aria-expanded="false" style="width:100px;" type="button" data-toggle="dropdown">--选择-- &nbsp; <span class="caret"></span></button>');
+			_btn.addClass(_search.theme);
+			_group_btn.append(_btn);
+			var _items = _search.items;
+			var _ul = $('<ul class="dropdown-menu"></div');
+			for(var i=0;i<_items.length;i++){
+				var _item = $.extend({}, _def_searchItem, _items[i]); 
+				var _li = $('<li><a href="#">'+_item.text+'</a></li>')
+				_li.data('item',_item);
+				_ul.append(_li);
+			}
+			_group_btn.append(_ul);
+			_input_group.append(_group_btn);
+			
+			_ul.find('li').each(function(){
+				var _this_li = $(this);
+				_this_li.click(function(e){
+					var _thisItem = $(this).data('item');
+					_btn.html(_thisItem.text+'&nbsp; <span class="caret"></span>');
+					_input.data('item',_thisItem);
+				});
+			});
+		}else{
+			_input.data('item',undefined);
+		}
+		
+		_input_group.append(_input);
+		
+		var _search_span = $('<span class="input-group-btn"></div>');
+		var _search_btn = $('<button class="btn" type="button"><i class="fa fa-search"></i></button>');
+		_search_btn.addClass(_search.theme);
+		_search_span.append(_search_btn);
+		_input_group.append(_search_span);
+		this.$element.append(_input_group);
+		
+		if(!webUtil.isEmpty(_search.dataChange)&&$.isFunction(_search.dataChange)){
+			_input.keydown(_search,function(e){
+				if(e.which == "13"){//回车事件
+					_search_btn.trigger('click',e.data);
+				}  
+			});
+			_search_btn.click(_search,function(e){
+				var _thisItem = _input.data('item');
+				if(!webUtil.isEmpty(_thisItem)){
+					var _thisData = $.extend({}, _def_searchItem,_input.data('item'));
+					_thisData.value = _input.val();
+					_search.dataChange(e.data,_thisData);
+				}
+			});
+		}
+	}
+}
+$.fn.myBtnGroup = function(options) {
+	if(!$(this).hasClass('btn-group')) $(this).addClass('btn-group');
+    var settings = $.extend({}, options);
+    return new MyBtnGroups($(this),settings);
+}
+})(jQuery, window, document);
+
+/**
+ * Table 插件方法 
+ * 其他方法待补充
+ */
+;(function($, window, document,undefined) {
+var MyDataTable = function(ele, opt){
+	 this.$element = ele;
+	 var _opt_onClickRow = opt.onClickRow;
+	 clickRow = function(row, $el, field){
+		if($el.hasClass('selected')){
+			$el.removeClass('selected');
+		}else{
+			$el.addClass('selected');
+			$el.data('rowData',row);
+		}
+		if(!webUtil.isEmpty(_opt_onClickRow)){
+			_opt_onClickRow(row, $el, field);
+		}
+	 }
+	 opt.onClickRow = undefined;
+	 this.defaults = {height:600,onClickRow:clickRow};
+     this.options = $.extend({}, this.defaults, opt);
+     this.tblMain =  this.$element.bootstrapTable(this.options);
+}
+MyDataTable.prototype = {
+	addRow:function(index,rowData){
+		var _idx = -1;
+		if($.isNumeric(index)){
+			_idx = index;
+		}
+		this.tblMain.bootstrapTable('insertRow',{index:_idx,row:rowData});
+	},
+	removeRow:function(index){
+		 //this.tblMain.bootstrapTable('removeAll'); 
+	},
+	getRowCount:function(){
+		return this.$element.find('tbody>tr').length;
+	},
+	removeAllRow:function(){
+		 this.tblMain.bootstrapTable('removeAll'); 
+	},
+	setSelectRow:function($el){
+		$el.find('td').eq(0).trigger('click');
+	},
+	getRow:function(index){
+		var _idx = -1;
+		if($.isNumeric(index)){
+			_idx = index;
+		}
+		if(_idx>0){
+			return this.$element.find('tbody>tr').eq(_idx);
+		}
+		return null;
+	},
+	getSelections:function(){
+		var seledRow = [];
+		this.$element.find('tbody>tr.selected').each(function(){
+			seledRow.push($(this).data('rowData'));
+		});
+		return seledRow;
+		
+	},
+	getData:function(){
+		return this.tblMain.bootstrapTable('getData'); 
+	},
+	loadData:function(data){
+		this.tblMain.bootstrapTable('load', data);
+	},
+	getVisibleColumns:function(){
+		return this.tblMain.bootstrapTable('getVisibleColumns');
+	},
+	addColumn:function(index,cols){
+		var _idx = -1;
+		if($.isNumeric(index)){
+			_idx = index;
+		}
+		var _cols = [];
+		var _oldCols = this.getVisibleColumns();
+		var hasAdd = false;
+		for(var i=0;i<_oldCols.length;i++){
+			if(i==_idx){
+				_cols.push(cols);
+				hasAdd = true;
+			}
+			_cols.push(_oldCols[i]);
+		}
+		if(!hasAdd){
+			_cols.push(cols);
+		}
+		this.tblMain.bootstrapTable('refreshOptions',{columns:_cols});
+	}
+	
+}
+$.fn.myDataTable = function(options) {
+	 var defaults = {height:600};
+     var settings = $.extend(defaults, options);
+     return new MyDataTable($(this),settings);
+}
+})(jQuery, window, document);
+
+
+

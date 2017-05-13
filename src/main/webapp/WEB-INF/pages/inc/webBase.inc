@@ -8,8 +8,13 @@
  String appRoot = request.getContextPath();
 %>
 <link rel="shortcut icon" href="<%=appRoot%>/assets/images/favicon.png" type="image/png">
+
 <link rel="stylesheet" href="<%=appRoot%>/assets/lib/fontawesome/css/font-awesome.css"/>
 <link rel="stylesheet" href="<%=appRoot%>/assets/css/quirk.css"/>
+
+<!--bootstrap-table-->
+<link rel="stylesheet" href="<%=appRoot%>/assets/lib/bootstrap-table/css/bootstrap-table.min.css"/>
+
 
 <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
 <!--[if lt IE 9]>
@@ -18,10 +23,25 @@
  <![endif]-->
 
 <script type="text/javascript">
-    
+    var app = {};
+    app.root = '<%=appRoot%>';
 </script>
+
+
+
 <script src="<%=appRoot%>/assets/lib/jquery/jquery.js"></script>
 <script src="<%=appRoot%>/assets/lib/bootstrap/js/bootstrap.js"></script>
 <script src="<%=appRoot%>/assets/lib/jquery-toggles/toggles.js"></script>
 <script src="<%=appRoot%>/assets/js/quirk.js"></script>
+
+
+<!--bootstrap-table-->
+<script src="<%=appRoot%>/assets/lib/bootstrap-table/js/bootstrap-table.min.js"></script>
+<script src="<%=appRoot%>/assets/lib/bootstrap-table/js/bootstrap-table-zh-CN.js"></script>
+<style type="text/css">
+	table.table-hover thead tr th{background-color: #fff;}
+	table.table-hover tbody tr.selected td{background-color: #8dc1ed;}
+</style>
+
 <script src="<%=appRoot%>/assets/app/js/myapp.util.js"></script>
+<script src="<%=appRoot%>/assets/app/js/myapp.main.js" type="text/javascript"></script>

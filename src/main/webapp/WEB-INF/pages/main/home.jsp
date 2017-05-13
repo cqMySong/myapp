@@ -7,7 +7,7 @@
 </head>
 <%@include file="../inc/webBase.inc"%>
 <body>
-	<div class="row" style="padding: 0px;margin: 0px;">
+	<div class="row" style="padding: 5px;">
 		<div class="col-md-10 col-lg-9 dash-left">
 			<div class="row panel-quick-page">
 				<div class="col-xs-4 col-sm-5 col-md-4 page-user">

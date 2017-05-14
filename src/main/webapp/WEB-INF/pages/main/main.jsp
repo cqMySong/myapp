@@ -332,6 +332,7 @@
 $(document).ready(function() {
 	myPillTreeMenu.init('#sysMenus');
 	myNavTab.init('#mainTab');
+	
 })
 </script>
 

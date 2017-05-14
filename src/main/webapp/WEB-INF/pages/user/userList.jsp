@@ -39,9 +39,9 @@
 function beforeAction(opt){
 	return true;
 }
-
 $(document).ready(function() {
-	var listUI = $('#listPanel').listUI({el:'#teacher_table',dataUrl:'user/list',toolbar:"#table-toolbar"});
+	var editWin ={title:'用户信息',url:'user/edit',width:600,height:400};
+	var listUI = $('#listPanel').listUI({title:"用户信息",el:'#teacher_table',dataUrl:'user/list',editWin:editWin,toolbar:"#table-toolbar"});
 	listUI.onLoad();
 })
 </script>

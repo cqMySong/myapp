@@ -3,18 +3,22 @@
 ;(function($, window, document,undefined) {
 var ListUI = function(el,options){
 	var _Def_listUI = {
-			 el:'#tblMain',dataUrl:"",editUrl:"",openModel:"",toolbar:"_table-toolbar",
+			 el:'#tblMain',dataUrl:"",openModel:"",toolbar:"_table-toolbar",
+			 	editWin:{title:'^~^',url:'',maxmin:true,width:800,height:600,btns:['确定','取消'],callBack:undefined},
 			 pageSize :20,curPage :1,listData:undefined,btns:undefined,pagination:true,
 			 tableOption:{},hasSeq:true,extendTableOptions:undefined,totalPages:0,queryColumn:undefined,
 			 hasCheck:true,getOtherToolBar:undefined,search:true,searchParams:undefined,index:true
 	};
 	this.options = $.extend({},_Def_listUI, options);
 	//pagination  这个为自定义的分页模式 与 没有用 bootstrap的分页模式
+	this.options.editWin.url = app.root+'/'+this.options.editWin.url;
+	
 	var $tb = $(el).find(this.options.toolbar);
 	if(webUtil.isEmpty($tb)||$tb.length<=0){
 		$tb = $('<div id="'+this.options.toolbar+'"></div>');
 		$(el).prepend($tb);
 	}
+	
 	var _btn_g = $('<div class="btn-group"></div>');
 	this.listUIObj = this;
 	var thisObj = this;
@@ -206,13 +210,22 @@ ListUI.prototype = {
 	addnew:function(btn){
 		var $obj = btn.owerObj;
 		if($obj.actionBefore('addnew')){
-			alert($obj.tblMain.getRowCount());
+			var _win = $.extend({},$obj.options.editWin);
+			_win.title = _win.title+'-新增';
+			_win.url = _win.url+'?operate=addnew';
+			webUtil.openWin(_win);
 		}
 	},
 	view:function(btn){
 		var $obj = btn.owerObj;
 		if($obj.actionBefore('view')){
-			alert($obj.getSelectIds());
+			var url = "http://www.baidu.com";
+			url = '/myapp/main/home';
+			//layer.open({type:2,title:'测试',content:url}); 
+			webUtil.openWin({title:'我打开测试下',url:url,callBack:function(index){
+				webUtil.mesg('打开的是第'+index);
+				return true;
+			}}); 
 		}
 	},
 	edit:function(btn){
@@ -234,7 +247,7 @@ ListUI.prototype = {
 		_data.pageSize = _listUI.options.pageSize;
 		_data.search = _listUI.options.searchParams;
 		
-		webUtil.ajaxData({url:app.root+'/'+this.options.dataUrl,data:_data,success:function(data){
+		webUtil.ajaxData({url:this.options.dataUrl,data:_data,success:function(data){
 			var _ret_Data = data.data;
 			if(!webUtil.isEmpty(_ret_Data)){
 				$('#tbl_pagination').find('li.disabled').removeClass('disabled');
@@ -282,7 +295,6 @@ function beforeAction(opt){
 }
 
 $(document).ready(function(){
-	
 })
 </script>
 

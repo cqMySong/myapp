@@ -1,11 +1,14 @@
 package com.myapp.core.util;
 
 import java.lang.reflect.Method;
-
-import org.aspectj.apache.bcel.classfile.Constant;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 import com.myapp.core.base.enums.MyEnum;
 import com.myapp.core.enums.Sex;
+import com.myapp.core.model.KeyValueModel;
 
 /**
  *-----------MySong---------------
@@ -41,12 +44,33 @@ public class EnumUtil {
 		return null;
 	}
 	
+	public static List<KeyValueModel> getEnumKvs(String enum_str){
+		List<KeyValueModel> items = new ArrayList<KeyValueModel>();
+		Object[] enum_obj = getEnums(Sex.class.getName());
+		if(enum_obj!=null&&enum_obj.length>0){
+			for(Object item:enum_obj){
+				if(item instanceof MyEnum){
+					MyEnum me = (MyEnum) item;
+					items.add(new KeyValueModel(me.getValue().toString(),me.getName()));
+				}
+			}
+		}
+		return items;
+	}
+	
 	public static void main(String[] args){
 		Object[] objs = getEnums(Sex.class.getName());
 		for(Object sx:objs){
-			System.out.println(((Sex)sx).getName());
+			if(sx instanceof Enum){
+				Enum sse  = (Enum) sx;
+				System.out.println(sse.name()+" = "+sse.valueOf(Sex.class, sse.name()));
+			}
 		}
 		Object obj = getEnum(Sex.class.getName(),"WOMAN");
-		System.out.println(obj.toString());
+		if(obj instanceof MyEnum){
+			MyEnum me = (MyEnum)obj;
+			System.out.println(me.getName()+" == "+me.getValue());
+		}
+		
 	}
 }

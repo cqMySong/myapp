@@ -32,17 +32,15 @@ public class UserListController extends BaseListController {
 	@RequestMapping("/toUsers")
 	public ModelAndView toUsers(){
 		Map params = new HashMap();
-//		for(int i=1;i<50;i++){
-//			UserInfo u = new UserInfo();
-//			u.setName("宋军_"+i);
-//			u.setNumber(10000+i+"");
-//			u.setPassWord("abc124"+i);
-//			u.setRemark("批量初始化插入_"+i);
-//			userService.addNewEntity(u);
-//		}
 		return toPage("user/userList", params);
 	}
-
+	
+	@RequestMapping("/edit")
+	public ModelAndView toEdit(){
+		Map params = new HashMap();
+		return toPage("user/userEdit", params);
+	}
+	
 	public AbstractBaseService getService() {
 		return this.userService;
 	}
@@ -50,6 +48,8 @@ public class UserListController extends BaseListController {
 		return "select u.id as id,u.name as name,u.number as number"
 				+ ",u.passWord as pwd ,u.createDate as cdate from UserInfo u";
 	}
+	
+	
 	
 	public List executeQueryParams() {
 		List params = super.executeQueryParams();

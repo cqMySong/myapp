@@ -32,7 +32,7 @@ public abstract class BaseListController extends BaseController {
 
 	public abstract String querySQL();
 
-	@RequestMapping(value="/list",method = RequestMethod.POST)
+	@RequestMapping(value="/list")
 	@ResponseBody
 	public WebDataModel toList() {
 		try {

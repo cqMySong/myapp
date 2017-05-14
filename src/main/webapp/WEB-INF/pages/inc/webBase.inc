@@ -11,16 +11,13 @@
 
 <link rel="stylesheet" href="<%=appRoot%>/assets/lib/fontawesome/css/font-awesome.css"/>
 <link rel="stylesheet" href="<%=appRoot%>/assets/css/quirk.css"/>
-
 <!--bootstrap-table-->
 <link rel="stylesheet" href="<%=appRoot%>/assets/lib/bootstrap-table/css/bootstrap-table.min.css"/>
+<!--bootstrap-select2-->
+<link rel="stylesheet" href="<%=appRoot%>/assets/lib/select/css/select2.css"/>
 
-
-<!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
-<!--[if lt IE 9]>
-	<script src="<%=appRoot%>/assets/lib/html5shiv/html5shiv.js"></script>
-	<script src="<%=appRoot%>/assets/lib/respond/respond.src.js"></script>
- <![endif]-->
+<!--myapp-->
+<link rel="stylesheet" href="<%=appRoot%>/assets/app/css/myapp.main.css"/>
 
 <script type="text/javascript">
     var app = {};
@@ -28,20 +25,24 @@
 </script>
 
 
-
+<!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
+<!--[if lt IE 9]>
+	<script src="<%=appRoot%>/assets/lib/html5shiv/html5shiv.js"></script>
+	<script src="<%=appRoot%>/assets/lib/respond/respond.src.js"></script>
+ <![endif]-->
 <script src="<%=appRoot%>/assets/lib/jquery/jquery.js"></script>
 <script src="<%=appRoot%>/assets/lib/bootstrap/js/bootstrap.js"></script>
 <script src="<%=appRoot%>/assets/lib/jquery-toggles/toggles.js"></script>
 <script src="<%=appRoot%>/assets/js/quirk.js"></script>
 
-
 <!--bootstrap-table-->
 <script src="<%=appRoot%>/assets/lib/bootstrap-table/js/bootstrap-table.min.js"></script>
 <script src="<%=appRoot%>/assets/lib/bootstrap-table/js/bootstrap-table-zh-CN.js"></script>
-<style type="text/css">
-	table.table-hover thead tr th{background-color: #fff;}
-	table.table-hover tbody tr.selected td{background-color: #8dc1ed;}
-</style>
+<!--layer 3.0-->
+<script src="<%=appRoot%>/assets/lib/layer/layer.js"></script>
+<!--bootstrap-select2-->
+<script src="<%=appRoot%>/assets/lib/select/js/select2.js"></script>
+<script src="<%=appRoot%>/assets/lib/select/js/select2.zh-CN.js"></script>
 
 <script src="<%=appRoot%>/assets/app/js/myapp.util.js"></script>
 <script src="<%=appRoot%>/assets/app/js/myapp.main.js" type="text/javascript"></script>

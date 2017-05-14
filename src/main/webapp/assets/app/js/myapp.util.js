@@ -27,8 +27,123 @@ var webUtil = {
 		}
 	    return billId; 
 	},
+	mesg:function(mesg){
+		layer.msg(mesg, {icon: 1});//最简单的mesg体现信息
+	},
+	getMesgIcon:function(type){
+		//icon :1：√ ,2： ✘, 3:?,4:锁，5：哭脸，6：笑脸，7：感叹号
+		var _icon = 1;
+		if(!webUtil.isEmpty(type)){
+			if('error'==type){
+				_icon.icon = 2;
+			}else if('warning'==type){
+				_icon.icon = 7;
+			}else if('question'==type){
+				_icon.icon = 3;
+			}else if('lock'==type){
+				_icon.icon = 4;
+			}else if('happley'==type){
+				_icon.icon = 6;
+			}else if('sad'==type){
+				_icon.icon = 5;
+			}
+		}
+		return _icon;
+		
+	},
+	showConfirm:function(_comfirm){
+		var _defConfirm = {title:'信息',content:'',callBack:undefined};
+		var _opt = $.extend({},_defConfirm,_comfirm);
+		var _opt_obj = {title:'输出提示'||_opt.title,icon:1,shade:0.1,scrollbar:false,btn: ['确定','取消']};
+		_opt_obj.icon = webUtil.getMesgIcon('question');
+		
+		parent.layer.confirm(_opt.content, _opt_obj, function(index){
+		  if(!webUtil.isEmpty(_opt.callBack)&&$.isFunction(_opt.callBack)){
+			  _opt.callBack(true);
+		  }
+		  parent.layer.close(index);
+		}, function(index){
+			if(!webUtil.isEmpty(_opt.callBack)&&$.isFunction(_opt.callBack)){
+				  _opt.callBack(false);
+			  }
+			parent.layer.close(index);
+		});
+	},
 	showMesg:function(obj){
-		alert(obj.mesg);
+		// layer open 中的type 定义 0（信息框，默认）1（页面层）2（iframe层）3（加载层）4（tips层）。
+		//shade  0-1  越大背景色越深
+		var _opt = {title:obj.title||'....',content:obj.content||'',shade:0.1,scrollbar:false}
+		_opt.icon = webUtil.getMesgIcon(obj.type);
+		parent.layer.open(_opt);
+	},
+	openWin:function(_winOpt){
+		// 此处 最大整四个btn 注意回调函数必须返回值 已确定是否允许关闭此win (true 关闭 false 不关闭)
+		var _def_win = {title:'^~^',url:'',maxmin:true,width:800,height:600
+					,btns:['确定','取消'],callBack:undefined};
+		var _opt = $.extend({},_def_win,_winOpt);
+		var btns = _opt.btns;
+		var callBack = _opt.callBack;
+		parent.layer.open({type : 2,
+			btn : _opt.btns,title :_opt.title,scrollbar : false,
+			shadeClose : false,close : false,shade : true,shade : 0.1,
+			maxmin : _opt.maxmin,area:[ _opt.width+'px', _opt.height+'px' ],
+			content : _opt.url,
+			btn1:function(index) {
+				var toClose = true;
+				if(btns.length>0){
+					if(!webUtil.isEmpty(callBack)&&$.isFunction(callBack)){
+						toClose = callBack(1);
+					}
+				}
+				if(toClose) parent.layer.close(index);
+			},
+			btn2:function(index) {
+				if(btns.length>1){
+					if(!webUtil.isEmpty(callBack)&&$.isFunction(callBack)){
+						return callBack(2);
+					}
+				}
+				parent.layer.close(index);
+			},
+			btn3:function(index) {
+				if(btns.length>2){
+					if(!webUtil.isEmpty(callBack)&&$.isFunction(callBack)){
+						return callBack(3);
+					}
+				}
+				parent.layer.close(index);
+			},
+			btn4:function(index) {
+				if(btns.length>3){
+					if(!webUtil.isEmpty(callBack)&&$.isFunction(callBack)){
+						return callBack(4);
+					}
+				}
+				parent.layer.close(index);
+			},
+			cancel : function(index) {
+				if(!webUtil.isEmpty(callBack)&&$.isFunction(callBack)){
+					return callBack(99);
+				}
+				parent.layer.close(index);
+			}
+		});
+	},
+	showPrompt:function(_prompt){
+		var _opt = {title:_prompt.title||'请输入',type:_prompt.type||'text'};
+		if(_opt.type=='textarea'){
+			_opt.formType = 2;
+		}else if(_opt.type=='password'){
+			_opt.formType = 1;
+		}else{
+			_opt.formType = 0;
+		}
+		parent.layer.prompt(_opt,function(val, index){
+			if(!webUtil.isEmpty(_prompt.callBack)&&$.isFunction(_prompt.callBack)){
+				_prompt.callBack(val);
+			}
+			parent.layer.close(index);
+		});
 	},
 	getFrame:function(_id){
 		var ofrm1 = document.getElementById(_id).document;
@@ -40,12 +155,13 @@ var webUtil = {
 	},
 	ajaxData:function(_opt){
 		var opt = $.extend({},ajax_defaultOpt,_opt);
-		$.ajax({type:opt.type,url:opt.url,data:opt.data,dataType:opt.dataType,success:function(data){
+		var _thisUrl = app.root+'/'+opt.url;
+		$.ajax({type:opt.type,url:_thisUrl,data:opt.data,dataType:opt.dataType,success:function(data){
 			if(!webUtil.isEmpty(data)){
 				var statusCode = $(data).attr('statusCode');
 				if(statusCode!=0){ //异常或者错误或者提示或者警告
 					var msgObj = {title:".::系统提示::.",type:"info"};//==1 提示
-					msgObj.mesg = $(data).attr('statusMesg');
+					msgObj.content = $(data).attr('statusMesg');
 					if(statusCode<0){//异常 错误
 						msgObj.title = ".::系统操作"+(statusCode==-100?"异常":"错误")+"::.";
 						msgObj.type = "error";

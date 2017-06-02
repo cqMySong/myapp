@@ -46,6 +46,7 @@ public class DateUtil {
     public static Date parseDate(String dateStr, String format) {
         Date date = null;
         try {
+        	if(BaseUtil.isEmpty(dateStr)) return date;
             DateFormat df = new SimpleDateFormat(format);
             date = (Date) df.parse(dateStr);
         } catch (Exception e) {

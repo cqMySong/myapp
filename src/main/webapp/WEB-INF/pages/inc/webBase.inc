@@ -15,7 +15,12 @@
 <link rel="stylesheet" href="<%=appRoot%>/assets/lib/bootstrap-table/css/bootstrap-table.min.css"/>
 <!--bootstrap-select2-->
 <link rel="stylesheet" href="<%=appRoot%>/assets/lib/select/css/select2.css"/>
-
+<!--bootstrap-datepicker-->
+<link rel="stylesheet" href="<%=appRoot%>/assets/lib/bootstrap-datepicker/css/bootstrap-datepicker.css"/>
+<!--bootstrap-datetimepicker-->
+<link rel="stylesheet" href="<%=appRoot%>/assets/lib/bootstrap-datetimepicker/css/bootstrap-datetimepicker.css"/>
+<!--ztree-->
+<link rel="stylesheet" href="<%=appRoot%>/assets/lib/ztree/css/metro.css"/>
 <!--myapp-->
 <link rel="stylesheet" href="<%=appRoot%>/assets/app/css/myapp.main.css"/>
 
@@ -36,13 +41,24 @@
 <script src="<%=appRoot%>/assets/js/quirk.js"></script>
 
 <!--bootstrap-table-->
-<script src="<%=appRoot%>/assets/lib/bootstrap-table/js/bootstrap-table.min.js"></script>
+<script src="<%=appRoot%>/assets/lib/bootstrap-table/js/bootstrap-table.js?v=121"></script>
 <script src="<%=appRoot%>/assets/lib/bootstrap-table/js/bootstrap-table-zh-CN.js"></script>
 <!--layer 3.0-->
 <script src="<%=appRoot%>/assets/lib/layer/layer.js"></script>
 <!--bootstrap-select2-->
 <script src="<%=appRoot%>/assets/lib/select/js/select2.js"></script>
 <script src="<%=appRoot%>/assets/lib/select/js/select2.zh-CN.js"></script>
+<!--bootstrap-datepicker-->
+<script src="<%=appRoot%>/assets/lib/bootstrap-datepicker/js/bootstrap-datepicker.js"></script>
+<script src="<%=appRoot%>/assets/lib/bootstrap-datepicker/js/bootstrap-datepicker.zh-CN.js"></script>
+<!--bootstrap-datetimepicker-->
+<script src="<%=appRoot%>/assets/lib/bootstrap-datetimepicker/js/bootstrap-datetimepicker.js"></script>
+<script src="<%=appRoot%>/assets/lib/bootstrap-datetimepicker/js/bootstrap-datetimepicker.zh-CN.js"></script>
+<!--ztree-->
+<script src="<%=appRoot%>/assets/lib/ztree/js/jquery.ztree.all-3.5.min.js"></script>
 
 <script src="<%=appRoot%>/assets/app/js/myapp.util.js"></script>
-<script src="<%=appRoot%>/assets/app/js/myapp.main.js" type="text/javascript"></script>
+<script src="<%=appRoot%>/assets/app/js/myapp.main.js?v=13" type="text/javascript"></script>
+<script src="<%=appRoot%>/assets/app/js/myapp.component.js?v=3" type="text/javascript"></script>
+<script src="<%=appRoot%>/assets/app/js/myapp.tree.js?v=3" type="text/javascript"></script>
+<script src="<%=appRoot%>/assets/app/js/myapp.myF7.js" type="text/javascript"></script>

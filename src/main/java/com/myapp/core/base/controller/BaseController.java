@@ -1,5 +1,6 @@
 package com.myapp.core.base.controller;
 
+import java.util.HashMap;
 import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
@@ -9,6 +10,7 @@ import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.servlet.ModelAndView;
 
+import com.myapp.core.enums.BaseMethodEnum;
 import com.myapp.core.model.WebDataModel;
 import com.myapp.core.util.BaseUtil;
 
@@ -33,9 +35,17 @@ public class BaseController {
     protected int statusCode = STATUSCODE_SUCCESS;//默认值
     protected String statusMesg = "";
     protected Object data;
+    protected BaseMethodEnum baseMethod;
+    protected Object otherData;
     @Autowired
     public HttpServletRequest request;
     
+    private void initModelAndViewParams(Map params){
+    	if(params==null) params = new HashMap();
+    	params.put("statusCode", this.statusCode);
+    	params.put("statusMesg", this.statusMesg);
+    	params.put("operate", getBaseMethod().getValue());
+    }
     public ModelAndView toPage(String page,Map params){
     	return initMav(page,params);
     }
@@ -44,6 +54,7 @@ public class BaseController {
     	if(BaseUtil.isEmpty(action)) return null;
     	ModelAndView mav = new ModelAndView();
     	mav.setViewName(action);
+    	initModelAndViewParams(params);
     	if(!BaseUtil.isEmpty(params)&&params.size()>0){
 			mav.addAllObjects(params);
 		}
@@ -69,10 +80,10 @@ public class BaseController {
     /**
      * 默认 初始化
      */
-    public void onLoad(){
+    public void init(){
     	this.statusCode = STATUSCODE_SUCCESS;
 		this.statusMesg = "";
-		this.data = null;
+		this.baseMethod = BaseMethodEnum.ADDNEW;
     }
     
     public void setMesg(int code,String mesg){
@@ -92,17 +103,32 @@ public class BaseController {
     	this.data = null;
     }
     
-    public Object getOtherData(){
-    	return null;
-    }
-    
-    public WebDataModel ajaxModel(){
+    private Object getOtherData() {
+		return otherData;
+	}
+	public void setOtherData(Object otherData) {
+		this.otherData = otherData;
+	}
+	public WebDataModel ajaxModel(){
     	WebDataModel wdm = new WebDataModel();
     	wdm.setData(data);
     	wdm.setStatusMesg(statusMesg);
     	wdm.setStatusCode(statusCode);
     	wdm.setOther(getOtherData());
+    	wdm.setOperate(getBaseMethod().getValue());
     	return wdm;
     }
+    
+    protected String getEntityPk(){
+		return "id";
+	}
+    
+	public BaseMethodEnum getBaseMethod() {
+		if(baseMethod==null) baseMethod = BaseMethodEnum.BILL;
+		return baseMethod;
+	}
+	public void setBaseMethod(BaseMethodEnum baseMethod) {
+		this.baseMethod = baseMethod;
+	}
     
 }

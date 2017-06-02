@@ -1,44 +1,64 @@
 package com.myapp.core.controller;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
+import org.hibernate.Criteria;
+import org.hibernate.criterion.Order;
+import org.hibernate.criterion.Restrictions;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.servlet.ModelAndView;
 
-import com.myapp.core.base.controller.BaseController;
-import com.myapp.core.base.service.impl.AbstractBaseService;
+import com.alibaba.fastjson.JSONObject;
 import com.myapp.core.base.setting.SystemConstant;
+import com.myapp.core.enums.BaseMethodEnum;
+import com.myapp.core.enums.DataTypeEnum;
+import com.myapp.core.model.ColumnModel;
 import com.myapp.core.model.WebDataModel;
 import com.myapp.core.util.BaseUtil;
+import com.myapp.core.util.DateUtil;
 import com.myapp.core.util.WebUtil;
 
 /**
  * 
- * -----------MySong--------------- ©MySong基础框架搭建
- * 
+ * -----------MySong---------------
+ *  ©MySong基础框架搭建
  * @author mySong @date 2017年3月12日
  * @system:
  *
- *          -----------MySong---------------
+ *-----------MySong---------------
  */
-public abstract class BaseListController extends BaseController {
+public abstract class BaseListController extends CoreBaseController {
 	private Integer curPage;
 	private Integer pageSize;
-	private String id;
-
-	public abstract AbstractBaseService getService();
-
-	public abstract String querySQL();
-
+	
+	//特殊情况 在处理
+	public String querySQL(){
+		return "";
+	}
+	
+	
+	public void init() {
+		super.init();
+	}
+	
 	@RequestMapping(value="/list")
 	@ResponseBody
 	public WebDataModel toList() {
 		try {
-			onLoad();
-			data = getService().toPageQuery(getCurPage(), getPageSize(),
-					querySQL(), executeQueryParams().toArray());
+			init();
+			Criteria query = initQueryCriteria();
+			executeQueryParams(query);
+			Order order = getOrder();
+			if(order!=null){
+				query.addOrder(order);
+			}
+			data = getService().toPageQuery(query, getProjectionList(), getCurPage(), getPageSize());
 		} catch (Exception e) {
 			e.printStackTrace();
 			setExceptionMesg(e.getMessage());
@@ -46,19 +66,42 @@ public abstract class BaseListController extends BaseController {
 		return ajaxModel();
 	}
 
-	public List executeQueryParams() {
-		List params = new ArrayList();
-		return params;
+	public void executeQueryParams(Criteria query) {
+		String serach = request.getParameter("search");
+		if(!BaseUtil.isEmpty(serach)){
+			Map searchMap = JSONObject.parseObject(serach, new HashMap().getClass());
+			Object obj_field = searchMap.get("key");
+			Object obj_val = searchMap.get("value");
+			Object obj_type = searchMap.get("type");
+			if(obj_field!=null){
+				if(obj_val==null){
+					query.add(Restrictions.isNull(obj_field.toString()));
+				}else{
+					obj_val = obj_val.toString();
+					DataTypeEnum dte = WebUtil.getWebServerDataType(obj_type.toString());
+					if(DataTypeEnum.BOOLEAN.equals(dte)){
+						obj_val = obj_val.toString().toLowerCase().equals("true")||obj_val.equals("1")?1:0;
+					}else if(DataTypeEnum.DATE.equals(dte)){
+						obj_val = DateUtil.parseDate(obj_val.toString());
+					}else if(DataTypeEnum.DATETIME.equals(dte)){
+						obj_val = DateUtil.parseDate(obj_val.toString(),DateUtil.DATEFORMT_YMDHMS);
+					}else if(DataTypeEnum.NUMBER.equals(dte)){
+						obj_val = new BigDecimal(obj_val.toString());
+					}
+					query.add(Restrictions.eq(obj_field.toString(),obj_val));
+				}
+			}
+		}
 	}
 
 	@ResponseBody
-	@RequestMapping("/remove")
+	@RequestMapping(value="/remove",method=RequestMethod.POST)
 	public WebDataModel toRemove() {
 		try {
-			onLoad();
-			String cur_id = getId();
-			if(!BaseUtil.isEmpty(cur_id)){
-				getService().deleteEntity(cur_id);
+			init();
+			String billId = getReuestBillId();
+			if(!BaseUtil.isEmpty(billId)){
+				getService().deleteEntity(billId);
 				setInfoMesg("数据删除成功!");
 			}else{
 				setErrorMesg("单据id为空，无法完成删除操作!");
@@ -68,14 +111,6 @@ public abstract class BaseListController extends BaseController {
 			setExceptionMesg(e.getMessage());
 		}
 		return ajaxModel();
-	}
-
-	public String getId() {
-		return WebUtil.UUID_ReplaceID(id);
-	}
-
-	public void setId(String id) {
-		this.id = id;
 	}
 
 	public Integer getCurPage() {
@@ -103,8 +138,71 @@ public abstract class BaseListController extends BaseController {
 	}
 
 	public void setPageSize(Integer pageSize) {
-		
 		this.pageSize = pageSize;
 	}
-
+	
+	public String getEditUrl(){
+		return "";
+	}
+	
+	@RequestMapping("/edit")
+	public ModelAndView edit(){
+		Map params = new HashMap();
+		init();
+		try {
+			setBaseMethod(BaseMethodEnum.EDIT);
+			String billId = getReuestBillId();
+			packageUIParams(params);
+			if(!BaseUtil.isEmpty(billId)){
+				params.put(getEntityPk(),billId);
+			}else{
+				setErrorMesg("单据id为空，无法进入数据编辑界面!");
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+			setExceptionMesg(e.getMessage());
+		}
+		return toPage(getEditUrl(), params);
+	}
+	
+	@RequestMapping("/view")
+	public ModelAndView view(){
+		Map params = new HashMap();
+		init();
+		try {
+			setBaseMethod(BaseMethodEnum.VIEW);
+			String billId = getReuestBillId();
+			packageUIParams(params);
+			if(!BaseUtil.isEmpty(billId)){
+				params.put(getEntityPk(), billId);
+			}else{
+				setErrorMesg("单据id为空，无法进入数据查看界面!");
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+			setExceptionMesg(e.getMessage());
+		}
+		return toPage(getEditUrl(), params);
+	}
+	//统一处理 uiCtx的参数类型传递
+	public void packageUIParams(Map params){
+		String ciCtx = request.getParameter("uiCtx");
+		if(!BaseUtil.isEmpty(ciCtx)){
+			Map uiCtx = JSONObject.parseObject(ciCtx, new HashMap().getClass());
+			params.put("uiCtx", ciCtx);
+		}
+	}
+	
+	@RequestMapping("/addnew")
+	public ModelAndView addnew(){
+		init();
+		setBaseMethod(BaseMethodEnum.ADDNEW);
+		Map params = new HashMap();
+		packageUIParams(params);
+		return toPage(getEditUrl(), params);
+	}
+	
+	public void initAddNewParams(HashMap params){
+		
+	}
 }

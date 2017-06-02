@@ -4,59 +4,85 @@
 <head>
 <title>mysong</title>
 </head>
-<%@include file="../inc/webBase.inc"%>
 <style type="text/css">
 </style>
 <script type="text/javascript">
 </script>
-<body style="padding: 5px;" >
-	<div id="editPanel" class="contentpanel editFrom" style="padding:2px;">
-		<div class="panel">
-            <div class="panel-heading">
-              <h4 class="panel-title">用户信息维护</h4>
-            </div>
-            <div class="panel-body form-group">
-              <div class="row">
-                <div class="col-sm-6">
-                  <div class="input-group">
-	                <span class="input-group-addon">用户账号</span>
-	                <input class="form-control" type="text" placeholder="userName">
+<body style="padding: 5px;">
+	<div id="editPanel" class="panel" >
+			<div id="table-toolbar">
+				<div class="btn-group">
+					<button class="btn btn-success" type="button">
+						<span class="glyphicon glyphicon-file"></span>查询
+					</button>
+				</div>
+			</div>
+            <form id="editForm">
+	              <div class="row">
+	                <div class="col-sm-6">
+	                  <div class="input-group">
+		                <span class="input-group-addon">用户账号</span>
+		                <input class="require input-item" name="number">
+		              </div>
+	                </div>
+	                 <div class="col-sm-6 mb15">
+	                  <div class="input-group">
+		                <span class="input-group-addon">用户实名</span>
+		                <input name="name" class="input-item form-control">
+		              </div>
+	                </div>
 	              </div>
-                </div>
-                 <div class="col-sm-6 mb15">
-                  <div class="input-group">
-	                <span class="input-group-addon">用户实名</span>
-	                <input class="form-control " type="text" placeholder="name">
+	               <div class="row">
+	               	<div class="col-sm-6">
+	                  <div class="input-group">
+		                <span class="input-group-addon">用户状态</span>
+		                <select name="userState" data-opt="{type:'select',selected:'WOMAN',url:'base/common/combox?enum=com.myapp.core.enums.UserState'}" 
+		                	class="form-control input-item require">
+		                </select>
+		              </div>
+	                </div>
+	                <div class="col-sm-3 mb15">
+	                  <div class="input-group">
+		                <span class="input-group-addon">系统管理员</span>
+		                <input name="admin" class="input-item" data-opt="{type:'checkbox'}" type="checkbox"/>
+		              </div>
+	                </div>
+	                <div class="col-sm-3 mb15">
+	                  <div class="input-group">
+		                <span class="input-group-addon">系统用户</span>
+		                 <input name="sysUser" class="input-item" data-opt="{type:'radio'}" type="radio"/>
+		              </div>
+	                </div>
+	               </div>
+	               
+	               <div class="row">
+	                <div class="col-sm-6">
+	                  <div class="input-group">
+		                <span class="input-group-addon">生    日</span>
+		                <input type="text" name="birthdate" class="form-control input-item" data-opt="{type:'date'}"/>
+		              </div>
+	                </div>
+	                 <div class="col-sm-6 mb15">
+	                  <div class="input-group">
+		                <span class="input-group-addon">创建时间</span>
+		                <input type="text" name="createDate" id="createtime" class="form-control input-item" 
+		                	data-opt="{type:'datetime'}">
+		              </div>
+	                </div>
 	              </div>
-                </div>
-              </div>
-               <div class="row">
-               	<div class="col-sm-6">
-                  <div class="input-group">
-	                <span class="input-group-addon">用户状态</span>
-	                <select id="usertate" class="form-control" data-placeholder="用户状态选择...">
-	                  <option value="United States">United States</option>
-	                  <option value="United Kingdom">United Kingdom</option>
-	                  <option value="Japan" selected>日本</option>
-	                  <option value="China">China</option>
-	                </select>
+	              
+	              <div class="row mt10" >
+	                <div class="col-sm-12">
+	                  <div class="input-group">
+		                <span class="input-group-addon">备注信息</span>
+		                <textarea name="remark" class="input-item form-control" rows="2"></textarea>
+		              </div>
+	                </div>
 	              </div>
-                </div>
-               </div>
-              <div class="row" style="margin-top: 10px;">
-                <div class="col-sm-12">
-                  <div class="input-group">
-	                <span class="input-group-addon">备注信息</span>
-	                <textarea class="form-control" rows="2"></textarea>
-	              </div>
-                </div>
-              </div>
-              
-            </div>
-        </div>
+              </form>
 	</div>
 </body>
-
+<%@include file="../base/base_edit.jsp"%>
 <script type="text/javascript">
 /**
  * 一切操作前的接口函数
@@ -66,15 +92,9 @@ function beforeAction(opt){
 }
 
 $(document).ready(function() {
-	var us = $("#usertate").select2({minimumResultsForSearch: Infinity});
-	$("#usertate").on('change.select2', function () {
-		alert( $("#usertate").val()+' == '+$("#usertate option:selected").text() );
-	});
-	$("#usertate").parent().find('.select2-selection').on('click', function (evt) {
-		evt.stopPropagation();
-		evt.preventDefault(); 
-		//alert( $("#usertate").val()+' =对对对= '+$("#usertate option:selected").text() );
-	});
+	var editUI = $('#editPanel').editUI({title:"用户信息",baseUrl:"base/user",toolbar:"#table-toolbar",form:{el:"#editForm"}});
+	editUI.onLoad();
+	var index = parent.layer.getFrameIndex(window.name); //获取窗口索引
 })
 </script>
 </html>

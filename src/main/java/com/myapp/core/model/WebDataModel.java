@@ -12,6 +12,7 @@ public class WebDataModel {
 	private String statusMesg;
 	private Object data;
 	private Object other;
+	private String operate;
 	
 	public int getStatusCode() {
 		return statusCode;
@@ -37,6 +38,12 @@ public class WebDataModel {
 	}
 	public void setOther(Object other) {
 		this.other = other;
+	}
+	public String getOperate() {
+		return operate;
+	}
+	public void setOperate(String operate) {
+		this.operate = operate;
 	}
 	
 }

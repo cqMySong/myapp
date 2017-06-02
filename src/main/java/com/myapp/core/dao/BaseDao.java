@@ -9,6 +9,7 @@ import org.springframework.stereotype.Repository;
 
 import com.myapp.core.base.dao.IAbstractBaseDao;
 import com.myapp.core.base.dao.impl.AbstractBaseDao;
+import com.myapp.core.exception.db.ReadException;
 @Repository
 public class BaseDao extends AbstractBaseDao {
 	@Autowired
@@ -25,6 +26,5 @@ public class BaseDao extends AbstractBaseDao {
 	public SessionFactory getSessionFactory() {
 		return this.sessionFactory;
 	}
-
 	
 }

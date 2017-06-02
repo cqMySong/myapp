@@ -319,7 +319,7 @@ var myNavTab = {
  */
 ;(function($, window, document,undefined) {
 var MyBtnGroups = function(ele, opt){
-	 this.$element = ele,
+	 this.$element = ele;
 	 this.defaults = {};
      this.options = $.extend({}, this.defaults, opt);
 }
@@ -359,7 +359,7 @@ MyBtnGroups.prototype = {
 		var _search = $.extend({}, _def_Search, _opt);
 		var _input_group = $('<div class="input-group"></div>');
 		_input_group.css(_search.css);
-		var _input = $('<input class="form-control" type="text">');
+		var _input = $('<input class="form-control" type="text" placeholder="请选择对应项">');
 		if(!webUtil.isEmpty(_search.items)
 				&&$.isArray(_search.items)&& _search.items.length>0){
 			var _group_btn = $('<div class="input-group-btn"></div>');
@@ -382,6 +382,7 @@ MyBtnGroups.prototype = {
 				_this_li.click(function(e){
 					var _thisItem = $(this).data('item');
 					_btn.html(_thisItem.text+'&nbsp; <span class="caret"></span>');
+					
 					_input.data('item',_thisItem);
 				});
 			});
@@ -410,6 +411,8 @@ MyBtnGroups.prototype = {
 					var _thisData = $.extend({}, _def_searchItem,_input.data('item'));
 					_thisData.value = _input.val();
 					_search.dataChange(e.data,_thisData);
+				}else{
+					webUtil.mesg('请先选择相关的项，搜索!');
 				}
 			});
 		}
@@ -442,11 +445,189 @@ var MyDataTable = function(ele, opt){
 		}
 	 }
 	 opt.onClickRow = undefined;
-	 this.defaults = {height:600,onClickRow:clickRow};
-     this.options = $.extend({}, this.defaults, opt);
+	 this.mypagination = undefined;
+	 this.$pagination = undefined;
+	 this.myQueryParams = undefined;
+	 if(!webUtil.isEmpty(opt.mypagination)&&opt.mypagination){
+		 var _defMypagination = {url:'',pageSize:20,pageList:[10,20,50],curPage:1,totalPages:1,queryParams:undefined};
+		 this.myQueryParams = opt.queryParams;
+		 this.mypagination = $.extend({}, _defMypagination, {url:opt.url,pageList:opt.pageList,pageSize:opt.pageSize});
+		 opt.url = undefined;
+	 }
+	 var defaults_bt = {height:600,onClickRow:clickRow,mypagination:true};//这个是客户端的过滤
+     this.options = $.extend({}, defaults_bt, opt);
      this.tblMain =  this.$element.bootstrapTable(this.options);
+     if(!webUtil.isEmpty(this.mypagination)){
+    	 this.addMyPagination(this.mypagination);
+     }
 }
 MyDataTable.prototype = {
+	addMyPagination:function(_opt){
+		var _tblBody = this.$element.parent('div.fixed-table-body');
+		this.$pagination = _tblBody.parent().find('div.fixed-table-pagination');
+		if(webUtil.isEmpty(this.$pagination)||this.$pagination.length<=0){
+			this.$pagination = $('<div class="fixed-table-pagination" style="display: block;"></div>');
+			_tblBody.parent().append(this.$pagination);
+		}else{
+			this.$pagination.html('');
+			this.$pagination.show();
+		}
+		var _pagination_detail = [];
+		_pagination_detail.push('<div class="pull-left pagination-detail" style="margin-top:0px;">');
+			_pagination_detail.push('<span id="tbl_pageinfo" class="pagination-info">显示第 1 到第 0 条记录，总共 0 条记录</span>');
+			_pagination_detail.push('<span class="page-list">每页显示');
+				_pagination_detail.push('<span class="btn-group dropup form-group" style="padding-top: 15px;">');
+					_pagination_detail.push('<select class="form-control _changePage" style="width: 50px;height:26px;padding :2px 5px;" data-placeholder="页码">');
+		var _pageList = _opt.pageList||[10,20,50];
+					for(var i=0;i<_pageList.length;i++){
+						var thisPageSize = _pageList[i];
+						_pagination_detail.push('<option value="'+_pageList[i]+'"');
+						if(thisPageSize==_opt.pageSize){
+							_pagination_detail.push(' selected="selected"');
+						}
+						_pagination_detail.push('">'+_pageList[i]+'</option>');
+					}
+					_pagination_detail.push('</select>');
+				_pagination_detail.push('</span> 条记录');
+			_pagination_detail.push('</span>');
+		_pagination_detail.push('</div>');
+		_pagination_detail.push('<div class="pull-right pagination">');
+			_pagination_detail.push('<ul class="pagination" style="border:1px solid #2596ab;">');
+				_pagination_detail.push('<li class="page-pre firstpage"><a href="#">首页</a></li>');
+				_pagination_detail.push('<li class="page-number prepage"><a href="#">上一页</a></li>');
+				_pagination_detail.push('<li class="page-number">');
+					_pagination_detail.push('<div style="width:40px;float:left;padding:0px;">');
+						_pagination_detail.push('<input style="height:32px;border: 0px;" type="text" class="form-control _tocurPage" value="1"/>');
+					_pagination_detail.push('</div>');
+				_pagination_detail.push('</li>');
+				_pagination_detail.push('<li class="page-number nextpage"><a href="#">下一页</a></li>');
+				_pagination_detail.push('<li class="page-next lastpage"><a href="#">末页</a></li>');
+			_pagination_detail.push('</ul>');
+		_pagination_detail.push('</div>');
+		
+		this.$pagination.html(_pagination_detail.join(''));
+		
+		//注册相关事件 进行查询 搜索;
+		this.initPaginationEvent();
+	},
+	initPaginationEvent:function(){
+		
+		this.$pagination.find('select._changePage').change(this,function(e){
+			var tableObj = e.data;
+			tableObj.mypagination.pageSize = $(this).val();
+			tableObj.refreshData();
+		});
+		this.$pagination.find('li.firstpage>a').click(this,function(e){
+			var tableObj = e.data;
+			var $li = $(this).parent('li');
+			if(!$li.hasClass('disabled')){
+				$li.parent().find('li.active').removeClass('active');
+				$li.addClass('active');
+				tableObj.mypagination.curPage = 1;
+				tableObj.refreshData();
+			}
+		});
+		this.$pagination.find('li.prepage>a').click(this,function(e){
+			var tableObj = e.data;
+			var $li = $(this).parent('li');
+			if(!$li.hasClass('disabled')){
+				$li.parent().find('li.active').removeClass('active');
+				$li.addClass('active');
+				var _curPage = tableObj.mypagination.curPage-1;
+				if(_curPage<1) _curPage = 1;
+				tableObj.mypagination.curPage =_curPage;
+				tableObj.refreshData();
+			}
+		});
+		this.$pagination.find('input._tocurPage').keydown(this,function(e){
+			if(e.which == "13"){//回车事件
+				var tableObj = e.data;
+				var _curPage = $(this).val();
+				if($.isNumeric(_curPage)){
+					var _total_page = tableObj.mypagination.totalPages;
+					if(_curPage<1){
+						_curPage = 1;
+					}else if(_curPage>_total_page){
+						_curPage = _total_page;
+					}
+					tableObj.mypagination.curPage =_curPage;
+					$(this).val(_curPage);
+					tableObj.refreshData();
+				}else{
+					webUtil.mesg('请输入正确的数字页码!');
+				}
+			}
+		});
+		this.$pagination.find('li.nextpage>a').click(this,function(e){
+			var tableObj = e.data;
+			var $li = $(this).parent('li');
+			if(!$li.hasClass('disabled')){
+				$li.parent().find('li.active').removeClass('active');
+				$li.addClass('active');
+				var _curPage = tableObj.mypagination.curPage+1;
+				if(_curPage>tableObj.mypagination.totalPages) _curPage = tableObj.mypagination.totalPages;
+				tableObj.mypagination.curPage =_curPage;
+				tableObj.refreshData();
+			}
+		});
+		this.$pagination.find('li.lastpage>a').click(this,function(e){
+			var tableObj = e.data;
+			var $li = $(this).parent('li');
+			if(!$li.hasClass('disabled')){
+				$li.parent().find('li.active').removeClass('active');
+				$li.addClass('active');
+				tableObj.mypagination.curPage =tableObj.mypagination.totalPages;
+				tableObj.refreshData();
+			}
+		});
+	},
+	refreshData:function(){
+		var _otherQueryParams = '';
+		if(!webUtil.isEmpty(this.myQueryParams)){
+			if($.isFunction(this.myQueryParams)){
+				_otherQueryParams = this.myQueryParams();
+			}else{
+				_otherQueryParams = this.myQueryParams;
+			}
+		}
+		var _data = {};
+		_data.curPage = this.mypagination.curPage;
+		_data.pageSize = this.mypagination.pageSize;
+		_data.search = _otherQueryParams;
+		var _myTableMain = this;
+		webUtil.ajaxData({url:this.mypagination.url,data:_data,success:function(data){
+			var _ret_Data = data.data;
+			if(!webUtil.isEmpty(_ret_Data)){
+				if(!webUtil.isEmpty(_myTableMain.$pagination)){
+					_myTableMain.$pagination.find('li.disabled').removeClass('disabled');
+					if(_ret_Data.currentPage<=1){
+						_myTableMain.$pagination.find('li.firstpage').addClass('disabled');
+						_myTableMain.$pagination.find('li.prepage').addClass('disabled');
+					}else{
+						if(_ret_Data.currentPage>=_ret_Data.totalPages){
+							_myTableMain.$pagination.find('li.nextpage').addClass('disabled');
+							_myTableMain.$pagination.find('li.lastpage').addClass('disabled');
+						}
+					}
+					if(_ret_Data.totalPages<=1){
+						_myTableMain.$pagination.find('li.firstpage').addClass('disabled');
+						_myTableMain.$pagination.find('li.prepage').addClass('disabled');
+						_myTableMain.$pagination.find('li.lastpage').addClass('disabled');
+						_myTableMain.$pagination.find('li.nextpage').addClass('disabled');
+					}
+					_myTableMain.mypagination.curPage = _ret_Data.currentPage;
+					_myTableMain.mypagination.pageSize = _ret_Data.pageSize;
+					_myTableMain.mypagination.totalPages = _ret_Data.totalPages;
+					_myTableMain.$pagination.find('input._tocurPage').val(_ret_Data.currentPage);
+					_myTableMain.$pagination.find('span.pagination-info').html("显示第 "+(_ret_Data.startNum+1)+" 到第 "+(_ret_Data.startNum+_ret_Data.pageSize)+" 条记录，总共  "+_ret_Data.totalRows+" 条记录")
+				}
+				var _dataRows = _ret_Data.datas;
+				if(!webUtil.isEmpty(_dataRows)){
+					_myTableMain.loadData(_dataRows);
+				}
+			}
+		}});
+	},
 	addRow:function(index,rowData){
 		var _idx = -1;
 		if($.isNumeric(index)){
@@ -513,7 +694,6 @@ MyDataTable.prototype = {
 		}
 		this.tblMain.bootstrapTable('refreshOptions',{columns:_cols});
 	}
-	
 }
 $.fn.myDataTable = function(options) {
 	 var defaults = {height:600};

@@ -1,4 +1,4 @@
-package com.myapp.controller.base;
+package com.myapp.controller.base.common;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -20,14 +20,14 @@ import com.myapp.core.util.EnumUtil;
  *-----------MySong---------------
  */
 @Controller
-@RequestMapping("/web")
+@RequestMapping("/base/common")
 public class WebCommonController extends BaseController {
 
 	@RequestMapping(value="/combox")
 	@ResponseBody
 	public WebDataModel getItems() {
 		try {
-			onLoad();
+			init();
 			String enumClaz =  request.getParameter("enum");
 			if(!BaseUtil.isEmpty(enumClaz)){
 				data = EnumUtil.getEnumKvs(enumClaz);

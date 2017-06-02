@@ -8,10 +8,139 @@ table.table-hover tbody tr.selected td {
 	background-color: #8dc1ed;
 }
 
+.fixed-table-toolbar .bs-bars{
+	line-height: 32px;
+}
+
 .input-w200 {
 	width: 200px;
 }
+.mt10:{
+	margin-top: 10px;
+}
+.mt20:{
+	margin-top: 20px;
+}
+.mt30:{
+	margin-top: 30px;
+}
 
+/**form 必填项 背景色**/
+.form-control.require{
+	background-color: #7fbd761a;
+	border-color: #e9b521;
+}
+span.select2>span.selection>span.require{
+	background-color: #7fbd761a;
+	border-color: #e9b521;
+}
+
+
+/*仿照iCheck的样式风格 简化
+包含 checkebox 和radio **/
+.mycheckradiobox_container{
+	padding:5px 40%;height:34px;border-radius:0px 2px 2px 0px;
+	width:100%;border:1px solid #bdc3d1;
+	cursor: pointer;
+	display: inline-block;
+    *display: inline; text-align:center;
+    vertical-align: middle;
+}
+
+.mycheckbox,
+.myradio {
+    display: inline-block;
+    *display: inline;
+    width: 22px;
+    height: 22px;
+    border: none;
+    cursor: pointer;
+}
+
+/**--其他都后面补充**/
+
+.mycheckbox.green {
+	 background-position: 0 0;
+	 background: url(../image/checkradio/green.png) no-repeat;
+}
+.mycheckbox.blue {
+	 background-position: 0 0;
+	 background: url(../image/checkradio/blue.png) no-repeat;
+}
+.mycheckbox.orange {
+	 background-position: 0 0;
+	 background: url(../image/checkradio/orange.png) no-repeat;
+}
+.mycheckbox.grey {
+	 background-position: 0 0;
+	 background: url(../image/checkradio/grey.png) no-repeat;
+}
+
+.mycheckbox.hover {
+     background-position: -24px 0;
+}
+.mycheckbox.checked {
+    background-position: -48px 0;
+}
+.mycheckbox.disabled {
+    background-position: -72px 0;
+    cursor: default;
+}
+.mycheckbox.checked.disabled {
+   background-position: -96px 0;
+}
+
+.myradio.green {
+	 background: url(../image/checkradio/green.png) no-repeat;
+	 background-position: -120px 0;
+}
+.myradio.blue {
+	 background: url(../image/checkradio/blue.png) no-repeat;
+	 background-position: -120px 0;
+}
+.myradio.orange {
+	 background: url(../image/checkradio/orange.png) no-repeat;
+	 background-position: -120px 0;
+}
+.myradio.grey {
+	 background: url(../image/checkradio/grey.png) no-repeat;
+	 background-position: -120px 0;
+}
+
+.myradio.hover {
+    background-position: -144px 0;
+}
+.myradio.checked {
+    background-position: -168px 0;
+}
+.myradio.disabled {
+   background-position: -192px 0;
+   cursor: default;
+}
+.myradio.checked.disabled {
+    background-position: -216px 0;
+}
+/* HiDPI support */
+@media (-o-min-device-pixel-ratio: 5/4), (-webkit-min-device-pixel-ratio: 1.25), (min-resolution: 120dpi) {
+	.mycheckbox,.myradio {
+	    -webkit-background-size: 240px 24px;
+	    background-size: 240px 24px;
+	}
+	.mycheckbox.green,.myradio.green {
+		background-image: url(../image/checkradio/green@2x.png);
+	}
+	.mycheckbox.orange,.myradio.orange {
+		background-image: url(../image/checkradio/orange@2x.png);
+	}
+	.mycheckbox.blue,.myradio.blue{
+		background-image: url(../image/checkradio/blue@2x.png);
+	}
+	.mycheckbox.grey,.myradio.grey{
+		background-image: url(../image/checkradio/grey@2x.png);
+	}
+}
+
+/**end**/
 
 @media (min-width: 600px) {
   .col-sm-1, .col-sm-2, .col-sm-3, .col-sm-4, .col-sm-5, .col-sm-6, .col-sm-7, .col-sm-8, .col-sm-9, .col-sm-10, .col-sm-11, .col-sm-12 {
@@ -171,3 +300,7 @@ table.table-hover tbody tr.selected td {
     margin-left: 0%;
   }
 }
+
+input::-ms-clear{display:none;}
+
+

@@ -1,4 +1,4 @@
-package com.myapp.controller.base;
+package com.myapp.controller.base.user;
 
 import java.util.HashMap;
 import java.util.List;
@@ -6,6 +6,11 @@ import java.util.Map;
 
 import javax.annotation.Resource;
 
+import org.hibernate.criterion.DetachedCriteria;
+import org.hibernate.criterion.Projection;
+import org.hibernate.criterion.ProjectionList;
+import org.hibernate.criterion.Projections;
+import org.hibernate.sql.JoinType;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.ModelAndView;
@@ -13,7 +18,11 @@ import org.springframework.web.servlet.ModelAndView;
 import com.myapp.core.base.service.impl.AbstractBaseService;
 import com.myapp.core.controller.BaseListController;
 import com.myapp.core.entity.UserInfo;
+import com.myapp.core.enums.DataTypeEnum;
+import com.myapp.core.enums.UserState;
+import com.myapp.core.model.ColumnModel;
 import com.myapp.core.service.UserService;
+import com.myapp.core.util.DateUtil;
 
 /**
  *-----------MySong---------------
@@ -24,7 +33,7 @@ import com.myapp.core.service.UserService;
  *-----------MySong---------------
  */
 @Controller
-@RequestMapping("/user")
+@RequestMapping("base/users")
 public class UserListController extends BaseListController {
 	@Resource
 	public UserService userService;
@@ -34,26 +43,24 @@ public class UserListController extends BaseListController {
 		Map params = new HashMap();
 		return toPage("user/userList", params);
 	}
-	
-	@RequestMapping("/edit")
-	public ModelAndView toEdit(){
-		Map params = new HashMap();
-		return toPage("user/userEdit", params);
+	public List<ColumnModel> getDataBinding() {
+		List<ColumnModel> cols = super.getDataBinding();
+		cols.add(new ColumnModel("name"));
+		cols.add(new ColumnModel("number"));
+		cols.add(new ColumnModel("remark"));
+		cols.add(new ColumnModel("createDate"));
+		cols.add(new ColumnModel("passWord"));
+		ColumnModel orgCol = new ColumnModel("defOrg",DataTypeEnum.F7,"name");
+		cols.add(orgCol);
+		return cols;
 	}
 	
 	public AbstractBaseService getService() {
 		return this.userService;
 	}
-	public String querySQL() {
-		return "select u.id as id,u.name as name,u.number as number"
-				+ ",u.passWord as pwd ,u.createDate as cdate from UserInfo u";
-	}
 	
-	
-	
-	public List executeQueryParams() {
-		List params = super.executeQueryParams();
-		return params;
+	public String getEditUrl() {
+		return "user/userEdit";
 	}
 	
 }

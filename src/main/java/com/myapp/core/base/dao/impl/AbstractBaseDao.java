@@ -8,22 +8,29 @@ import java.util.Set;
 
 import org.apache.log4j.LogManager;
 import org.apache.log4j.Logger;
+import org.hibernate.Criteria;
 import org.hibernate.Query;
 import org.hibernate.QueryException;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.criterion.CriteriaSpecification;
+import org.hibernate.criterion.DetachedCriteria;
+import org.hibernate.criterion.ProjectionList;
+import org.hibernate.criterion.Projections;
 import org.hibernate.engine.spi.SessionFactoryImplementor;
 import org.hibernate.hql.internal.ast.QueryTranslatorImpl;
 import org.hibernate.persister.entity.AbstractEntityPersister;
+import org.hibernate.sql.JoinType;
+import org.hibernate.transform.Transformers;
 
 import com.myapp.core.base.dao.IAbstractBaseDao;
-import com.myapp.core.base.entity.CoreBaseBillInfo;
+import com.myapp.core.base.dao.MyResultTransFormer;
 import com.myapp.core.base.entity.CoreBaseInfo;
 import com.myapp.core.base.entity.CoreBaseTreeInfo;
 import com.myapp.core.base.entity.CoreInfo;
 import com.myapp.core.base.setting.SystemConstant;
 import com.myapp.core.entity.SubsystemTreeInfo;
+import com.myapp.core.exception.db.ReadException;
 import com.myapp.core.model.PageModel;
 import com.myapp.core.util.BaseUtil;
 import com.myapp.core.uuid.UuidUtils;
@@ -38,6 +45,7 @@ import com.myapp.core.uuid.UuidUtils;
  */
 public abstract class AbstractBaseDao implements IAbstractBaseDao {
 	private static final Logger log = LogManager.getLogger(AbstractBaseDao.class);
+	private Class claz;
 	
 	public abstract Session getCurrentSession() ;
 	public abstract SessionFactory getSessionFactory();
@@ -67,13 +75,19 @@ public abstract class AbstractBaseDao implements IAbstractBaseDao {
 	public Object saveEntity(Object entity) {
 		if(entity!=null){
 			Serializable pk = null;
-			if(entity instanceof CoreBaseBillInfo){
-				pk = ((CoreBaseBillInfo)entity).getId();
+			if(entity instanceof CoreInfo){
+				pk = ((CoreInfo)entity).getId();
 			}
-			if(pk==null){
+			if(entity instanceof CoreBaseInfo){
+				CoreBaseInfo cbInfo = (CoreBaseInfo) entity;
+				cbInfo.setLastUpdateDate(new Date());
+			}
+			if(BaseUtil.isEmpty(pk)){
 				pk = addNewEntity(entity);
 			}else{
-				pk = getCurrentSession().save(entity);
+				Session sesion = getCurrentSession();
+				sesion.update(entity);
+				sesion.flush();
 			}
 			if(pk!=null) {
 				return entity;
@@ -197,6 +211,50 @@ public abstract class AbstractBaseDao implements IAbstractBaseDao {
 		}
 		return null;
 	}
+	public Object queryEntity(Class claz, String hql, Object[] params)
+			throws ReadException {
+		Session session = getCurrentSession();
+		Query entityQuery = initHqlParams(session.createQuery(hql),params);
+		entityQuery.setResultTransformer(Transformers.aliasToBean(claz));
+		return entityQuery.uniqueResult();
+	}
 	
+	public Criteria findByDetachedCriteria(Class claz,DetachedCriteria dca)
+			throws QueryException {
+		dca.setResultTransformer(new MyResultTransFormer(claz));
+		return dca.getExecutableCriteria(getCurrentSession());
+	}
+	
+	/**
+	 * 此方法有局限性 后期再考虑 怎么处理
+	 * 查询级联对象的值 获取不成功
+	 */
+	
+	@Deprecated 
+	public PageModel toPageDetachedCriteria(Class claz,DetachedCriteria dca,ProjectionList pList,Integer curPage, Integer pageSize) throws QueryException{
+		Criteria query = dca.getExecutableCriteria(getCurrentSession());
+		long rowCount = ((Long)query.setProjection(Projections.rowCount()).uniqueResult()).longValue();
+		PageModel pm = new PageModel(curPage, pageSize, rowCount);
+		if(pList!=null){
+			query.setProjection(pList);
+		}else{
+			query.setProjection(null);
+		}
+		
+		query.setResultTransformer(Transformers.aliasToBean(claz));
+		query.setFirstResult(pm.getStartNum());
+		query.setMaxResults(pageSize);
+		pm.setDatas(query.list());
+		return pm;
+	}
+	
+	public Criteria initQueryCriteria(Class claz) throws QueryException {
+		Criteria ctiteria = getCurrentSession().createCriteria(claz);
+		return ctiteria;
+	}
+	
+	public Criteria initQueryCriteria(String entityName) throws QueryException {
+		return getCurrentSession().createCriteria(entityName);
+	}
 	
 }

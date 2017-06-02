@@ -46,7 +46,7 @@ public class EnumUtil {
 	
 	public static List<KeyValueModel> getEnumKvs(String enum_str){
 		List<KeyValueModel> items = new ArrayList<KeyValueModel>();
-		Object[] enum_obj = getEnums(Sex.class.getName());
+		Object[] enum_obj = getEnums(enum_str);
 		if(enum_obj!=null&&enum_obj.length>0){
 			for(Object item:enum_obj){
 				if(item instanceof MyEnum){
@@ -71,6 +71,5 @@ public class EnumUtil {
 			MyEnum me = (MyEnum)obj;
 			System.out.println(me.getName()+" == "+me.getValue());
 		}
-		
 	}
 }

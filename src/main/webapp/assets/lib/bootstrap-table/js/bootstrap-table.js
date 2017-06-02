@@ -287,6 +287,7 @@
         sortOrder: 'asc',
         sortStable: false,
         striped: false,
+        rowIndex:true,//addby songjun
         columns: [[]],
         data: [],
         totalField: 'total',
@@ -305,7 +306,7 @@
         responseHandler: function (res) {
             return res;
         },
-        pagination: false,
+        pagination: false,mypagination:false,
         onlyInfoPagination: false,
         paginationLoop: true,
         sidePagination: 'client', // client or server
@@ -644,22 +645,58 @@
         if (!this.$header.length) {
             this.$header = $('<thead></thead>').appendTo(this.$el);
         }
-        this.$header.find('tr').each(function () {
+        var _trCount = this.$header.find('tr').length;
+        this.$header.find('tr').each(function (idx) {
             var column = [];
-
+            if(idx==0&&that.options.rowIndex){//addby songjun
+            	column.push({field:'_seq',width:50,titleTooltip:'序号',rowspan:_trCount,colspan:1,title:"序号",visible:true,formatter:function(value, row, index){
+                	return index+1;
+                }});
+            }
             $(this).find('th').each(function () {
                 // Fix #2014 - getFieldIndex and elsewhere assume this is string, causes issues if not
                 if (typeof $(this).data('field') !== 'undefined') {
                     $(this).data('field', $(this).data('field') + '');
                 }
-                column.push($.extend({}, {
+                var _thisColumn = $.extend({}, {
                     title: $(this).html(),
                     'class': $(this).attr('class'),
                     titleTooltip: $(this).attr('title'),
                     rowspan: $(this).attr('rowspan') ? +$(this).attr('rowspan') : undefined,
-                    colspan: $(this).attr('colspan') ? +$(this).attr('colspan') : undefined
-                }, $(this).data()));
+                    colspan: $(this).attr('colspan') ? +$(this).attr('colspan') : undefined,
+                    sortable:that.options.sortStable||true,align:"center",valign:'middle',
+                    type:DataType.text,formatter:undefined
+                }, $(this).data());
+                
+                if(_thisColumn.formatter&&$.isFunction(_thisColumn.formatter)){}else{//addby songjun
+                	 if((_thisColumn.type==DataType.date||_thisColumn.type==DataType.datetime)){
+                     	var _thisFormtStr = _thisColumn.type=='date'?"yyyy-MM-dd":"yyyy-MM-dd h:m:s";
+                     	if(_thisColumn.formatter&&typeof (_thisColumn.formatter) == 'string'){
+                     		_thisFormtStr = _thisColumn.formatter;
+                         }
+                     	_thisColumn.formatter = function(value, row, index){
+                     		if($.isNumeric(value)){
+                     			var thisDate = new Date();
+                         		thisDate.setTime(value);
+                         		return thisDate.format(_thisFormtStr);
+                     		}else{
+                     			return value;
+                     		}
+                     	}
+                     }else if(_thisColumn.type==DataType.number){
+                    	 var precision = 2;
+                    	 if(_thisColumn.formatter&&$.isNumeric(_thisColumn.formatter)){
+                    		 precision = _thisColumn.formatter;
+                          }
+                    	 _thisColumn.formatter = function(value, row, index){
+                      		return webUtil.numberFormatter(value,precision,',');
+                      	}
+                     }
+                }
+                
+                column.push(_thisColumn);
             });
+            
             columns.push(column);
         });
         if (!$.isArray(this.options.columns[0])) {
@@ -1295,6 +1332,8 @@
     };
 
     BootstrapTable.prototype.initPagination = function () {
+    	if(this.options.mypagination) return;
+    	
         if (!this.options.pagination) {
             this.$pagination.hide();
             return;

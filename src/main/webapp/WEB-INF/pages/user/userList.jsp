@@ -4,7 +4,6 @@
 <head>
 <title>mysong</title>
 </head>
-<%@include file="../inc/webBase.inc"%>
 <style type="text/css">
 </style>
 <script type="text/javascript">
@@ -21,17 +20,19 @@
 	     <table id="teacher_table">
 			 <thead >
 				<tr>
-					<th data-field="name" data-sortable="true">姓名</th>
-					<th data-field="number" data-sortable="true">编码</th>
-					<th data-field="cdate" data-sortable="true">创建时间</th>
-					<th data-field="pwd" >密码</th>
+					<th data-field="name">姓名</th>
+					<th data-field="number">编码</th>
+					<th data-field="createDate" data-type="datetime">创建时间</th>
+					<th data-field="passWord" >密码</th>
+					<th data-field="remark" >备注</th>
+					<th data-field="defOrg_name" >组织名称</th>
 				</tr>
 			</thead>
 		</table>
 	</div>
 </body>
 
-<%@include file="../base/baselist.jsp"%>
+<%@include file="../base/base_list.jsp"%>
 <script type="text/javascript">
 /**
  * 一切操作前的接口函数
@@ -39,9 +40,10 @@
 function beforeAction(opt){
 	return true;
 }
+
 $(document).ready(function() {
-	var editWin ={title:'用户信息',url:'user/edit',width:600,height:400};
-	var listUI = $('#listPanel').listUI({title:"用户信息",el:'#teacher_table',dataUrl:'user/list',editWin:editWin,toolbar:"#table-toolbar"});
+	var editWin ={title:'用户信息',width:620,height:450};
+	var listUI = $('#listPanel').listUI({tableEl:'#teacher_table',baseUrl:'base/users',editWin:editWin,toolbar:"#table-toolbar"});
 	listUI.onLoad();
 })
 </script>

@@ -177,9 +177,9 @@
 						</div>
 						<div class="my-pill-menu" id="sysMenus" data-opt="{menus:[{title:'首页',icon:'fa fa-home'},
 																{title:'系统管理',icon:'fa fa-cogs',child:[
-																	{title:'组织管理',icon:'fa fa-cogs'},{title:'人员管理'}]},
+																	{title:'组织管理',icon:'fa fa-cogs',url:'base/orgs/toOrgs'},{title:'人员管理'}]},
 																{title:'门户管理',icon:'fa fa-home',child:[{title:'菜单管理'}]},
-																{title:'安全管理',icon:'fa fa-star',child:[{title:'用户管理',active:true,url:'user/toUsers'},{title:'权限管理'},{title:'角色管理'}]}	
+																{title:'安全管理',icon:'fa fa-star',child:[{title:'用户管理',active:true,url:'base/users/toUsers'},{title:'权限管理'},{title:'角色管理'}]}	
 																]}">
             			</div>
 					</div>

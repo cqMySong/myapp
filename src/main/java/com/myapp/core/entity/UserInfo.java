@@ -2,6 +2,7 @@ package com.myapp.core.entity;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.JoinColumn;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
@@ -17,11 +18,11 @@ import com.myapp.core.enums.UserState;
 @Table(name="t_pm_user")
 public class UserInfo extends CoreBaseInfo{
 	private String passWord;
-	private boolean isAdmin = false;
+	private Boolean admin = Boolean.FALSE;
 	private UserState userState;
 	private String remark;
 	private BaseOrgInfo defOrg;
-	private boolean isSysUser=false;
+	private Boolean sysUser = Boolean.FALSE;
 	
 	@Column(name="fpassword")
 	public String getPassWord() {
@@ -32,10 +33,10 @@ public class UserInfo extends CoreBaseInfo{
 	}
 	@Column(name="fisAdmin")
 	public boolean isAdmin() {
-		return isAdmin;
+		return admin;
 	}
 	public void setAdmin(boolean isAdmin) {
-		this.isAdmin = isAdmin;
+		this.admin = isAdmin;
 	}
 	@Column(name="fuserState",length=20)
 	@Type(type="myEnum",parameters={@Parameter(name="enumClass",value="com.myapp.core.enums.UserState")})
@@ -53,7 +54,7 @@ public class UserInfo extends CoreBaseInfo{
 		this.remark = remark;
 	}
 	
-	@OneToOne
+	@OneToOne(fetch=FetchType.LAZY)
 	@JoinColumn(name = "fdefOrg")
 	public BaseOrgInfo getDefOrg() {
 		return defOrg;
@@ -63,10 +64,10 @@ public class UserInfo extends CoreBaseInfo{
 	}
 	@Column(name="fisSysUser",length=2)
 	public boolean isSysUser() {
-		return isSysUser;
+		return sysUser;
 	}
 	public void setSysUser(boolean isSysUser) {
-		this.isSysUser = isSysUser;
+		this.sysUser = isSysUser;
 	}
 	
 }

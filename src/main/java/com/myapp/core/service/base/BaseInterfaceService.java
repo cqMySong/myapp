@@ -1,4 +1,4 @@
-package com.myapp.core.service;
+package com.myapp.core.service.base;
 
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
@@ -19,7 +19,6 @@ import com.myapp.core.model.PageModel;
  *
  *-----------MySong---------------
  */
-@Service("baseInterfaceService")
 @Transactional
 public class BaseInterfaceService<T> extends AbstractBaseService {
 	@Resource

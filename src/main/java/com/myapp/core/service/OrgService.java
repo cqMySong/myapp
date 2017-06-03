@@ -3,6 +3,7 @@ package com.myapp.core.service;
 import org.springframework.stereotype.Service;
 
 import com.myapp.core.entity.BaseOrgInfo;
+import com.myapp.core.service.base.BaseInterfaceService;
 
 /**
  *-----------MySong---------------

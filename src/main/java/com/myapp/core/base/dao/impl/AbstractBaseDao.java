@@ -86,7 +86,8 @@ public abstract class AbstractBaseDao implements IAbstractBaseDao {
 				pk = addNewEntity(entity);
 			}else{
 				Session sesion = getCurrentSession();
-				sesion.update(entity);
+				sesion.merge(entity);
+//				sesion.update(entity);
 				sesion.flush();
 			}
 			if(pk!=null) {
@@ -159,7 +160,7 @@ public abstract class AbstractBaseDao implements IAbstractBaseDao {
 					subTree.setEntityClaz(entityClaz);
 					String tableName = cmd.getTableName();
 					subTree.setEntityTable(tableName);
-					long seq = UuidUtils.byteArrayToLong(tableName.getBytes());
+					long seq = UuidUtils.getStringLong(claz.getName());
 					subTree.setEntityType(UuidUtils.toHexString(seq, 8));
 					subTree.setEntitySeq(new Date().getTime());
 					subTree.setSeq(seq);

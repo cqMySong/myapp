@@ -13,7 +13,9 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Enumeration;
 import java.util.List;
+import java.util.zip.CRC32;
 
+import com.myapp.core.entity.UserInfo;
 import com.myapp.core.util.BaseUtil;
 
 public class UuidUtils {
@@ -25,30 +27,13 @@ public class UuidUtils {
 
 	public static String getEntityType(String strName){
 		if(BaseUtil.isEmpty(strName)) return null;
-		return toHexString(byteArrayToLong(strName.getBytes()),8);
+		return toHexString(getStringLong(strName),8);
 	}
-	
-	public static long byteArrayToLong(byte[] byteArray) {
-		byte[] a = new byte[8];
-		int i = a.length - 1, j = byteArray.length - 1;
-		for (; i >= 0; i--, j--) {// 从b的尾部(即int值的低位)开始copy数据
-			if (j >= 0){
-				a[i] = byteArray[j];	
-			}else{
-				a[i] = 0;// 如果b.length不足4,则将高位补0
-			}
-		}
-		// 注意此处和byte数组转换成int的区别在于，下面的转换中要将先将数组中的元素转换成long型再做移位操作，
-		// 若直接做位移操作将得不到正确结果，因为Java默认操作数字时，若不加声明会将数字作为int型来对待，此处必须注意。
-		long v0 = (long) (a[0] & 0xff) << 56;// &0xff将byte值无差异转成int,避免Java自动类型提升后,会保留高位的符号位
-		long v1 = (long) (a[1] & 0xff) << 48;
-		long v2 = (long) (a[2] & 0xff) << 40;
-		long v3 = (long) (a[3] & 0xff) << 32;
-		long v4 = (long) (a[4] & 0xff) << 24;
-		long v5 = (long) (a[5] & 0xff) << 16;
-		long v6 = (long) (a[6] & 0xff) << 8;
-		long v7 = (long) (a[7] & 0xff);
-		return v0 + v1 + v2 + v3 + v4 + v5 + v6 + v7;
+	public static long getStringLong(String strName){
+		if(BaseUtil.isEmpty(strName)) return 0l;
+		CRC32 crc32 = new CRC32();
+		crc32.update(strName.getBytes());
+		return crc32.getValue();
 	}
 	
 	public static String toHexString(long x, int chars) {
@@ -102,5 +87,27 @@ public class UuidUtils {
 		} catch (Exception ex) {
 		}
 		return null;
+	}
+	
+	
+	public static void main(String[] args) {
+//		String uri = "D:\\ETFMY100PHFUNDBulletin20130325.txt";
+//		System.out.println(getCRC32(uri));
+		for(int i=0;i<10;i++){
+			CRC32 crc32 = new CRC32();
+			String cn = UserInfo.class.getName()+"_"+i;
+			System.out.println(cn);
+			crc32.update(cn.getBytes());
+			System.out.println(crc32.getValue());
+		}
+		
+//		String bostype = UuidUtils.toHexString(crc32.getValue(), 8);
+//		System.out.println(bostype);
+//		for(int i=0;i<10;i++){
+//			SysUuid uid = SysUuid.create(SysObjectType.create(bostype));
+//			System.out.println(uid.toString());
+//			SysObjectType bostype_1 = SysUuid.getBOSObjectType(uid.toString(), true);
+//			System.out.println(bostype_1.toString()+"  "+bostype_1.toInteger());
+//		}
 	}
 }

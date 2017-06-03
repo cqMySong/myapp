@@ -19,11 +19,9 @@ public class GeneratePK implements IdentifierGenerator {
 
 	public Serializable generate(SessionImplementor session, Object obj)
 			throws HibernateException {
-		AbstractEntityPersister classMetadata = (AbstractEntityPersister)session.getFactory().getClassMetadata(obj.getClass());
 		Class claz = obj.getClass();
-		if(claz!=null&&classMetadata!=null){
-			String tableName = classMetadata.getTableName();
-			String objectType = UuidUtils.getEntityType(tableName);
+		if(claz!=null){
+			String objectType = UuidUtils.getEntityType(claz.getName());
 			SysUuid uid = SysUuid.create(SysObjectType.create(objectType));
 			return uid.toString();
 		}

@@ -1,4 +1,4 @@
-package com.myapp.core.service;
+package com.myapp.core.service.base;
 
 import java.io.Serializable;
 import java.lang.reflect.ParameterizedType;

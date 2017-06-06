@@ -1,5 +1,12 @@
 package com.myapp.core.util;
 
+import java.io.BufferedOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
+
+import javax.servlet.ServletOutputStream;
+
 import com.myapp.core.enums.DataTypeEnum;
 
 /**
@@ -20,6 +27,8 @@ public class WebUtil {
 	public static String Web_DataType_checekbox  = "checekbox";
 	public static String Web_DataType_radio  = "radio";
 	public static String Web_DataType_f7  = "f7";
+	
+	private final static int BUFFER_SIZE = 1024;  
 	
 	public static String UUID_ReplaceID(String id){
 		if(!BaseUtil.isEmpty(id)){
@@ -65,5 +74,37 @@ public class WebUtil {
 		return dte;
 	}
 	
+	public static String UUID2String(String fn){
+		if(!BaseUtil.isEmpty(fn)){
+			boolean go = true;
+			while(go){
+				if(fn.indexOf("+")>=0){
+					fn = fn.replaceAll("\\+", "%2B");
+				}
+				if(fn.indexOf("=")>=0){
+					fn = fn.replaceAll("=", "%3D");
+				}
+				if(fn.indexOf("/")>=0){
+					fn = fn.replaceAll("/", "%2F");
+				}
+				go = fn.indexOf("+")>=0||fn.indexOf("=")>=0||fn.indexOf("/")>=0;
+			}
+		}
+		return fn;
+	}
+	
+	public static void inputStreamWrite2Web(InputStream in,ServletOutputStream out) throws IOException {
+		if(in==null||out==null) return;
+		OutputStream toClient = new BufferedOutputStream(out);
+		byte[] data = new byte[BUFFER_SIZE];
+		int count = -1;
+		while ((count = in.read(data, 0, BUFFER_SIZE)) != -1)
+			toClient.write(data, 0, count);
+		
+		toClient.flush();
+		toClient.close();
+		in.close();
+		
+	}
 	
 }

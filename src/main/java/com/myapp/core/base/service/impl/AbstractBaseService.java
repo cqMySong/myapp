@@ -1,6 +1,7 @@
 package com.myapp.core.base.service.impl;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -13,7 +14,6 @@ import org.hibernate.criterion.DetachedCriteria;
 import org.hibernate.criterion.ProjectionList;
 import org.hibernate.criterion.Projections;
 import org.hibernate.criterion.Restrictions;
-import org.hibernate.sql.JoinType;
 import org.hibernate.transform.Transformers;
 
 import com.myapp.core.base.dao.IAbstractBaseDao;
@@ -246,4 +246,18 @@ public abstract class AbstractBaseService implements IAbstractBaseService {
 		pm.setDatas(query.list());
 		return pm;
 	}
+	
+	public void executeUpdata(String hql,Object[] params){
+		getBaseDao().executeUpdata(hql, params);
+	}
+	
+	public void executeDeleteEntitys(List idparams){
+		if(BaseUtil.isEmpty(idparams)||idparams.size()<=0) return;
+		String delHql = "from "+getEntityClass().getSimpleName()+" where id in(?)";
+		List newParams = new ArrayList();
+		newParams.add(idparams.toArray());
+		executeUpdata(delHql,newParams.toArray());
+	}
+	
+	
 }

@@ -21,13 +21,13 @@
 	              <div class="row">
 	                <div class="col-sm-6">
 	                  <div class="input-group">
-		                <span class="input-group-addon">用户账号</span>
+		                <span class="input-group-addon lable">用户账号</span>
 		                <input class="require input-item" name="number">
 		              </div>
 	                </div>
 	                 <div class="col-sm-6 mb15">
 	                  <div class="input-group">
-		                <span class="input-group-addon">用户实名</span>
+		                <span class="input-group-addon lable">用户实名</span>
 		                <input name="name" class="input-item form-control">
 		              </div>
 	                </div>
@@ -35,7 +35,7 @@
 	               <div class="row">
 	               	<div class="col-sm-6">
 	                  <div class="input-group">
-		                <span class="input-group-addon">用户状态</span>
+		                <span class="input-group-addon lable">用户状态</span>
 		                <select name="userState" data-opt="{type:'select',selected:'WOMAN',url:'base/common/combox?enum=com.myapp.core.enums.UserState'}" 
 		                	class="form-control input-item require">
 		                </select>
@@ -43,13 +43,13 @@
 	                </div>
 	                <div class="col-sm-3 mb15">
 	                  <div class="input-group">
-		                <span class="input-group-addon">系统管理员</span>
+		                <span class="input-group-addon lable">系统管理员</span>
 		                <input name="admin" class="input-item" data-opt="{type:'checkbox'}" type="checkbox"/>
 		              </div>
 	                </div>
 	                <div class="col-sm-3 mb15">
 	                  <div class="input-group">
-		                <span class="input-group-addon">系统用户</span>
+		                <span class="input-group-addon lable">系统用户</span>
 		                 <input name="sysUser" class="input-item" data-opt="{type:'radio'}" type="radio"/>
 		              </div>
 	                </div>
@@ -58,13 +58,13 @@
 	               <div class="row">
 	                <div class="col-sm-6">
 	                  <div class="input-group">
-		                <span class="input-group-addon">生    日</span>
+		                <span class="input-group-addon lable">生    日</span>
 		                <input type="text" name="birthdate" class="form-control input-item" data-opt="{type:'date'}"/>
 		              </div>
 	                </div>
 	                 <div class="col-sm-6 mb15">
 	                  <div class="input-group">
-		                <span class="input-group-addon">创建时间</span>
+		                <span class="input-group-addon lable">创建时间</span>
 		                <input type="text" name="createDate" id="createtime" class="form-control input-item" 
 		                	data-opt="{type:'datetime'}">
 		              </div>
@@ -74,7 +74,7 @@
 	              <div class="row mt10" >
 	                <div class="col-sm-12">
 	                  <div class="input-group">
-		                <span class="input-group-addon">备注信息</span>
+		                <span class="input-group-addon lable">备注信息</span>
 		                <textarea name="remark" class="input-item form-control" rows="2"></textarea>
 		              </div>
 	                </div>

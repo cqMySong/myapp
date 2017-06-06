@@ -54,7 +54,7 @@ public class SubsystemTreeInfo extends CoreInfo {
 		this.entityTable = entityTable;
 	}
 	@Column(name="fentityType")
-	public String getEntityType() {
+	public String genEntityType() {
 		return entityType;
 	}
 	public void setEntityType(String entityType) {

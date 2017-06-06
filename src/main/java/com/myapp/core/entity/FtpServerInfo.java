@@ -17,19 +17,20 @@ import com.myapp.core.base.entity.CoreBaseInfo;
 @Entity
 @Table(name="t_base_Ftp")
 public class FtpServerInfo extends CoreBaseInfo {
-	private String ftpUrl;
+	private String host;
 	private String root;//
 	private String userName;//webApp
 	private String password;//myApp
 	private Integer port = 21;
 	private Boolean enabled = Boolean.TRUE;
+	private String remark;
 	
-	@Column(name="fFtpUrl")
-	public String getFtpUrl() {
-		return ftpUrl;
+	@Column(name="fHost")
+	public String getHost() {
+		return host;
 	}
-	public void setFtpUrl(String ftpUrl) {
-		this.ftpUrl = ftpUrl;
+	public void setHost(String host) {
+		this.host = host;
 	}
 	@Column(name="fRoot")
 	public String getRoot() {
@@ -65,5 +66,12 @@ public class FtpServerInfo extends CoreBaseInfo {
 	}
 	public void setEnabled(Boolean enabled) {
 		this.enabled = enabled;
+	}
+	@Column(name="fremark",length=250)
+	public String getRemark() {
+		return remark;
+	}
+	public void setRemark(String remark) {
+		this.remark = remark;
 	}
 }

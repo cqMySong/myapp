@@ -59,14 +59,16 @@ public class FileToCRCUtil {
 	public static void main(String[] args) {
 //		String uri = "D:\\ETFMY100PHFUNDBulletin20130325.txt";
 //		System.out.println(getCRC32(uri));
-		for(int i=0;i<10;i++){
-			CRC32 crc32 = new CRC32();
-			String cn = UserInfo.class.getName()+"_"+i;
-			System.out.println(cn);
-			crc32.update(cn.getBytes());
-			System.out.println(crc32.getValue());
-		}
-		
+//		for(int i=0;i<10;i++){
+//			CRC32 crc32 = new CRC32();
+//			String cn = UserInfo.class.getName()+"_"+i;
+//			System.out.println(cn);
+//			crc32.update(cn.getBytes());
+//			System.out.println(crc32.getValue());
+//		}
+//		
+//		CRC32 crc32 = new CRC32();
+//		crc32.update(UserInfo.class.getName().getBytes());
 //		String bostype = UuidUtils.toHexString(crc32.getValue(), 8);
 //		System.out.println(bostype);
 //		for(int i=0;i<10;i++){
@@ -75,5 +77,9 @@ public class FileToCRCUtil {
 //			SysObjectType bostype_1 = SysUuid.getBOSObjectType(uid.toString(), true);
 //			System.out.println(bostype_1.toString()+"  "+bostype_1.toInteger());
 //		}
+//		
+		
+		UserInfo uInfo = new UserInfo();
+		System.out.println(uInfo.genEntityType());
 	}
 }

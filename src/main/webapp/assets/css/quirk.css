@@ -9333,7 +9333,7 @@ blockquote {
 .nav-quirk .children > li > a {
   display: block;
   font-weight: 400;
-  padding: 5px 0 5px 18px;
+  padding: 5px 0 5px 10px;
   color: #657390;
   position: relative;
   height: 28px;

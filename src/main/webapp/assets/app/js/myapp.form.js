@@ -88,6 +88,12 @@ myForm.prototype = {
 			thisObj.setItemData($(this),data[_name]);
 		});
 	},
+	clearFormData:function(){
+		var thisObj = this;
+		this.$element.find('.input-item').each(function(){
+			thisObj.setItemData($(this),null);
+		});
+	},
 	getItemData:function(item_el){
 		var $itemel = webUtil.getJqueryDom(item_el);
 		var _type = $itemel.data('dataType');
@@ -115,6 +121,22 @@ myForm.prototype = {
 		if(!webUtil.isEmpty(_type)){
 			$itemel.myComponet(_type,{method:'enable',opt:val});
 		}
+	},
+	verifyInputRequire:function(){
+		var thisObj = this;
+		var isOk = true;
+		this.$element.find('.input-item').each(function(){
+			if($(this).hasClass('require')){
+				var _textLable = $(this).prev('.lable').text();
+				var _data = thisObj.getItemData($(this));
+				if(webUtil.isEmpty(_data)){
+					webUtil.mesg(_textLable+'为空,不允许保存');
+					isOk = false;
+					return false;
+				}
+			}
+		});
+		return isOk;
 	}
 }
 $.fn.myForm = function(options) {

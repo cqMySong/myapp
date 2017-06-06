@@ -1,5 +1,6 @@
 package com.myapp.core.base.entity;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
@@ -17,8 +18,8 @@ import javax.persistence.MappedSuperclass;
 public class CoreBaseEntryInfo<T> extends CoreInfo {
 	private T parent;
 	private Integer seq;
-	
-	@ManyToOne   
+	           
+	@ManyToOne(cascade={CascadeType.ALL})
 	@JoinColumn(name="fprentid")  
 	public T getParent() {
 		return parent;

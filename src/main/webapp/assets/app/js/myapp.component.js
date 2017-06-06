@@ -36,7 +36,7 @@
 				}else{
 					thisObj.initRender(_selOpt.opt);
 				}
-			}else if(_type ==DataType.checekbox||_type ==DataType.radio){
+			}else if(_type ==DataType.checkbox||_type ==DataType.radio){
 				var $parentContainer = $thisDom.parent('.mycheckradiobox_container');
 				if(webUtil.isEmpty($parentContainer)||$parentContainer.length==0){
 					var _ckrad_opt = $.extend({},{event:undefined}, _opt);
@@ -61,7 +61,7 @@
 				
 			}else if(_type ==DataType.select){//下拉选择
 				
-			}else if(_type ==DataType.checekbox||_type ==DataType.radio){
+			}else if(_type ==DataType.checkbox||_type ==DataType.radio){
 				var $parentContainer = $thisDom.parent('.mycheckradiobox_container');
 				if(!webUtil.isEmpty($parentContainer)&&$parentContainer.length>0){
 					var _clas = 'div.my'+_type;
@@ -103,7 +103,7 @@
 						$thisDom.append(_optionDom);
 					}
 				}
-			}else if(_type ==DataType.checekbox||_type ==DataType.radio){
+			}else if(_type ==DataType.checkbox||_type ==DataType.radio){
 				var _ckrad_opt = $.extend({},{theme:'green',checked:false}, _opt);
 				var $parentContainer = $thisDom.parent('.mycheckradiobox_container');
 				if(webUtil.isEmpty($parentContainer)||$parentContainer.length==0){
@@ -182,7 +182,7 @@
 					}
 					$thisDom.val(thisDate);
 				}
-			}else if(_type ==DataType.checekbox||_type ==DataType.radio){
+			}else if(_type ==DataType.checkbox||_type ==DataType.radio){
 				var $parentContainer = $thisDom.parent('.mycheckradiobox_container');
 				if(!webUtil.isEmpty($parentContainer)&&$parentContainer.length>0){
 					var _clas = 'div.my'+_type;
@@ -217,7 +217,7 @@
 						_data = $parentContainer.datetimepicker('getDate');
 					}
 				}*/
-			}else if(_type ==DataType.checekbox||_type ==DataType.radio){
+			}else if(_type ==DataType.checkbox||_type ==DataType.radio){
 				_data = $thisDom.prop("checked");
 			}else if(_type==DataType.F7){
 				_data = $thisDom.myF7().getValue();
@@ -237,7 +237,7 @@
 				}else{
 					$thisDom.attr("disabled","disabled");
 				}
-			}else if(_type ==DataType.checekbox||_type ==DataType.radio){
+			}else if(_type ==DataType.checkbox||_type ==DataType.radio){
 				var $parentContainer = $thisDom.parent('.mycheckradiobox_container');
 				var _toDom = $parentContainer.find('div.my'+_type);
 				if(enable){

@@ -101,7 +101,14 @@ public abstract class BaseListController extends CoreBaseController {
 			init();
 			String billId = getReuestBillId();
 			if(!BaseUtil.isEmpty(billId)){
-				getService().deleteEntity(billId);
+				if(billId.indexOf(",")<0){
+					getService().deleteEntity(billId);
+				}else{
+					String[] billIds = billId.split(",");
+					for(int i=0;i<billIds.length;i++){
+						getService().deleteEntity(billIds[i]);
+					}
+				}
 				setInfoMesg("数据删除成功!");
 			}else{
 				setErrorMesg("单据id为空，无法完成删除操作!");

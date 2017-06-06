@@ -1,6 +1,6 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@include file="../inc/webBase.inc"%>
-<script src="<%=appRoot%>/assets/app/js/myapp.form.js?v=23" type="text/javascript"></script>
+<script src="<%=appRoot%>/assets/app/js/myapp.form.js?v=22" type="text/javascript"></script>
 
 <% 
 String _uiCtx = "";
@@ -42,10 +42,11 @@ var EditUI = function(el,opt){
 		return btnSet;
 	}
 	
-	btng.addBtn(toDoBtnGroup({text:'新增',icon:"glyphicon glyphicon-shopping-cart",clickFun:this.addnew}));
-	btng.addBtn(toDoBtnGroup({text:'修改',icon:"glyphicon glyphicon-shopping-cart",clickFun:this.edit}));
-	btng.addBtn(toDoBtnGroup({text:'保存',icon:"glyphicon glyphicon-shopping-cart",clickFun:this.save}));
-	btng.addBtn(toDoBtnGroup({text:'删除',icon:"glyphicon glyphicon-shopping-cart",clickFun:this.remove}));
+	btng.addBtn(toDoBtnGroup({text:'新增',icon:"fa fa-file-o",clickFun:this.btnAddnew}));
+	btng.addBtn(toDoBtnGroup({text:'修改',icon:"fa fa-edit",clickFun:this.edit}));
+	btng.addBtn(toDoBtnGroup({text:'保存',icon:"fa fa-save",clickFun:this.save}));
+	btng.addBtn(toDoBtnGroup({text:'删除',icon:"fa fa-remove",clickFun:this.remove}));
+	btng.addBtn(toDoBtnGroup({text:'附件管理',icon:"fa fa-paperclip",clickFun:this.attach}));
     
     var form_el = this.options.form.el;
     if(!webUtil.isEmpty(form_el)){
@@ -118,9 +119,10 @@ EditUI.prototype = {
 		
 	},
 	btnAddnew:function(btn){
-		var $obj = btn.owerObj;
-		if($obj.actionBefore(OperateType.addnew)){
-			$obj.addNew();
+		var _thisEditUI = btn.owerObj;
+		if(_thisEditUI.actionBefore(OperateType.addnew)){
+			_thisEditUI.editForm.clearFormData();
+			_thisEditUI.addNew();
 		}
 	},
 	edit:function(btn){
@@ -134,7 +136,8 @@ EditUI.prototype = {
 	},
 	save:function(btn){
 		var thisEditUI = btn.owerObj;
-		if(thisEditUI.actionBefore(OperateType.save)){
+		if(thisEditUI.editForm.verifyInputRequire()
+				&&thisEditUI.actionBefore(OperateType.save)){
 			var this_editData = thisEditUI.storeData();
 			var _toData = {};
 			_toData.editData = JSON.stringify(this_editData);
@@ -166,6 +169,21 @@ EditUI.prototype = {
 				thisEditUI.actionAfter(OperateType.remove);
 			}else{
 				webUtil.mesg('单据主键为空或者不存在，不能完成删除操作!');
+			}
+		}
+	},
+	attach:function(btn){
+		var thisEditUI = btn.owerObj;
+		if(thisEditUI.actionBefore(OperateType.attach)){
+			var bid = thisEditUI.billId;
+			if(!webUtil.isEmpty(bid)){
+				var attachUrl = webUtil.toUrl('base/attach')+'/toAttach';
+				var _win = {url:attachUrl,maxmin:false,title:thisEditUI.options.title+'-附件管理'};
+				_win.uiParams = 'billId='+bid;
+				_win.btns = ['关闭'];
+				webUtil.openWin(_win);
+			}else{
+				webUtil.mesg('单据主键为空或者不存在，不能操作!');
 			}
 		}
 	},

@@ -17,7 +17,7 @@
 					</button>
 				</div>
 		</div>
-	     <table id="teacher_table">
+	     <table id="tblMain">
 			 <thead >
 				<tr>
 					<th data-field="name">姓名</th>
@@ -43,7 +43,7 @@ function beforeAction(opt){
 
 $(document).ready(function() {
 	var editWin ={title:'用户信息',width:620,height:450};
-	var listUI = $('#listPanel').listUI({tableEl:'#teacher_table',baseUrl:'base/users',editWin:editWin,toolbar:"#table-toolbar"});
+	var listUI = $('#listPanel').listUI({tableEl:'#tblMain',baseUrl:'base/users',editWin:editWin,toolbar:"#table-toolbar"});
 	listUI.onLoad();
 })
 </script>

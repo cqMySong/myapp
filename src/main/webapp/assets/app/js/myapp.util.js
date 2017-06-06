@@ -10,8 +10,9 @@ if(typeof DataType == "undefined"){
 	DataType.time = 'time';
 	DataType.F7 = 'f7';
 	DataType.number = 'number';
-	DataType.checekbox = 'checkbox';
+	DataType.checkbox = 'checkbox';
 	DataType.radio = 'radio';
+	DataType.password = 'password';
 }
 if(typeof OperateType == "undefined"){
 	var OperateType = {};
@@ -23,6 +24,7 @@ if(typeof OperateType == "undefined"){
 	OperateType.remove = 'remove';
 	OperateType.audit = 'audit';
 	OperateType.unaudit = 'unAudit';
+	OperateType.attach = 'attach';
 }
 //'yyyy-MM-dd h:m:s'
 //yyyy-MM-dd
@@ -307,7 +309,7 @@ var webUtil = {
 		 var dom = ifrm.contentDocument? ifrm.contentDocument:ifrm.contentWindow.document; 
 		 ifrm.style.visibility = 'hidden'; 
 		 ifrm.style.height = "10px"; 
-		 ifrm.style.height = (webUtil.getDomHeight(dom) -30) + "px"; 
+		 ifrm.style.height = (webUtil.getDomHeight(dom) -50) + "px"; 
 		 ifrm.style.visibility = 'visible'; 
 		 var _parent = $("#"+elId).parent('div');
 		 if(!webUtil.isEmpty(_parent)){

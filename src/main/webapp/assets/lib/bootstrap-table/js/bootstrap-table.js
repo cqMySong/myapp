@@ -691,6 +691,23 @@
                     	 _thisColumn.formatter = function(value, row, index){
                       		return webUtil.numberFormatter(value,precision,',');
                       	}
+                     }else if(_thisColumn.type == DataType.password){
+                    	 _thisColumn.formatter = function(value, row, index){
+                       		if(webUtil.isEmpty(value)){
+                       			return "---";
+                       		}else{
+                       			return "******";
+                       		}
+                       	}
+                     }else if(_thisColumn.type == DataType.checkbox){
+                    	 _thisColumn.formatter = function(value, row, index){
+                    		var _checked = "";
+                    		if(!webUtil.isEmpty(value)){
+                    			if(value=='true'||value=='1'||value==1)
+                    				_checked = 'checked';
+                    		}
+                    		return '<div class="mycheckbox green '+_checked+'"></div>'
+                        } 
                      }
                 }
                 

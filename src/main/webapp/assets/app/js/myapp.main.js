@@ -73,7 +73,11 @@ var myPillTreeMenu = {
 			_li_a.append('<i class="'+_menuItem.icon+'"></i>');
 		}
 		if(!webUtil.isEmpty(_menuItem.title)){
-			_li_a.append('<span>'+_menuItem.title+'</span>');
+			var $title = $('<span>'+_menuItem.title+'</span>');
+			if(!webUtil.isEmpty(_menuItem.icon)){
+				$title.css({"margin-left":"2px"});
+			}
+			_li_a.append($title);
 		}
 		if(webUtil.isEmpty(_menuItem.id)){
 			_menuItem.id = webUtil.getRandomWord(6);
@@ -290,6 +294,10 @@ var myNavTab = {
 		}
 		
 		var _tab_li_a_text = $('<strong>'+_tabItem.title+'</strong>');
+		if(!webUtil.isEmpty(_this_icon)){
+			_tab_li_a_text.css({"margin-left":"2px"});
+		}
+		
 		if(_tabItem.enColse){
 			var _tab_colse$ = $($.parseHTML('<a style="cursor: pointer;" id="">&nbsp;&nbsp;<i class="fa fa-remove" style="font-size: 12px;"></i></a>'));
 			_tab_li_a_text.append(_tab_colse$)
@@ -331,7 +339,7 @@ MyBtnGroups.prototype = {
 		}
 		var defaults = {theme: 'btn-success', icon: '',text:'按钮',clickFun:undefined};
 		var _opt = $.extend({}, defaults, opt);
-		var _$btn = $('<button type="button">'+_opt.text+'</button>');
+		var _$btn = $('<button type="button">&nbsp;'+_opt.text+'</button>');
 		_$btn.addClass("btn btn-success");
 		if(!webUtil.isEmpty(_opt.icon)){
 			_$btn.prepend($('<span>').addClass(_opt.icon));

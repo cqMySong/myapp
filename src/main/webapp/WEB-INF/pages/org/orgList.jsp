@@ -7,14 +7,14 @@
 <script type="text/javascript">
 </script>
 <body style="padding: 5px;">
-	<div id="table-toolbar"></div>
+	<div id="table-toolbar" class="panel" style="height:60px;margin-bottom:5px;"></div>
 	<div class="mainContrainer">
 		<div class="leftContainer" id="tree_container"></div>
 		<div class="rightContainer" id="tblMain_container">
 			<div class="panel">
 				<div class="" id="tblMain_toolbar">
-					<div class="input-group" style="width:120px;">
-		                <span class="input-group-addon">包含下级</span>
+					<div class="input-group" style="width:160px;">
+		                <span class="input-group-addon" style="width:80px;">包含下级</span>
 		                <input id="includeChild" class="input-item" type="checkbox"/>
 	              	</div>
 				</div>
@@ -64,9 +64,10 @@ $(document).ready(function() {
      includeChild.setData(true);
      
      var editWin ={title:'组织信息',url:'base/orgs/edit',width:620,height:400};
-     thisOrgList = $('body').treeListUI({tableEl:'#tblMain',baseUrl:'base/orgs',title:'组织信息',
+     var height = 700;
+     thisOrgList = $('body').treeListUI({tableEl:'#tblMain',baseUrl:'base/orgs',title:'组织信息',height:height,
     	 treeContainer:"#tree_container",editWin:editWin,toolbar:"#table-toolbar",searchParams:{includeChild:true}
-    	 ,extendTableOptions:{toolbar:'#tblMain_toolbar'}});
+    	 ,extendTableOptions:{toolbar:'#tblMain_toolbar',height:height}});
      thisOrgList.onLoad();
 });
 

@@ -4,6 +4,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
 import org.apache.log4j.LogManager;
 import org.apache.log4j.Logger;
@@ -39,6 +40,9 @@ public class BaseController {
     protected Object otherData;
     @Autowired
     public HttpServletRequest request;
+    
+    @Autowired
+    public HttpServletResponse response;
     
     private void initModelAndViewParams(Map params){
     	if(params==null) params = new HashMap();
@@ -130,5 +134,10 @@ public class BaseController {
 	public void setBaseMethod(BaseMethodEnum baseMethod) {
 		this.baseMethod = baseMethod;
 	}
-    
+    public String getParamterByRequest(String key){
+    	if(BaseUtil.isEmpty(key)) return "";
+    	String paramter = request.getParameter(key);
+    	if(paramter==null) paramter = "";
+    	return paramter;
+    }
 }

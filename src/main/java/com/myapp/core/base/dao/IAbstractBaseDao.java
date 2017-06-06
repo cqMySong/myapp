@@ -37,4 +37,5 @@ public interface IAbstractBaseDao {
 	public PageModel toPageDetachedCriteria(Class claz,DetachedCriteria dca,ProjectionList pList,Integer curPage, Integer pageSize) throws QueryException;
 	public Criteria initQueryCriteria(Class claz)throws QueryException;
 	public Criteria initQueryCriteria(String entityName)throws QueryException;
+	public void executeUpdata(String hql,Object[] params);
 }

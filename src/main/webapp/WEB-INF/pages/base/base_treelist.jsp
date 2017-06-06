@@ -5,7 +5,7 @@
   width: 100%;
   height: 100%;
   overflow:hidden;
-  padding: 20px 2px 2px 2px;
+  padding: 0px 2px 2px 2px;
 }
 .leftContainer {
   width: 260px;
@@ -17,13 +17,15 @@
   overflow:hidden;
   padding-left: 5px;
 }
+
 </style>
 
 <script type="text/javascript">
 ;(function($, window, document,undefined) {
 var TreeListUI = function(el,options){
-	var _def_treeList = {height:730,treeUrl:undefined,treeSectedChange2Query:true
+	var _def_treeList = {height:700,treeUrl:undefined,treeSectedChange2Query:true
 			,treeContainer:'#tree_container',treeOpt:{},tableEl:'#tblMain'
+			,extendTableOptions:{height:700}
 			,editWin:{title:'^~^',url:'',maxmin:true,width:800,height:600,callBack:undefined}
 			,treeNode2QueryProp:["id","name","number","longNumber"]
 	};

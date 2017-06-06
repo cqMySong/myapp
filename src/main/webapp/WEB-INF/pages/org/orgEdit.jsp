@@ -21,13 +21,13 @@
 			<div class="row">
 				<div class="col-sm-6">
 					<div class="input-group">
-						<span class="input-group-addon">组织编码</span> 
+						<span class="input-group-addon lable">组织编码</span> 
 						<input class="require input-item" name="number" type="text">
 					</div>
 				</div>
 				<div class="col-sm-6 mb15">
 					<div class="input-group">
-						<span class="input-group-addon">组织名称</span> 
+						<span class="input-group-addon lable">组织名称</span> 
 						<input name="name" class="input-item form-control">
 					</div>
 				</div>
@@ -35,7 +35,7 @@
 			<div class="row">
 				<div class="col-sm-6">
 					<div class="input-group">
-						<span class="input-group-addon">上级组织</span> 
+						<span class="input-group-addon lable">上级组织</span> 
 						<input name="parent" class="require input-item form-control" 
 							data-opt="{type:'f7',dataChange:parent_dataChange,uiWin:{title:'组织查询',height:550,width:800,url:'base/orgf7',params:'key=124&val=1344'}}" />
 						
@@ -43,7 +43,7 @@
 				</div>
 				<div class="col-sm-6 mb15">
 					<div class="input-group">
-						<span class="input-group-addon">组织简码</span> 
+						<span class="input-group-addon lable">组织简码</span> 
 						<input name="shortCode" class="input-item form-control">
 					</div>
 				</div>
@@ -51,7 +51,7 @@
 			<div class="row mt10">
 				<div class="col-sm-12">
 					<div class="input-group">
-						<span class="input-group-addon">备注信息</span>
+						<span class="input-group-addon lable">备注信息</span>
 						<textarea name="remark" class="input-item form-control" rows="2"></textarea>
 					</div>
 				</div>

@@ -182,6 +182,11 @@ public abstract class AbstractBaseDao implements IAbstractBaseDao {
 		return null;
 	}
 	
+	public void executeUpdata(String hql,Object[] params){
+		Query query = createQuery(hql,params);
+		query.executeUpdate();
+	}
+	
 	protected long getCount(Session session, String hql, Object[] params)
 			throws QueryException {
 		QueryTranslatorImpl queryTranslator = new QueryTranslatorImpl(hql, hql,

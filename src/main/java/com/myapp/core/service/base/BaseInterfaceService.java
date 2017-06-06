@@ -19,6 +19,7 @@ import com.myapp.core.model.PageModel;
  *
  *-----------MySong---------------
  */
+@Service("baseInterfaceService")
 @Transactional
 public class BaseInterfaceService<T> extends AbstractBaseService {
 	@Resource
@@ -43,11 +44,6 @@ public class BaseInterfaceService<T> extends AbstractBaseService {
 	
 	public BaseService getBaseService(){
 		return this.baseService;
-	}
-	
-	public PageModel toQueryPage(Integer curPage, Integer pageSize, String hql,
-			Object[] params){
-		return toPageQuery(curPage, pageSize, hql, params);
 	}
 
 }

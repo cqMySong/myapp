@@ -15,6 +15,7 @@ import org.hibernate.annotations.GenericGenerator;
 import org.hibernate.annotations.TypeDef;
 
 import com.myapp.core.base.usertype.MyEnumType;
+import com.myapp.core.uuid.UuidUtils;
 
 
 /**
@@ -68,5 +69,9 @@ public class CoreInfo implements Serializable{
 			e.printStackTrace();
 		}
 		return null;
+	}
+	
+	public String genEntityType(){
+		return UuidUtils.getEntityType(beanObj.getClass().getName());
 	}
 }

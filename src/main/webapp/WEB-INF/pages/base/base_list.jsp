@@ -1,5 +1,10 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@include file="../inc/webBase.inc"%>
+<style type="text/css">
+.panel {
+  margin-bottom: 0px;
+}
+</style>
 <script type="text/javascript">
 ;(function($, window, document,undefined) {
 var ListUI = function(el,options){
@@ -11,6 +16,7 @@ var ListUI = function(el,options){
 			 search:true,searchParams:undefined
 	};
 	this.options = $.extend({},_Def_listUI, options);
+	this.options.editWin.title = '<i class="fa fa-windows"></i>&nbsp;'+this.options.editWin.title;
 	this.pkCol = this.options.pkCol;
 	this.baseUrl = this.options.baseUrl;
 	//pagination  这个为自定义的分页模式 与 没有用 bootstrap的分页模式
@@ -32,12 +38,13 @@ var ListUI = function(el,options){
 		$tb.prepend(_btn_g);
 		var btng = _btn_g.myBtnGroup();
 		
-		btng.addBtn(toDoBtnGroup({text:'新增',icon:"glyphicon glyphicon-shopping-cart",clickFun:this.addnew}));
-		btng.addBtn(toDoBtnGroup({text:'查看',icon:"glyphicon glyphicon-shopping-cart",clickFun:this.view}));
-		btng.addBtn(toDoBtnGroup({text:'修改',icon:"glyphicon glyphicon-shopping-cart",clickFun:this.edit}));
-		btng.addBtn(toDoBtnGroup({text:'删除',icon:"glyphicon glyphicon-shopping-cart",clickFun:this.remove}));
-		btng.addBtn(toDoBtnGroup({text:'刷新',icon:"glyphicon glyphicon-refresh icon-refresh",clickFun:this.refresh}));
-		btng.addBtn(toDoBtnGroup({text:'查询',icon:"glyphicon glyphicon-shopping-cart",clickFun:this.query}));
+		btng.addBtn(toDoBtnGroup({text:'新增',icon:"fa fa-file-o",clickFun:this.addnew}));
+		btng.addBtn(toDoBtnGroup({text:'查看',icon:"fa fa-file-text-o",clickFun:this.view}));
+		btng.addBtn(toDoBtnGroup({text:'修改',icon:"fa fa-edit",clickFun:this.edit}));
+		btng.addBtn(toDoBtnGroup({text:'删除',icon:"fa fa-remove",clickFun:this.remove}));
+		btng.addBtn(toDoBtnGroup({text:'刷新',icon:"fa fa-refresh",clickFun:this.refresh}));
+		btng.addBtn(toDoBtnGroup({text:'附件管理',icon:"fa fa-paperclip",clickFun:this.attach}));
+		btng.addBtn(toDoBtnGroup({text:'查询',icon:"fa fa-filter",clickFun:this.query}));
 	}
 	serachPrams = function(){
 		return JSON.stringify(thisObj.options.searchParams);
@@ -194,21 +201,44 @@ ListUI.prototype = {
 			if(!webUtil.isEmpty(_selRows)&&_selRows.length>0){
 				webUtil.showConfirm({title:"删除提醒",content:"你将删除["+_selRows.length+"]条记录信息，是否继续?",callBack:function(ok){
 					if(ok){
-						var _thisURL = $thisList.baseUrl+'/remove';
+						var seleIds = "";
 						for(var i=0;i<_selRows.length;i++){
 							var _thisRowData = _selRows[i];
-							var _data = {};
-							_data.id = _thisRowData[$thisList.pkCol];
-							//同步删除操作
-							webUtil.ajaxData({url:_thisURL,async:false,data:_data,success:function(data){
-								
-							}});
+							if(i>0) seleIds+=',';
+							seleIds+= _thisRowData[$thisList.pkCol];
 						}
+						var _thisURL = $thisList.baseUrl+'/remove';
+						var _data = {};
+						_data.id = seleIds;
+						//同步删除操作
+						webUtil.ajaxData({url:_thisURL,async:false,data:_data,success:function(data){
+						}});
 						$thisList.executeQuery();
 					}
 				}});
 			}else{
 				webUtil.mesg('请先选中对应的数据行，方可进行删除操作!');
+			}
+		}
+	},
+	attach:function(btn){
+		var $thisList = btn.owerObj;
+		if($thisList.actionBefore(OperateType.attach)){
+			var _selRows = $thisList.getSelectRow();
+			if(!webUtil.isEmpty(_selRows)&&_selRows.length>0){
+				var bid = _selRows[0][$thisList.pkCol];
+				if(!webUtil.isEmpty(bid)){
+					var attachUrl = webUtil.toUrl('base/attach')+'/toAttach';
+					var _win = {url:attachUrl,maxmin:false,title:$thisList.options.editWin.title+'-附件管理'};
+					_win.uiParams = 'billId='+bid;
+					_win.btns = ['关闭'];
+					webUtil.openWin(_win);
+				}else{
+					webUtil.mesg('单据主键为空或者不存在，不能查看附件!');
+				}
+				
+			}else{
+				webUtil.mesg('请先选中对应的数据行，方可进行查看附件!');
 			}
 		}
 	},

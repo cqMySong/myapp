@@ -1,0 +1,199 @@
+table.billtable {
+	border: 1px solid #cce2ed;
+	margin: 5px;border-collapse: collapse;
+	width: 100%;font: normal 14px ËÎÌו, SimSun, arial, sans-serif, tahoma, helvetica;
+}
+
+table.billtable tr {
+	word-wrap: break-word;word-break: break-all;line-height: 22px;
+}
+
+table.billtable tr th {
+	color: #5F3F3F;
+	font-weight: bold;
+	background: #f1f6fa;
+	text-align: right;
+	padding: 5px 5px 5px 0px;
+}
+
+table.billtable tr td {
+	padding: 5px 0px 5px 5px;
+}
+
+table.listtable {
+	margin: 5px;
+	border: 1px solid #cce2ed;
+	border-collapse: collapse;
+	width: 100%;
+	font: normal 14px ËÎÌו, SimSun, arial, sans-serif, tahoma, helvetica;
+}
+
+table.listtable tr {
+	word-wrap: break-word;
+	word-break: break-all;
+	line-height: 22px;
+}
+
+table.listtable thead {
+	text-align: left;
+	padding: 0px;
+	border-top: hidden;
+	border-right: hidden;
+	border-left: hidden;
+}
+
+table.listtable thead tr th div.title {
+	width: 80px;
+	background: #f1f6fa;
+	border: 1px solid #cce2ed;
+	padding: 5px;
+	font-weight: bold;
+	text-align: center;
+	border-bottom: hidden;
+}
+
+table.listtable tbody tr th {
+	border: 1px solid #cce2ed;
+	text-align: center;
+	height: 30px;
+	background: #F5F5F5;
+}
+
+table.listtable tbody tr td {
+	border: 1px solid #cce2ed;
+	text-align: center;
+	height: 22px;
+}
+
+.mytabs {
+	margin: 5px;
+}
+
+.mytabs div.tabhead {
+	height: 28px;
+	line-height: 28px;
+	border-bottom: 1px solid #cce2ed;
+}
+
+.mytabs div.tabhead li {
+	float: left;
+	margin-right: 1px;
+	border-left: 1px solid #cce2ed;
+	border-right: 1px solid #cce2ed;
+}
+
+.mytabs div.tabhead li a {
+	color: #106aa9;
+	text-decoration: none;
+	border-top: 1px solid #cce2ed;
+	background: #f1f6fa;
+	font-size: 14px;
+	float: left;
+	display: block;
+	padding: 0 10px;
+	overflow: hidden;
+	margin-top: -1px;
+}
+
+.mytabs div.tabhead li a:hover {
+	background: #ffffff;
+	text-decoration: none;
+}
+
+.mytabs div.tabhead li a span.closetab {
+	font-style: normal;
+	text-align: center;
+}
+.mytabs div.tabhead li a span:hover {
+	color: red;
+}
+
+.mytabs div.tabhead .selected,
+.mytabs div.tabhead li:hover {
+	border-left: 1px solid #cce2ed;
+	border-right: 1px solid #cce2ed;
+}
+
+.mytabs div.tabhead li:hover a {
+	border-top: 1px solid #cce2ed;
+}
+
+.mytabs div.tabhead .selected a,
+.mytabs div.tabhead .tabhead .selected a:hover {
+	background: #ffffff;
+	border-bottom: 1px solid #ffffff;
+	color: #333333;
+	border-top: 1px solid #cce2ed;
+}
+
+.mytabs div.tabhead .selected a {
+	font-weight: bold;
+}
+
+.mytabs div.tabhead ul {
+	float: left;
+	margin-bottom: -1px;
+	list-style: none outside none;
+	margin: 0;
+	padding: 0;
+}
+
+.mytabs div.tabcontent {
+	border: 1px solid #cce2ed;
+	border-top: hidden;
+	padding: 1px 5px 1px 5px;
+}
+
+div.fileItems {
+	height: 150px;margin-bottom:5px;overflow-y:auto ;
+	font:normal 12px ËÎÌו, SimSun, arial, sans-serif, tahoma, helvetica;
+	border: 1px solid #cce2ed;
+}
+
+div.fileItems div.fileItem {
+	height: 65px;margin-top: 5px;
+	border-bottom: 1px solid #cce2ed;
+}
+div.fileItems div.fileItem div.img-box{
+	width: 32px;height: 65px;float: left;margin-left: 5px;
+}
+div.fileItems div.fileItem div.img-box img{
+	width: 32px;height: 32px;margin-top: 17px;
+}
+div.fileItems div.fileItem div.file-area{
+	width: 300px;float: left;padding: 5px 10px 0px 5px;color: #728089;
+}
+div.fileItems div.fileItem div.file-area div.file-head{
+	width: 100%;height: 20px;overflow: hidden;vertical-align: middle;
+}
+div.fileItems div.fileItem div.file-area div.file-head div.fill-name{
+	font-weight: bold;height: 20px;float: left;text-overflow: ellipsis;width: 220px;
+	overflow: hidden;white-space: nowrap;vertical-align: middle;color: #333333;
+}
+div.fileItems div.fileItem div.file-area div.file-head div.percent{
+	float: right;height: 30px;
+}
+div.fileItems div.fileItem div.file-area div.file-head div.file-size{
+	height: 50px;float: right;
+	overflow:hidden;white-space: nowrap;vertical-align: middle;
+}
+div.fileItems div.fileItem div.file-area div.process-bar{
+	margin: 0px;padding: 0px;clear: both;border: 1px solid #AAA;
+}
+div.fileItems div.fileItem div.file-area div.process-bar div.process{
+	height: 12px;background-color: #A5DF16;
+}
+div.fileItems div.fileItem div.file-area div.mesg{
+	margin-top: 5px;
+}
+div.fileItems div.fileItem div.opt-right{
+	float: left;margin-left: 5px;height: 100%;	
+}
+
+div.fileItems div.fileItem div.opt-right a{
+	width: 45px;float: left;overflow: hidden;text-align: center;
+	text-decoration: none;margin-top: 8px;
+}
+div.fileItems div.fileItem div.opt-right a img{
+	width: 32px;height: 32px;
+}

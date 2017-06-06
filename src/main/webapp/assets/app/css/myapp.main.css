@@ -302,5 +302,8 @@ span.select2>span.selection>span.require{
 }
 
 input::-ms-clear{display:none;}
-
+.input-group-addon:first-child{
+	min-width: 100px;
+	text-align: right;
+}
 

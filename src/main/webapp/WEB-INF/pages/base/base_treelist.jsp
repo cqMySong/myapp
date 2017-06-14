@@ -41,7 +41,7 @@ var TreeListUI = function(el,options){
 	}};
 	this.selTreeId = '';
 	var thisTreeUI = this;
-	this.refreshTree = true;
+	this.toRefreshTree = true;
 	_defTreeOpt.setting.callback.onClick = function(event, treeId, treeNode){
 		var selNode = treeNode;
 		if(selNode.id!=thisTreeUI.selTreeId){
@@ -54,10 +54,10 @@ var TreeListUI = function(el,options){
 			}
 			var _thisListUI = thisTreeUI.listUI;
 			if(thisTreeUI.options.treeSectedChange2Query){
-				thisTreeUI.refreshTree = false;
+				thisTreeUI.toRefreshTree = false;
 				var thisParms = {tree:to_treeNode};
 				_thisListUI.executeQueryByParams(thisParms);
-				thisTreeUI.refreshTree = true;
+				thisTreeUI.toRefreshTree = true;
 			}
 			if(thisTreeUI.options.treeOpt&&thisTreeUI.options.treeOpt.selectChange
 					&&$.isFunction(thisTreeUI.options.treeOpt.selectChange)){
@@ -96,7 +96,7 @@ var TreeListUI = function(el,options){
 	}});
 	
 	this.listUI.actionAfter = function(opt){
-		if(thisTreeUI.refreshTree){
+		if(thisTreeUI.toRefreshTree){
 			thisTreeUI.refreshTree();
 		}
 		thisTreeUI.actionAfter();

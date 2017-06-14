@@ -6,14 +6,14 @@
 var MyTreeViewer = function(el, opt){
 	 this.$element = el,
 	 this.defaults = {};
-     this.options = $.extend({}, this.defaults, opt);
+     this.options = $.extend(true,{}, this.defaults, opt);
      this.treeViewer = undefined||this.options.treeViewer;
      this.tree = undefined||this.options.tree;
 }
 MyTreeViewer.prototype = {
 	init:function(opt){
-		var _defViewer = {theme:"panel-success",title:"",height:200,search:true};
-		var _opt = $.extend({}, _defViewer, opt);
+		var _defViewer = {theme:"panel-success",title:"",height:200,search:true,refresh:true};
+		var _opt = $.extend(true,{}, _defViewer, opt);
 		this.treeViewer = this.$element.find('panel');
 		if(webUtil.isEmpty(this.treeViewer)||this.treeViewer.length<=0){
 			this.treeViewer = $('<div class="panel"></div>');
@@ -32,14 +32,15 @@ MyTreeViewer.prototype = {
 		_$panel_detail.push('</div>');
 		this.treeViewer.html(_$panel_detail.join(''));
 		if(_opt.search){
-			this.addBtn({icon:"fa fa-search",onwer:this,clickFun:function(sarchbtn){
+			var thisTreeView = this;
+			this.addBtn({icon:"fa fa-search",onwer:thisTreeView,clickFun:function(sarchbtn){
 				var thisViewer = sarchbtn.onwer;
-				if(!webUtil.isEmpty(thisViewer.tree)){
+				var myTree = thisViewer.getTree();
+				if(!webUtil.isEmpty(myTree)){
 					var _curIdx = 0;
 					var _selNods = [];
 					var _curVal = '';
 					webUtil.showPrompt({title:'输入名称搜索',callBack:function(val){
-						var myTree = thisViewer.tree;
 						if(_curVal!=val){
 							_selNods = myTree.getNodesByParamFuzzy(val);
 							_curIdx = 0;
@@ -53,7 +54,11 @@ MyTreeViewer.prototype = {
 				}
 			}});
 		}
-		
+	},
+	addRefreshBtn:function(opt){
+		var thisTreeView = this;
+		var refeshBtn = $.extend({}, {icon:"fa fa-refresh",onwer:thisTreeView,clickFun:undefined}, opt);
+		this.addBtn(refeshBtn);
 	},
 	addTree:function(opt,data){
 		if(webUtil.isEmpty(this.tree)){
@@ -76,10 +81,12 @@ MyTreeViewer.prototype = {
 		if(!webUtil.isEmpty(this.treeViewer)&&!webUtil.isEmpty(btn)){
 			var _defBtn = {icon:"",style:{"font-size":"12px", "color":"#ffffff"},text:"",clickFun:undefined};
 			var thisBtn = $.extend({}, _defBtn, btn);
-			var $thisBtn = $('<i style="cursor:pointer;">'+thisBtn.text+'</i>');
+			
+			var $thisBtn = $('<i style="cursor:pointer;">&nbsp;'+thisBtn.text+'</i>&nbsp;');
 			if(!webUtil.isEmpty(thisBtn.icon)) $thisBtn.addClass(thisBtn.icon);
 			$thisBtn.css(thisBtn.style);
-			this.treeViewer.find('.panel-heading>ul.panel-options').append($thisBtn);
+			
+			this.treeViewer.find('.panel-heading>ul.panel-options').prepend($thisBtn);
 			if(!webUtil.isEmpty(thisBtn.clickFun)&&$.isFunction(thisBtn.clickFun)){
 				$thisBtn.click(thisBtn,function(e){
 					thisBtn.clickFun(e.data);
@@ -106,9 +113,9 @@ var MyTree = function(el, opt,data){
 	 var thisTreeCom = this;
 	 def_beforClick=function(treeId, treeNode){
 		 var fg = true;
-		 if (treeNode.isParent) {
-			 thisTreeCom.tree.expandNode(treeNode);
-         	fg = false;
+		 if(treeNode.isParent) {
+			thisTreeCom.getTree().expandNode(treeNode);
+         	fg = true;
          }
 		 if(opt.callback&&opt.callback.beforeClick&&$.isFunction(opt.callback.beforeClick)){
 			 fg = opt.callback.beforeClick(treeId,treeNode);
@@ -116,38 +123,56 @@ var MyTree = function(el, opt,data){
 		 return fg;
 	 }
 	 var _def_setting = {
-		    view: {dblClickExpand: true,selectedMulti: false},
+		    view: {dblClickExpand: true,selectedMulti: false, showLine: true},
 		    data: {simpleData: {enable:true,idKey: "id",pIdKey: "parent_id",rootPId: ""}},
 		    callback: {beforeClick: def_beforClick}
 		};
 	 if(opt.callback&&opt.callback.beforeClick&&$.isFunction(opt.callback.beforeClick)){
-		 opt.callback.beforeClick = undefined;
+		 delete opt.callback.beforeClick;
 	 }
-	 var setting = $.extend({}, _def_setting, opt);
-	 if(webUtil.isEmpty(data)) data = [];
-	 this.tree = $.fn.zTree.init(el, setting, data);
+	 this.setting = $.extend(true,{}, _def_setting, opt);
+	 this.init(data);
 }
 MyTree.prototype = {
+	init:function(data){
+		if(webUtil.isEmpty(data)) data = [];
+		var tree = $.fn.zTree.init(this.$element, this.setting, data);
+		this.$element.data('myTree',tree);
+	},
+	getTree:function(){
+		return this.$element.data('myTree');
+	},
 	addNodes:function(parentNode,nodes){
 		if(webUtil.isEmpty(parentNode)) parentNode = null;
-		this.tree.addNodes(parentNode, nodes);
+		this.getTree().addNodes(parentNode, nodes);
 	},
 	getSelectNodes:function(){
-		return this.tree.getSelectedNodes();
+		return this.getTree().getSelectedNodes();
 	},
 	selectNodeByIndex:function(indx){
-		var nodes = this.tree.getNodes();
+		var nodes = this.getNodes();
 		this.selectNode(nodes[indx]);
 	},
 	selectNode:function(node){
-		return this.tree.selectNode(node);
+		return this.getTree().selectNode(node);
+	},
+	getNodes:function(){
+		return this.getTree().getNodes();
 	},
 	getNodesByParamFuzzy:function(val){
-		return this.tree.getNodesByParamFuzzy("name", val, null);
+		return this.getTree().getNodesByParamFuzzy("name", val, null);
+	},
+	removeTreeNode:function(node){
+		this.getTree().removeChildNodes(node);
+		this.getTree().removeNode(node);
+	},
+	reLoadTree:function(nodes){
+		this.getTree().destroy();
+		this.init(nodes);
 	}
 }
 $.fn.myTree = function(options,data) {
-    var settings = $.extend({}, options);
+    var settings = $.extend(true,{}, options);
     return new MyTree($(this),settings,data);
 }
 })(jQuery, window, document);

@@ -11,7 +11,7 @@ import javax.persistence.MappedSuperclass;
  * ©MySong基础框架搭建
  * @author mySong @date 2017年5月29日 
  * @system: 基础分录信息模型
- *
+ * 基础分录集合数据模型
  *-----------MySong---------------
  */
 @MappedSuperclass

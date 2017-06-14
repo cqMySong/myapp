@@ -23,6 +23,7 @@ public class GeneratePK implements IdentifierGenerator {
 		if(claz!=null){
 			String objectType = UuidUtils.getEntityType(claz.getName());
 			SysUuid uid = SysUuid.create(SysObjectType.create(objectType));
+			System.out.println(uid.toString());
 			return uid.toString();
 		}
 		return null;

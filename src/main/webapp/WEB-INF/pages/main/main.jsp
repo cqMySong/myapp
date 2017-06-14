@@ -1,10 +1,12 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
+<%@ page import="com.myapp.core.model.MyWebContent" %>
 <!DOCTYPE html>
 <html lang="en">
 	<head>
-		<title>mysong</title>
+		<title>${appName }</title>
 	</head>
 	<%@include file="../inc/webBase.inc"%>
+	<% MyWebContent webCtx = (MyWebContent)request.getSession().getAttribute("webCtx"); %>
 	<link rel="stylesheet" href="<%=appRoot%>/assets/css/main.css"/>
 	<body>
 		<div class="headerpanel">
@@ -70,14 +72,14 @@
 						<li>
 							<div class="btn-group">
 								<button type="button" class="btn btn-logged" data-toggle="dropdown">
-									<img src="<%=appRoot%>/assets/images/photos/loggeduser.png" alt="" /> mySong
+									<img src="<%=appRoot%>/assets/images/photos/loggeduser.png" alt="" />
+									<span class="userName"><%=webCtx.getUserName()%></span> 
 									<span class="caret"></span>
 								</button>
 								<ul class="dropdown-menu pull-right">
-									<li><a href="profile.html"><i class="glyphicon glyphicon-user"></i> 个人信息</a></li>
-									<li><a href="#"><i class="glyphicon glyphicon-cog"></i> 账户设置</a></li>
+									<li><a href="#" id="userSet"><i class="glyphicon glyphicon-cog"></i> 账户设置</a></li>
 									<li><a href="#"><i class="glyphicon glyphicon-question-sign"></i> 帮助？</a></li>
-									<li><a href="signin.html"><i class="glyphicon glyphicon-log-out"></i> 退出</a></li>
+									<li><a href="<%=appRoot%>/main/logout" id="_logout"><i class="glyphicon glyphicon-log-out"></i> 退出</a></li>
 								</ul>
 							</div>
 						</li>
@@ -98,8 +100,8 @@
 						</a>
 					</div>
 					<div class="media-body">
-						<h4 class="media-heading" style="cursor:pointer;" data-toggle="collapse" 
-							data-target="#loguserinfo" >mySong
+						<h4 class="media-heading" style="cursor:pointer;overflow: hidden;" data-toggle="collapse" 
+							data-target="#loguserinfo" ><span class="userName"><%=webCtx.getUserName()%></span> 
 							<a class="pull-right"> <i class="fa fa-angle-down"></i></a>
 						</h4>
 						<h5 class="media-heading">@软件工程师
@@ -110,8 +112,8 @@
 				<!-- leftpanel-profile -->
 
 				<div class="leftpanel-userinfo collapse" id="loguserinfo">
-					<h5 class="sidebar-title">地址：</h5>
-					<address>重庆江北</address>
+					<h5 class="sidebar-title">行政部门：</h5>
+					<address><%=webCtx.getOrgName()%></address>
 					<h5 class="sidebar-title">联系方式：</h5>
 					<ul class="list-group">
 						<li class="list-group-item">
@@ -154,7 +156,7 @@
 							<i class="fa fa-user"></i>
 						</a>
 					</li>
-					<li class="tooltips" data-toggle="tooltip" title="系统设置">
+					<li class="tooltips" data-toggle="tooltip" title="系统管理">
 						<a data-toggle="tab" data-target="#settings">
 							<i class="fa fa-cog"></i>
 						</a>
@@ -175,13 +177,16 @@
 	            				<button class="btn btn-default" type="button"><i class="fa fa-search"></i></button>
 	          				</span>
 						</div>
-						<div class="my-pill-menu" id="sysMenus" data-opt="{menus:[{title:'首页',icon:'fa fa-home'},
-																{title:'系统管理',icon:'fa fa-cogs',child:[
-																	{title:'组织管理',icon:'fa fa-cogs',url:'base/orgs/toOrgs'}
-																   ,{title:'人员管理'}
-																   ,{title:'附件管理',icon:'fa fa-server',url:'base/ftps/toFtps'}]},
-																{title:'门户管理',icon:'fa fa-home',child:[{title:'菜单管理'}]},
-																{title:'安全管理',icon:'fa fa-star',child:[{title:'用户管理',active:true,url:'base/users/toUsers'},{title:'权限管理'},{title:'角色管理'}]}	
+						<div class="my-pill-menu" id="userMenus" data-opt="{menus:[
+																{title:'项目管理首页',icon:'fa fa-home'},
+																{title:'基础资料',icon:'fa fa-cogs',child:[
+																	{title:'项目结构类型',icon:'fa fa-cogs',url:'ec/basedata/structTypes/list'}
+																    ]},
+																{title:'基础数据',icon:'fa fa-home',child:[
+																	{title:'工程项目',icon:'fa fa-building-o',url:'ec/basedata/projects/list'}]},
+																{title:'质量管理',icon:'fa fa-star',child:[
+																	{title:'.....',icon:'fa fa-user'}
+																	]}
 																]}">
             			</div>
 					</div>
@@ -290,27 +295,19 @@
 						</div>
 					</div>
 					<!-- tab-pane -->
-
-					<!-- #################### SETTINGS ################### -->
-
 					<div class="tab-pane" id="settings">
-						<h5 class="sidebar-title">常用系统设置</h5>
-						<ul class="list-group list-group-settings">
-							<li class="list-group-item">
-								<h5>Daily Newsletter</h5>
-								<small>Get notified when someone else is trying to access your account.</small>
-								<div class="toggle-wrapper">
-									<div class="leftpanel-toggle toggle-light success"></div>
-								</div>
-							</li>
-							<li class="list-group-item">
-								<h5>Call Phones</h5>
-								<small>Make calls to friends and family right from your account.</small>
-								<div class="toggle-wrapper">
-									<div class="leftpanel-toggle-off toggle-light success"></div>
-								</div>
-							</li>
-						</ul>
+						<div class="my-pill-menu" id="sysMenus" data-opt="{menus:[{title:'首页',icon:'fa fa-home'},
+																{title:'系统管理',icon:'fa fa-cogs',child:[
+																	{title:'组织管理',icon:'fa fa-cogs',url:'base/orgs/list'}
+																   ,{title:'人员管理'}
+																   ,{title:'附件管理',icon:'fa fa-server',url:'base/ftps/list'}]},
+																{title:'门户管理',icon:'fa fa-home',child:[{title:'菜单管理'}]},
+																{title:'安全管理',icon:'fa fa-star',child:[
+																	{title:'用户管理',icon:'fa fa-user',active:true,url:'base/users/list'},
+																	{title:'权限管理',icon:'fa fa-tags',url:'base/permissions/list'},
+																	{title:'角色管理',icon:'fa fa-users',url:'base/roles/list'}]}	
+																]}">
+            			</div>
 					</div>
 					<div class="tab-pane" id="more">
 						<h5 class="sidebar-title">其他...</h5>
@@ -331,10 +328,18 @@
 	</body>
 	
 <script type="text/javascript">
+function openUserSetUI(){
+	var win = {title:'<i class="fa fa-user"></i>&nbsp;用户信息设置',maxmin:false,height:600,width:400,btns:['关闭'],url:app.root+'/main/toUserSet'};
+	webUtil.openWin(win);
+}
 $(document).ready(function() {
 	myPillTreeMenu.init('#sysMenus');
+	myPillTreeMenu.init('#userMenus');
 	myNavTab.init('#mainTab');
 	
+	$('#userSet').click(function(){
+		openUserSetUI();
+	});
 })
 </script>
 

@@ -77,6 +77,8 @@ public abstract class BaseF7QueryController extends CoreBaseController {
 				type = WebUtil.Web_DataType_datetime;
 			}else if(DataTypeEnum.NUMBER.equals(dte)){
 				type = WebUtil.Web_DataType_number;
+			}else if(DataTypeEnum.BOOLEAN.equals(dte)){
+				type = WebUtil.Web_DataType_checekbox;
 			}
 			Map colMap = new HashMap();
 			colMap.put("field",alias);

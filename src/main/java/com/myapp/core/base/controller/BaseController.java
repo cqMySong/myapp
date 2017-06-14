@@ -31,6 +31,7 @@ public class BaseController {
 	protected static Integer STATUSCODE_INFO = 1; // 提示
 	protected static Integer STATUSCODE_ERROR = -1; // 错误类
 	protected static Integer STATUSCODE_SUCCESS = 0; // 成功类
+	protected static Integer STATUSCODE_NEEDLOGIN = -99; // 需要重新登录
 	protected static Integer STATUSCODE_EXCEPTION = -100; // 异常类
 	protected static Integer STATUSCODE_WARNING = 100; // 警告类
     protected int statusCode = STATUSCODE_SUCCESS;//默认值

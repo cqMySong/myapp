@@ -285,7 +285,7 @@
         undefinedText: '-',
         sortName: undefined,
         sortOrder: 'asc',
-        sortStable: false,
+        sortStable: true,
         striped: false,
         rowIndex:true,//addby songjun
         columns: [[]],
@@ -664,7 +664,7 @@
                     titleTooltip: $(this).attr('title'),
                     rowspan: $(this).attr('rowspan') ? +$(this).attr('rowspan') : undefined,
                     colspan: $(this).attr('colspan') ? +$(this).attr('colspan') : undefined,
-                    sortable:that.options.sortStable||true,align:"center",valign:'middle',
+                    sortable:that.options.sortStable,align:"center",valign:'middle',
                     type:DataType.text,formatter:undefined
                 }, $(this).data());
                 
@@ -701,12 +701,12 @@
                        	}
                      }else if(_thisColumn.type == DataType.checkbox){
                     	 _thisColumn.formatter = function(value, row, index){
-                    		var _checked = "";
+                    		var _checked = '✘';
                     		if(!webUtil.isEmpty(value)){
                     			if(value=='true'||value=='1'||value==1)
-                    				_checked = 'checked';
+                    				_checked = '√';
                     		}
-                    		return '<div class="mycheckbox green '+_checked+'"></div>'
+                    		return _checked;
                         } 
                      }
                 }

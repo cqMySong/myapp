@@ -6,16 +6,21 @@
 }
 </style>
 <script type="text/javascript">
+if(typeof listModel == "undefined"){
+	var listModel = {};
+	listModel.baseData =1;
+	listModel.billData =2;
+}
 ;(function($, window, document,undefined) {
 var ListUI = function(el,options){
 	var _Def_listUI = {
 			 tableEl:'#tblMain',baseUrl:"",openModel:"",toolbar:"_table-toolbar",pkCol:'id',hasDefToolbar:true,
-			 editWin:{title:'^~^',url:'',maxmin:true,width:800,height:600,callBack:undefined},
-			 pageSize :20,curPage :1,listData:undefined,btns:undefined,pagination:true
-			 ,extendTableOptions:undefined,totalPages:0,queryColumn:undefined,
+			 editWin:{title:'^~^',url:'',maxmin:true,width:800,height:600,callBack:undefined,btns:['关闭']},
+			 pageSize :20,curPage :1,listData:undefined,btns:undefined,pagination:true,listModel:0,
+			 extendTableOptions:undefined,totalPages:0,queryColumn:undefined,
 			 search:true,searchParams:undefined
 	};
-	this.options = $.extend({},_Def_listUI, options);
+	this.options = $.extend(true,{},_Def_listUI, options);
 	this.options.editWin.title = '<i class="fa fa-windows"></i>&nbsp;'+this.options.editWin.title;
 	this.pkCol = this.options.pkCol;
 	this.baseUrl = this.options.baseUrl;
@@ -33,6 +38,16 @@ var ListUI = function(el,options){
 		var btnSet = $.extend({},_def_btnG_opt, _btnOpt);
 		return btnSet;
 	}
+	
+	this.toolbar = $tb; 
+	if(this.options.hasDefToolbar&&this.options.listModel==listModel.baseData){
+		var _btn_g = $('<div class="btn-group"></div>');
+		$tb.prepend(_btn_g);
+		var btng = _btn_g.myBtnGroup();
+		btng.addBtn(toDoBtnGroup({text:'启用',icon:"fa fa-toggle-on",clickFun:this.enabled}));
+		btng.addBtn(toDoBtnGroup({text:'禁用',icon:"fa fa-toggle-off",clickFun:this.disabled}));
+	}
+	
 	if(this.options.hasDefToolbar){
 		var _btn_g = $('<div class="btn-group"></div>');
 		$tb.prepend(_btn_g);
@@ -41,7 +56,7 @@ var ListUI = function(el,options){
 		btng.addBtn(toDoBtnGroup({text:'新增',icon:"fa fa-file-o",clickFun:this.addnew}));
 		btng.addBtn(toDoBtnGroup({text:'查看',icon:"fa fa-file-text-o",clickFun:this.view}));
 		btng.addBtn(toDoBtnGroup({text:'修改',icon:"fa fa-edit",clickFun:this.edit}));
-		btng.addBtn(toDoBtnGroup({text:'删除',icon:"fa fa-remove",clickFun:this.remove}));
+		btng.addBtn(toDoBtnGroup({text:'删除',icon:"fa fa-trash",clickFun:this.remove}));
 		btng.addBtn(toDoBtnGroup({text:'刷新',icon:"fa fa-refresh",clickFun:this.refresh}));
 		btng.addBtn(toDoBtnGroup({text:'附件管理',icon:"fa fa-paperclip",clickFun:this.attach}));
 		btng.addBtn(toDoBtnGroup({text:'查询',icon:"fa fa-filter",clickFun:this.query}));
@@ -51,9 +66,9 @@ var ListUI = function(el,options){
 	};
 	var def_listTable_options = {height:730,striped:true,sortStable:true,showRefresh:false,clickToSelect:true
 			,cache:false,pageSize:this.options.pageSize,showToggle:true,search:true,queryParams:serachPrams
-			,showColumns:true,idField:"id",mypagination:true,url:this.options.baseUrl+'/list'};
+			,showColumns:true,idField:"id",mypagination:true,url:this.options.baseUrl+'/query'};
 
-	var tbl_opts = $.extend({}, def_listTable_options, this.options.extendTableOptions);
+	var tbl_opts = $.extend(true,{}, def_listTable_options, this.options.extendTableOptions);
 	this.tblMain =  $(this.options.tableEl).myDataTable(tbl_opts);
 	
 	if(this.options.search){
@@ -139,10 +154,15 @@ ListUI.prototype = {
 			return true;
 		}
 	},
+	actionAfter:function(opt){
+		if(afterAction&&!webUtil.isEmpty(afterAction)&&$.isFunction(afterAction)){
+			afterAction(opt);
+		}
+	},
 	addnew:function(btn){
 		var $thisList = btn.owerObj;
 		if($thisList.actionBefore('addnew')){
-			var _win = $.extend({},$thisList.options.editWin);
+			var _win = $.extend(true,{},$thisList.options.editWin);
 			_win.title = _win.title+'-新增';
 			_win.url = webUtil.toUrl($thisList.baseUrl)+'/addnew';
 			if(!webUtil.isEmpty(_win.uiParams)&&$.isFunction(_win.uiParams)){
@@ -160,7 +180,7 @@ ListUI.prototype = {
 			var _selRows = $thisList.getSelectRow();
 			if(!webUtil.isEmpty(_selRows)&&_selRows.length>0){
 				var _thisRowData = _selRows[0];
-				var _win = $.extend({},$thisList.options.editWin);
+				var _win = $.extend(true,{},$thisList.options.editWin);
 				_win.title = _win.title+'-查看';
 				if(!webUtil.isEmpty(_win.uiParams)&&$.isFunction(_win.uiParams))
 					_win.uiParams = _win.uiParams('view');
@@ -180,7 +200,7 @@ ListUI.prototype = {
 			var _selRows = $thisList.getSelectRow();
 			if(!webUtil.isEmpty(_selRows)&&_selRows.length>0){
 				var _thisRowData = _selRows[0];
-				var _win = $.extend({},$thisList.options.editWin);
+				var _win = $.extend(true,{},$thisList.options.editWin);
 				if(!webUtil.isEmpty(_win.uiParams)&&$.isFunction(_win.uiParams))
 					_win.uiParams = _win.uiParams('edit');
 				_win.title = _win.title+'-修改';
@@ -212,8 +232,8 @@ ListUI.prototype = {
 						_data.id = seleIds;
 						//同步删除操作
 						webUtil.ajaxData({url:_thisURL,async:false,data:_data,success:function(data){
+							$thisList.executeQuery();
 						}});
-						$thisList.executeQuery();
 					}
 				}});
 			}else{
@@ -254,11 +274,57 @@ ListUI.prototype = {
 	},
 	executeQuery:function(){
 		this.tblMain.refreshData();
+		this.actionAfter(OperateType.refesh);
+		
 	},
 	executeQueryByParams:function(params){
 		var oldParms = this.options.searchParams;
-		this.options.searchParams = $.extend({},oldParms, params);
+		this.options.searchParams = $.extend(true,{},oldParms, params);
 		this.executeQuery();
+	},
+	enabled:function(btn){
+		var $thisList = btn.owerObj;
+		if($thisList.actionBefore('enabled')){
+			var _selRows = $thisList.getSelectRow();
+			if(!webUtil.isEmpty(_selRows)&&_selRows.length>0){
+				var seleIds = "";
+				for(var i=0;i<_selRows.length;i++){
+					var _thisRowData = _selRows[i];
+					if(i>0) seleIds+=',';
+					seleIds+= _thisRowData[$thisList.pkCol];
+				}
+				var _thisURL = $thisList.baseUrl+'/enable';
+				var _data = {};
+				_data.id = seleIds;
+				webUtil.ajaxData({url:_thisURL,data:_data,success:function(data){
+					$thisList.executeQuery();
+				}});
+			}else{
+				webUtil.mesg('请先选中对应的数据行，方可进行启用操作!');
+			}
+		}
+	},
+	disabled:function(btn){
+		var $thisList = btn.owerObj;
+		if($thisList.actionBefore('disabled')){
+			var _selRows = $thisList.getSelectRow();
+			if(!webUtil.isEmpty(_selRows)&&_selRows.length>0){
+				var seleIds = "";
+				for(var i=0;i<_selRows.length;i++){
+					var _thisRowData = _selRows[i];
+					if(i>0) seleIds+=',';
+					seleIds+= _thisRowData[$thisList.pkCol];
+				}
+				var _thisURL = $thisList.baseUrl+'/disable';
+				var _data = {};
+				_data.id = seleIds;
+				webUtil.ajaxData({url:_thisURL,data:_data,success:function(data){
+					$thisList.executeQuery();
+				}});
+			}else{
+				webUtil.mesg('请先选中对应的数据行，方可进行禁用操作!');
+			}
+		}
 	}
 }
 
@@ -274,6 +340,10 @@ function queryParams(params){
 }
 function beforeAction(opt){
 	return true;
+}
+
+function afterAction(){
+	
 }
 
 $(document).ready(function(){

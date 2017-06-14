@@ -7,7 +7,7 @@
 var myForm = function(el, opt){
 	 this.$element = el,
 	 this.defaults = {};
-     this.options = $.extend({}, this.defaults, opt);
+     this.options = $.extend(true,{}, this.defaults, opt);
 }
 myForm.prototype = {
 	init:function(){
@@ -98,21 +98,33 @@ myForm.prototype = {
 		var $itemel = webUtil.getJqueryDom(item_el);
 		var _type = $itemel.data('dataType');
 		if(!webUtil.isEmpty(_type)){
-			return $itemel.myComponet(_type,{method:'data'});
+			return $itemel.myComponet(_type,{method:'getData'});
 		}
 		return null;
+	},
+	getItemLable:function(item_el){
+		var $itemel = webUtil.getJqueryDom(item_el);
+		var _type = $itemel.data('dataType');
+		if(!webUtil.isEmpty(_type)){
+			return $itemel.myComponet(_type,{method:'getLable'});
+		}
+		return '';
 	},
 	setItemData:function(item_el,val){
 		var $itemel = webUtil.getJqueryDom(item_el);
 		var _type = $itemel.data('dataType');
 		if(!webUtil.isEmpty(_type)){
-			$itemel.myComponet(_type,{method:'data',opt:val});
+			$itemel.myComponet(_type,{method:'setData',opt:val});
 		}
 	},
 	setFormEnabled:function(val){
 		var thisObj = this;
 		this.$element.find('.input-item').each(function(){
-			thisObj.setItemEnabled($(this),val);
+			var isRead = val;
+			if(isRead&&$(this).hasClass("read")){
+				isRead = false;
+			}
+			thisObj.setItemEnabled($(this),isRead);
 		});
 	},
 	setItemEnabled:function(item_el,val){
@@ -127,7 +139,7 @@ myForm.prototype = {
 		var isOk = true;
 		this.$element.find('.input-item').each(function(){
 			if($(this).hasClass('require')){
-				var _textLable = $(this).prev('.lable').text();
+				var _textLable = thisObj.getItemLable($(this));
 				var _data = thisObj.getItemData($(this));
 				if(webUtil.isEmpty(_data)){
 					webUtil.mesg(_textLable+'为空,不允许保存');
@@ -140,7 +152,7 @@ myForm.prototype = {
 	}
 }
 $.fn.myForm = function(options) {
-    var settings = $.extend({}, options);
+    var settings = $.extend(true,{}, options);
     return new myForm($(this),settings);
 }
 })(jQuery, window, document);

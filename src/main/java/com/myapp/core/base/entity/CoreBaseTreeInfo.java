@@ -27,6 +27,7 @@ public class CoreBaseTreeInfo<T> extends CoreBaseInfo {
 	private Set<T> children = new HashSet<T>();   
 	private Integer level;
 	private String longNumber;
+	private String displayName;
 	private boolean isLeaf;
 	
 	@ManyToOne   
@@ -81,10 +82,31 @@ public class CoreBaseTreeInfo<T> extends CoreBaseInfo {
 		
 		return longNumber;
 	}
+	
 	public void setLongNumber(String longNumber) {
 		this.longNumber = longNumber;
 	}
 	
+	@Column(name="fdisplayname",nullable=false)
+	public String getDisplayName() {
+		String curName = getName();
+		if(BaseUtil.isEmpty(curName)) curName = "01";
+		if(this.getParent()!=null){
+			displayName = ((CoreBaseTreeInfo)this.getParent()).getDisplayName();
+			if(!BaseUtil.isEmpty(displayName)){
+				displayName = displayName+"!"+curName;
+			}else{
+				displayName = curName;
+			}
+		}else{
+			displayName = curName;
+		}
+		
+		return displayName;
+	}
+	public void setDisplayName(String displayName) {
+		this.displayName = displayName;
+	}
 	@Column(name="fisleaf",nullable=false)
 	public boolean isLeaf() {
 		return isLeaf;

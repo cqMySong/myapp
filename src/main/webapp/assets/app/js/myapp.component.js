@@ -22,7 +22,7 @@
 				thisObj.initEnvent();
 			}else if(_type ==DataType.select){
 				var _defSelOpt = {url:'',data:undefined,key:'key',val:'val',selected:undefined,opt:undefined};
-				var _selOpt = $.extend({},_defSelOpt, _opt);
+				var _selOpt = $.extend(true,{},_defSelOpt, _opt);
 				var _items = _selOpt.data;
 				if(!webUtil.isEmpty(_items)&&$.isArray(_items)){
 					thisObj.initViewr(_selOpt);
@@ -39,7 +39,7 @@
 			}else if(_type ==DataType.checkbox||_type ==DataType.radio){
 				var $parentContainer = $thisDom.parent('.mycheckradiobox_container');
 				if(webUtil.isEmpty($parentContainer)||$parentContainer.length==0){
-					var _ckrad_opt = $.extend({},{event:undefined}, _opt);
+					var _ckrad_opt = $.extend(true,{},{event:undefined}, _opt);
 					thisObj.initViewr(_ckrad_opt);
 					thisObj.initEnvent(_ckrad_opt.event);
 				}
@@ -56,7 +56,7 @@
 			if(webUtil.isEmpty(_type)) return;
 			var $thisDom = this.$element;
 			var thisObj = this;
-			var opt = $.extend({},{name:'',params:undefined,callBack:undefined}, _opt);
+			var opt = $.extend(true,{},{name:'',params:undefined,callBack:undefined}, _opt);
 			if(_type == DataType.text){
 				
 			}else if(_type ==DataType.select){//下拉选择
@@ -90,7 +90,7 @@
 			var $thisDom = this.$element;
 			if(_type ==DataType.select){//下拉选择
 				var _defSelOpt = {data:undefined,key:'key',val:'val',selected:undefined};
-				var _selOpt = $.extend({},_defSelOpt, _opt);
+				var _selOpt = $.extend(true,{},_defSelOpt, _opt);
 				var _items = _selOpt.data;
 				if(!webUtil.isEmpty(_items)&&$.isArray(_items)&&_items.length>0){
 					for(var i=0;i<_items.length;i++){
@@ -104,7 +104,7 @@
 					}
 				}
 			}else if(_type ==DataType.checkbox||_type ==DataType.radio){
-				var _ckrad_opt = $.extend({},{theme:'green',checked:false}, _opt);
+				var _ckrad_opt = $.extend(true,{},{theme:'green',checked:false}, _opt);
 				var $parentContainer = $thisDom.parent('.mycheckradiobox_container');
 				if(webUtil.isEmpty($parentContainer)||$parentContainer.length==0){
 					$parentContainer = $('<div class="mycheckradiobox_container"></div>');
@@ -118,7 +118,7 @@
 					$thisDom.before(_div);
 				}
 			}else if(_type ==DataType.date||_type ==DataType.datetime){
-				var _dateOpt = $.extend({},{icon:'glyphicon glyphicon-calendar'},_opt);
+				var _dateOpt = $.extend(true,{},{icon:'glyphicon glyphicon-calendar'},_opt);
 				var $parentContainer = $thisDom.parent('.date');
 				if(webUtil.isEmpty($parentContainer)||$parentContainer.length==0){
 					$thisDom.css({"border-radius":"0px"});   
@@ -131,12 +131,22 @@
 				}
 			}
 		},
+		getLable:function(){
+			var _type = this.type;
+			if(webUtil.isEmpty(_type)) return;
+			var $thisDom = this.$element;
+			if(_type ==DataType.checkbox||_type ==DataType.radio){
+				return $thisDom.parent().prev('.lable').text();
+			}else{
+				return $thisDom.prev('.lable').text();
+			}
+		},
 		initRender:function(_opt){
 			var _type = this.type;
 			if(webUtil.isEmpty(_type)) return;
 			var $thisDom = this.$element;
 			if(_type ==DataType.select){//下拉选择
-				var thisSelect_opt = $.extend({allowClear: true}, _opt);
+				var thisSelect_opt = $.extend(true,{allowClear: true}, _opt);
 				$thisDom.select2(thisSelect_opt);
 				if($thisDom.hasClass('require')){
 					this.setRequire(true);
@@ -146,7 +156,7 @@
 				if(!webUtil.isEmpty($parentContainer)&&$parentContainer.length>0){
 					var _format = (_type ==DataType.date)?'yyyy-mm-dd':'yyyy-mm-dd hh:ii:ss';
 					var _def_date = {language: 'zh-CN',format:_format,autoclose: true,todayBtn: true,pickerPosition: "bottom-left"};
-					var _dateOpt = $.extend({},_def_date,_opt);
+					var _dateOpt = $.extend(true,{},_def_date,_opt);
 					if(_type ==DataType.date){
 						$parentContainer.datepicker(_dateOpt);
 					}else{
@@ -271,7 +281,7 @@
 	}
 	$.fn.myComponet = function(type,options) {
 		var defaults = {method:'init',opt:undefined};
-		var options = $.extend({},defaults, options);
+		var options = $.extend(true,{},defaults, options);
 		if(webUtil.isEmpty(type)) type = DataType.text;
 		var mycom = new MyComponet($(this),type);
 		var _data = options.opt;
@@ -280,16 +290,16 @@
 			_method = _method.toLowerCase();
 			if(_method=='init'){
 				mycom.init(_data);
-			}else if(_method=='data'){
-				if(!webUtil.isEmpty(_data)){
-					mycom.setData(_data);
-				}else{
-					return mycom.getData();
-				}
+			}else if(_method=='getdata'){
+				return mycom.getData();
+			}else if(_method=='setdata'){
+				mycom.setData(_data);
 			}else if(_method=='enable'){
 				mycom.setEnable(_data);
 			}else if(_method=='require'){
 				mycom.setRequire(_data);
+			}else if(_method=='getlable'){
+				return mycom.getLable();
 			}else{
 				webUtil.mesg("未知情况:其他的待续.....");
 			}

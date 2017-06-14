@@ -1,7 +1,7 @@
 ﻿<meta content="text/html;charset=utf-8">
 <meta charset="UTF-8">
 <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
-<meta name="description" content="个人应用框架开发实践">
+<meta name="description" content="个人应用框架开发实战">
 <meta name="author" content="mySong">
 <meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0,minimum-scale=1.0,user-scalable=no" >
 <%
@@ -57,8 +57,12 @@
 <!--ztree-->
 <script src="<%=appRoot%>/assets/lib/ztree/js/jquery.ztree.all-3.5.min.js"></script>
 
-<script src="<%=appRoot%>/assets/app/js/myapp.util.js"></script>
+<script src="<%=appRoot%>/assets/app/js/myapp.util.js?v=3"></script>
 <script src="<%=appRoot%>/assets/app/js/myapp.main.js?v=13" type="text/javascript"></script>
 <script src="<%=appRoot%>/assets/app/js/myapp.component.js?v=3" type="text/javascript"></script>
 <script src="<%=appRoot%>/assets/app/js/myapp.tree.js?v=3" type="text/javascript"></script>
 <script src="<%=appRoot%>/assets/app/js/myapp.myF7.js" type="text/javascript"></script>
+
+<script type="text/javascript">
+
+</script>

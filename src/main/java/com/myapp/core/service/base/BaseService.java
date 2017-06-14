@@ -31,4 +31,5 @@ public class BaseService extends AbstractBaseService{
 		this.claz = clazz;
 		return this;
 	}
+	
 }

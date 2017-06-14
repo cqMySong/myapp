@@ -8,6 +8,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import javax.persistence.EnumType;
+
 import org.hibernate.Criteria;
 import org.hibernate.criterion.ProjectionList;
 import org.hibernate.criterion.Projections;
@@ -19,6 +21,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.alibaba.fastjson.JSONObject;
+import com.myapp.core.annotation.PermissionItemAnn;
 import com.myapp.core.base.dao.MyResultTransFormer;
 import com.myapp.core.base.entity.CoreBaseBillInfo;
 import com.myapp.core.base.entity.CoreBaseInfo;
@@ -27,6 +30,7 @@ import com.myapp.core.base.enums.MyEnum;
 import com.myapp.core.enums.BaseMethodEnum;
 import com.myapp.core.enums.BillState;
 import com.myapp.core.enums.DataTypeEnum;
+import com.myapp.core.enums.PermissionTypeEnum;
 import com.myapp.core.exception.db.QueryException;
 import com.myapp.core.model.ColumnModel;
 import com.myapp.core.model.WebDataModel;
@@ -200,10 +204,16 @@ public abstract class BaseEditController extends CoreBaseController {
 	private void packageJson2EditData(){
 		String editData_str = request.getParameter("editData");
 		if(BaseUtil.isEmpty(editData_str)) return;
-		CoreBaseInfo cbInfo = getEntityInfo();
+		Map editData_map = JSONObject.parseObject(editData_str, new HashMap().getClass());
+		CoreBaseInfo cbInfo = null;
+		String billId = (String)editData_map.get("id");
+		if(BaseUtil.isEmpty(billId)){
+			cbInfo = getEntityInfo();
+		}else{
+			cbInfo = (CoreBaseInfo) getService().getEntity(billId);
+		}
 		if(cbInfo!=null){
 			List<ColumnModel> cols = getDataBinding();
-			Map editData_map = JSONObject.parseObject(editData_str, new HashMap().getClass());
 			for(ColumnModel col:cols){
 				String name = col.getName();
 				if(!BaseUtil.isEmpty(name)&&editData_map.containsKey(name)){
@@ -256,6 +266,7 @@ public abstract class BaseEditController extends CoreBaseController {
 		return this.data;
 	}
 	
+	@PermissionItemAnn(name="保存",number="save")
 	@ResponseBody
 	@RequestMapping(value="/save",method=RequestMethod.POST)
 	public WebDataModel save() {
@@ -286,7 +297,7 @@ public abstract class BaseEditController extends CoreBaseController {
 			}
 		}
 	}
-	
+	@PermissionItemAnn(name="新增",number="addnew")
 	@ResponseBody
 	@RequestMapping(value="/addNew",method=RequestMethod.POST)
 	public WebDataModel addNew() {
@@ -426,38 +437,36 @@ public abstract class BaseEditController extends CoreBaseController {
 		 }
 	}
 	
+	public WebDataModel loadData(BaseMethodEnum bme) {
+		try{
+			if(bme==null) bme = BaseMethodEnum.VIEW;
+			if(beforeOperate(bme)){
+				loadData();
+				afterOperate(bme);
+				setBaseMethod(bme);
+			}
+		}catch (Exception e) {
+			e.printStackTrace();
+			setExceptionMesg(e.getMessage());
+		}
+		return ajaxModel();
+	}
+	
+	@PermissionItemAnn(name="查看",number="view",type=PermissionTypeEnum.PAGEADDFUNCTION)
 	@ResponseBody
 	@RequestMapping(value="/view",method=RequestMethod.POST)
 	public WebDataModel view() {
-		try{
-			if(beforeOperate(BaseMethodEnum.VIEW)){
-				loadData();
-				afterOperate(BaseMethodEnum.VIEW);
-				setBaseMethod(BaseMethodEnum.VIEW);
-			}
-		}catch (Exception e) {
-			e.printStackTrace();
-			setExceptionMesg(e.getMessage());
-		}
-		return ajaxModel();
+		return loadData(BaseMethodEnum.VIEW);
 	}
 	
+	@PermissionItemAnn(name="编辑",number="edit",type=PermissionTypeEnum.PAGEADDFUNCTION)
 	@ResponseBody
 	@RequestMapping(value="/edit",method=RequestMethod.POST)
 	public WebDataModel edit() {
-		try{
-			if(beforeOperate(BaseMethodEnum.EDIT)){
-				loadData();
-				afterOperate(BaseMethodEnum.EDIT);
-				setBaseMethod(BaseMethodEnum.EDIT);
-			}
-		}catch (Exception e) {
-			e.printStackTrace();
-			setExceptionMesg(e.getMessage());
-		}
-		return ajaxModel();
+		return loadData(BaseMethodEnum.EDIT);
 	}
 	
+	@PermissionItemAnn(name="删除",number="remove")
 	@ResponseBody
 	@RequestMapping(value="/remove",method=RequestMethod.POST)
 	public WebDataModel toRemove() {
@@ -473,11 +482,4 @@ public abstract class BaseEditController extends CoreBaseController {
 		}
 		return ajaxModel();
 	}
-	
-	protected List getDataParams(){
-		List params = new ArrayList();
-		params.add(getReuestBillId());
-		return params;
-	}
-	
 }

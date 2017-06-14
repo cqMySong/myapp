@@ -1,28 +1,23 @@
 package com.myapp.controller.base.user;
 
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import javax.annotation.Resource;
 
-import org.hibernate.criterion.DetachedCriteria;
-import org.hibernate.criterion.Projection;
-import org.hibernate.criterion.ProjectionList;
-import org.hibernate.criterion.Projections;
-import org.hibernate.sql.JoinType;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.servlet.ModelAndView;
+import org.springframework.web.bind.annotation.ResponseBody;
 
+import com.myapp.core.annotation.PermissionAnn;
+import com.myapp.core.annotation.PermissionItemAnn;
 import com.myapp.core.base.service.impl.AbstractBaseService;
 import com.myapp.core.controller.BaseListController;
 import com.myapp.core.entity.UserInfo;
 import com.myapp.core.enums.DataTypeEnum;
-import com.myapp.core.enums.UserState;
 import com.myapp.core.model.ColumnModel;
+import com.myapp.core.model.WebDataModel;
 import com.myapp.core.service.UserService;
-import com.myapp.core.util.DateUtil;
+import com.myapp.core.util.BaseUtil;
 
 /**
  *-----------MySong---------------
@@ -32,17 +27,13 @@ import com.myapp.core.util.DateUtil;
  *
  *-----------MySong---------------
  */
+@PermissionAnn(name="系统管理.用户管理",number="app.user")
 @Controller
 @RequestMapping("base/users")
 public class UserListController extends BaseListController {
 	@Resource
 	public UserService userService;
 	
-	@RequestMapping("/toUsers")
-	public ModelAndView toUsers(){
-		Map params = new HashMap();
-		return toPage("user/userList", params);
-	}
 	public List<ColumnModel> getDataBinding() {
 		List<ColumnModel> cols = super.getDataBinding();
 		cols.add(new ColumnModel("name"));
@@ -50,6 +41,7 @@ public class UserListController extends BaseListController {
 		cols.add(new ColumnModel("remark"));
 		cols.add(new ColumnModel("createDate"));
 		cols.add(new ColumnModel("passWord"));
+		cols.add(new ColumnModel("userState"));
 		ColumnModel orgCol = new ColumnModel("defOrg",DataTypeEnum.F7,"name");
 		cols.add(orgCol);
 		return cols;
@@ -62,5 +54,28 @@ public class UserListController extends BaseListController {
 	public String getEditUrl() {
 		return "user/userEdit";
 	}
+
+	public String getListUrl() {
+		return "user/userList";
+	}
 	
+	
+	@PermissionItemAnn(name="用户密码重置",number="resetEncrypt")
+	@RequestMapping(value="/resetEncrypt")
+	@ResponseBody
+	public WebDataModel resetEncrypt() {
+		try {
+			init();
+			String billId = getReuestBillId();
+			if(!BaseUtil.isEmpty(billId)){
+				setInfoMesg(userService.resetUserEncrypt(billId));
+			}else{
+				setErrorMesg("单据id为空，无法完成密码重置操作!");
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+			setExceptionMesg(e.getMessage());
+		}
+		return ajaxModel();
+	}
 }

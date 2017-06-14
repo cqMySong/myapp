@@ -329,7 +329,7 @@ var myNavTab = {
 var MyBtnGroups = function(ele, opt){
 	 this.$element = ele;
 	 this.defaults = {};
-     this.options = $.extend({}, this.defaults, opt);
+     this.options = $.extend(true,{}, this.defaults, opt);
 }
 MyBtnGroups.prototype = {
 	addBtn:function(opt,index){
@@ -459,11 +459,11 @@ var MyDataTable = function(ele, opt){
 	 if(!webUtil.isEmpty(opt.mypagination)&&opt.mypagination){
 		 var _defMypagination = {url:'',pageSize:20,pageList:[10,20,50],curPage:1,totalPages:1,queryParams:undefined};
 		 this.myQueryParams = opt.queryParams;
-		 this.mypagination = $.extend({}, _defMypagination, {url:opt.url,pageList:opt.pageList,pageSize:opt.pageSize});
+		 this.mypagination = $.extend(true,{}, _defMypagination, {url:opt.url,pageList:opt.pageList,pageSize:opt.pageSize});
 		 opt.url = undefined;
 	 }
 	 var defaults_bt = {height:600,onClickRow:clickRow,mypagination:true};//这个是客户端的过滤
-     this.options = $.extend({}, defaults_bt, opt);
+     this.options = $.extend(true,{}, defaults_bt, opt);
      this.tblMain =  this.$element.bootstrapTable(this.options);
      if(!webUtil.isEmpty(this.mypagination)){
     	 this.addMyPagination(this.mypagination);
@@ -705,7 +705,7 @@ MyDataTable.prototype = {
 }
 $.fn.myDataTable = function(options) {
 	 var defaults = {height:600};
-     var settings = $.extend(defaults, options);
+     var settings = $.extend(true,defaults, options);
      return new MyDataTable($(this),settings);
 }
 })(jQuery, window, document);

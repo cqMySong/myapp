@@ -1,32 +1,27 @@
 package com.myapp.controller.base;
 
+import java.math.BigInteger;
+import java.security.MessageDigest;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 import javax.annotation.Resource;
 
-import org.hibernate.Criteria;
-import org.hibernate.FetchMode;
-import org.hibernate.criterion.DetachedCriteria;
-import org.hibernate.criterion.Order;
-import org.hibernate.criterion.ProjectionList;
-import org.hibernate.criterion.Projections;
-import org.hibernate.criterion.Restrictions;
-import org.hibernate.transform.Transformers;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
+import com.alibaba.fastjson.JSONObject;
+import com.myapp.core.annotation.NeedLoginAnn;
 import com.myapp.core.base.controller.BaseController;
 import com.myapp.core.entity.BaseOrgInfo;
 import com.myapp.core.entity.UserInfo;
 import com.myapp.core.enums.UserState;
-import com.myapp.core.exception.db.QueryException;
-import com.myapp.core.model.PageModel;
-import com.myapp.core.service.OrgService;
+import com.myapp.core.model.MyWebContent;
+import com.myapp.core.model.WebDataModel;
 import com.myapp.core.service.UserService;
-import com.myapp.core.util.EnumUtil;
+import com.myapp.core.util.BaseUtil;
 
 /**
  *-----------MySong---------------
@@ -40,46 +35,11 @@ import com.myapp.core.util.EnumUtil;
 @RequestMapping("/main")
 public class MainController extends BaseController {
 	@Resource
-	public OrgService orgService;
-	@Resource
 	public UserService userService;
-	
 	
 	@RequestMapping("/index")
 	public ModelAndView index(){
 		Map params = new HashMap();
-//		try {
-//			String arias ="_t";
-//			DetachedCriteria dca = DetachedCriteria.forClass(UserInfo.class,arias);
-//			ProjectionList pList = Projections.projectionList();  
-//			pList.add(Projections.property(arias+".id").as("id"));
-//			pList.add(Projections.property(arias+".name").as("name"));
-//			pList.add(Projections.property(arias+".number").as("number"));
-//			dca.createAlias(arias+".defOrg", "defOrg");
-//			dca.setFetchMode(arias+".defOrg",FetchMode.JOIN);
-//			pList.add(Projections.property("defOrg.id").as("defOrgId"));
-//			dca.setProjection(pList);
-//			dca.add(Restrictions.like("name", "宋军%"));
-//			dca.addOrder(Order.desc("number").asc("name"));
-////			dca.setResultTransformer(Transformers.aliasToBean(UserInfo.class));
-////			dca.setProjection(Property.forName("name").like("宋军", MatchMode.END));
-//			
-//			List<UserInfo> us = userService.findByDetachedCriteria(dca);
-//			System.out.println(us.size());
-//			for(UserInfo u:us){
-//				System.out.println(u.getName()+" == "+u.getNumber());
-//			}
-//			
-//			PageModel pms = userService.toPageDetachedCriteria(dca,pList, 1, 10);
-//			System.out.println(pms.getDatas());
-//			PageModel pms2 = userService.toPageDetachedCriteria(dca,pList, 2, 10);
-//			System.out.println(pms2.getDatas());
-//			
-//		} catch (QueryException e) {
-//			e.printStackTrace();
-//		}
-		
-		
 		return toPage("main/main", params);
 	}
 	
@@ -88,16 +48,79 @@ public class MainController extends BaseController {
 		Map params = new HashMap();
 		return toPage("main/home", params);
 	}
+	@NeedLoginAnn(doLongin=false)
+	@RequestMapping("/login")
+	public ModelAndView login(){
+		Map params = new HashMap();
+		return toPage("main/login", params);
+	}
 	
-	public static void main(String[] args){
-		UserInfo uInfo = new UserInfo();
-		uInfo.setUserState(UserState.DISABLE);
-		uInfo.put("userState", EnumUtil.getEnum(UserState.class.getName(), "DISABLE"));
-//		uInfo.setCreateDate(new Date());
-		BaseOrgInfo orgInfo = new BaseOrgInfo();
-		orgInfo.setName("asdfald啊塑料袋放进");
-		uInfo.setDefOrg(orgInfo);
-		System.out.println(uInfo.get("defOrg"));
+	@NeedLoginAnn(doLongin=false)
+	@RequestMapping("/logout")
+	public ModelAndView logout(){
+		Map params = new HashMap();
+		request.getSession().invalidate();
+		return toPage("main/login", params);
+	}
+	
+	@NeedLoginAnn(doLongin=false)
+	@ResponseBody
+	@RequestMapping("/tologin")
+	public WebDataModel tologin(){
+		init();
+		String un = request.getParameter("un");
+		String pd = request.getParameter("pd");
+		String hql = " from UserInfo where number=?";
+		UserInfo uInfo = userService.getEntity(hql, new String[]{un});
+		if(uInfo!=null){
+			try {
+				String dbPd = uInfo.getPassWord();
+				if(BaseUtil.isEmpty(dbPd))dbPd = "";
+				String inputPd = BaseUtil.md5Encrypt(pd);
+				if(inputPd.equals(dbPd)){
+					UserState us = uInfo.getUserState();
+					if(UserState.ENABLE.equals(us)){
+						JSONObject jsonObj = new JSONObject();
+						jsonObj.put("userName", un);
+						jsonObj.put("indexUrl", request.getContextPath()+"/main/index");
+						MyWebContent myWebCtx = new MyWebContent();
+						myWebCtx.setUserId(uInfo.getId());
+						myWebCtx.setUserName(uInfo.getName());
+						myWebCtx.setUserNumber(uInfo.getNumber());
+						BaseOrgInfo org = uInfo.getDefOrg();
+						if(org!=null){
+							myWebCtx.setOrgId(org.getId());
+							myWebCtx.setOrgName(org.getName());
+						}
+						request.getSession().setAttribute("webCtx", myWebCtx);
+						this.data = jsonObj;
+					}else{
+						setInfoMesg("用户状态已经"+us.getName()+",不能登录!");
+					}
+				}else{
+					setInfoMesg("用户名和密码不匹配，请重新输入!");
+				}
+			} catch (Exception e) {
+				setErrorMesg("用户验证发生错误!"+e.getMessage());
+				e.printStackTrace();
+			}
+		}else{
+			setInfoMesg("用户名不存在,请重新输入!");
+		}
+		return ajaxModel();
+	}
+	
+	@RequestMapping("/toUserSet")
+	public ModelAndView toUserSetting(){
+		Map params = new HashMap();
+		return toPage("main/userSetting", params);
+	}
+	
+	@ResponseBody
+	@RequestMapping("/userSet")
+	public WebDataModel userSet(){
+		
+		return ajaxModel();
 	}
 	
 }

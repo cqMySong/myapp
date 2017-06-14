@@ -24,7 +24,7 @@ public class WebUtil {
 	public static String Web_DataType_datetime  = "datetime";
 	public static String Web_DataType_select  = "select";
 	public static String Web_DataType_number  = "number";
-	public static String Web_DataType_checekbox  = "checekbox";
+	public static String Web_DataType_checekbox  = "checkbox";
 	public static String Web_DataType_radio  = "radio";
 	public static String Web_DataType_f7  = "f7";
 	

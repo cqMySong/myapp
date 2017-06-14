@@ -4,6 +4,8 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.UnsupportedEncodingException;
 import java.math.BigInteger;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
 import java.sql.Blob;
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -131,6 +133,13 @@ public abstract class BaseUtil {
 				e.printStackTrace();
 			}
 	    	return val;
+	    }
+	    
+	    public static String md5Encrypt(String inputStr) throws NoSuchAlgorithmException{
+	    	if(isEmpty(inputStr)) inputStr = "";
+	    	MessageDigest md = MessageDigest.getInstance("MD5");
+			md.update(inputStr.getBytes());
+			return new BigInteger(1, md.digest()).toString(16);
 	    }
 	
 }

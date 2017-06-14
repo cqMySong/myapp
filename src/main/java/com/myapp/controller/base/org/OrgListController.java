@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.ModelAndView;
 
 import com.alibaba.fastjson.JSONObject;
+import com.myapp.core.annotation.PermissionAnn;
 import com.myapp.core.base.service.impl.AbstractBaseService;
 import com.myapp.core.controller.BaseListController;
 import com.myapp.core.controller.BaseTreeListController;
@@ -31,6 +32,7 @@ import com.myapp.core.util.BaseUtil;
  *
  *-----------MySong---------------
  */
+@PermissionAnn(name="系统管理.组织管理",number="app.org")
 @Controller
 @RequestMapping("base/orgs")
 public class OrgListController extends BaseTreeListController {
@@ -39,11 +41,7 @@ public class OrgListController extends BaseTreeListController {
 	public AbstractBaseService getService() {
 		return orgService;
 	}
-	@RequestMapping("/toOrgs")
-	public ModelAndView toUsers(){
-		Map params = new HashMap();
-		return toPage("org/orgList", params);
-	}
+	
 	public List<ColumnModel> getDataBinding() {
 		List<ColumnModel> cols = super.getDataBinding();
 		cols.add(new ColumnModel("name"));
@@ -79,6 +77,9 @@ public class OrgListController extends BaseTreeListController {
 	}
 	public String getEditUrl() {
 		return "org/orgEdit";
+	}
+	public String getListUrl() {
+		return "org/orgList";
 	}
 	public AbstractBaseService getTreeService() {
 		return orgService;

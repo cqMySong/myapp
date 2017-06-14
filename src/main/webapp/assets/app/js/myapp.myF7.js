@@ -20,10 +20,10 @@ MyF7.prototype = {
 		this.f7Btn = $('<div class="input-group-addon" style="cursor:pointer;"><span class="fa fa-search"></span></div>');
 		$thisDom.after(this.f7Btn);
 		$thisDom.data("f7enabled",true);
-		if(opt.enabled) {
+		if(!webUtil.isEmpty(opt.enabled)) {
 			$thisDom.data("f7enabled",opt.enabled);
 		}
-		this.uiWin_opt = $.extend({},{title:'信息查询',url:'',params:undefined,width:600,height:450},opt.uiWin);
+		this.uiWin_opt = $.extend(true,{},{title:'信息查询',url:'',params:undefined,width:600,height:450},opt.uiWin);
 		if(opt.displayName){
 			this.displayName = opt.displayName;
 		}
@@ -46,7 +46,7 @@ MyF7.prototype = {
 			this.f7Btn.click({f7:this,ev:event},function(e){
 				var edata = e.data;//整个f7对象
 				var myf7 = edata.f7;
-				if(myf7.$element.data("f7enabled")){
+				if(myf7.isEnabled()){
 					var _go = true;
 					if(!webUtil.isEmpty(myf7.onShow)&&$.isFunction(myf7.onShow)){
 						_go = myf7.onShow(myf7);
@@ -59,8 +59,10 @@ MyF7.prototype = {
 		}
 	},
 	show:function(){
-		if(!webUtil.isEmpty(this.uiWin_opt)&&this.$element.data("f7enabled")){
-			var _win = $.extend({},this.uiWin_opt);
+		if(!webUtil.isEmpty(this.uiWin_opt)){
+			var enabled = this.isEnabled();
+			if(!enabled) return;
+			var _win = $.extend(true,{},this.uiWin_opt);
 			var _toUrl = _win.url;
 			if(!webUtil.isEmpty(_toUrl)){
 				var thisF7 = this;
@@ -127,7 +129,6 @@ MyF7.prototype = {
 	}
 }
 $.fn.myF7 = function(options) {
-    var settings = $.extend({});
     return new MyF7($(this));
 }
 })(jQuery, window, document);

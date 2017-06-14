@@ -176,6 +176,7 @@ public abstract class AbstractBaseDao implements IAbstractBaseDao {
 				cbinfo.setLastUpdateDate(curDate);
 			}
 			Serializable pk = session.save(entity);
+			session.merge(entity);
 			session.flush();
 			return pk;
 		}

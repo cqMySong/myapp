@@ -15,7 +15,7 @@ import com.myapp.core.enums.BillState;
  * ©MySong基础框架搭建
  * @author mySong @date 2017年3月12日 
  * @system:
- *  基础数据模型
+ *  基础业务数据模型
  *-----------MySong---------------
  */
 @MappedSuperclass

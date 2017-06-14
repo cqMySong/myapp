@@ -1,6 +1,6 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@include file="../inc/webBase.inc"%>
-<script src="<%=appRoot%>/assets/app/js/myapp.form.js?v=22" type="text/javascript"></script>
+<script src="<%=appRoot%>/assets/app/js/myapp.form.js?v=25" type="text/javascript"></script>
 
 <% 
 String _uiCtx = "";
@@ -10,21 +10,26 @@ Object uiCtxObj = request.getAttribute("uiCtx");
 	 _uiCtx = _uiCtx.replaceAll("\'","\"");//单引号转双引号
  }
 %>
+
 <script type="text/javascript">
 var _uiCtx = '<%=_uiCtx%>';
-
+var billId = '${id}';
 
 ;(function($, window, document,undefined) {
 var EditUI = function(el,opt){
 	this.$element = el;
-	this.defaults = {title:"",toolbar:'_table-toolbar',baseUrl:'',operate:'view',from:{el:'',data:undefined}};
-    this.options = $.extend({}, this.defaults, opt);
+	this.defaults = {title:"",toolbar:'_table-toolbar',baseUrl:'',operate:'view',form:{el:'',data:undefined}};
+    this.options = $.extend(true,{}, this.defaults, opt);
     this.editForm = undefined;
     this.operate = '${operate}';
     this.statusCode = ${statusCode};
     this.statusMesg = '${statusMesg}';
-    this.billId = '${id}'
     this.editData = {};
+    var form_el = this.options.form.el;
+    if(!webUtil.isEmpty(form_el)){
+    	$(form_el).css({"margin-top":"30px"});
+    	this.editForm = $(form_el).myForm();
+    }
     //界面的一些初始化
     //1.1 界面基本工具条初始化
     var $tb = $(el).find(this.options.toolbar);
@@ -38,7 +43,7 @@ var EditUI = function(el,opt){
 	var btng = _btn_g.myBtnGroup();
 	toDoBtnGroup = function(_btnOpt){
 		var _def_btnG_opt = {owerObj:thisObj};
-		var btnSet = $.extend({},_def_btnG_opt, _btnOpt);
+		var btnSet = $.extend(true,{},_def_btnG_opt, _btnOpt);
 		return btnSet;
 	}
 	
@@ -48,11 +53,7 @@ var EditUI = function(el,opt){
 	btng.addBtn(toDoBtnGroup({text:'删除',icon:"fa fa-remove",clickFun:this.remove}));
 	btng.addBtn(toDoBtnGroup({text:'附件管理',icon:"fa fa-paperclip",clickFun:this.attach}));
     
-    var form_el = this.options.form.el;
-    if(!webUtil.isEmpty(form_el)){
-    	$(form_el).css({"margin-top":"30px"});
-    	this.editForm = $(form_el).myForm();
-    }
+    
 }
 EditUI.prototype = {
 	onLoad:function(){
@@ -62,7 +63,7 @@ EditUI.prototype = {
 		if(OperateType.addnew == _operate){//新增
 			this.addNew();
 		}else{// 修改 or 查看
-			this.loadServerData(_operate,this.billId);
+			this.loadServerData(_operate,billId);
 		}
 	},
 	loadServerData:function(_operate,bid){
@@ -90,14 +91,14 @@ EditUI.prototype = {
 	loadData:function(data){
 		if(!webUtil.isEmpty(data)){
 			this.editForm.setFormData(data);
-			this.billId = data.id;
+			billId = data.id;
 		}
 	},
 	storeData:function(){
 		var editData = {};
-		editData.id = this.billId;
+		editData.id = billId;
 		if(!webUtil.isEmpty(this.editForm)){
-			editData = $.extend({},editData, this.editForm.getFormData());
+			editData = $.extend(true,{},editData, this.editForm.getFormData());
 		}
 		return editData;
 	},
@@ -158,7 +159,7 @@ EditUI.prototype = {
 	remove:function(btn){
 		var thisEditUI = btn.owerObj;
 		if(thisEditUI.actionBefore(OperateType.remove)){
-			var bid = thisEditUI.billId;
+			var bid = billId;
 			if(!webUtil.isEmpty(bid)){
 				var _thisUrl = thisEditUI.options.baseUrl+"/"+OperateType.remove;
 				var _toData = {};
@@ -175,7 +176,7 @@ EditUI.prototype = {
 	attach:function(btn){
 		var thisEditUI = btn.owerObj;
 		if(thisEditUI.actionBefore(OperateType.attach)){
-			var bid = thisEditUI.billId;
+			var bid = billId;
 			if(!webUtil.isEmpty(bid)){
 				var attachUrl = webUtil.toUrl('base/attach')+'/toAttach';
 				var _win = {url:attachUrl,maxmin:false,title:thisEditUI.options.title+'-附件管理'};
@@ -239,3 +240,4 @@ $(document).ready(function(){
 	
 })
 </script>
+

@@ -24,7 +24,6 @@ public class EnumUtil {
 		try{
 			Class<Enum<?>> enumClass = (Class<Enum<?>>) Class.forName(enum_str);
 			Object enumObject = enumClass.getEnumConstants()[0];
-			
 			Method method = enumClass.getMethod("getEnum",new Class[] {value.getClass()});
 			return (T) method.invoke(enumObject, value);
 		}catch(Exception e) {

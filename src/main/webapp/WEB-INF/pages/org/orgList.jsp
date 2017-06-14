@@ -43,7 +43,8 @@ var includeChild;
 function beforeAction(opt){
 	if(opt=='addnew'){
 		var params = thisOrgList.uiParams(opt);
-		if(webUtil.isEmpty(params)){
+		var tree = thisOrgList.tree;
+		if(webUtil.isEmpty(params)&&tree&&tree.getNodes().length>0){
 			webUtil.mesg('请先选择的组织，然后才能做新增操作!');
 			return false;
 		}

@@ -53,6 +53,10 @@ public abstract class BaseTreeListController extends BaseListController {
 		return Order.asc("longNumber");
 	}
 	
+	public Order getOrder() {
+		return Order.asc("longNumber");
+	}
+	
 	protected Criteria initTreeQueryCriteria() throws QueryException{
 		Criteria criter = getTreeService().initQueryCriteria();
 		treeProjections = Projections.projectionList();

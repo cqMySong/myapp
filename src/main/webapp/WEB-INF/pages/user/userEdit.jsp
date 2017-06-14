@@ -58,8 +58,10 @@
 	               <div class="row">
 	                <div class="col-sm-6">
 	                  <div class="input-group">
-		                <span class="input-group-addon lable">生    日</span>
-		                <input type="text" name="birthdate" class="form-control input-item" data-opt="{type:'date'}"/>
+		                <span class="input-group-addon lable">行政部门</span>
+		                <input name="defOrg" class="input-item form-control require" 
+							data-opt="{type:'f7',uiWin:{title:'组织查询',height:550,width:800,url:'base/orgf7'}}" />
+			
 		              </div>
 	                </div>
 	                 <div class="col-sm-6 mb15">

@@ -13338,7 +13338,7 @@ fieldset[disabled] .btn-fb.active {
   color: rgba(255, 255, 255, 0.7);
 }
 .sign-overlay {
-  background-image: url(../images/dot.png);
+  background-image: url(../images/pattern.png);
   position: fixed;
   top: 0;
   right: 0;
@@ -13353,10 +13353,9 @@ fieldset[disabled] .btn-fb.active {
   }
 }
 .signpanel {
-  background-color: rgba(0, 0, 0, 0.95);
   background-image: -webkit-linear-gradient(left, transparent 0%, #1b1f27 100%);
-  background-image: -o-linear-gradient(left, transparent 0%, #1b1f27 100%);
-  background-image: linear-gradient(to right, transparent 0%, #1b1f27 100%);
+  background-image: -o-linear-gradient(left, transparent 0%, #6ae9e0 100%);
+  background-image: linear-gradient(to right, transparent 0%, #6ae9e0 100%);
   background-repeat: repeat-x;
   filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#00000000', endColorstr='#ff1b1f27', GradientType=1);
   position: fixed;
@@ -13365,7 +13364,7 @@ fieldset[disabled] .btn-fb.active {
   bottom: 0;
   left: 0;
   z-index: 200;
-  opacity: .75;
+  opacity: .55;
 }
 @media (max-width: 767px) {
   .signpanel {
@@ -13376,13 +13375,13 @@ fieldset[disabled] .btn-fb.active {
 }
 /***** SIGN IN *****/
 .signin {
-  width: 400px;
+  width: 350px;
   position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
+  top: 20%;
+  left: 90%;
+  transform: translate(-80%, -10%);
   background-color: rgba(38, 43, 54, 0.9);
-  padding: 20px;
+  padding: 10px;
   z-index: 300;
 }
 @media (max-width: 767px) {
@@ -13390,7 +13389,7 @@ fieldset[disabled] .btn-fb.active {
     top: 20px;
     left: 0;
     transform: none;
-    width: 400px;
+    width: 350px;
     position: relative;
     margin: auto;
     padding-top: 0;
@@ -13425,94 +13424,6 @@ fieldset[disabled] .btn-fb.active {
 .signin .btn-fb:hover,
 .signin .btn-fb:focus {
   color: rgba(255, 255, 255, 0.5);
-}
-/***** SIGN UP *****/
-.signup {
-  position: absolute;
-  top: 40px;
-  left: 50%;
-  transform: translateX(-50%);
-  z-index: 300;
-  width: 900px;
-}
-@media (max-width: 767px) {
-  .signup {
-    top: 20px;
-    left: 0;
-    transform: none;
-    width: 400px;
-    position: relative;
-    margin: auto;
-    padding-top: 0;
-  }
-}
-@media (max-width: 360px) {
-  .signup {
-    width: 300px;
-  }
-}
-.signup h1 {
-  color: #259dab;
-  text-align: center;
-  margin: 0;
-  font-weight: 500;
-}
-.signup .panel {
-  background-color: rgba(38, 43, 54, 0.9);
-  padding: 20px 20px 40px 20px;
-}
-@media (max-width: 360px) {
-  .signup .panel {
-    padding: 0;
-  }
-}
-.signup .row > div {
-  padding-left: 7px;
-  padding-right: 7px;
-}
-.signup .row > div:first-child {
-  padding-left: 10px;
-}
-.signup .row > div:last-child {
-  padding-right: 10px;
-  color: rgba(255, 255, 255, 0.7);
-}
-.signup .signtitle {
-  color: #259dab;
-  font-weight: 200;
-  letter-spacing: .5px;
-  margin-top: 0;
-}
-.signup .sign-sidebar {
-  padding: 33px 40px 0;
-}
-@media (max-width: 767px) {
-  .signup .sign-sidebar {
-    display: none;
-  }
-}
-.signup .sign-sidebar p {
-  line-height: 21px;
-  font-weight: 200;
-  letter-spacing: .5px;
-  font-size: 14px;
-}
-.signup .sign-sidebar h4 {
-  margin: 0 0 20px;
-  color: #259dab;
-}
-.signup .sign-sidebar .panel-title {
-  text-align: left;
-  color: #fff;
-}
-.signup .sign-sidebar .reason {
-  font-weight: 700;
-  font-family: 'Open Sans', 'Helvetica Neue', Helvetica, sans-serif;
-  font-size: 13px;
-  text-transform: uppercase;
-  letter-spacing: 1px;
-  margin-bottom: 10px;
-  color: #fff;
 }
 /***** DASHBOARD *****/
 .dash-left .table > thead > tr > th,

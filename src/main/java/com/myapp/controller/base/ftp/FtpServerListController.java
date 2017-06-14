@@ -42,11 +42,6 @@ public class FtpServerListController extends BaseListController {
 		return this.ftpServerService;
 	}
 	
-	@RequestMapping("/toFtps")
-	public ModelAndView toUsers(){
-		Map params = new HashMap();
-		return toPage("ftp/ftpList", params);
-	}
 	public List<ColumnModel> getDataBinding() {
 		List<ColumnModel> cols = super.getDataBinding();
 		cols.add(new ColumnModel("name"));
@@ -63,6 +58,10 @@ public class FtpServerListController extends BaseListController {
 	
 	public String getEditUrl() {
 		return "ftp/ftpEdit";
+	}
+
+	public String getListUrl() {
+		return "ftp/ftpList";
 	}
 	
 }

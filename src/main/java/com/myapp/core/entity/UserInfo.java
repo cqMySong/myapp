@@ -46,7 +46,7 @@ public class UserInfo extends CoreBaseInfo{
 	public void setUserState(UserState userState) {
 		this.userState = userState;
 	}
-	@Column(name="fremark",length=500)
+	@Column(name="fremark",length=200)
 	public String getRemark() {
 		return remark;
 	}

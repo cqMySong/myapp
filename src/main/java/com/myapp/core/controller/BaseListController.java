@@ -15,9 +15,12 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
 import com.alibaba.fastjson.JSONObject;
+import com.myapp.core.annotation.PermissionItemAnn;
+import com.myapp.core.base.service.impl.AbstractBaseService;
 import com.myapp.core.base.setting.SystemConstant;
 import com.myapp.core.enums.BaseMethodEnum;
 import com.myapp.core.enums.DataTypeEnum;
+import com.myapp.core.enums.PermissionTypeEnum;
 import com.myapp.core.model.ColumnModel;
 import com.myapp.core.model.WebDataModel;
 import com.myapp.core.util.BaseUtil;
@@ -37,17 +40,28 @@ public abstract class BaseListController extends CoreBaseController {
 	private Integer curPage;
 	private Integer pageSize;
 	
+	public abstract String getEditUrl();
+	public abstract String getListUrl();
+	
 	//特殊情况 在处理
 	public String querySQL(){
 		return "";
 	}
 	
-	
 	public void init() {
 		super.init();
 	}
 	
-	@RequestMapping(value="/list")
+	@PermissionItemAnn(name="查看",number="onload",type=PermissionTypeEnum.PAGE)
+	@RequestMapping("/list")
+	public ModelAndView list(){
+		Map params = new HashMap();
+		packageUIParams(params);
+		return toPage(getListUrl(), params);
+	}
+	
+	@PermissionItemAnn(name="查询",number="query")
+	@RequestMapping(value="/query")
 	@ResponseBody
 	public WebDataModel toList() {
 		try {
@@ -94,6 +108,7 @@ public abstract class BaseListController extends CoreBaseController {
 		}
 	}
 
+	@PermissionItemAnn(name="删除",number="remove")
 	@ResponseBody
 	@RequestMapping(value="/remove",method=RequestMethod.POST)
 	public WebDataModel toRemove() {
@@ -148,12 +163,11 @@ public abstract class BaseListController extends CoreBaseController {
 		this.pageSize = pageSize;
 	}
 	
-	public String getEditUrl(){
-		return "";
-	}
 	
+	@PermissionItemAnn(name="编辑",number="edit",type=PermissionTypeEnum.PAGEADDFUNCTION)
 	@RequestMapping("/edit")
 	public ModelAndView edit(){
+		System.out.println(this.getClass().getName());
 		Map params = new HashMap();
 		init();
 		try {
@@ -171,7 +185,7 @@ public abstract class BaseListController extends CoreBaseController {
 		}
 		return toPage(getEditUrl(), params);
 	}
-	
+	@PermissionItemAnn(name="查看",number="view",type=PermissionTypeEnum.PAGEADDFUNCTION)
 	@RequestMapping("/view")
 	public ModelAndView view(){
 		Map params = new HashMap();
@@ -199,7 +213,7 @@ public abstract class BaseListController extends CoreBaseController {
 			params.put("uiCtx", ciCtx);
 		}
 	}
-	
+	@PermissionItemAnn(name="新增",number="addnew",type=PermissionTypeEnum.PAGEADDFUNCTION)
 	@RequestMapping("/addnew")
 	public ModelAndView addnew(){
 		init();

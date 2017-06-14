@@ -41,6 +41,7 @@ var TreeListUI = function(el,options){
 	}};
 	this.selTreeId = '';
 	var thisTreeUI = this;
+	this.refreshTree = true;
 	_defTreeOpt.setting.callback.onClick = function(event, treeId, treeNode){
 		var selNode = treeNode;
 		if(selNode.id!=thisTreeUI.selTreeId){
@@ -53,8 +54,10 @@ var TreeListUI = function(el,options){
 			}
 			var _thisListUI = thisTreeUI.listUI;
 			if(thisTreeUI.options.treeSectedChange2Query){
+				thisTreeUI.refreshTree = false;
 				var thisParms = {tree:to_treeNode};
 				_thisListUI.executeQueryByParams(thisParms);
+				thisTreeUI.refreshTree = true;
 			}
 			if(thisTreeUI.options.treeOpt&&thisTreeUI.options.treeOpt.selectChange
 					&&$.isFunction(thisTreeUI.options.treeOpt.selectChange)){
@@ -84,26 +87,51 @@ var TreeListUI = function(el,options){
 		return thisTreeUI.uiParams(operate);
 	};
 	this.listUI = $(el).listUI(this.options);
-	this.tree = undefined;
+	this.treeViewer.addTree(this.treeOpt.setting,[]);
+	this.tree = this.treeViewer.getTree();
+	var thisTreeUI = this;
+	this.treeViewer.addRefreshBtn({ui:thisTreeUI,clickFun:function(btn){
+		var myTreeUi = btn.ui;
+		myTreeUi.refreshTree();
+	}});
+	
+	this.listUI.actionAfter = function(opt){
+		if(thisTreeUI.refreshTree){
+			thisTreeUI.refreshTree();
+		}
+		thisTreeUI.actionAfter();
+	}
 }
 TreeListUI.prototype = {
 	onLoad:function(){
+		this.refreshTree();
+		this.listUI.onLoad();
+	},
+	refreshTree:function(){
 		if(!webUtil.isEmpty(this.treeViewer)){
 			if(!webUtil.isEmpty(this.treeOpt.url)){
 				var tree_url = this.treeOpt.url;
 				var _data = getTreeQueryParams();
 				var thisTreeList = this;
+				var hasSelnode = thisTreeList.getSelectNode();
 				webUtil.ajaxData({url:tree_url,async:false,data:_data,success:function(data){
 					var treeDatas = data.data;
-					thisTreeList.treeViewer.addTree(thisTreeList.treeOpt.setting,treeDatas);
-					thisTreeList.tree = thisTreeList.treeViewer.getTree();
-					if (treeDatas.length>0) {
-						thisTreeList.tree.selectNodeByIndex(0);
+					if (treeDatas.length>0&&!webUtil.isEmpty(thisTreeList.tree)) {
+						thisTreeList.tree.reLoadTree(treeDatas)
+						if(!webUtil.isEmpty(hasSelnode)){
+							thisTreeList.tree.selectNode(hasSelnode);
+						}else{
+							thisTreeList.tree.selectNodeByIndex(0);
+						}
 					}
 				}});
 			}
 		}
-		this.listUI.onLoad();
+	},
+	actionAfter:function(opt){
+		if(afterAction&&!webUtil.isEmpty(afterAction)&&$.isFunction(afterAction)){
+			afterAction(opt);
+		}
 	},
 	getSelectNode:function(){
 		if(this.tree){

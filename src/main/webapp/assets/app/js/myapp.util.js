@@ -25,6 +25,7 @@ if(typeof OperateType == "undefined"){
 	OperateType.audit = 'audit';
 	OperateType.unaudit = 'unAudit';
 	OperateType.attach = 'attach';
+	OperateType.refesh = 'refesh';
 }
 //'yyyy-MM-dd h:m:s'
 //yyyy-MM-dd
@@ -54,6 +55,9 @@ var ajax_defaultOpt = {type:"POST",url:"",async:true,data:"",contentType:"applic
 var webUtil = {
 	isEmpty:function(obj){
 		if($.isNumeric(obj)&&(obj ==0 || obj=='0')){
+			return false;
+		}
+		if (typeof(obj) == 'boolean') {
 			return false;
 		}
 		if(obj){
@@ -107,7 +111,7 @@ var webUtil = {
 	},
 	showConfirm:function(_comfirm){
 		var _defConfirm = {title:'信息',content:'',callBack:undefined};
-		var _opt = $.extend({},_defConfirm,_comfirm);
+		var _opt = $.extend(true,{},_defConfirm,_comfirm);
 		var _opt_obj = {title:'输出提示'||_opt.title,icon:1,shade:0.1,scrollbar:false,btn: ['确定','取消']};
 		_opt_obj.icon = webUtil.getMesgIcon('question');
 		
@@ -231,7 +235,7 @@ var webUtil = {
 		}
 	},
 	ajaxData:function(_opt){
-		var opt = $.extend({},ajax_defaultOpt,_opt);
+		var opt = $.extend(true,{},ajax_defaultOpt,_opt);
 		var _thisUrl = webUtil.toUrl(_opt.url)
 		var loadIdx = layer.msg('数据加载中...', {icon: 16,time:0,shade : true,shade: 0.1});
 		$.ajax({type:opt.type,url:_thisUrl,async:opt.async,data:opt.data,dataType:opt.dataType,success:function(data){
@@ -241,14 +245,20 @@ var webUtil = {
 				if(statusCode!=0){ //异常或者错误或者提示或者警告
 					var msgObj = {title:".::系统提示::.",type:"info"};//==1 提示
 					msgObj.content = $(data).attr('statusMesg');
-					if(statusCode<0){//异常 错误
-						msgObj.title = ".::系统操作"+(statusCode==-100?"异常":"错误")+"::.";
-						msgObj.type = "error";
-					}else if(statusCode==100){//警告
-						msgObj.title = ".::系统操作警告::.";
-						msgObj.type = "warning";
+					if(statusCode==-99){//检查需要重新登录的ajax
+						parent.layer.open({title:data.title,icon:5,content:data.statusMesg,end:function(){
+							window.open(data.loginUrl,'_top');
+						}});
+					}else{
+						if(statusCode<0){//异常 错误
+							msgObj.title = ".::系统操作"+(statusCode==-100?"异常":"错误")+"::.";
+							msgObj.type = "error";
+						}else if(statusCode==100){//警告
+							msgObj.title = ".::系统操作警告::.";
+							msgObj.type = "warning";
+						}
+						webUtil.showMesg(msgObj);
 					}
-					webUtil.showMesg(msgObj);
 				}
 				if(statusCode>=0){
 					opt.success(data);
@@ -257,7 +267,7 @@ var webUtil = {
 		},complete:function(){
 			layer.close(loadIdx);
 		}
-		,error:function(){
+		,error:function(event, XMLHttpRequest, ajaxOptions, thrownError){
 			layer.close(loadIdx);
 			alert('请求失败');
 		}
@@ -309,7 +319,7 @@ var webUtil = {
 		 var dom = ifrm.contentDocument? ifrm.contentDocument:ifrm.contentWindow.document; 
 		 ifrm.style.visibility = 'hidden'; 
 		 ifrm.style.height = "10px"; 
-		 ifrm.style.height = (webUtil.getDomHeight(dom) -50) + "px"; 
+		 ifrm.style.height = (webUtil.getDomHeight(dom) -30) + "px"; 
 		 ifrm.style.visibility = 'visible'; 
 		 var _parent = $("#"+elId).parent('div');
 		 if(!webUtil.isEmpty(_parent)){

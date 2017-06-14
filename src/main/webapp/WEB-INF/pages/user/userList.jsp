@@ -8,13 +8,13 @@
 </style>
 <script type="text/javascript">
 </script>
-<body style="padding: 5px;" >
+<body style="padding: 5px;margin: 0px;" >
 	<div id="listPanel" class="panel" style="padding:2px;">
 		<div id="table-toolbar">
 				<div class="btn-group">
-					<button class="btn btn-success" type="button">
-						<span class="glyphicon glyphicon-file"></span>查询
-					</button>
+					<a id="resetEncrypt" class="btn btn-success">
+						<span class="fa fa-retweet"></span>密码重置
+					</a>
 				</div>
 		</div>
 	     <table id="tblMain">
@@ -22,10 +22,11 @@
 				<tr>
 					<th data-field="name">姓名</th>
 					<th data-field="number">编码</th>
+					<th data-field="defOrg_name" >行政部门</th>
+					<th data-field="userState" data-formatter="userState_formarter">状态</th>
 					<th data-field="createDate" data-type="datetime">创建时间</th>
-					<th data-field="passWord" >密码</th>
+					<th data-field="passWord" data-type="password">密码</th>
 					<th data-field="remark" >备注</th>
-					<th data-field="defOrg_name" >组织名称</th>
 				</tr>
 			</thead>
 		</table>
@@ -37,14 +38,42 @@
 /**
  * 一切操作前的接口函数
  */
+var thisListUI ;
+var thisBaseUrl = 'base/users';
 function beforeAction(opt){
 	return true;
+}
+function userState_formarter(value, row, index){
+	var txt = value;
+	if(value=='ENABLE'){
+		txt = '正常';
+	}else if(value=='DISABLE'){
+		txt = '失效';
+	}else if(value=='FREEZE'){
+		txt = '冻结';
+	}
+	return txt;
+}
+function reSetUserEncrypt(){
+	var _selRows = thisListUI.getSelectRow();
+	if(!webUtil.isEmpty(_selRows)&&_selRows.length>0){
+		var _thisRowData = _selRows[0];
+		var thisId = _thisRowData.id;
+		var _thisURL = thisBaseUrl+'/resetEncrypt'
+		webUtil.ajaxData({url:_thisURL,async:false,data:{id:thisId},success:function(data){
+			thisListUI.executeQuery();
+		}});
+	}
 }
 
 $(document).ready(function() {
 	var editWin ={title:'用户信息',width:620,height:450};
-	var listUI = $('#listPanel').listUI({tableEl:'#tblMain',baseUrl:'base/users',editWin:editWin,toolbar:"#table-toolbar"});
-	listUI.onLoad();
+	thisListUI = $('#listPanel').listUI({tableEl:'#tblMain',height:680,baseUrl:thisBaseUrl,editWin:editWin,toolbar:"#table-toolbar"});
+	thisListUI.onLoad();
+	
+	$('#resetEncrypt').click(function(){
+		reSetUserEncrypt();
+	});
 })
 </script>
 </html>

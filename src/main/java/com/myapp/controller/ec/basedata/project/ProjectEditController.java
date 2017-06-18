@@ -20,6 +20,7 @@ import com.myapp.core.service.OrgService;
 import com.myapp.core.util.DateUtil;
 import com.myapp.entity.ec.basedata.ProjectInfo;
 import com.myapp.entity.ec.basedata.StructTypeInfo;
+import com.myapp.enums.ProjectState;
 import com.myapp.service.ec.basedata.ProjectService;
 
 /**
@@ -60,6 +61,7 @@ public class ProjectEditController extends BaseEditController{
 		List<ColumnModel> cols = super.getDataBinding();
 		cols.add(new ColumnModel("name"));
 		cols.add(new ColumnModel("number"));
+		cols.add(new ColumnModel("proState",DataTypeEnum.ENUM,ProjectState.class));
 		cols.add(new ColumnModel("remark"));
 		cols.add(new ColumnModel("address"));
 		cols.add(new ColumnModel("scale"));
@@ -67,9 +69,6 @@ public class ProjectEditController extends BaseEditController{
 		cols.add(new ColumnModel("floorHeight",DataTypeEnum.NUMBER));
 		cols.add(new ColumnModel("area",DataTypeEnum.NUMBER));
 		cols.add(new ColumnModel("aseismicLevel"));
-		ColumnModel parentCol = new ColumnModel("parent",DataTypeEnum.F7,"id,name");
-		parentCol.setClaz(ProjectInfo.class);
-		cols.add(parentCol);
 		ColumnModel structType = new ColumnModel("structType",DataTypeEnum.F7,"id,name");
 		structType.setClaz(StructTypeInfo.class);
 		cols.add(structType);

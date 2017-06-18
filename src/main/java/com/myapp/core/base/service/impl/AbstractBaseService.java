@@ -209,6 +209,11 @@ public abstract class AbstractBaseService implements IAbstractBaseService {
 		return (T) findByDetachedCriteria(getEntityClass(),dca);
 	}
 	
+	public List executeSQLQuery(String sql, Object[] params)
+			throws QueryException {
+		return getBaseDao().executeSQLQuery(sql, params);
+	}
+	
 	public Criteria initQueryCriteria(Class claz) throws QueryException {
 		return getBaseDao().initQueryCriteria(claz);
 	}

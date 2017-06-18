@@ -30,9 +30,10 @@
 			<div class="row">
 				<div class="col-sm-6">
 					<div class="input-group">
-						<span class="input-group-addon lable">上级项目</span> 
-						<input name="parent" class="input-item form-control read" 
-							data-opt="{type:'f7',dataChange:parent_dataChange,enabled:false,uiWin:{title:'组织查询',height:550,width:800,url:'base/orgf7'}}" />
+						<span class="input-group-addon lable">项目状态</span> 
+						<select name="proState" data-opt="{type:'select',selected:'WOMAN',url:'base/common/combox?enum=com.myapp.enums.ProjectState'}" 
+		                	class="form-control input-item require">
+		                </select>
 						
 					</div>
 				</div>
@@ -118,7 +119,7 @@ function afterAction(_opt){
 		var uiCtx = getUICtx();
 		if(!webUtil.isEmpty(uiCtx)&&$.isPlainObject(uiCtx)
 				&&!webUtil.isEmpty(uiCtx.tree)){
-			$('input[name="parent"]').myF7().setData(uiCtx.tree);
+			$('input[name="org"]').myF7().setData(uiCtx.tree);
 		}
 	}
 }

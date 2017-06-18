@@ -9,8 +9,12 @@ import javax.persistence.JoinColumn;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
-import com.myapp.core.base.entity.CoreBaseTreeInfo;
+import org.hibernate.annotations.Parameter;
+import org.hibernate.annotations.Type;
+
+import com.myapp.core.base.entity.CoreBaseInfo;
 import com.myapp.core.entity.BaseOrgInfo;
+import com.myapp.enums.ProjectState;
 
 /**
  *-----------MySong---------------
@@ -22,7 +26,8 @@ import com.myapp.core.entity.BaseOrgInfo;
  */
 @Entity
 @Table(name="t_ec_project")
-public class ProjectInfo extends CoreBaseTreeInfo<ProjectInfo> {
+public class ProjectInfo extends CoreBaseInfo{
+	private ProjectState proState;//项目状态
 	private String address;//地址
 	private String scale;//规模(建筑面积)
 	private BigDecimal eavesHeight;//檐高(m)
@@ -33,6 +38,14 @@ public class ProjectInfo extends CoreBaseTreeInfo<ProjectInfo> {
 	private String remark;
 	private BaseOrgInfo org;//所属组织
 	
+	@Column(name="fproState",length=20)
+	@Type(type="myEnum",parameters={@Parameter(name="enumClass",value="com.myapp.enums.ProjectState")})
+	public ProjectState getProState() {
+		return proState;
+	}
+	public void setProState(ProjectState proState) {
+		this.proState = proState;
+	}
 	@Column(name="faddress",length=200)
 	public String getAddress() {
 		return address;

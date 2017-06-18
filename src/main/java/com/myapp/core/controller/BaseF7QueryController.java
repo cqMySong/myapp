@@ -96,7 +96,6 @@ public abstract class BaseF7QueryController extends CoreBaseController {
 	@RequestMapping("/f7show")
 	public ModelAndView f7show(){
 		init();
-		
 		Map params = new HashMap();
 		List displayCols = getF7DisplayCols();
 		if(displayCols==null){

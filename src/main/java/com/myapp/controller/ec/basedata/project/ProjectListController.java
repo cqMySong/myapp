@@ -7,19 +7,25 @@ import java.util.Map;
 import javax.annotation.Resource;
 
 import org.hibernate.Criteria;
+import org.hibernate.criterion.DetachedCriteria;
 import org.hibernate.criterion.MatchMode;
 import org.hibernate.criterion.Order;
+import org.hibernate.criterion.Projections;
+import org.hibernate.criterion.Property;
 import org.hibernate.criterion.Restrictions;
+import org.hibernate.criterion.Subqueries;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import com.alibaba.fastjson.JSONObject;
 import com.myapp.core.annotation.PermissionAnn;
 import com.myapp.core.base.service.impl.AbstractBaseService;
-import com.myapp.core.controller.BaseTreeListController;
+import com.myapp.core.controller.BaseListController;
+import com.myapp.core.entity.BaseOrgInfo;
 import com.myapp.core.enums.DataTypeEnum;
 import com.myapp.core.model.ColumnModel;
 import com.myapp.core.util.BaseUtil;
+import com.myapp.enums.ProjectState;
 import com.myapp.service.ec.basedata.ProjectService;
 
 /**
@@ -33,7 +39,7 @@ import com.myapp.service.ec.basedata.ProjectService;
 @PermissionAnn(name="系统管理.现场管理.基础数据.工程项目",number="app.ec.basedata.project")
 @Controller
 @RequestMapping("ec/basedata/projects")
-public class ProjectListController extends BaseTreeListController {
+public class ProjectListController extends BaseListController {
 	@Resource
 	public ProjectService projectService;
 	public AbstractBaseService getService() {
@@ -50,9 +56,8 @@ public class ProjectListController extends BaseTreeListController {
 		cols.add(new ColumnModel("eavesHeight"));
 		cols.add(new ColumnModel("floorHeight"));
 		cols.add(new ColumnModel("area"));
+		cols.add(new ColumnModel("proState",DataTypeEnum.ENUM,ProjectState.class));
 		cols.add(new ColumnModel("aseismicLevel"));
-		ColumnModel parentCol = new ColumnModel("parent",DataTypeEnum.F7,"name,number");
-		cols.add(parentCol);
 		ColumnModel structCol = new ColumnModel("structType",DataTypeEnum.F7,"name,number");
 		cols.add(structCol);
 		ColumnModel orgCol = new ColumnModel("org",DataTypeEnum.F7,"name");
@@ -74,21 +79,22 @@ public class ProjectListController extends BaseTreeListController {
 				Map treeMap = JSONObject.parseObject(objTree.toString(), new HashMap().getClass());
 				Object lnObj = treeMap.get("longNumber");
 				if(lnObj!=null){
-					query.add(Restrictions.like("longNumber",lnObj.toString(),include?MatchMode.START:MatchMode.EXACT));
+					DetachedCriteria orgCriteria = DetachedCriteria.forClass(BaseOrgInfo.class, "torg");
+					orgCriteria.add(Restrictions.like("longNumber",lnObj.toString(),include?MatchMode.START:MatchMode.EXACT));
+					orgCriteria.add(Property.forName("torg.id").eqProperty("org.id"));
+					orgCriteria.setProjection(Projections.property("torg.id"));
+					query.add(Subqueries.exists(orgCriteria));
 				}
 			}
 		}
 	}
 	public Order getOrder() {
-		return Order.asc("longNumber");
+		return Order.asc("number");
 	}
 	public String getEditUrl() {
 		return "ec/basedata/project/projectEdit";
 	}
 	public String getListUrl() {
 		return "ec/basedata/project/projectList";
-	}
-	public AbstractBaseService getTreeService() {
-		return projectService;
 	}
 }

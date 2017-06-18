@@ -188,6 +188,12 @@ public abstract class AbstractBaseDao implements IAbstractBaseDao {
 		query.executeUpdate();
 	}
 	
+	public List executeSQLQuery(String sql, Object[] params) {
+		Query query = initHqlParams(getCurrentSession().createSQLQuery(sql),params);
+		query.setResultTransformer(CriteriaSpecification.ALIAS_TO_ENTITY_MAP);
+		return query.list();
+	}
+	
 	protected long getCount(Session session, String hql, Object[] params)
 			throws QueryException {
 		QueryTranslatorImpl queryTranslator = new QueryTranslatorImpl(hql, hql,
@@ -263,5 +269,8 @@ public abstract class AbstractBaseDao implements IAbstractBaseDao {
 	public Criteria initQueryCriteria(String entityName) throws QueryException {
 		return getCurrentSession().createCriteria(entityName);
 	}
+	
+	
+	
 	
 }

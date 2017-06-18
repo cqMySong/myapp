@@ -24,6 +24,7 @@
 							<tr>
 								<th data-field="number" data-align="left">项目编码</th>
 								<th data-field="name">项目名称</th>
+								<th data-field="proState" data-formatter="proState_formarter">项目状态</th>
 								<th data-field="org_name">所属组织</th>
 								<th data-field="address">项目地址</th>
 								<th data-field="scale" >规模</th>
@@ -32,7 +33,6 @@
 								<th data-field="structType_name" >结构类型</th>
 								<th data-field="area" >占地面积</th>
 								<th data-field="aseismicLevel" >抗震等级</th>
-								<th data-field="parent_number" >上级编码</th>
 								<th data-field="remark" >备注</th>
 							</tr>
 						</thead>
@@ -44,6 +44,23 @@
 </body>
 <%@include file="../../../base/base_treelist.jsp"%>
 <script type="text/javascript">
+
+function proState_formarter(value, row, index){
+	var txt = value;
+	if(value=='SGZB'){
+		txt = '施工准备';
+	}else if(value=='ZZSG'){
+		txt = '正在施工';
+	}else if(value=='YJG'){
+		txt = '已竣工';
+	}else if(value=='YGB'){
+		txt = '已关闭';
+	}else if(value=='YDG'){
+		txt = '已停工';
+	}
+	return txt;
+}
+
 var thisOrgList ;
 var includeChild;
 function beforeAction(opt){
@@ -72,7 +89,7 @@ $(document).ready(function() {
      
      var editWin ={title:'工程项目',width:620,height:580};
      var height = 700;
-     thisOrgList = $('body').treeListUI({tableEl:'#tblMain',baseUrl:'ec/basedata/projects',title:'工程项目',height:height,
+     thisOrgList = $('body').treeListUI({tableEl:'#tblMain',treeUrl:'base/orgs/tree',baseUrl:'ec/basedata/projects',title:'工程项目',height:height,
     	 treeContainer:"#tree_container",editWin:editWin,toolbar:"#table-toolbar",searchParams:{includeChild:true}
     	 ,extendTableOptions:{toolbar:'#tblMain_toolbar',height:height,sortStable:false}});
      thisOrgList.onLoad();

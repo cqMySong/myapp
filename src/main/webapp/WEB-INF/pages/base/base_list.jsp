@@ -61,6 +61,14 @@ var ListUI = function(el,options){
 		btng.addBtn(toDoBtnGroup({text:'附件管理',icon:"fa fa-paperclip",clickFun:this.attach}));
 		btng.addBtn(toDoBtnGroup({text:'查询',icon:"fa fa-filter",clickFun:this.query}));
 	}
+	
+	var gs = $tb.find('.btn-group');
+	if(gs&&gs.length>1){
+		for(var i=1;i<gs.length;i++){
+			$(gs[i]).css({"margin-left":"1px"});
+		}
+	}
+	
 	serachPrams = function(){
 		return JSON.stringify(thisObj.options.searchParams);
 	};

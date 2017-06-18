@@ -184,8 +184,8 @@
 																    ]},
 																{title:'基础数据',icon:'fa fa-home',child:[
 																	{title:'工程项目',icon:'fa fa-building-o',url:'ec/basedata/projects/list'}]},
-																{title:'质量管理',icon:'fa fa-star',child:[
-																	{title:'.....',icon:'fa fa-user'}
+																{title:'计划管理',icon:'fa fa-star',child:[
+																	{title:'项目总计划',icon:'fa fa-user',url:'ec/plan/projectplans/list'}
 																	]}
 																]}">
             			</div>

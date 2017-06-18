@@ -22,6 +22,7 @@ public enum BillState implements MyEnum<BillState,String> {
 	private String value;
 	private static final Map<String, BillState> map = new HashMap<String, BillState>();
 	static {
+        map.put(ADDNEW.getValue(), ADDNEW);
         map.put(SAVE.getValue(), SAVE);
         map.put(SUBMIT.getValue(), SUBMIT);
         map.put(AUDIT.getValue(), AUDIT);

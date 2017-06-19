@@ -24,6 +24,7 @@
 							<tr>
 								<th data-field="number" data-align="left">项目编码</th>
 								<th data-field="name">项目名称</th>
+								<th data-field="industryType" data-formatter="industryType_formarter">工程行业</th>
 								<th data-field="proState" data-formatter="proState_formarter">项目状态</th>
 								<th data-field="org_name">所属组织</th>
 								<th data-field="address">项目地址</th>
@@ -44,6 +45,22 @@
 </body>
 <%@include file="../../../base/base_treelist.jsp"%>
 <script type="text/javascript">
+
+function industryType_formarter(value, row, index){
+	var txt = value;
+	if(value=='FWJZ'){
+		txt = '房屋建筑工程';
+	}else if(value=='SLSD'){
+		txt = '水利水电工程';
+	}else if(value=='SZGC'){
+		txt = '市政工程';
+	}else if(value=='GLGC'){
+		txt = '公路工程';
+	}else if(value=='NLGC'){
+		txt = '农林工程';
+	}
+	return txt;
+}
 
 function proState_formarter(value, row, index){
 	var txt = value;

@@ -14,6 +14,7 @@ import org.hibernate.annotations.Type;
 
 import com.myapp.core.base.entity.CoreBaseInfo;
 import com.myapp.core.entity.BaseOrgInfo;
+import com.myapp.enums.IndustryType;
 import com.myapp.enums.ProjectState;
 
 /**
@@ -28,6 +29,7 @@ import com.myapp.enums.ProjectState;
 @Table(name="t_ec_project")
 public class ProjectInfo extends CoreBaseInfo{
 	private ProjectState proState;//项目状态
+	private IndustryType industryType;//工程行业
 	private String address;//地址
 	private String scale;//规模(建筑面积)
 	private BigDecimal eavesHeight;//檐高(m)
@@ -38,6 +40,14 @@ public class ProjectInfo extends CoreBaseInfo{
 	private String remark;
 	private BaseOrgInfo org;//所属组织
 	
+	@Column(name="findustryType",length=20)
+	@Type(type="myEnum",parameters={@Parameter(name="enumClass",value="com.myapp.enums.IndustryType")})
+	public IndustryType getIndustryType() {
+		return industryType;
+	}
+	public void setIndustryType(IndustryType industryType) {
+		this.industryType = industryType;
+	}
 	@Column(name="fproState",length=20)
 	@Type(type="myEnum",parameters={@Parameter(name="enumClass",value="com.myapp.enums.ProjectState")})
 	public ProjectState getProState() {

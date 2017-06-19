@@ -25,6 +25,7 @@ import com.myapp.core.entity.BaseOrgInfo;
 import com.myapp.core.enums.DataTypeEnum;
 import com.myapp.core.model.ColumnModel;
 import com.myapp.core.util.BaseUtil;
+import com.myapp.enums.IndustryType;
 import com.myapp.enums.ProjectState;
 import com.myapp.service.ec.basedata.ProjectService;
 
@@ -57,6 +58,7 @@ public class ProjectListController extends BaseListController {
 		cols.add(new ColumnModel("floorHeight"));
 		cols.add(new ColumnModel("area"));
 		cols.add(new ColumnModel("proState",DataTypeEnum.ENUM,ProjectState.class));
+		cols.add(new ColumnModel("industryType",DataTypeEnum.ENUM,IndustryType.class));
 		cols.add(new ColumnModel("aseismicLevel"));
 		ColumnModel structCol = new ColumnModel("structType",DataTypeEnum.F7,"name,number");
 		cols.add(structCol);

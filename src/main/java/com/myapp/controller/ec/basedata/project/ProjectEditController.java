@@ -20,6 +20,7 @@ import com.myapp.core.service.OrgService;
 import com.myapp.core.util.DateUtil;
 import com.myapp.entity.ec.basedata.ProjectInfo;
 import com.myapp.entity.ec.basedata.StructTypeInfo;
+import com.myapp.enums.IndustryType;
 import com.myapp.enums.ProjectState;
 import com.myapp.service.ec.basedata.ProjectService;
 
@@ -62,6 +63,7 @@ public class ProjectEditController extends BaseEditController{
 		cols.add(new ColumnModel("name"));
 		cols.add(new ColumnModel("number"));
 		cols.add(new ColumnModel("proState",DataTypeEnum.ENUM,ProjectState.class));
+		cols.add(new ColumnModel("industryType",DataTypeEnum.ENUM,IndustryType.class));
 		cols.add(new ColumnModel("remark"));
 		cols.add(new ColumnModel("address"));
 		cols.add(new ColumnModel("scale"));

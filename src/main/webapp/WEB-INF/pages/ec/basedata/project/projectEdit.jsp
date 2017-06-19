@@ -31,7 +31,7 @@
 				<div class="col-sm-6">
 					<div class="input-group">
 						<span class="input-group-addon lable">项目状态</span> 
-						<select name="proState" data-opt="{type:'select',selected:'WOMAN',url:'base/common/combox?enum=com.myapp.enums.ProjectState'}" 
+						<select name="proState" data-opt="{type:'select',selected:'SGZB',url:'base/common/combox?enum=com.myapp.enums.ProjectState'}" 
 		                	class="form-control input-item require">
 		                </select>
 						
@@ -70,12 +70,13 @@
 				</div>
 				<div class="col-sm-6 mb15">
 					<div class="input-group">
-						<span class="input-group-addon lable">抗震等级</span> 
-						<input name="aseismicLevel" class="input-item require">
+						<span class="input-group-addon lable">工程行业</span> 
+						<select name="industryType" data-opt="{type:'select',selected:'FWJZ',url:'base/common/combox?enum=com.myapp.enums.IndustryType'}" 
+		                	class="form-control input-item require">
+		                </select>
 					</div>
 				</div>
 			</div>
-							
 			<div class="row">
 				<div class="col-sm-6">
 					<div class="input-group">
@@ -88,6 +89,16 @@
 						<span class="input-group-addon lable">规模</span> 
 						<input name="scale" class="input-item require">
 					</div>
+				</div>
+			</div>
+			<div class="row">
+				<div class="col-sm-6">
+					<div class="input-group">
+						<span class="input-group-addon lable">抗震等级</span> 
+						<input name="aseismicLevel" class="input-item require">
+					</div>
+				</div>
+				<div class="col-sm-6 mb15">
 				</div>
 			</div>
 			<div class="row">

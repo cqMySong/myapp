@@ -48,8 +48,9 @@
 
 .fn-gantt .leftPanel {
     float: left;
-    width: 225px;
-    overflow: hidden;
+    width: 400px;
+    overflow-x: auto;
+    overflow-y: hidden;
     border-right: 1px solid #DDD;
     position: relative;
     z-index: 20;
@@ -60,40 +61,54 @@
     height: 24px;
     line-height: 24px;
     margin-left: -1px;
+    background-color: #f6f6f6;
 }
 
 .fn-gantt .leftPanel .fn-label {
     display: inline-block;
-    margin: 0 0 0 5px;
     color: #484A4D;
-    width: 110px;
     white-space: nowrap;
     text-overflow: ellipsis;
-    overflow: hidden;
 }
 
-.fn-gantt .leftPanel .row0 {
-    border-top: 1px solid #DDD;
+.fn-gantt .leftPanel .row:first-child {
+    border-top: 0px;
 }
-.fn-gantt .leftPanel .name, .fn-gantt .leftPanel .desc {
+
+.fn-gantt .leftPanel .row .col {
+   border-right: 1px solid #DDD;
+   padding-left: 2px;
+   text-overflow: ellipsis;
+}
+.fn-gantt .leftPanel .row.selected{
+	background-color:#D0E4FD;
+	border-top: 1px solid #484A4D;
+	border-bottom: 1px solid #484A4D;
+	padding-top: 1px;
+	padding-bottom: 1px;
+	margin-top: -2px;
+}
+.fn-gantt .leftPanel .row,.fn-gantt .leftPanel .col {
     float: left;
     height: 23px;
     margin: 0;
     border-bottom: 1px solid #DDD;
-    background-color: #f6f6f6;
+}
+.fn-gantt .leftPanel .row .col{
+    margin-left: 0px;
+}
+.fn-gantt .leftPanel .row:last-child{
+	 border-bottom: 0px;
 }
 
 .fn-gantt .leftPanel .name {
-    width: 110px;
     font-weight: bold;
 }
 
 .fn-gantt .leftPanel .desc {
-    width: 115px;
 }
 
 .fn-gantt .leftPanel .fn-wide, .fn-gantt .leftPanel .fn-wide .fn-label {
-    width: 225px;
 }
 
 .fn-gantt .spacer {
@@ -281,7 +296,7 @@
 }
 .fn-gantt .navigate {
     border-top: 1px solid #DDD;
-    padding: 10px 0 10px 225px;
+    padding: 10px 0 10px 405px;
 }
 
 .fn-gantt .navigate .nav-slider {

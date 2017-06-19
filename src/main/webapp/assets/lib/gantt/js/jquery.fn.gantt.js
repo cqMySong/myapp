@@ -34,15 +34,15 @@
         var settings = {
             source: [],
             itemsPerPage: 7,
-            months: ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"],
-            dow: ["S", "M", "T", "W", "T", "F", "S"],
+            months:["一月","二月","三月","四月","五月","六月","七月","八月","九月","十月","十一月","十二月"],
+    		dow:["日","一","二","三","四","五","六"],
             startPos: new Date(),
             navigate: "buttons",
             scale: "days",
             useCookie: false,
             maxScale: "months",
-            minScale: "hours",
-            waitText: "Please wait...",
+            minScale: "days",
+            waitText: "数据加载中...",
             onItemClick: function (data) { return; },
             onAddClick: function (data) { return; },
             onRender: function() { return; },
@@ -260,7 +260,7 @@
             render: function (element) {
                 var content = $('<div class="fn-content"/>');
                 var $leftPanel = core.leftPanel(element);
-                content.append($leftPanel);
+               content.append($leftPanel);
                 var $rightPanel = core.rightPanel(element, $leftPanel);
                 var mLeft, hPos;
 
@@ -316,31 +316,72 @@
                 core.waitToggle(element, false);
                 settings.onRender();
             },
-
+            //@author:songjun 做了大量都修改
             // Create and return the left panel with labels
             leftPanel: function (element) {
                 /* Left panel */
-                var ganttLeftPanel = $('<div class="leftPanel"/>')
-                    .append($('<div class="row spacer"/>')
-                    .css("height", tools.getCellSize() * element.headerRows + "px")
-                    .css("width", "100%"));
-
-                var entries = [];
+            	var headerHight = tools.getCellSize() * element.headerRows;
+            	var rowHeader = $('<div class="row spacer"/>').css("height", headerHight + "px");
+            	var leftHeadColumns = element.leftCols;
+            	var headers = [];
+            	var totalWidth = 32;
+            	headers.push('<div class="leftHeader" style="height:'+headerHight+'px;line-height:'+headerHight+'px;">');
+            	headers.push('<div class="col" style="height:'+headerHight+'px;width:30px;">');
+            		headers.push('<span style="height:96px;">序号</span>');
+            	headers.push('</div>');
+            	$.each(leftHeadColumns,function(i,col){
+            		var thisWidth = col.width;
+            		headers.push('<div class="col" style="height:'+headerHight+'px;width:'+thisWidth+'px;line-height:'+headerHight+'px;text-align:center;">');
+            			headers.push('<span>'+col.text+'</span>');
+            		headers.push('</div>');
+            		totalWidth +=thisWidth+3;
+            	});
+            	headers.push('</div>');
+            	if(totalWidth<400){
+            		totalWidth = '100%';
+            	}else{
+            		totalWidth =(totalWidth+5)+"px";
+            	}
+            	rowHeader.css("width", totalWidth);
+            	rowHeader.append(headers.join(''));
+                var ganttLeftPanel = $('<div class="leftPanel"/>').append(rowHeader);
+                var toClickEvt = undefined;
+                if(!webUtil.isEmpty(element.leftColClick)&&$.isFunction(element.leftColClick)){
+                	toClickEvt = element.leftColClick;
+                }
                 $.each(element.data, function (i, entry) {
                     if (i >= element.pageNum * settings.itemsPerPage && i < (element.pageNum * settings.itemsPerPage + settings.itemsPerPage)) {
-                        entries.push('<div class="row name row' + i + (entry.desc ? '' : ' fn-wide') + '" id="rowheader' + i + '" offset="' + i % settings.itemsPerPage * tools.getCellSize() + '">');
-                        entries.push('<span class="fn-label' + (entry.cssClass ? ' ' + entry.cssClass : '') + '">' + (entry.name || '') + '</span>');
-                        entries.push('</div>');
-
-                        if (entry.desc) {
-                            entries.push('<div class="row desc row' + i + ' " id="RowdId_' + i + '" data-id="' + entry.id + '">');
-                            entries.push('<span class="fn-label' + (entry.cssClass ? ' ' + entry.cssClass : '') + '">' + entry.desc + '</span>');
-                            entries.push('</div>');
-                        }
-
+                    	var offset = i % settings.itemsPerPage * tools.getCellSize();
+                    	var thisRow = $('<div class="row leftBodyRow" style="width:'+totalWidth+';" offset="' + i % settings.itemsPerPage * tools.getCellSize() + '"></div>');
+                        var seqCol = $('<div class="col" id="rowheader' + i + '" offset="' + offset + '" data-id="'+entry.id+'" style="width:30px;text-align:center;"><span>' + (i+1) + '</span></div>');
+                        thisRow.append(seqCol);
+                        $.each(leftHeadColumns,function(colIdx,col){
+                        	var thisCol = $.extend(true,{},{name:'',type:'text',algin:'center'},col);
+                        	var key = thisCol.name;
+                        	var $thisCol = $('<div class="col" style="text-align:'+thisCol.algin+'"></div)');
+                        	var text = entry[key];
+                    		if(webUtil.isEmpty(text)){
+                    			text = '';
+                    		}
+                			if('boolean'==thisCol.type){
+                				text = !text?'✘':'√';
+                			}
+                			$thisCol.append('<span class="fn-label' + (entry.cssClass ? ' ' + entry.cssClass : '') + '" style="width:'+col.width+'px;">' +text+ '</span>');
+            				$thisCol.click({rowIdx:i,colIdx:colIdx,col:col,row:entry},function(e){
+                				var evData = e.data;
+                				$(this).parent('.leftBodyRow').parent().find('.selected').removeClass('selected');
+                				$(this).parent('.leftBodyRow').addClass('selected');
+                				if(toClickEvt){
+                					toClickEvt(evData)
+                				}
+                			});
+                			thisRow.append($thisCol);
+                    	});
+                        
+                    	
+                        ganttLeftPanel.append(thisRow);
                     }
                 });
-                ganttLeftPanel.append(entries.join(""));
                 return ganttLeftPanel;
             },
 
@@ -940,32 +981,38 @@
             // **Progress Bar**
             // Return an element representing a progress of position within
             // the entire chart
-            createProgressBar: function (days, cls, desc, label, dataObj) {
+            //@author:songjun 
+            createProgressBar: function (days, day) {
+            	
+            	var id = day.id ? day.id : "",
+        			cls = day.customClass ? day.customClass : "",
+        			desc = day.desc ? day.desc : "",
+        			label = day.label ? day.label : "",
+        			percent = day.percent?day.percent:0;
+                 
                 var cellWidth = tools.getCellSize();
                 var barMarg = tools.getProgressBarMargin() || 0;
-                var bar = $('<div class="bar"><div class="fn-label">' + label + '</div></div>')
+                
+                var bar = $('<div class="bar progress"><div class="progress-bar progress-bar-warning" role="progressbar" aria-valuenow="60" aria-valuemin="0" aria-valuemax="100" style="width:'+percent+'%;background-color:#e4a24d;">&nbsp;<span class="fn-label">('+percent+'%)' + label + '</span></div></div>')
                         .addClass(cls)
-                        .css({
-                            width: ((cellWidth * days) - barMarg) + 2
-                        })
-                        .data("dataObj", dataObj);
-
+                        .css({width: ((cellWidth * days) - barMarg) + 2})
+                        .data("dataObj", day);
+                bar.attr("id",id);
                 if (desc) {
-                    bar
-                      .mouseover(function (e) {
-                          var hint = $('<div class="fn-gantt-hint" />').html(desc);
-                          $("body").append(hint);
-                          hint.css("left", e.pageX);
-                          hint.css("top", e.pageY);
-                          hint.show();
-                      })
-                      .mouseout(function () {
-                          $(".fn-gantt-hint").remove();
-                      })
-                      .mousemove(function (e) {
-                          $(".fn-gantt-hint").css("left", e.pageX);
-                          $(".fn-gantt-hint").css("top", e.pageY + 15);
-                      });
+                	bar.mouseover(function (e) {
+                        var hint = $('<div class="fn-gantt-hint" />').html(desc);
+                        $("body").append(hint);
+                        hint.css("left", e.pageX);
+                        hint.css("top", e.pageY);
+                        hint.show();
+                    })
+                    .mouseout(function () {
+                        $(".fn-gantt-hint").remove();
+                    })
+                    .mousemove(function (e) {
+                        $(".fn-gantt-hint").css("left", e.pageX);
+                        $(".fn-gantt-hint").css("top", e.pageY + 15);
+                    });
                 }
                 bar.click(function (e) {
                     e.stopPropagation();
@@ -1045,15 +1092,8 @@
                                     var cFrom = from.attr("offset");
                                     var cTo = to.attr("offset");
                                     var dl = Math.floor((cTo - cFrom) / tools.getCellSize()) + 1;
-
-                                    _bar = core.createProgressBar(
-                                                dl,
-                                                day.id ? day.id : "",
-                                                day.customClass ? day.customClass : "",
-                                                day.desc ? day.desc : "",
-                                                day.label ? day.label : "",
-                                                day.dataObj ? day.dataObj : null
-                                            );
+                                  //  days, cls, desc, label, dataObj
+                                    _bar = core.createProgressBar(dl,day);
 
                                     // find row
                                     var topEl = $(element).find("#rowheader" + i);
@@ -1090,14 +1130,7 @@
 
                                     var dl = Math.round((cTo - cFrom) / tools.getCellSize()) + 1;
 
-                                    _bar = core.createProgressBar(
-                                             dl,
-                                             day.id ? day.id : "",
-                                             day.customClass ? day.customClass : "",
-                                             day.desc ? day.desc : "",
-                                             day.label ? day.label : "",
-                                            day.dataObj ? day.dataObj : null
-                                        );
+                                    _bar = core.createProgressBar(dl,day);
 
                                     // find row
                                     var topEl = $(element).find("#rowheader" + i);
@@ -1131,15 +1164,7 @@
                                     var cTo = to.attr("offset");
                                     var dl = Math.round((cTo - cFrom) / tools.getCellSize()) + 1;
 
-                                    _bar = core.createProgressBar(
-                                        dl,
-                                        day.id ? day.id : "",
-                                        day.customClass ? day.customClass : "",
-                                        day.desc ? day.desc : "",
-                                        day.label ? day.label : "",
-                                        day.dataObj ? day.dataObj : null
-                                    );
-
+                                    _bar = core.createProgressBar(dl,day);
                                     // find row
                                     var topEl = $(element).find("#rowheader" + i);
 
@@ -1158,14 +1183,7 @@
                                     var cFrom = from.attr("offset");
 
                                     var dl = Math.floor(((dTo / 1000) - (dFrom / 1000)) / 86400) + 1;
-                                    _bar = core.createProgressBar(
-                                                dl,
-                                                day.id ? day.id : "",
-                                                day.customClass ? day.customClass : "",
-                                                day.desc ? day.desc : "",
-                                                day.label ? day.label : "",
-                                                day.dataObj ? day.dataObj : null
-                                        );
+                                    _bar =  core.createProgressBar(dl,day);
 
                                     // find row
                                     var topEl = $(element).find("#rowheader" + i);
@@ -1780,7 +1798,12 @@
 
             this.gantt = null;
             this.loader = null;
-
+            if (settings.leftCols) {
+            	this.leftCols = settings.leftCols;
+            }
+            if (settings.leftColClick) {
+            	this.leftColClick = settings.leftColClick;
+            }
             core.create(this);
 
         });

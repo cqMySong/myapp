@@ -2,7 +2,10 @@
 <%@include file="../inc/webBase.inc"%>
 <style type="text/css">
 .panel {
-  margin-bottom: 0px;
+  width: 100%;
+  height: 100%;
+  overflow:hidden;
+  padding: 0px 2px 2px 2px;
 }
 </style>
 <script type="text/javascript">
@@ -15,7 +18,7 @@ if(typeof listModel == "undefined"){
 var ListUI = function(el,options){
 	var _Def_listUI = {
 			 tableEl:'#tblMain',baseUrl:"",openModel:"",toolbar:"_table-toolbar",pkCol:'id',hasDefToolbar:true,
-			 editWin:{title:'^~^',url:'',maxmin:true,width:800,height:600,callBack:undefined,btns:['关闭']},
+			 editWin:{title:'^~^',openType:'WIN',url:'',maxmin:true,width:800,height:600,callBack:undefined,btns:['关闭']},
 			 pageSize :20,curPage :1,listData:undefined,btns:undefined,pagination:true,listModel:0,
 			 extendTableOptions:undefined,totalPages:0,queryColumn:undefined,
 			 search:true,searchParams:undefined
@@ -24,6 +27,7 @@ var ListUI = function(el,options){
 	this.options.editWin.title = '<i class="fa fa-windows"></i>&nbsp;'+this.options.editWin.title;
 	this.pkCol = this.options.pkCol;
 	this.baseUrl = this.options.baseUrl;
+	this.el = el;
 	//pagination  这个为自定义的分页模式 与 没有用 bootstrap的分页模式
 	this.options.editWin.url = webUtil.toUrl(this.options.editWin.url);
 	var $tb = $(el).find(this.options.toolbar);
@@ -167,19 +171,40 @@ ListUI.prototype = {
 			afterAction(opt);
 		}
 	},
+	openEditWin:function(_win){
+		if(_win.openType=='WIN'){
+			_win.url = webUtil.toUrl(_win.url);
+			webUtil.openWin(_win);
+		}else if(_win.openType=='MAINTAB'){
+			var winUrl = _win.url;
+			var uiCtx = _win.uiParams;
+			if(!webUtil.isEmpty(winUrl)&&!webUtil.isEmpty(uiCtx)){
+				if($.isFunction(_win.uiParams)){
+					uiCtx = _win.uiParams();
+				}
+				if($.isPlainObject(uiCtx)){
+					uiCtx =  'uiCtx='+webUtil.json2Str(uiCtx);
+				}
+				winUrl += (winUrl.indexOf('?')>0?'&':'?')+uiCtx;
+			} 
+			winUrl = winUrl.replace(/\"/g,"'"); 
+			_win.url = winUrl;
+			top.myNavTab.addTab('#mainTab', _win);
+		}
+	},
 	addnew:function(btn){
 		var $thisList = btn.owerObj;
 		if($thisList.actionBefore('addnew')){
 			var _win = $.extend(true,{},$thisList.options.editWin);
 			_win.title = _win.title+'-新增';
-			_win.url = webUtil.toUrl($thisList.baseUrl)+'/addnew';
+			_win.url = $thisList.baseUrl+'/addnew';
 			if(!webUtil.isEmpty(_win.uiParams)&&$.isFunction(_win.uiParams)){
 				_win.uiParams = _win.uiParams('addnew');
 			}
 			_win.colseCallBack =function(){
 				$thisList.executeQuery();
 			};
-			webUtil.openWin(_win);
+			$thisList.openEditWin(_win);
 		}
 	},
 	view:function(btn){
@@ -192,11 +217,11 @@ ListUI.prototype = {
 				_win.title = _win.title+'-查看';
 				if(!webUtil.isEmpty(_win.uiParams)&&$.isFunction(_win.uiParams))
 					_win.uiParams = _win.uiParams('view');
-				_win.url = webUtil.toUrl($thisList.baseUrl)+'/view?id='+_thisRowData[$thisList.pkCol];
+				_win.url = $thisList.baseUrl+'/view?id='+_thisRowData[$thisList.pkCol];
 				_win.colseCallBack =function(){
 					$thisList.executeQuery();
 				};
-				webUtil.openWin(_win);
+				$thisList.openEditWin(_win);
 			}else{
 				webUtil.mesg('请先选中对应的数据行，方可进行查看操作!');
 			}
@@ -212,11 +237,11 @@ ListUI.prototype = {
 				if(!webUtil.isEmpty(_win.uiParams)&&$.isFunction(_win.uiParams))
 					_win.uiParams = _win.uiParams('edit');
 				_win.title = _win.title+'-修改';
-				_win.url = webUtil.toUrl($thisList.baseUrl)+'/edit?id='+_thisRowData[$thisList.pkCol];
+				_win.url = $thisList.baseUrl+'/edit?id='+_thisRowData[$thisList.pkCol];
 				_win.colseCallBack =function(){
 					$thisList.executeQuery();
 				};
-				webUtil.openWin(_win);
+				$thisList.openEditWin(_win);
 			}else{
 				webUtil.mesg('请先选中对应的数据行，方可进行编辑操作!');
 			}

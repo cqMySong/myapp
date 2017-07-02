@@ -22,6 +22,7 @@ import com.myapp.core.annotation.PermissionAnn;
 import com.myapp.core.annotation.PermissionItemAnn;
 import com.myapp.core.entity.PermissionInfo;
 import com.myapp.core.enums.PermissionTypeEnum;
+import com.myapp.core.exception.db.SaveException;
 import com.myapp.core.model.PermissionModel;
 import com.myapp.core.service.base.BaseInterfaceService;
 import com.myapp.core.util.BaseUtil;
@@ -77,7 +78,7 @@ public class PermissionService extends BaseInterfaceService<PermissionInfo> {
 		return pmMap;
 	}
 	
-	public Map<String,Integer> syncSysPermission(HttpServletRequest request){
+	public Map<String,Integer> syncSysPermission(HttpServletRequest request) throws SaveException{
 		Map<String, PermissionModel> appPermissions =  getAppPermission(request);
 		Map<String ,PermissionInfo> dbPerInfoMap = new HashMap<String ,PermissionInfo>();
 		int total = appPermissions.size();

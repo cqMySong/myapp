@@ -3,6 +3,8 @@ package com.myapp.core.model;
 import java.util.List;
 import java.util.Map;
 
+import com.myapp.core.entity.UserInfo;
+
 /**
  *-----------MySong---------------
  * ©MySong基础框架搭建
@@ -60,6 +62,13 @@ public class MyWebContent {
 	}
 	public void setPermission(List<Map<String, String>> permission) {
 		this.permission = permission;
+	}
+	public UserInfo getCurUserInfo(){
+		UserInfo u = new UserInfo();
+		u.setId(getUserId());
+		u.setName(getUserName());
+		u.setNumber(getUserNumber());
+		return u;
 	}
 	
 	

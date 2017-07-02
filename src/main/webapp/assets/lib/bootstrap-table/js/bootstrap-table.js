@@ -288,6 +288,9 @@
         sortStable: true,
         striped: false,
         rowIndex:true,//addby songjun
+        cusTopToolBar:undefined,//自定义的top toolbar addby songjun 
+        updateRow2Body:true,//默认都情况下 更新行都时候会重新生成table 编辑表格不需要，故此扩展
+        layout:'auto',//固定列宽
         columns: [[]],
         data: [],
         totalField: 'total',
@@ -384,12 +387,28 @@
         onAll: function (name, args) {
             return false;
         },
-        onClickCell: function (field, value, row, $element) {
+        
+        onClickCell: function ($element,clickObj) {
             return false;
         },
-        onDblClickCell: function (field, value, row, $element) {
+      /*  onClickCell: function (field, value, row, $element) {
+            return false;
+        },*/
+        //uddate by songjun 
+        onDblClickCell: function ($element,clickObj) {
+/*        	var dbClickObj = {};
+            dbClickObj.field = field;
+            dbClickObj.value = value;
+            dbClickObj.row = item;
+            dbClickObj.column = column;
+            dbClickObj.rowIndex = $tr.data('index');
+            dbClickObj.colIndex = index;*/
+            
             return false;
         },
+        /*onDblClickCell: function (field, value, row, $element) {
+            return false;
+        },*/
         onClickRow: function (item, $element) {
             return false;
         },
@@ -649,7 +668,7 @@
         this.$header.find('tr').each(function (idx) {
             var column = [];
             if(idx==0&&that.options.rowIndex){//addby songjun
-            	column.push({field:'_seq',width:50,titleTooltip:'序号',rowspan:_trCount,colspan:1,title:"序号",visible:true,formatter:function(value, row, index){
+            	column.push({field:'_seq',width:50,valign:'middle',titleTooltip:'序号',rowspan:_trCount,colspan:1,title:"序号",visible:true,formatter:function(value, row, index){
                 	return index+1;
                 }});
             }
@@ -689,7 +708,11 @@
                     		 precision = _thisColumn.formatter;
                           }
                     	 _thisColumn.formatter = function(value, row, index){
-                      		return webUtil.numberFormatter(value,precision,',');
+                    		if(!$.isNumeric(value)){
+                    			return '';
+                    		}else{
+                    			return webUtil.numberFormatter(value,precision,',');
+                    		}
                       	}
                      }else if(_thisColumn.type == DataType.password){
                     	 _thisColumn.formatter = function(value, row, index){
@@ -708,7 +731,19 @@
                     		}
                     		return _checked;
                         } 
-                     }
+                     }else if(_thisColumn.type == DataType.F7){
+                    	 var displayName = 'name';
+              			if(_thisColumn.formatter&&typeof _thisColumn.formatter === 'string'){
+              				displayName = _thisColumn.formatter;
+                          }
+                    	 _thisColumn.formatter = function(value, row, index){
+                     		var txt = '';
+                     		if(!webUtil.isEmpty(value)&&$.isPlainObject(value)){
+                     			txt = value[displayName];
+                     		}
+                     		return txt;
+                         } 
+                      }
                 }
                 
                 column.push(_thisColumn);
@@ -799,7 +834,11 @@
             cellStyles: [],
             searchables: []
         };
-
+        var fixed = false;
+        if(this.options.layout == 'fixed'){
+        	fixed = true;
+    	}
+        
         $.each(this.options.columns, function (i, columns) {
             html.push('<tr>');
 
@@ -834,7 +873,9 @@
                 style = sprintf('vertical-align: %s; ', column.valign);
                 style += sprintf('width: %s; ', (column.checkbox || column.radio) && !width ?
                     '36px' : (width ? width + unitWidth : undefined));
-
+               if(fixed){
+            	   style += sprintf('word-wrap: %s; ', "break-word");
+               }
                 if (typeof column.fieldIndex !== 'undefined') {
                     that.header.fields[column.fieldIndex] = column.field;
                     that.header.styles[column.fieldIndex] = align + style;
@@ -1090,174 +1131,181 @@
     };
 
     BootstrapTable.prototype.initToolbar = function () {
-        var that = this,
+    	if(!webUtil.isEmpty(this.options.cusTopToolBar)){
+    		this.$toolbar.html('');
+    		if (typeof this.options.cusTopToolBar === 'string' || typeof this.options.cusTopToolBar === 'object') {
+    			this.$toolbar.append($(this.options.cusTopToolBar));
+    		}
+    	}else{
+    		var that = this,
             html = [],
             timeoutId = 0,
             $keepOpen,
             $search,
             switchableCount = 0;
 
-        if (this.$toolbar.find('.bs-bars').children().length) {
-            $('body').append($(this.options.toolbar));
-        }
-        this.$toolbar.html('');
-
-        if (typeof this.options.toolbar === 'string' || typeof this.options.toolbar === 'object') {
-            $(sprintf('<div class="bs-bars pull-%s"></div>', this.options.toolbarAlign))
-                .appendTo(this.$toolbar)
-                .append($(this.options.toolbar));
-        }
-
-        // showColumns, showToggle, showRefresh
-        html = [sprintf('<div class="columns columns-%s btn-group pull-%s">',
-            this.options.buttonsAlign, this.options.buttonsAlign)];
-
-        if (typeof this.options.icons === 'string') {
-            this.options.icons = calculateObjectValue(null, this.options.icons);
-        }
-
-        if (this.options.showPaginationSwitch) {
-            html.push(sprintf('<button class="btn' +
-                    sprintf(' btn-%s', this.options.buttonsClass) +
-                    sprintf(' btn-%s', this.options.iconSize) +
-                    '" type="button" name="paginationSwitch" aria-label="pagination Switch" title="%s">',
-                    this.options.formatPaginationSwitch()),
-                sprintf('<i class="%s %s"></i>', this.options.iconsPrefix, this.options.icons.paginationSwitchDown),
-                '</button>');
-        }
-
-        if (this.options.showRefresh) {
-            html.push(sprintf('<button class="btn' +
-                    sprintf(' btn-%s', this.options.buttonsClass) +
-                    sprintf(' btn-%s', this.options.iconSize) +
-                    '" type="button" name="refresh" aria-label="refresh" title="%s">',
-                    this.options.formatRefresh()),
-                sprintf('<i class="%s %s"></i>', this.options.iconsPrefix, this.options.icons.refresh),
-                '</button>');
-        }
-
-        if (this.options.showToggle) {
-            html.push(sprintf('<button class="btn' +
-                    sprintf(' btn-%s', this.options.buttonsClass) +
-                    sprintf(' btn-%s', this.options.iconSize) +
-                    '" type="button" name="toggle" aria-label="toggle" title="%s">',
-                    this.options.formatToggle()),
-                sprintf('<i class="%s %s"></i>', this.options.iconsPrefix, this.options.icons.toggle),
-                '</button>');
-        }
-
-        if (this.options.showColumns) {
-            html.push(sprintf('<div class="keep-open btn-group" title="%s">',
-                    this.options.formatColumns()),
-                '<button type="button" aria-label="columns" class="btn' +
-                sprintf(' btn-%s', this.options.buttonsClass) +
-                sprintf(' btn-%s', this.options.iconSize) +
-                ' dropdown-toggle" data-toggle="dropdown">',
-                sprintf('<i class="%s %s"></i>', this.options.iconsPrefix, this.options.icons.columns),
-                ' <span class="caret"></span>',
-                '</button>',
-                '<ul class="dropdown-menu" role="menu">');
-
-            $.each(this.columns, function (i, column) {
-                if (column.radio || column.checkbox) {
-                    return;
-                }
-
-                if (that.options.cardView && !column.cardVisible) {
-                    return;
-                }
-
-                var checked = column.visible ? ' checked="checked"' : '';
-
-                if (column.switchable) {
-                    html.push(sprintf('<li role="menuitem">' +
-                        '<label><input type="checkbox" data-field="%s" value="%s"%s> %s</label>' +
-                        '</li>', column.field, i, checked, column.title));
-                    switchableCount++;
-                }
-            });
-            html.push('</ul>',
-                '</div>');
-        }
-
-        html.push('</div>');
-
-        // Fix #188: this.showToolbar is for extensions
-        if (this.showToolbar || html.length > 2) {
-            this.$toolbar.append(html.join(''));
-        }
-
-        if (this.options.showPaginationSwitch) {
-            this.$toolbar.find('button[name="paginationSwitch"]')
-                .off('click').on('click', $.proxy(this.togglePagination, this));
-        }
-
-        if (this.options.showRefresh) {
-            this.$toolbar.find('button[name="refresh"]')
-                .off('click').on('click', $.proxy(this.refresh, this));
-        }
-
-        if (this.options.showToggle) {
-            this.$toolbar.find('button[name="toggle"]')
-                .off('click').on('click', function () {
-                    that.toggleView();
-                });
-        }
-
-        if (this.options.showColumns) {
-            $keepOpen = this.$toolbar.find('.keep-open');
-
-            if (switchableCount <= this.options.minimumCountColumns) {
-                $keepOpen.find('input').prop('disabled', true);
-            }
-
-            $keepOpen.find('li').off('click').on('click', function (event) {
-                event.stopImmediatePropagation();
-            });
-            $keepOpen.find('input').off('click').on('click', function () {
-                var $this = $(this);
-
-                that.toggleColumn($(this).val(), $this.prop('checked'), false);
-                that.trigger('column-switch', $(this).data('field'), $this.prop('checked'));
-            });
-        }
-
-        if (this.options.search) {
-            html = [];
-            html.push(
-                '<div class="pull-' + this.options.searchAlign + ' search">',
-                sprintf('<input class="form-control' +
-                    sprintf(' input-%s', this.options.iconSize) +
-                    '" type="text" placeholder="%s">',
-                    this.options.formatSearch()),
-                '</div>');
-
-            this.$toolbar.append(html.join(''));
-            $search = this.$toolbar.find('.search input');
-            $search.off('keyup drop blur').on('keyup drop blur', function (event) {
-                if (that.options.searchOnEnterKey && event.keyCode !== 13) {
-                    return;
-                }
-
-                if ($.inArray(event.keyCode, [37, 38, 39, 40]) > -1) {
-                    return;
-                }
-
-                clearTimeout(timeoutId); // doesn't matter if it's 0
-                timeoutId = setTimeout(function () {
-                    that.onSearch(event);
-                }, that.options.searchTimeOut);
-            });
-
-            if (isIEBrowser()) {
-                $search.off('mouseup').on('mouseup', function (event) {
-                    clearTimeout(timeoutId); // doesn't matter if it's 0
-                    timeoutId = setTimeout(function () {
-                        that.onSearch(event);
-                    }, that.options.searchTimeOut);
-                });
-            }
-        }
+	        if (this.$toolbar.find('.bs-bars').children().length) {
+	            $('body').append($(this.options.toolbar));
+	        }
+	        this.$toolbar.html('');
+	
+	        if (typeof this.options.toolbar === 'string' || typeof this.options.toolbar === 'object') {
+	            $(sprintf('<div class="bs-bars pull-%s"></div>', this.options.toolbarAlign))
+	                .appendTo(this.$toolbar)
+	                .append($(this.options.toolbar));
+	        }
+	
+	        // showColumns, showToggle, showRefresh
+	        html = [sprintf('<div class="columns columns-%s btn-group pull-%s">',
+	            this.options.buttonsAlign, this.options.buttonsAlign)];
+	
+	        if (typeof this.options.icons === 'string') {
+	            this.options.icons = calculateObjectValue(null, this.options.icons);
+	        }
+	
+	        if (this.options.showPaginationSwitch) {
+	            html.push(sprintf('<button class="btn' +
+	                    sprintf(' btn-%s', this.options.buttonsClass) +
+	                    sprintf(' btn-%s', this.options.iconSize) +
+	                    '" type="button" name="paginationSwitch" aria-label="pagination Switch" title="%s">',
+	                    this.options.formatPaginationSwitch()),
+	                sprintf('<i class="%s %s"></i>', this.options.iconsPrefix, this.options.icons.paginationSwitchDown),
+	                '</button>');
+	        }
+	
+	        if (this.options.showRefresh) {
+	            html.push(sprintf('<button class="btn' +
+	                    sprintf(' btn-%s', this.options.buttonsClass) +
+	                    sprintf(' btn-%s', this.options.iconSize) +
+	                    '" type="button" name="refresh" aria-label="refresh" title="%s">',
+	                    this.options.formatRefresh()),
+	                sprintf('<i class="%s %s"></i>', this.options.iconsPrefix, this.options.icons.refresh),
+	                '</button>');
+	        }
+	
+	        if (this.options.showToggle) {
+	            html.push(sprintf('<button class="btn' +
+	                    sprintf(' btn-%s', this.options.buttonsClass) +
+	                    sprintf(' btn-%s', this.options.iconSize) +
+	                    '" type="button" name="toggle" aria-label="toggle" title="%s">',
+	                    this.options.formatToggle()),
+	                sprintf('<i class="%s %s"></i>', this.options.iconsPrefix, this.options.icons.toggle),
+	                '</button>');
+	        }
+	
+	        if (this.options.showColumns) {
+	            html.push(sprintf('<div class="keep-open btn-group" title="%s">',
+	                    this.options.formatColumns()),
+	                '<button type="button" aria-label="columns" class="btn' +
+	                sprintf(' btn-%s', this.options.buttonsClass) +
+	                sprintf(' btn-%s', this.options.iconSize) +
+	                ' dropdown-toggle" data-toggle="dropdown">',
+	                sprintf('<i class="%s %s"></i>', this.options.iconsPrefix, this.options.icons.columns),
+	                ' <span class="caret"></span>',
+	                '</button>',
+	                '<ul class="dropdown-menu" role="menu">');
+	
+	            $.each(this.columns, function (i, column) {
+	                if (column.radio || column.checkbox) {
+	                    return;
+	                }
+	
+	                if (that.options.cardView && !column.cardVisible) {
+	                    return;
+	                }
+	
+	                var checked = column.visible ? ' checked="checked"' : '';
+	
+	                if (column.switchable) {
+	                    html.push(sprintf('<li role="menuitem">' +
+	                        '<label><input type="checkbox" data-field="%s" value="%s"%s> %s</label>' +
+	                        '</li>', column.field, i, checked, column.title));
+	                    switchableCount++;
+	                }
+	            });
+	            html.push('</ul>',
+	                '</div>');
+	        }
+	
+	        html.push('</div>');
+	
+	        // Fix #188: this.showToolbar is for extensions
+	        if (this.showToolbar || html.length > 2) {
+	            this.$toolbar.append(html.join(''));
+	        }
+	
+	        if (this.options.showPaginationSwitch) {
+	            this.$toolbar.find('button[name="paginationSwitch"]')
+	                .off('click').on('click', $.proxy(this.togglePagination, this));
+	        }
+	
+	        if (this.options.showRefresh) {
+	            this.$toolbar.find('button[name="refresh"]')
+	                .off('click').on('click', $.proxy(this.refresh, this));
+	        }
+	
+	        if (this.options.showToggle) {
+	            this.$toolbar.find('button[name="toggle"]')
+	                .off('click').on('click', function () {
+	                    that.toggleView();
+	                });
+	        }
+	
+	        if (this.options.showColumns) {
+	            $keepOpen = this.$toolbar.find('.keep-open');
+	
+	            if (switchableCount <= this.options.minimumCountColumns) {
+	                $keepOpen.find('input').prop('disabled', true);
+	            }
+	
+	            $keepOpen.find('li').off('click').on('click', function (event) {
+	                event.stopImmediatePropagation();
+	            });
+	            $keepOpen.find('input').off('click').on('click', function () {
+	                var $this = $(this);
+	
+	                that.toggleColumn($(this).val(), $this.prop('checked'), false);
+	                that.trigger('column-switch', $(this).data('field'), $this.prop('checked'));
+	            });
+	        }
+	
+	        if (this.options.search) {
+	            html = [];
+	            html.push(
+	                '<div class="pull-' + this.options.searchAlign + ' search">',
+	                sprintf('<input class="form-control' +
+	                    sprintf(' input-%s', this.options.iconSize) +
+	                    '" type="text" placeholder="%s">',
+	                    this.options.formatSearch()),
+	                '</div>');
+	
+	            this.$toolbar.append(html.join(''));
+	            $search = this.$toolbar.find('.search input');
+	            $search.off('keyup drop blur').on('keyup drop blur', function (event) {
+	                if (that.options.searchOnEnterKey && event.keyCode !== 13) {
+	                    return;
+	                }
+	
+	                if ($.inArray(event.keyCode, [37, 38, 39, 40]) > -1) {
+	                    return;
+	                }
+	
+	                clearTimeout(timeoutId); // doesn't matter if it's 0
+	                timeoutId = setTimeout(function () {
+	                    that.onSearch(event);
+	                }, that.options.searchTimeOut);
+	            });
+	
+	            if (isIEBrowser()) {
+	                $search.off('mouseup').on('mouseup', function (event) {
+	                    clearTimeout(timeoutId); // doesn't matter if it's 0
+	                    timeoutId = setTimeout(function () {
+	                        that.onSearch(event);
+	                    }, that.options.searchTimeOut);
+	                });
+	            }
+	        }
+    	}
     };
 
     BootstrapTable.prototype.onSearch = function (event) {
@@ -1909,8 +1957,17 @@
             if ($td.find('.detail-icon').length) {
                 return;
             }
-
-            that.trigger(e.type === 'click' ? 'click-cell' : 'dbl-click-cell', field, value, item, $td);
+            //update by songjun 
+            var dbClickObj = {};
+            dbClickObj.field = field;
+            dbClickObj.value = value;
+            dbClickObj.row = item;
+            dbClickObj.column = column;
+            dbClickObj.rowIndex = $tr.data('index');
+            dbClickObj.colIndex = index;
+            that.trigger(e.type === 'click' ? 'click-cell' : 'dbl-click-cell', $td,dbClickObj);
+            
+            //that.trigger(e.type === 'click' ? 'click-cell' : 'dbl-click-cell', field, value, item, $td);
             that.trigger(e.type === 'click' ? 'click-row' : 'dbl-click-row', item, $tr, field);
 
             // if click to select - then trigger the checkbox/radio click
@@ -2610,11 +2667,13 @@
             }
             $.extend(that.options.data[params.index], params.row);
         });
-
-        this.initSearch();
-        this.initPagination();
-        this.initSort();
-        this.initBody(true);
+        //修正编辑表格要重新刷新整个表格  songjun
+        if(that.options.updateRow2Body){
+        	this.initSearch();
+            this.initPagination();
+            this.initSort();
+            this.initBody(true);
+        }
     };
 
     BootstrapTable.prototype.initHiddenRows = function () {
@@ -3102,6 +3161,9 @@
                 options = $.extend({}, BootstrapTable.DEFAULTS, $this.data(),
                     typeof option === 'object' && option);
 
+            	if(options.layout == 'fixed'){
+            		$this.css({"table-layout":"fixed"});
+            	}
             if (typeof option === 'string') {
                 if ($.inArray(option, allowedMethods) < 0) {
                     throw new Error("Unknown method: " + option);

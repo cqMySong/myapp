@@ -16,6 +16,7 @@ import org.hibernate.criterion.Restrictions;
 import org.hibernate.criterion.Subqueries;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.alibaba.fastjson.JSONObject;
 import com.myapp.core.annotation.PermissionAnn;
@@ -24,6 +25,7 @@ import com.myapp.core.controller.BaseListController;
 import com.myapp.core.entity.BaseOrgInfo;
 import com.myapp.core.enums.DataTypeEnum;
 import com.myapp.core.model.ColumnModel;
+import com.myapp.core.model.WebDataModel;
 import com.myapp.core.util.BaseUtil;
 import com.myapp.enums.IndustryType;
 import com.myapp.enums.ProjectState;
@@ -90,6 +92,18 @@ public class ProjectListController extends BaseListController {
 			}
 		}
 	}
+	
+	@RequestMapping(value="/projectTree")
+	@ResponseBody
+	public WebDataModel treeData() {
+		try{
+			data = projectService.getProjectTreeData(null);
+		}catch(Exception e){
+			setErrorMesg(e.getMessage());
+		}
+		return ajaxModel();
+	}
+	
 	public Order getOrder() {
 		return Order.asc("number");
 	}

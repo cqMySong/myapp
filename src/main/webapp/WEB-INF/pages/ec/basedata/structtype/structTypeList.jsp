@@ -2,14 +2,14 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<title>角色信息</title>
+<title>结构类型</title>
 </head>
 <style type="text/css">
 </style>
 <script type="text/javascript">
 </script>
 <body style="padding: 5px;" >
-	<div id="listPanel" class="panel" style="padding:2px;">
+	<div id="listPanel" class="panel">
 		<div id="table-toolbar">
 		</div>
 	     <table id="tblMain">

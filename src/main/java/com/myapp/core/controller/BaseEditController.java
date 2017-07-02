@@ -4,18 +4,18 @@ import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import javax.persistence.EnumType;
-
 import org.hibernate.Criteria;
+import org.hibernate.criterion.Order;
 import org.hibernate.criterion.ProjectionList;
 import org.hibernate.criterion.Projections;
 import org.hibernate.criterion.Restrictions;
 import org.hibernate.sql.JoinType;
-import org.hibernate.transform.Transformers;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -24,6 +24,7 @@ import com.alibaba.fastjson.JSONObject;
 import com.myapp.core.annotation.PermissionItemAnn;
 import com.myapp.core.base.dao.MyResultTransFormer;
 import com.myapp.core.base.entity.CoreBaseBillInfo;
+import com.myapp.core.base.entity.CoreBaseEntryInfo;
 import com.myapp.core.base.entity.CoreBaseInfo;
 import com.myapp.core.base.entity.CoreInfo;
 import com.myapp.core.base.enums.MyEnum;
@@ -32,6 +33,7 @@ import com.myapp.core.enums.BillState;
 import com.myapp.core.enums.DataTypeEnum;
 import com.myapp.core.enums.PermissionTypeEnum;
 import com.myapp.core.exception.db.QueryException;
+import com.myapp.core.exception.db.SaveException;
 import com.myapp.core.model.ColumnModel;
 import com.myapp.core.model.WebDataModel;
 import com.myapp.core.util.BaseUtil;
@@ -81,17 +83,26 @@ public abstract class BaseEditController extends CoreBaseController {
 		
 	}
 	
-	private void storeData(BaseMethodEnum bme){
+	protected void storeData(BaseMethodEnum bme) throws SaveException{
 		Object editData = getEditData();
+		if(editData!=null&&editData instanceof CoreBaseBillInfo){
+			CoreBaseBillInfo cbInfo = (CoreBaseBillInfo) editData;
+			cbInfo.setLastUpdateUser(getCurUser());
+		}
 		if(BaseMethodEnum.SAVE.equals(bme)){
 			getService().saveEntity(editData);
 		}else if(BaseMethodEnum.SUBMIT.equals(bme)){
 			getService().submitEntity(editData);
+		}else{
+			storeData(bme,editData);
 		}
 		setEditData(editData);
 	}
+	protected void storeData(BaseMethodEnum bme,Object editData) throws SaveException{
+		
+	}
 	
-	protected boolean beforeOperate(BaseMethodEnum bme){
+	protected boolean beforeOperate(BaseMethodEnum bme) throws ClassNotFoundException, InstantiationException, IllegalAccessException{
 		boolean toGo = true;
 		init();
 		if(BaseMethodEnum.ADDNEW.equals(bme)){
@@ -103,15 +114,14 @@ public abstract class BaseEditController extends CoreBaseController {
 			beforeStoreData(bme,getEditData());
 			toGo = verifyInput(getEditData());
 			if(toGo&&BaseMethodEnum.SUBMIT.equals(bme)){
-				verifyInputSubmit(getEditData());
+				toGo = verifyInputSubmit(getEditData());
 			}
 		}else if(BaseMethodEnum.EDIT.equals(bme)
 				||BaseMethodEnum.VIEW.equals(bme)
 				||BaseMethodEnum.REMOVE.equals(bme)){
 			String billId = getReuestBillId();
 			if(BaseUtil.isEmpty(billId)){
-				String oprName = BaseMethodEnum.EDIT.equals(bme)?"编辑":(BaseMethodEnum.VIEW.equals(bme)?"查看":"删除");
-				setErrorMesg("单据ID为空，无法完成数据的["+oprName+"]操作!");
+				setErrorMesg("单据ID为空，无法完成数据的["+bme.getName()+"]操作!");
 				toGo = false;
 			}else{
 				if(BaseMethodEnum.REMOVE.equals(bme)){
@@ -119,10 +129,15 @@ public abstract class BaseEditController extends CoreBaseController {
 				}
 			}
 		}
+		if(toGo){
+			toGo = verifyEditData(bme);
+		}
 		return toGo;
 	}
-	
-	private void afterOperate(BaseMethodEnum bme){
+	protected boolean verifyEditData(BaseMethodEnum bme){
+		return true;
+	}
+	protected void afterOperate(BaseMethodEnum bme){
 		packageEditData2Json();
 	}
 	
@@ -161,8 +176,8 @@ public abstract class BaseEditController extends CoreBaseController {
 				List<ColumnModel> cols = col.getCols();
 				if(entrys!=null&&entrys.size()>0&&cols!=null&&cols.size()>0){
 					for(Object entryObj: entrys) {
-						if(entryObj!=null&&entryObj instanceof CoreBaseInfo){
-							CoreBaseInfo eInfo = (CoreBaseInfo) entryObj;
+						if(entryObj!=null&&entryObj instanceof CoreBaseEntryInfo){
+							CoreBaseEntryInfo eInfo = (CoreBaseEntryInfo) entryObj;
 							Map eMap = new HashMap();
 							for(ColumnModel ecol:cols){
 								String name = ecol.getName();
@@ -201,7 +216,74 @@ public abstract class BaseEditController extends CoreBaseController {
 		}
 	}
 	
-	private void packageJson2EditData(){
+	private Object getBaseColumnData(Map editData_map,ColumnModel col){
+		String name = col.getName();
+		Object val =  editData_map.get(name);
+		if(val!=null) {
+			DataTypeEnum dte = col.getDataType();
+			if(DataTypeEnum.DATE.equals(dte)){
+				if(BaseUtil.isEmpty(val)){
+					val = null;
+				}else{
+					val = DateUtil.parseDate(val.toString(), col.getFormat());
+				}
+			}else if(DataTypeEnum.BOOLEAN.equals(dte)){
+				if(BaseUtil.isEmpty(val)) {
+					val = Boolean.FALSE;
+				}else{
+					val = ("1".equals(val.toString())||"true".equals(val.toString().toLowerCase()))?Boolean.TRUE:Boolean.FALSE;
+				}
+			}else if(DataTypeEnum.F7.equals(dte)){
+				if(BaseUtil.isEmpty(val)) {
+					val = null;
+				}else{
+					val = getService().getEntity(col.getClaz(), WebUtil.UUID_ReplaceID(val.toString()));
+				}
+				
+			}else if(DataTypeEnum.ENUM.equals(dte)){
+				if(BaseUtil.isEmpty(val)) {
+					val = null;
+				}else{
+					val = EnumUtil.getEnum(col.getClaz().getName(), val.toString());
+				}
+			}else if(DataTypeEnum.NUMBER.equals(dte)){
+				if(BaseUtil.isEmpty(val)){
+					val = null;
+				}else{
+					String num_str = val.toString().trim();
+					BigDecimal bd =  new BigDecimal(num_str);
+					val = bd;
+					Class cz = col.getClass();
+					if(cz!=null){
+						if(cz.equals(Double.class)){
+							val = bd.doubleValue();
+						}else if(cz.equals(Long.class)){
+							val = bd.longValue();
+						}else if(cz.equals(Float.class)){
+							val = bd.floatValue();
+						}else if(cz.equals(Short.class)){
+							val = bd.shortValue();
+						}
+					}
+				}
+			}else if(DataTypeEnum.INT.equals(dte)){
+				if(BaseUtil.isEmpty(val)){
+					val = null;
+				}else{
+					val = Integer.valueOf(val.toString());
+				}
+			}else if(DataTypeEnum.PK.equals(dte)){
+				if(BaseUtil.isEmpty(val)) {
+					val = null;
+				}else{
+					val = WebUtil.UUID_ReplaceID(val.toString());
+				}
+			}
+		}
+		return val;	
+	}
+	
+	private void packageJson2EditData() throws ClassNotFoundException, InstantiationException, IllegalAccessException{
 		String editData_str = request.getParameter("editData");
 		if(BaseUtil.isEmpty(editData_str)) return;
 		Map editData_map = JSONObject.parseObject(editData_str, new HashMap().getClass());
@@ -215,54 +297,94 @@ public abstract class BaseEditController extends CoreBaseController {
 		if(cbInfo!=null){
 			List<ColumnModel> cols = getDataBinding();
 			for(ColumnModel col:cols){
+				DataTypeEnum dte = col.getDataType();
 				String name = col.getName();
 				if(!BaseUtil.isEmpty(name)&&editData_map.containsKey(name)){
-					Object val =  editData_map.get(name);
-					if(val!=null) {
-						DataTypeEnum dte = col.getDataType();
-						if(DataTypeEnum.DATE.equals(dte)){
-							val = DateUtil.parseDate(val.toString(), col.getFormat());
-						}else if(DataTypeEnum.BOOLEAN.equals(dte)){
-							val = ("1".equals(val.toString())||"true".equals(val.toString().toLowerCase()))?Boolean.TRUE:Boolean.FALSE;
-						}else if(DataTypeEnum.F7.equals(dte)){
-							val = getService().getEntity(col.getClaz(), WebUtil.UUID_ReplaceID(val.toString()));
-						}else if(DataTypeEnum.ENUM.equals(dte)){
-							val = EnumUtil.getEnum(col.getClaz().getName(), val.toString());
-						}else if(DataTypeEnum.NUMBER.equals(dte)){
-							BigDecimal bd =  new BigDecimal(val.toString());
-							val = bd;
-							Class cz = col.getClass();
-							if(cz!=null){
-								if(cz.equals(Double.class)){
-									val = bd.doubleValue();
-								}else if(cz.equals(Long.class)){
-									val = bd.longValue();
-								}else if(cz.equals(Float.class)){
-									val = bd.floatValue();
-								}else if(cz.equals(Short.class)){
-									val = bd.shortValue();
+					if(DataTypeEnum.ENTRY.equals(dte)&&col.getCols().size()>0&&col.getClaz()!=null){
+						//如果单据id不为空都时候 先处理删除该单据下都所有 分录信息
+						//TODO 还是有问题哦
+						
+						Map<String,CoreBaseEntryInfo> entrysMap = new HashMap<String,CoreBaseEntryInfo>();
+						Object objEntrySet = cbInfo.get(name);
+						if(objEntrySet!=null&&objEntrySet instanceof Set){
+							Set entrySet = (Set) objEntrySet;
+							Iterator it = entrySet.iterator();
+							while(it.hasNext()){
+								Object entryObj = it.next();
+								if(entryObj!=null&&entryObj instanceof CoreBaseEntryInfo){
+									CoreBaseEntryInfo eInfo = (CoreBaseEntryInfo) entryObj;
+									entrysMap.put(eInfo.getId(), eInfo);
 								}
 							}
-						}else if(DataTypeEnum.INT.equals(dte)){
-							val = Integer.valueOf(val.toString());
-						}else if(DataTypeEnum.PK.equals(dte)){
-							val = WebUtil.UUID_ReplaceID(val.toString());
-						}else if(DataTypeEnum.ENTRY.equals(dte)){
-							
 						}
+//						if(!BaseUtil.isEmpty(billId)){
+////							String delHql = "delete from "+col.getClaz().getName()+" where parent.id=?";
+////							getService().executeUpdata(delHql, new String[]{billId});
+//						}else{
+//							entrySet = new HashSet();
+//						}
+						//
+						Set entrySet = new HashSet();
+						Object entrys_str = editData_map.get(name);
+						if(!BaseUtil.isEmpty(entrys_str)){
+							List entry_List = JSONObject.parseObject(entrys_str.toString(), new ArrayList().getClass());
+							if(entry_List!=null&&entry_List.size()>0){
+								List<ColumnModel> entryCols = col.getCols();
+								Class entryClaz = col.getClaz();
+								for(int i=0;i<entry_List.size();i++){
+									Object entryObj = entry_List.get(i);
+									if(!BaseUtil.isEmpty(entryObj)){
+										Map entryObj_map = JSONObject.parseObject(entryObj.toString(), new HashMap().getClass());
+										CoreBaseEntryInfo entryInfo = null;
+										String entryId = (String)entryObj_map.get("id");
+										if(!BaseUtil.isEmpty(entryId)){
+											if(entrysMap.containsKey(entryId)){
+												entryInfo = entrysMap.get(entryId);
+												entrysMap.remove(entryId);
+											}else{
+												entryInfo = (CoreBaseEntryInfo)getService().getEntity(entryClaz, entryId);
+											}
+										}else{
+											Object enObj = Class.forName(entryClaz.getName()).newInstance();
+											if(enObj!=null&&enObj instanceof CoreBaseEntryInfo){
+												entryInfo = (CoreBaseEntryInfo) enObj;
+											}
+										}
+										if(entryInfo!=null){
+											for(ColumnModel entry_col:entryCols){
+												String entryColName = entry_col.getName();
+												if(BaseUtil.isEmpty(entryColName)) continue;
+												entryInfo.put(entryColName, getBaseColumnData(entryObj_map,entry_col));
+											}
+											entryInfo.setSeq(i+1);
+											entryInfo.setParent(cbInfo);
+											entrySet.add(entryInfo);
+										}
+									}
+								}
+							}
+						}
+						cbInfo.put(name, entrySet);
+						if(entrysMap!=null&&entrysMap.size()>0){
+							for (CoreBaseEntryInfo eInfo : entrysMap.values()) {  
+								getService().deleteEntity(eInfo);
+							}
+						}
+						
+					}else{
+						cbInfo.put(name, getBaseColumnData(editData_map,col));
 					}
-					cbInfo.put(name, val);
 				}
 			}
 		}
 		setEditData(cbInfo);
 	}
 	
-	private void setEditData(Object editData){
+	protected void setEditData(Object editData){
 		this.data = editData;
 	}
 	
-	private Object getEditData(){
+	protected Object getEditData(){
 		return this.data;
 	}
 	
@@ -294,6 +416,8 @@ public abstract class BaseEditController extends CoreBaseController {
 			if(editData instanceof CoreBaseBillInfo){
 				CoreBaseBillInfo cbbInfo = (CoreBaseBillInfo) editData;
 				cbbInfo.setBillState(BillState.ADDNEW);
+				cbbInfo.setCreateUser(getCurUser());
+				cbbInfo.setBizDate(new Date());
 			}
 		}
 	}
@@ -339,6 +463,7 @@ public abstract class BaseEditController extends CoreBaseController {
 			//如果是多分录的情况 这样是有问题的 
 			
 			Map editMap = new HashMap();
+			Map entryMap = new HashMap();
 			Criteria billCrteria = getService().initQueryCriteria();
 			ProjectionList billProjectList = Projections.projectionList();
 			List<ColumnModel> cols = getDataBinding();
@@ -355,7 +480,7 @@ public abstract class BaseEditController extends CoreBaseController {
 					List<ColumnModel> entry_cols = cm.getCols();
 					if(entryClaz!=null){
 						Criteria entryCrteria = getService().initQueryCriteria(entryClaz);
-						entryCrteria.createAlias("parent", "parent", JoinType.FULL_JOIN);
+						entryCrteria.createAlias("parent", "parent", JoinType.INNER_JOIN);
 						ProjectionList entryProjectList = Projections.projectionList();
 						List<ColumnModel> entryF7Col =  new ArrayList<ColumnModel>();
 						for(ColumnModel entry_cm:entry_cols){
@@ -368,12 +493,13 @@ public abstract class BaseEditController extends CoreBaseController {
 						}
 						entryCrteria.setProjection(entryProjectList);
 						entryCrteria.add(Restrictions.eq("parent.id", billId));
-						entryCrteria.setResultTransformer(Transformers.ALIAS_TO_ENTITY_MAP);
+						entryCrteria.addOrder(Order.asc("seq"));
+						entryCrteria.setResultTransformer(new MyResultTransFormer(entryClaz));
 						entryCols.add(cm.getName());
 						if(entryF7Col.size()>0){
 							F7Col.put(cm.getName(), entryF7Col);
 						}
-						editMap.put(cm.getName(), entryCrteria);
+						entryMap.put(cm.getName(), entryCrteria);
 					}
 				}
 			}
@@ -384,8 +510,9 @@ public abstract class BaseEditController extends CoreBaseController {
 			if(billData!=null&&billData.size()>0){
 				editMap = (Map) billData.get(0);
 				for(String entryKey:entryCols){
-					Criteria entryCrteria = (Criteria) editMap.get(entryKey);
-					editMap.put(entryKey, entryCrteria.list());
+					Criteria entryCrteria = (Criteria) entryMap.get(entryKey);
+					if(entryCrteria!=null)
+						editMap.put(entryKey, entryCrteria.list());
 				}
 			}
 			//然后再把f7的集合处理成对象

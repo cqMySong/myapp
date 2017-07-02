@@ -38,32 +38,4 @@ public class BaseOrgInfo extends CoreBaseTreeInfo<BaseOrgInfo> {
 	public void setRemark(String remark) {
 		this.remark = remark;
 	}
-	
-	public static void main(String[] args){
-		BaseOrgInfo ui= new BaseOrgInfo();
-		ui.put("name","p1");
-		ui.put("number","01");
-		ui.put("createDate", new Date());
-		
-		BaseOrgInfo ui2= new BaseOrgInfo();
-		ui2.put("name","p11");
-		ui2.put("number","0101");
-		ui2.put("createDate", new Date());
-		
-		BaseOrgInfo ui3= new BaseOrgInfo();
-		ui3.put("name","p12");
-		ui3.put("number","0102");
-		ui3.put("createDate", new Date());
-		Set<BaseOrgInfo> childs = new HashSet<BaseOrgInfo>();
-		childs.add(ui2);
-		childs.add(ui3);
-		
-		ui.put("children", childs);
-		System.out.println(ui.get("name")+":"+ui.get("number"));
-		Set<BaseOrgInfo> cds = (Set<BaseOrgInfo>) ui.get("children");
-		for(BaseOrgInfo oinfo:cds){
-			System.out.println(oinfo.get("name")+":"+oinfo.get("number"));
-		}
-		
-	}
 }

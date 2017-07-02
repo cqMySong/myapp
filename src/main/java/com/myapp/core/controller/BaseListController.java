@@ -40,8 +40,7 @@ public abstract class BaseListController extends CoreBaseController {
 	private Integer curPage;
 	private Integer pageSize;
 	
-	public abstract String getEditUrl();
-	public abstract String getListUrl();
+	
 	
 	//特殊情况 在处理
 	public String querySQL(){
@@ -226,4 +225,11 @@ public abstract class BaseListController extends CoreBaseController {
 	public void initAddNewParams(HashMap params){
 		
 	}
+	
+	public Order getOrder() {
+		return Order.asc("number");
+	}
+	
+	public abstract String getEditUrl();
+	public abstract String getListUrl();
 }

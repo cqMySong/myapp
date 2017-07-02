@@ -23,10 +23,10 @@ public class ProjectService extends BaseInterfaceService<ProjectInfo> {
 	
 	public List getProjectTreeData(Map params) throws QueryException{
 		StringBuffer sql = new StringBuffer();
-		sql.append(" select fid as id,fnumber as number,fname as name,fprentid as parentId,'baseOrg' as type");
+		sql.append(" select fid as id,fnumber as number,fname as name,fprentid as parentId,flongnumber as longNumber,'baseOrg' as type");
 		sql.append(" from t_base_Org ");
 		sql.append(" union all ");
-		sql.append(" select fid as id,fnumber as number,fname as name,forgId as parentId,'project' as type");
+		sql.append(" select fid as id,fnumber as number,fname as name,forgId as parentId,'01' as longNumber,'project' as type");
 		sql.append(" from t_ec_project ");
 		return executeSQLQuery(sql.toString(), null);
 	}

@@ -24,7 +24,6 @@ public interface IAbstractBaseService {
 	public <T> T getEntity(Class<T> c,String id);
 	public <T> T queryEntity(Class<T> c, String hql, Object[] params);
 	public List<CoreInfo> getEntityCollection(Class claz);
-	public Object saveEntity(Object entity);
 	public void deleteEntity(Class c,String id);
 	public void deleteEntity(Object entity);
 	public List findByHQL(String hql, Object[] params); 

@@ -92,8 +92,8 @@
 				</div>
 			</div>
 			<div class="row">
-				<div class="col-sm-6">
-					<div class="input-group">
+				<div class="col-sm-6 mb15">
+					<div class="input-group ">
 						<span class="input-group-addon lable">抗震等级</span> 
 						<input name="aseismicLevel" class="input-item require">
 					</div>

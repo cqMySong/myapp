@@ -94,7 +94,7 @@ public class CoreBaseTreeInfo<T> extends CoreBaseInfo {
 		if(this.getParent()!=null){
 			displayName = ((CoreBaseTreeInfo)this.getParent()).getDisplayName();
 			if(!BaseUtil.isEmpty(displayName)){
-				displayName = displayName+"!"+curName;
+				displayName = displayName+"_"+curName;
 			}else{
 				displayName = curName;
 			}

@@ -12,6 +12,7 @@ var MyF7 = function(el){
 	 this.commitName = 'id';
 	 this.dataFormat = undefined;
 	 this.dataChange = undefined;
+	 this.closeWin = undefined;
 }
 MyF7.prototype = {
 	init:function(opt){
@@ -23,7 +24,7 @@ MyF7.prototype = {
 		if(!webUtil.isEmpty(opt.enabled)) {
 			$thisDom.data("f7enabled",opt.enabled);
 		}
-		this.uiWin_opt = $.extend(true,{},{title:'信息查询',url:'',params:undefined,width:600,height:450},opt.uiWin);
+		this.uiWin_opt = $.extend(true,{},{title:'信息查询',url:'',uiParams:undefined,width:600,height:450},opt.uiWin);
 		if(opt.displayName){
 			this.displayName = opt.displayName;
 		}
@@ -39,6 +40,9 @@ MyF7.prototype = {
 		if(opt.onShow&&$.isFunction(opt.onShow)){
 			this.onShow = opt.onShow;
 		}
+		if(opt.closeWin&&$.isFunction(opt.closeWin)){
+			this.closeWin = opt.closeWin;
+		}
 		this.addEevent(opt.event);
 	},
 	addEevent:function(event){
@@ -46,15 +50,7 @@ MyF7.prototype = {
 			this.f7Btn.click({f7:this,ev:event},function(e){
 				var edata = e.data;//整个f7对象
 				var myf7 = edata.f7;
-				if(myf7.isEnabled()){
-					var _go = true;
-					if(!webUtil.isEmpty(myf7.onShow)&&$.isFunction(myf7.onShow)){
-						_go = myf7.onShow(myf7);
-					}
-					if(_go){
-						myf7.show();
-					}
-				}
+				myf7.show();
 			});
 		}
 	},
@@ -62,17 +58,24 @@ MyF7.prototype = {
 		if(!webUtil.isEmpty(this.uiWin_opt)){
 			var enabled = this.isEnabled();
 			if(!enabled) return;
+			var _go = true;
+			if(!webUtil.isEmpty(this.onShow)&&$.isFunction(this.onShow)){
+				_go = this.onShow(myf7);
+			}
+			if(!_go) return;
 			var _win = $.extend(true,{},this.uiWin_opt);
 			var _toUrl = _win.url;
 			if(!webUtil.isEmpty(_toUrl)){
 				var thisF7 = this;
-				_win.url = webUtil.toUrl(_toUrl+"/f7show");
+				var thisUrl = webUtil.toUrl(_toUrl+"/f7show");
+				_win.url = thisUrl;
 				_win.btns = ['确定','取消'];
 				_win.maxmin = false;
 				_win.btnCallBack = function(index,layerIndex,layero){
 					if(layero){
 						var iframe_win = $(layero).parent().find('#layui-layer-iframe'+layerIndex)[0].contentWindow;
 						var f7Data = iframe_win.getData();
+						var isOk = false;
 						if(index==1){
 							var oldVal = thisF7.getValue();
 							var oldData = thisF7.getData();
@@ -82,6 +85,10 @@ MyF7.prototype = {
 									!webUtil.isEmpty(thisF7.dataChange)&&$.isFunction(thisF7.dataChange)){
 								thisF7.dataChange(oldData,f7Data);
 							}
+							isOk = true;
+						}
+						if(!webUtil.isEmpty(thisF7.closeWin)&&$.isFunction(thisF7.closeWin)){
+							thisF7.closeWin(isOk,f7Data);
 						}
 					}
 					return true;
@@ -95,7 +102,11 @@ MyF7.prototype = {
 		if(this.dataFormat&&$.isFunction(this.dataFormat)){
 			this.dataFormat(this.$element,data);
 		}else{
-			$(this.$element).val(data[this.displayName]);
+			var _txt = '';
+			if(!webUtil.isEmpty(data)){
+				_txt = data[this.displayName];
+			}
+			$(this.$element).val(_txt);
 		}
 	},
 	getData:function(){

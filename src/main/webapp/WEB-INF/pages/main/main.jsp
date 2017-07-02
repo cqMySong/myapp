@@ -181,11 +181,15 @@
 																{title:'项目管理首页',icon:'fa fa-home'},
 																{title:'基础资料',icon:'fa fa-cogs',child:[
 																	{title:'项目结构类型',icon:'fa fa-cogs',url:'ec/basedata/structTypes/list'}
+																   ,{title:'项目工程结构',icon:'fa fa-cogs',url:'ec/basedata/prostructures/list'}
+																   ,{title:'项目分部分项',icon:'fa fa-cogs',url:'ec/basedata/prosubitems/list'}
 																    ]},
 																{title:'基础数据',icon:'fa fa-home',child:[
 																	{title:'工程项目',icon:'fa fa-building-o',url:'ec/basedata/projects/list'}]},
 																{title:'计划管理',icon:'fa fa-star',child:[
-																	{title:'项目总计划',icon:'fa fa-user',url:'ec/plan/projectplans/list'}
+																	{title:'项目总计划',icon:'fa fa-user',url:'ec/plan/projecttotalplans/list'},
+																	{title:'项目月计划',icon:'fa fa-user',url:'ec/plan/projectplans/monthlist'},
+																	{title:'项目总计划-old',icon:'fa fa-user',url:'ec/plan/projectplans/list'}
 																	]}
 																]}">
             			</div>

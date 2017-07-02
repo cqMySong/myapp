@@ -13,7 +13,7 @@
 			if(webUtil.isEmpty(_type)) return;
 			var $thisDom = this.$element;
 			var thisObj = this;
-			if(_type ==DataType.text){
+			if(_type ==DataType.text || _type==DataType.textarea){
 				if(!webUtil.isEmpty(_opt)){
 					if(!webUtil.isEmpty(_opt.initData)){
 						thisObj.setData(_opt.initData);
@@ -57,7 +57,7 @@
 			var $thisDom = this.$element;
 			var thisObj = this;
 			var opt = $.extend(true,{},{name:'',params:undefined,callBack:undefined}, _opt);
-			if(_type == DataType.text){
+			if(_type == DataType.text||_type == DataType.textarea){
 				
 			}else if(_type ==DataType.select){//下拉选择
 				
@@ -155,7 +155,7 @@
 				var $parentContainer = $thisDom.parent('.date');
 				if(!webUtil.isEmpty($parentContainer)&&$parentContainer.length>0){
 					var _format = (_type ==DataType.date)?'yyyy-mm-dd':'yyyy-mm-dd hh:ii:ss';
-					var _def_date = {language: 'zh-CN',format:_format,autoclose: true,todayBtn: true,pickerPosition: "bottom-left"};
+					var _def_date = {language: 'zh-CN',format:_format,autoclose: true,todayBtn: 'linked',pickerPosition: "bottom-left"};
 					var _dateOpt = $.extend(true,{},_def_date,_opt);
 					if(_type ==DataType.date){
 						$parentContainer.datepicker(_dateOpt);
@@ -170,7 +170,7 @@
 			if(webUtil.isEmpty(_type)) return;
 			var $thisDom = this.$element;
 			var _data = data;
-			if(_type ==DataType.text){
+			if(_type ==DataType.text||_type == DataType.textarea){
 				if(webUtil.isEmpty(data)){
 					_data = '';
 				}
@@ -190,7 +190,11 @@
                      		thisDate = thisDate.format(_thisFormtStr);
 						}
 					}
-					$thisDom.val(thisDate);
+					if(_type==DataType.date){
+						$parentContainer.datepicker('update',thisDate);
+					}else{
+						$thisDom.val(thisDate);
+					}
 				}
 			}else if(_type ==DataType.checkbox||_type ==DataType.radio){
 				var $parentContainer = $thisDom.parent('.mycheckradiobox_container');
@@ -206,6 +210,8 @@
 				}
 			}else if(_type==DataType.F7){
 				$thisDom.myF7().setData(data);
+			}else{
+				$thisDom.val(_data);
 			}
 		},
 		getData:function(){
@@ -213,20 +219,12 @@
 			if(webUtil.isEmpty(_type)) return;
 			var $thisDom = this.$element;
 			var _data = '';
-			if(_type ==DataType.text){
+			if(_type ==DataType.text||_type == DataType.textarea){
 				_data = $thisDom.val();
 			}else if(_type ==DataType.select){//下拉选择
 				_data = $thisDom.select2().val();
 			}else if(_type ==DataType.date||_type ==DataType.datetime){
 				_data = $thisDom.val();
-				/*var $parentContainer = $thisDom.parent('.date');
-				if(!webUtil.isEmpty($parentContainer)&&$parentContainer.length>0){
-					if(_type ==DataType.date){
-						_data = $parentContainer.datepicker('getDate');
-					}else{
-						_data = $parentContainer.datetimepicker('getDate');
-					}
-				}*/
 			}else if(_type ==DataType.checkbox||_type ==DataType.radio){
 				_data = $thisDom.prop("checked");
 			}else if(_type==DataType.F7){
@@ -240,7 +238,7 @@
 			var _type = this.type;
 			if(webUtil.isEmpty(_type)) return;
 			var $thisDom = this.$element;
-			if(_type ==DataType.text
+			if(_type ==DataType.text||_type == DataType.textarea||_type ==DataType.select
 					||_type ==DataType.date||_type ==DataType.datetime){
 				if(enable){
 					$thisDom.removeAttr("disabled");
@@ -275,9 +273,19 @@
 			}else{
 				_toDom.removeClass('require');
 			}
-			
+		},
+		setFocus:function(data){
+			var _type = this.type;
+			if(webUtil.isEmpty(_type)) return;
+			var $thisDom = this.$element;
+			if(_type ==DataType.text||_type == DataType.textarea){
+				if(data){
+					$thisDom.focus();
+				}else{
+					$thisDom.blur();
+				}
+			}
 		}
-		
 	}
 	$.fn.myComponet = function(type,options) {
 		var defaults = {method:'init',opt:undefined};
@@ -300,6 +308,8 @@
 				mycom.setRequire(_data);
 			}else if(_method=='getlable'){
 				return mycom.getLable();
+			}else if(_method=='setfocus'){
+				mycom.setFocus(_data);
 			}else{
 				webUtil.mesg("未知情况:其他的待续.....");
 			}

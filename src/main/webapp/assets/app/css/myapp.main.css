@@ -12,6 +12,11 @@ table.table-hover tbody tr.selected td {
 	line-height: 32px;
 }
 
+
+/**form 解决bootstrap 表头融合的一个边框问题**/
+.fixed-table-container thead th._myMerge{
+	border-left: 1px solid #ddd;
+}
 .input-w200 {
 	width: 200px;
 }
@@ -306,4 +311,6 @@ input::-ms-clear{display:none;}
 	min-width: 100px;
 	text-align: right;
 }
+
+
 

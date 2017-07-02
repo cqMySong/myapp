@@ -272,7 +272,8 @@ var myNavTab = {
 					if(webUtil.isEmpty(_curUrl)&&!webUtil.isEmpty(tabUrl))
 						_ifm_tabContent.attr("src",app.root+"/"+tabUrl);
 					_ifm_tabContent.load(function(){
-						webUtil.setIframeAutoHeight(_itemId+"_ifm");
+						var elId = _itemId+"_ifm";
+						webUtil.setMainTabHeight(elId);
 					});
 				}
 			}
@@ -303,6 +304,9 @@ var myNavTab = {
 			_tab_li_a_text.append(_tab_colse$)
 			_tab_colse$.click(_tabItem,function(e){
 				myNavTab.removeTabItem(e.data.id);
+				if(_tabItem.colseCallBack&&$.isFunction(_tabItem.colseCallBack)){
+					_tabItem.colseCallBack(e.data);
+				}
 			});
 		}
 		_tab_li_a.append(_tab_li_a_text);
@@ -440,14 +444,26 @@ $.fn.myBtnGroup = function(options) {
 ;(function($, window, document,undefined) {
 var MyDataTable = function(ele, opt){
 	 this.$element = ele;
+	 this.selectModel = 1;//1 单选  2 多选
+	 if(!webUtil.isEmpty(opt.selectModel)){
+		 this.selectModel = opt.selectModel;
+	 }
+	 var thisTable = this;
 	 var _opt_onClickRow = opt.onClickRow;
 	 clickRow = function(row, $el, field){
-		if($el.hasClass('selected')){
-			$el.removeClass('selected');
-		}else{
+		var selectModel = thisTable.getSelectModel();
+		if(selectModel===1){
+			$el.siblings('tr.selected').removeClass('selected');
 			$el.addClass('selected');
-			$el.data('rowData',row);
+		}else if(selectModel===2){
+			if($el.hasClass('selected')){
+				$el.removeClass('selected');
+			}else{
+				$el.addClass('selected');
+				$el.data('rowData',row);
+			}
 		}
+		$el.data('rowData',row);
 		if(!webUtil.isEmpty(_opt_onClickRow)){
 			_opt_onClickRow(row, $el, field);
 		}
@@ -468,6 +484,7 @@ var MyDataTable = function(ele, opt){
      if(!webUtil.isEmpty(this.mypagination)){
     	 this.addMyPagination(this.mypagination);
      }
+     this.editDataChanged = undefined;
 }
 MyDataTable.prototype = {
 	addMyPagination:function(_opt){
@@ -636,15 +653,44 @@ MyDataTable.prototype = {
 			}
 		}});
 	},
-	addRow:function(index,rowData){
+	addRow:function(rowData){
+		this.insertRow(this.getRowCount(),rowData);
+	},
+	insertRow:function(index,rowData){
 		var _idx = -1;
 		if($.isNumeric(index)){
 			_idx = index;
 		}
 		this.tblMain.bootstrapTable('insertRow',{index:_idx,row:rowData});
+		this.tblMain.bootstrapTable('resetView');
 	},
-	removeRow:function(index){
-		 //this.tblMain.bootstrapTable('removeAll'); 
+	removeRow:function(row){
+		var index = -1;
+		if($.isNumeric(row)){
+			index = row;
+		}else{
+			var rowDom = webUtil.getJqueryDom(row);
+			if(!webUtil.isEmpty(rowDom)){
+				index = rowDom.attr('data-index');
+			}
+		}
+		if($.isNumeric(index)&&index>=0&&index<this.getRowCount()){
+			var curTableData = this.tblMain.bootstrapTable('getData', false);
+			curTableData.splice(index, 1);
+			this.loadData(curTableData);
+		}else{
+			alert('无法找到对应的数据行!');
+		}
+	},
+	getSelectRow:function(){
+		var selRows = this.getSelectRows();
+		if(!webUtil.isEmpty(selRows)&&selRows.length>0){
+			return selRows.eq(0);
+		}
+		return null;
+	},
+	getSelectRows:function(){
+		return this.$element.find('tbody>tr.selected');
 	},
 	getRowCount:function(){
 		return this.$element.find('tbody>tr').length;
@@ -660,7 +706,7 @@ MyDataTable.prototype = {
 		if($.isNumeric(index)){
 			_idx = index;
 		}
-		if(_idx>0){
+		if(_idx>=0){
 			return this.$element.find('tbody>tr').eq(_idx);
 		}
 		return null;
@@ -673,14 +719,82 @@ MyDataTable.prototype = {
 		return seledRow;
 		
 	},
+	
 	getData:function(){
 		return this.tblMain.bootstrapTable('getData'); 
+	},
+	getSubmitData:function(otherCol){
+		var datas = [];
+		var cols = this.getVisibleColumns();
+		var tableDatas = this.getData();
+		if(!webUtil.isEmpty(cols)&&cols.length>0
+				&&!webUtil.isEmpty(tableDatas)&&tableDatas.length>0){
+			if(!webUtil.isEmpty(otherCol)&&otherCol.length>0&&$.isArray(otherCol)){
+				for(var i=0;i<otherCol.length;i++){
+					cols.push(otherCol[i]);
+				}
+			}
+			for(var i=0;i<tableDatas.length;i++){
+				var rowObj = {};
+				var rowData = tableDatas[i];
+				for(var j=0;j<cols.length;j++){
+					var column = cols[j];
+					var field = column.field;
+					if(field=='_seq') continue;
+					var val ;
+					var _type = column.type;
+					if(_type == DataType.F7){
+						var f7Obj = rowData[field];
+						if(!webUtil.isEmpty(f7Obj)&&!webUtil.isEmpty(f7Obj.id)){
+							val = f7Obj.id;
+						}else{
+							val = '';
+						}
+					}else{
+						val = rowData[field];
+						if(!webUtil.isEmpty(val)&&$.isNumeric(val)
+								&&(_type == DataType.date ||_type == DataType.datetime)){
+							var thisDate = new Date();
+                     		thisDate.setTime(val);
+                     		var _thisFormtStr = _type==DataType.date?"yyyy-MM-dd":"yyyy-MM-dd h:m:s";
+                     		val = thisDate.format(_thisFormtStr);
+						}
+					}
+					if(webUtil.isEmpty(val)) val = '';
+					rowObj[field] = val;
+				}
+				datas.push(rowObj);
+			}
+		}
+		return datas;
 	},
 	loadData:function(data){
 		this.tblMain.bootstrapTable('load', data);
 	},
 	getVisibleColumns:function(){
 		return this.tblMain.bootstrapTable('getVisibleColumns');
+	},
+	getColumn:function(field){
+		if(webUtil.isEmpty(field)) return null;
+		var cols = this.getVisibleColumns();
+		if(!webUtil.isEmpty(cols)&&cols.length>0){
+			if($.isNumeric(field)){
+				if(field>=0&&field<cols.length){
+					return cols[field];
+				}
+			}else if(typeof field === 'string' ){
+				var thisCol = null;
+				$(cols).each(function(i,col){
+					if(col.field==field){
+						thisCol = col;
+						return false;
+					}
+				});
+				return thisCol;
+			}
+		}
+		return null;
+		
 	},
 	addColumn:function(index,cols){
 		var _idx = -1;
@@ -701,6 +815,228 @@ MyDataTable.prototype = {
 			_cols.push(cols);
 		}
 		this.tblMain.bootstrapTable('refreshOptions',{columns:_cols});
+	},
+	getTblMain:function(){
+		return this.tblMain;
+	},
+	addTableEvent:function(eventName,fun){
+		this.$element.on(eventName+'.bs.table',fun);
+	},
+	resetView:function(){
+		this.getTblMain().bootstrapTable('resetView');
+	},
+	updateRow:function(rowIdx,row){
+		if($.isNumeric(rowIdx)){
+			var rowData = {};
+			if(!webUtil.isEmpty(row)&&$.isPlainObject(row)){
+				rowData = row;
+			}
+			this.getTblMain().bootstrapTable('updateRow',{index:rowIdx,row:rowData});
+		}
+	},
+	getSelectModel:function(){
+		return this.selectModel;
+	},
+	isEnabled:function(){
+		var enable = this.$element.data('enabled');
+		if(!webUtil.isEmpty(enable)&&typeof(enable) == 'boolean'){
+			return enable;
+		}
+		return true;
+	},
+	setEnabled:function(enabled){
+		var enable = true;
+		if(!webUtil.isEmpty(enabled)&&typeof(enabled) == 'boolean'){
+			enable = enabled;
+		}
+		this.$element.data('enabled',enable);
+	},
+	getRowData:function(rowIdx){
+		var tableDatas = this.getData();
+		if(!webUtil.isEmpty(tableDatas)&&$.isArray(tableDatas)){
+			if(rowIdx>=0&&rowIdx<tableDatas.length)
+				return tableDatas[rowIdx];
+		}
+		return null;
+	},
+	getCell:function(rowIdx,colIdx){
+		var row = this.getRow(rowIdx);
+		if(!webUtil.isEmpty(row)){
+			return row.find('td').eq(colIdx);
+		}
+		return null;
+	},
+	getTableCellValue:function(rowIdx,field){
+		var rowData = this.getRowData(rowIdx);
+		if(!webUtil.isEmpty(rowData)){
+			return rowData[field];
+		}
+		return null;
+	},
+	setTableCellValue:function(rowIdx,field,val){
+		if(webUtil.isEmpty(field)) return;
+		var rowData = this.getRowData(rowIdx);
+		if(!webUtil.isEmpty(rowData)){
+			var oldVal = rowData[field];
+			var newVal = val;
+			var thisColumn = null;
+			var colIdx = -1;
+			var _cols = this.getVisibleColumns();
+			$.each(_cols, function (i, column) {
+	            if (column.field === field) {
+	            	thisColumn = column;
+	            	colIdx = i;
+	                return false;
+	            }
+	            return true;
+	        });
+			
+			var cell = this.getCell(rowIdx,colIdx);
+			if(!webUtil.isEmpty(thisColumn)&&!webUtil.isEmpty(cell)){
+				if(!webUtil.isEmpty(val)){
+					if(thisColumn.type == DataType.number){
+						if(!$.isNumeric(val)){
+							webUtil.mesg("请输入有效的数字!");
+							if(!webUtil.isEmpty(oldVal)){
+								newVal = oldVal;
+							}else{
+								newVal = null;
+							}
+						}
+					}
+				}
+				
+				rowData[field] = newVal;
+				this.updateRow(rowIdx,rowData);
+				
+				var _cellHtml = newVal;
+				if(!webUtil.isEmpty(thisColumn.formatter)){
+					if($.isFunction(thisColumn.formatter)){
+						_cellHtml = thisColumn.formatter(newVal,rowData,colIdx);
+					}else{
+						_cellHtml = thisColumn.formatter;
+					}
+				}
+				cell.html(_cellHtml);
+				if(oldVal!=newVal){
+					if(!webUtil.isEmpty(this.editDataChanged)&&$.isFunction(this.editDataChanged)){
+						var changeObj= {};
+						changeObj.oldVal = oldVal;
+						changeObj.value = newVal;
+						changeObj.rowData = rowData;
+						changeObj.field = field;
+						changeObj.column = thisColumn;
+						changeObj.rowIndex = rowIdx;
+						changeObj.colIndex = colIdx;
+						this.editDataChanged(cell,changeObj);
+					}
+				}
+				this.resetView();
+			}
+		}
+	},
+	initTableColumnEditor:function(medthed,opt){
+		//dbl-click-cell 双击事件名
+		if(webUtil.isEmpty(medthed)) medthed = 'click-cell';//单击开始编辑
+		var tblOpt = $.extend(true,{}, {statrtEdit:undefined,endEdit:undefined,editDataChanged:undefined}, opt);
+		if(!webUtil.isEmpty(tblOpt.editDataChanged)&&$.isFunction(tblOpt.editDataChanged)){
+			this.editDataChanged = tblOpt.editDataChanged;
+		}
+		var thisMyTable = this;
+		this.addTableEvent(medthed,function(e,$td,obj){
+			var toEdit = true;
+			 /* var obj = {};
+	            obj.field = field;
+	            obj.value = value; 
+	            obj.row = item;
+	            obj.column = column;
+	            obj.rowIndex = $tr.data('index');
+	            obj.colIndex = index;*/
+			if('_seq'==obj.field){
+				toEdit = false;
+			}
+			if(toEdit){
+				toEdit = thisMyTable.isEnabled();
+			}
+			var thisColumn  = obj.column;
+			if(toEdit){
+				var locked = false;
+				if(!webUtil.isEmpty(thisColumn.locked)&&typeof(thisColumn.locked) == 'boolean'){
+					locked = thisColumn.locked;
+				}
+				if(locked){
+					var tdLocked = $td.data("locked");
+					if(!webUtil.isEmpty(tdLocked)&&typeof(tdLocked) == 'boolean'){
+						locked = tdLocked;
+					}
+				}
+				toEdit = !locked;
+			}
+			if(toEdit){
+				var thisEditorColumn = thisMyTable.$element.data('curEditorColumn');
+				if(!webUtil.isEmpty(thisEditorColumn)){
+					var ridx = thisEditorColumn.rowIndex;
+					var colIdx = thisEditorColumn.colIndex;
+					if(ridx===obj.rowIndex&&colIdx===obj.colIndex){
+						toEdit = false;
+					}else{
+						//bs-table 肯爹的方式啊  更新行居然把整个表格重新生成一次
+						var curEditor = thisEditorColumn.editor;
+						if(!webUtil.isEmpty(curEditor)){
+							var thisCellVal = curEditor.getTableCellData();
+							var go = true;
+							var endObj= $.extend(true,{},obj, {value:thisCellVal});
+							if(!webUtil.isEmpty(tblOpt.endEdit)&&$.isFunction(tblOpt.endEdit)){
+								go = tblOpt.endEdit($td,endObj);
+							}
+							if(go){
+								thisMyTable.setTableCellValue(ridx,thisEditorColumn.field,thisCellVal);
+							}
+							thisMyTable.$element.data('curEditorColumn',null);
+							thisEditorColumn.cell.data('hasInit','no');
+						}
+					}
+				}
+			}
+			if(toEdit&&!webUtil.isEmpty(tblOpt.statrtEdit)&&$.isFunction(tblOpt.statrtEdit)){
+				toEdit = tblOpt.statrtEdit($td,obj);
+			}
+			if(toEdit){
+				var thisClickObj = obj;
+				var colEditor = $td.myDataTableCellEditor(thisColumn.type);
+				var _editorOpt = {};
+				_editorOpt.endEdit = function(val){
+					var go = true;
+					obj.value = val;
+					if(!webUtil.isEmpty(tblOpt.endEdit)&&$.isFunction(tblOpt.endEdit)){
+						go = tblOpt.endEdit($td,obj);
+					}
+					if(go){
+						var ridx =  thisClickObj.rowIndex;
+						thisMyTable.setTableCellValue(ridx,thisClickObj.field,val);
+					}
+					thisMyTable.$element.data('curEditorColumn',null);
+					$td.data('hasInit','no');
+				};
+				_editorOpt.initData = thisMyTable.getTableCellValue(obj.rowIndex,obj.field);
+				var editOpt = $.extend(true,{}, _editorOpt)
+				var thisEditor = thisColumn.editor;
+				if(!webUtil.isEmpty(thisEditor)){
+					if(typeof thisEditor === 'string'){
+						thisEditor = webUtil.str2Json(thisEditor);
+					}
+					if($.isPlainObject(thisEditor)){
+						editOpt = $.extend(true,editOpt, thisEditor)
+					}
+				}
+				colEditor.initEditor(editOpt);
+				thisMyTable.resetView();
+				thisClickObj.editor = colEditor;
+				thisClickObj.cell = $td;
+				thisMyTable.$element.data('curEditorColumn', $.extend(true,{},thisClickObj));
+			}
+			return true;
+		});
 	}
 }
 $.fn.myDataTable = function(options) {
@@ -710,5 +1046,154 @@ $.fn.myDataTable = function(options) {
 }
 })(jQuery, window, document);
 
-
+;(function($, window, document, undefined) {
+var MyDataTableCellEditor = function(ele) {
+	this.$element = ele;
+}
+MyDataTableCellEditor.prototype = {
+	initEditor:function(opt){
+		var hasInit = this.$element.data('hasInit');
+		if(!webUtil.isEmpty(hasInit)&&hasInit=='yes'){//已经初始化了的
+			return ;
+		}else{
+			var width = this.$element.innerWidth();
+			var height = this.$element.innerHeight();
+			this.$element.html('');
+			var _$editor = $('<div class="input-group"></div>');
+			var type = this.$element.data('dataType');
+			var cell_css = {"margin":"0px","width":width+"px","height":height+"px","padding":"0px"};
+			if(!webUtil.isEmpty(type)){
+				var cell_componet = null;
+				if(DataType.text==type){
+					cell_componet = $('<input type="text" class="form-control" />');
+					cell_componet.css(cell_css);
+				}else if(DataType.F7==type){
+					cell_componet = $('<input style="margin:0px;width:100%;height:100%;padding:0px;" class="form-control"/>');
+				}else if(DataType.date==type||DataType.datetime==type){
+					cell_componet = $('<input style="margin:0px;height:100%;padding:0px;" readonly="readonly" class="form-control" />');
+				}else if(DataType.select == type){
+					cell_componet = $('<select class="form-control"></select>');
+				}else if(DataType.textarea == type){
+					cell_componet = $('<textarea class="input-item form-control"></textarea>');
+				}else{
+					//其他未知都初始化成text
+					cell_componet = $('<input type="text" class="form-control"/>');
+					cell_componet.css(cell_css);
+				}
+				if(!webUtil.isEmpty(cell_componet)){
+					_$editor.append(cell_componet);
+					_$editor.data('componet',cell_componet);
+				}
+			}
+			this.$element.css({"padding":"0px"});
+			this.$element.append(_$editor);
+			var thisMyComponet = _$editor.data('componet');
+			if(!webUtil.isEmpty(thisMyComponet)){
+				_$editor.css(cell_css);
+				if(DataType.F7==type
+						||DataType.date==type||DataType.datetime==type){
+					thisMyComponet.height(height); 
+					if(DataType.F7==type){
+						opt.closeWin = function(isOk,f7Data){
+							var thisData = f7Data;
+							if(!isOk){
+								thisData = thisMyComponet.myF7().getData();
+							}
+							if(!webUtil.isEmpty(opt.endEdit)&&$.isFunction(opt.endEdit)){
+								opt.endEdit(thisData);
+							}
+						 }
+					}else if(DataType.date==type||DataType.datetime==type){
+					}
+				}else{
+					thisMyComponet.css(cell_css);
+				}
+				
+				this.$element.data('editor',_$editor);
+				this.$element.width(width);
+				this.$element.height(height);
+				this.$element.data('hasInit','yes');
+				//1:控件初始化
+				thisMyComponet.myComponet(type,{method:'init',opt:opt});
+				//2：初始化事件
+				this.initEditorEvent(opt.endEdit);
+				//3:初始化值
+				thisMyComponet.myComponet(type,{method:'setData',opt:opt.initData});
+			}
+		}
+	},
+	getTableCellData:function(){
+		var type = this.$element.data('dataType');
+		var _editor = this.$element.data('editor');
+		var val = null;
+		if(!webUtil.isEmpty(_editor)&&!webUtil.isEmpty(type)){
+			var thisMyComponet =_editor.data('componet');
+			if(!webUtil.isEmpty(thisMyComponet)){
+				if(DataType.F7==type){
+					val = thisMyComponet.myF7().getData();
+				}else{
+					val = thisMyComponet.myComponet(type,{method:'getdata'});
+				}
+			}
+		}
+		return val;
+	},
+	initEditorEvent:function(endEdit){
+		var type = this.$element.data('dataType');
+		var _editor = this.$element.data('editor');
+		if(!webUtil.isEmpty(_editor)&&!webUtil.isEmpty(type)){
+			var thisMyComponet = _editor.data('componet');
+			if(DataType.F7==type){
+				_editor.focus();
+				thisMyComponet.focusout(function(e) {
+					e.stopPropagation();
+					if(!webUtil.isEmpty(endEdit)&&$.isFunction(endEdit)){
+						endEdit($(this).myF7().getData());
+					}
+				});
+			}else if(DataType.date==type||DataType.datetime==type){
+				thisMyComponet.focusout(function(e) {
+					e.stopPropagation();
+					if(!webUtil.isEmpty(endEdit)&&$.isFunction(endEdit)){
+						endEdit($(this).myComponet(type,{method:'getData'}));
+					}
+				});
+			}else if(DataType.select == type){
+				_editor.on('select2:select', function (evt) {
+					if(!webUtil.isEmpty(endEdit)&&$.isFunction(endEdit)){
+						endEdit(thisMyComponet.myComponet(type,{method:'getData'}));
+					}
+				});
+			}else{
+				_editor.focus();
+				if(!webUtil.isEmpty(thisMyComponet)){
+					thisMyComponet.focus();
+					thisMyComponet.focusout(function() {
+						if(!webUtil.isEmpty(endEdit)&&$.isFunction(endEdit)){
+							endEdit($(this).myComponet(type,{method:'getdata'}));
+						}
+					});
+				}
+			}
+			var thisCell = this;
+			if(DataType.text==type){
+				thisMyComponet.keyup(function(event){
+					var myEvent =event||window.event;  
+					var kcode=myEvent.keyCode;  
+					if(kcode==13){
+						if(!webUtil.isEmpty(endEdit)&&$.isFunction(endEdit)){
+							endEdit($(this).myComponet(DataType.text,{method:'getdata'}));
+						}
+					}
+				});
+			}
+		}
+	}
+}
+$.fn.myDataTableCellEditor = function(type) {
+	if(webUtil.isEmpty(type)) type = DataType.text;
+	$(this).data("dataType",type);
+	return new MyDataTableCellEditor($(this));
+}
+})(jQuery, window, document);
 

@@ -17,6 +17,7 @@ import com.alibaba.fastjson.JSONObject;
 import com.myapp.core.annotation.NeedLoginAnn;
 import com.myapp.core.annotation.PermissionAnn;
 import com.myapp.core.annotation.PermissionItemAnn;
+import com.myapp.core.entity.BaseOrgInfo;
 import com.myapp.core.entity.UserInfo;
 import com.myapp.core.model.MyWebContent;
 import com.myapp.core.service.base.BaseService;

@@ -1,5 +1,7 @@
 package com.myapp.core.base.entity;
 
+import java.util.Date;
+
 import javax.persistence.Column;
 import javax.persistence.JoinColumn;
 import javax.persistence.MappedSuperclass;
@@ -23,7 +25,10 @@ public class CoreBaseBillInfo extends CoreBaseInfo {
 	
 	private UserInfo createUser;
 	private UserInfo lastUpdateUser;
-	private BillState billState;
+	private BillState billState;//单据状态
+	private Date bizDate;//业务日期
+	private UserInfo auditor;//审核人
+	private Date auditDate;//审核日期
 	
 	@OneToOne
 	@JoinColumn(name = "fcreateUser")
@@ -50,6 +55,30 @@ public class CoreBaseBillInfo extends CoreBaseInfo {
 	public void setBillState(BillState billState) {
 		this.billState = billState;
 	}
+	@Column(name="fbizDate")
+	public Date getBizDate() {
+		return bizDate;
+	}
+	public void setBizDate(Date bizDate) {
+		this.bizDate = bizDate;
+	}
+	@OneToOne
+	@JoinColumn(name = "fauditor")
+	public UserInfo getAuditor() {
+		return auditor;
+	}
+	public void setAuditor(UserInfo auditor) {
+		this.auditor = auditor;
+	}
+	@Column(name="fauditDate")
+	public Date getAuditDate() {
+		return auditDate;
+	}
+	public void setAuditDate(Date auditDate) {
+		this.auditDate = auditDate;
+	}
+	
+	
 	
 	
 }

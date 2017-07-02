@@ -8,15 +8,23 @@
 </style>
 <script type="text/javascript">
 </script>
+		<!-- <div class="ui-layout-center"></div>
+		<div class="ui-layout-north">North</div>  
+		<div class="ui-layout-south">South</div>  
+		<div class="ui-layout-east">East</div>  
+		<div class="ui-layout-west">West</div>  -->
 <body style="padding: 5px;" >
-	<div id="listPanel" class="panel" style="padding:2px;">
-		<div class="gantt" style="height: 400px;overflow: auto;"></div>
-	</div>
+	<div class="ui-layout-center">
+		<div id="listPanel" style="padding:2px;">
+			<div class="gantt" style="height: 400px;overflow: auto;"></div>
+		</div>
+	</div>  
 </body>
 
 <%@include file="../../../base/base_list.jsp"%>
 <link rel="stylesheet" href="<%=appRoot%>/assets/lib/gantt/css/style.css"/>
 <script src="<%=appRoot%>/assets/lib/gantt/js/jquery.fn.gantt.js?v=1" charset ="GB2312"></script>
+<script src="<%=appRoot%>/assets/lib/jquery/jquery.layout-latest.js" charset ="GB2312"></script>
 
 <script type="text/javascript">
 /**
@@ -31,6 +39,8 @@ function enableClick(btn){
 	alert(btn.text);
 }
 $(document).ready(function() {
+	$('body').layout({ applyDefaultStyles: true,north__resizable:true});  
+	
 	$(".gantt").gantt({
 		source: [{
 			name: "现场施工",

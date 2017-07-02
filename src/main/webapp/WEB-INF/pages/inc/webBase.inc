@@ -39,6 +39,8 @@
 <script src="<%=appRoot%>/assets/lib/bootstrap/js/bootstrap.js"></script>
 <script src="<%=appRoot%>/assets/lib/jquery-toggles/toggles.js"></script>
 <script src="<%=appRoot%>/assets/js/quirk.js"></script>
+<!--jquery-layout-->
+<script src="<%=appRoot%>/assets/lib/jquery/jquery.layout-latest.js" charset ="GB2312"></script>
 
 <!--bootstrap-table-->
 <script src="<%=appRoot%>/assets/lib/bootstrap-table/js/bootstrap-table.js?v=121"></script>
@@ -58,7 +60,7 @@
 <script src="<%=appRoot%>/assets/lib/ztree/js/jquery.ztree.all-3.5.min.js"></script>
 
 <script src="<%=appRoot%>/assets/app/js/myapp.util.js?v=3"></script>
-<script src="<%=appRoot%>/assets/app/js/myapp.main.js?v=13" type="text/javascript"></script>
+<script src="<%=appRoot%>/assets/app/js/myapp.main.js?v=15" type="text/javascript"></script>
 <script src="<%=appRoot%>/assets/app/js/myapp.component.js?v=3" type="text/javascript"></script>
 <script src="<%=appRoot%>/assets/app/js/myapp.tree.js?v=3" type="text/javascript"></script>
 <script src="<%=appRoot%>/assets/app/js/myapp.myF7.js" type="text/javascript"></script>

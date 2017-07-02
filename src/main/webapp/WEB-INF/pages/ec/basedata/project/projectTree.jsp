@@ -41,7 +41,6 @@ function getData(){
 }
 //f7中配置 height:580,width:300 合适
 $(document).ready(function() {
-	var treeData = '${treeData}';
 	projectTreeViewer = $('#treeContainer').myTreeViewer(null);
 	projectTreeViewer.init({title:'工程项目',height:460});
 	projectTreeViewer.addTree(projectSetting,[]);

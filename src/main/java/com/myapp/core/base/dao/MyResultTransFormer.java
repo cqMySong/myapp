@@ -56,7 +56,11 @@ public class MyResultTransFormer implements ResultTransformer {
 	}
 
 	public List transformList(List collection) {
-		return this.data;
+		if(collection==null||collection.size()==0){
+			return new ArrayList();
+		}else{
+			return this.data;
+		}
 	}
 
 }

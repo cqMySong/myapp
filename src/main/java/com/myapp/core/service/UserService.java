@@ -8,6 +8,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.myapp.core.base.setting.SystemConstant;
 import com.myapp.core.entity.UserInfo;
+import com.myapp.core.exception.db.SaveException;
 import com.myapp.core.service.base.BaseInterfaceService;
 import com.myapp.core.util.BaseUtil;
 
@@ -16,7 +17,7 @@ import com.myapp.core.util.BaseUtil;
 public class UserService extends BaseInterfaceService<UserInfo> {
 	
 	
-	public String resetUserEncrypt(String userId) throws NoSuchAlgorithmException{
+	public String resetUserEncrypt(String userId) throws NoSuchAlgorithmException, SaveException{
 		if(BaseUtil.isEmpty(userId)) return "用户id为空无法完成用户密码都重置操作!";
 		UserInfo uInfo = (UserInfo) getEntity(userId);
 		if(uInfo!=null){

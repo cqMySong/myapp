@@ -1,9 +1,9 @@
 package com.myapp.controller.base;
 
-import java.math.BigInteger;
-import java.security.MessageDigest;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Set;
 
 import javax.annotation.Resource;
 
@@ -15,6 +15,7 @@ import org.springframework.web.servlet.ModelAndView;
 import com.alibaba.fastjson.JSONObject;
 import com.myapp.core.annotation.NeedLoginAnn;
 import com.myapp.core.base.controller.BaseController;
+import com.myapp.core.base.service.impl.AbstractBaseService;
 import com.myapp.core.entity.BaseOrgInfo;
 import com.myapp.core.entity.UserInfo;
 import com.myapp.core.enums.UserState;
@@ -22,6 +23,9 @@ import com.myapp.core.model.MyWebContent;
 import com.myapp.core.model.WebDataModel;
 import com.myapp.core.service.UserService;
 import com.myapp.core.util.BaseUtil;
+import com.myapp.entity.ec.plan.ProjectTotalPlanInfo;
+import com.myapp.entity.ec.plan.ProjectTotalPlanItemInfo;
+import com.myapp.service.ec.plan.ProjectTotalPlanService;
 
 /**
  *-----------MySong---------------
@@ -36,6 +40,12 @@ import com.myapp.core.util.BaseUtil;
 public class MainController extends BaseController {
 	@Resource
 	public UserService userService;
+	
+	@Resource
+	public ProjectTotalPlanService projectTotalPlanService;
+	public AbstractBaseService getService() {
+		return projectTotalPlanService;
+	}
 	
 	@RequestMapping("/index")
 	public ModelAndView index(){
@@ -119,7 +129,6 @@ public class MainController extends BaseController {
 	@ResponseBody
 	@RequestMapping("/userSet")
 	public WebDataModel userSet(){
-		
 		return ajaxModel();
 	}
 	

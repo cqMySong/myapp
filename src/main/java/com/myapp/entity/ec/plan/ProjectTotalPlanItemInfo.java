@@ -11,7 +11,9 @@ import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
 import com.myapp.core.base.entity.CoreBaseEntryInfo;
+import com.myapp.core.entity.UserInfo;
 import com.myapp.entity.ec.basedata.ProStructureInfo;
+import com.myapp.entity.ec.basedata.ProSubInfo;
 import com.myapp.entity.ec.basedata.ProSubItemInfo;
 
 /**
@@ -26,7 +28,8 @@ import com.myapp.entity.ec.basedata.ProSubItemInfo;
 @Table(name="t_ec_projectTotalPlanItem")
 public class ProjectTotalPlanItemInfo extends CoreBaseEntryInfo<ProjectTotalPlanInfo> {
 	private ProStructureInfo proStructure;//项目结构
-	private ProSubItemInfo proSubItem;//工程分部分项
+	private ProSubInfo proSub;//项目分部
+	private ProSubItemInfo proSubItem;//工程分项
 	private Date planBegDate;//计划开始日期
 	private Date planEndDate;//计划截止日期
 	private Integer planDays;//计划工期
@@ -38,6 +41,10 @@ public class ProjectTotalPlanItemInfo extends CoreBaseEntryInfo<ProjectTotalPlan
 	private String content;//工作内容
 	private String proQty;//工程量
 	private String proPersons;//施工人员
+	
+	private UserInfo dutyer;//责任人
+	private String dutyers;//责任人 多人之间用,分隔开
+	
 	
 	private String remark;
 	
@@ -133,6 +140,31 @@ public class ProjectTotalPlanItemInfo extends CoreBaseEntryInfo<ProjectTotalPlan
 	}
 	public void setProPersons(String proPersons) {
 		this.proPersons = proPersons;
+	}
+	@OneToOne(fetch=FetchType.LAZY)
+	@JoinColumn(name = "fproSubId")
+	public ProSubInfo getProSub() {
+		return proSub;
+	}
+	public void setProSub(ProSubInfo proSub) {
+		this.proSub = proSub;
+	}
+	
+	@OneToOne(fetch=FetchType.LAZY)
+	@JoinColumn(name = "fdutyerId")
+	public UserInfo getDutyer() {
+		return dutyer;
+	}
+	public void setDutyer(UserInfo dutyer) {
+		this.dutyer = dutyer;
+	}
+	
+	@Column(name="fdutyers",length=500)
+	public String getDutyers() {
+		return dutyers;
+	}
+	public void setDutyers(String dutyers) {
+		this.dutyers = dutyers;
 	}
 	
 	

@@ -42,7 +42,10 @@
 		</init-param>
 		<load-on-startup>1</load-on-startup> <!-- 是启动顺序，让这个Servlet随Servletp容器一起启动。 -->
 	</servlet>
-
+	<servlet-mapping>
+		<servlet-name>springMVC</servlet-name>
+		<url-pattern>/main/login</url-pattern>
+	</servlet-mapping>
 	<servlet-mapping>
 		<servlet-name>springMVC</servlet-name>
 		<url-pattern>/</url-pattern> <!-- 会拦截/的请求。 -->

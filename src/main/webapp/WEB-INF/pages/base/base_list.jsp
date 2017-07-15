@@ -185,9 +185,9 @@ ListUI.prototype = {
 				if($.isPlainObject(uiCtx)){
 					uiCtx =  'uiCtx='+webUtil.json2Str(uiCtx);
 				}
-				winUrl += (winUrl.indexOf('?')>0?'&':'?')+uiCtx;
+				winUrl += (winUrl.indexOf('?')>0?'&':'?')+encodeURI(uiCtx);
 			} 
-			winUrl = winUrl.replace(/\"/g,"'"); 
+			//winUrl = winUrl.replace(/\"/g,"'"); 
 			_win.url = winUrl;
 			top.myNavTab.addTab('#mainTab', _win);
 		}

@@ -14,6 +14,7 @@ import com.myapp.core.controller.BaseEditController;
 import com.myapp.core.entity.BaseOrgInfo;
 import com.myapp.core.enums.BaseMethodEnum;
 import com.myapp.core.enums.DataTypeEnum;
+import com.myapp.core.enums.OrgTypeEnum;
 import com.myapp.core.enums.UserState;
 import com.myapp.core.model.ColumnModel;
 import com.myapp.core.service.OrgService;
@@ -59,6 +60,7 @@ public class OrgEditController extends BaseEditController{
 		cols.add(new ColumnModel("number"));
 		cols.add(new ColumnModel("remark"));
 		cols.add(new ColumnModel("shortCode"));
+		cols.add(new ColumnModel("orgType",DataTypeEnum.ENUM,OrgTypeEnum.class));
 		ColumnModel parent = new ColumnModel("parent",DataTypeEnum.F7,"id,name");
 		parent.setClaz(BaseOrgInfo.class);
 		cols.add(parent);

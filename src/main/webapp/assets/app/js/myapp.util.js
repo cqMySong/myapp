@@ -51,6 +51,28 @@ Date.prototype.format = function(format) {
     }
     return format;
 }
+Date.prototype.addDays = function(d){
+	var date = this.getDate(); 
+	this.setDate(date + d); 
+	return this; 
+};
+Date.prototype.addWeeks = function(w){
+	return this.addDays(w * 7); 
+};
+Date.prototype.addMonths= function(m){
+	var month = this.getMonth(); 
+	this.setMonth(month + m); 
+	return this; 
+};
+Date.prototype.addYears = function(y){
+	var year = this.getFullYear(); 
+	this.setFullYear(year + y); 
+	return this; 
+};
+Date.prototype.getFirstDayOfWeek = function(){
+	var day = this.getDay() || 7;
+	return new Date(this.getFullYear(), this.getMonth(), this.getDate() + 1 - day);
+};
 
 var ajax_defaultOpt = {type:"POST",url:"",async:true,data:"",contentType:"application/json; charset=utf-8",dataType:"json",success:function(data){}};
 var webUtil = {
@@ -177,9 +199,9 @@ var webUtil = {
 			if($.isPlainObject(uiCtx)){
 				uiCtx =  'uiCtx='+webUtil.json2Str(uiCtx);
 			}
-			winUrl += (winUrl.indexOf('?')>0?'&':'?')+uiCtx;
+			winUrl += (winUrl.indexOf('?')>0?'&':'?')+encodeURI(uiCtx);
 		} 
-		winUrl = winUrl.replace(/\"/g,"'"); 
+		//winUrl = encodeURI(winUrl.replace(/\"/g,"'")); 
 		var layer_index = parent.layer.open({type : 2,
 			btn : _opt.btns,title :_opt.title,scrollbar : false,
 			shadeClose : false,close : false,shade : true,shade : 0.1,zIndex:2500,

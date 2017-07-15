@@ -7,7 +7,7 @@ import javax.persistence.JoinColumn;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
-import com.myapp.core.base.entity.CoreBaseTreeInfo;
+import com.myapp.core.base.entity.CoreBaseDataInfo;
 
 /**
  *-----------MySong---------------
@@ -19,11 +19,11 @@ import com.myapp.core.base.entity.CoreBaseTreeInfo;
  */
 @Entity
 @Table(name="t_ec_proSubItem")
-public class ProSubItemInfo extends CoreBaseTreeInfo<ProSubItemInfo> {
+public class ProSubItemInfo extends CoreBaseDataInfo {
 	private ProjectInfo project;//工程项目
-	private String remark;//备注
-	private Boolean enabled;//启用
-	
+	private ProStructureInfo proStruct;//项目工程结构
+	private ProSubInfo proSub;//项目分部工程
+
 	@OneToOne(fetch=FetchType.LAZY)
 	@JoinColumn(name = "fprojectId")
 	public ProjectInfo getProject() {
@@ -32,18 +32,26 @@ public class ProSubItemInfo extends CoreBaseTreeInfo<ProSubItemInfo> {
 	public void setProject(ProjectInfo project) {
 		this.project = project;
 	}
-	@Column(name="fremark",length=200)
-	public String getRemark() {
-		return remark;
+	@OneToOne(fetch=FetchType.LAZY)
+	@JoinColumn(name = "fproSubId")
+	public ProSubInfo getProSub() {
+		return proSub;
 	}
-	public void setRemark(String remark) {
-		this.remark = remark;
+
+	public void setProSub(ProSubInfo proSub) {
+		this.proSub = proSub;
 	}
-	@Column(name="fenabled",length=2)
-	public Boolean getEnabled() {
-		return enabled;
+	
+	@OneToOne(fetch=FetchType.LAZY)
+	@JoinColumn(name = "fproStructId")
+	public ProStructureInfo getProStruct() {
+		return proStruct;
 	}
-	public void setEnabled(Boolean enabled) {
-		this.enabled = enabled;
+	public void setProStruct(ProStructureInfo proStruct) {
+		this.proStruct = proStruct;
 	}
+	
+	
+	
+	
 }

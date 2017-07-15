@@ -13,7 +13,7 @@ import com.myapp.core.base.enums.MyEnum;
  * DISABLE 禁止登录等其他操作，FREEZE 只是禁止一些操作
  *-----------MySong---------------
  */
-public enum UserState implements MyEnum<UserState, String> {
+public enum UserState implements MyEnum<UserState> {
 	ENABLE("ENABLE","正常"),DISABLE("DISABLE","失效"),FREEZE("FREEZE","冻结");
 
 	private String name;

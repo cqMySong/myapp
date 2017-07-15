@@ -14,16 +14,13 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import com.alibaba.fastjson.JSONObject;
 import com.myapp.core.annotation.PermissionAnn;
 import com.myapp.core.base.service.impl.AbstractBaseService;
-import com.myapp.core.controller.BaseListController;
-import com.myapp.core.controller.BaseTreeListController;
+import com.myapp.core.controller.BaseDataListController;
 import com.myapp.core.enums.DataTypeEnum;
 import com.myapp.core.model.ColumnModel;
 import com.myapp.core.util.BaseUtil;
 import com.myapp.entity.ec.basedata.ProSubItemInfo;
 import com.myapp.entity.ec.basedata.ProjectInfo;
 import com.myapp.service.ec.basedata.ProStructureService;
-import com.myapp.service.ec.basedata.ProSubItemService;
-import com.myapp.service.ec.basedata.StructTypeService;
 
 /**
  *-----------MySong---------------
@@ -36,7 +33,7 @@ import com.myapp.service.ec.basedata.StructTypeService;
 @PermissionAnn(name="系统管理.现场管理.基础数据.工程结构",number="app.ec.basedata.prostructure")
 @Controller
 @RequestMapping("ec/basedata/prostructures")
-public class ProStructureListController extends BaseListController {
+public class ProStructureListController extends BaseDataListController {
 	
 	@Resource
 	public ProStructureService proStructureService;
@@ -47,10 +44,6 @@ public class ProStructureListController extends BaseListController {
 
 	public List<ColumnModel> getDataBinding() {
 		List<ColumnModel> cols = super.getDataBinding();
-		cols.add(new ColumnModel("name"));
-		cols.add(new ColumnModel("number"));
-		cols.add(new ColumnModel("enabled"));
-		cols.add(new ColumnModel("remark"));
 		ColumnModel parent = new ColumnModel("parent",DataTypeEnum.F7,"id,name,number");
 		parent.setClaz(ProSubItemInfo.class);
 		cols.add(parent);
@@ -59,6 +52,7 @@ public class ProStructureListController extends BaseListController {
 		cols.add(project);
 		return cols;
 	}
+	
 	public void executeQueryParams(Criteria query) {
 		super.executeQueryParams(query);
 		String serach = request.getParameter("search");

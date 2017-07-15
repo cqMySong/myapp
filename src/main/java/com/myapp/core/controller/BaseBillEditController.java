@@ -31,9 +31,9 @@ public abstract class BaseBillEditController extends BaseEditController {
 	protected boolean beforeOperate(BaseMethodEnum bme)
 			throws ClassNotFoundException, InstantiationException,
 			IllegalAccessException {
-		boolean toGo = true;
-		if(BaseMethodEnum.AUDIT.equals(bme)
-				||BaseMethodEnum.UNAUDIT.equals(bme)){
+		boolean toGo = super.beforeOperate(bme);
+		if(toGo&&(BaseMethodEnum.AUDIT.equals(bme)
+				||BaseMethodEnum.UNAUDIT.equals(bme))){
 			String billId = getReuestBillId();
 			if(BaseUtil.isEmpty(billId)){
 				setErrorMesg("单据ID为空，无法完成数据的["+bme.getName()+"]操作!");
@@ -44,12 +44,7 @@ public abstract class BaseBillEditController extends BaseEditController {
 				beforeStoreData(bme,getEditData());
 			}
 		}
-		if(toGo){
-			return super.beforeOperate(bme);
-		}else{
-			return false;
-		}
-		
+		return toGo;
 	}
 	
 	
@@ -72,7 +67,12 @@ public abstract class BaseBillEditController extends BaseEditController {
 	protected boolean verifyEditData(BaseMethodEnum bme){
 		boolean toGo = super.verifyEditData(bme);
 		if(!toGo) return toGo;
-		Object editObj = getEditData();
+		Object editObj = null;
+		if(BaseMethodEnum.REMOVE.equals(bme)){
+			editObj = getService().getEntity(getReuestBillId());
+		}else{
+			editObj = getEditData();
+		}
 		if(editObj!=null&&editObj instanceof CoreBaseBillInfo){
 			CoreBaseBillInfo cbInfo = (CoreBaseBillInfo) editObj; 
 			BillState bs = cbInfo.getBillState();

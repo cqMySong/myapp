@@ -7,7 +7,7 @@ String _uiCtx = "";
 Object uiCtxObj = request.getAttribute("uiCtx");
  if(uiCtxObj!=null){
 	 _uiCtx = uiCtxObj.toString();
-	 _uiCtx = _uiCtx.replaceAll("\'","\"");//单引号转双引号
+//	 _uiCtx = _uiCtx.replaceAll("\'","\"");//单引号转双引号
  }
 %>
 

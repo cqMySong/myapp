@@ -15,7 +15,7 @@ import com.myapp.core.util.BaseUtil;
  *
  *-----------MySong---------------
  */
-public enum BillState implements MyEnum<BillState,String> {
+public enum BillState implements MyEnum<BillState> {
 	ADDNEW("ADDNEW","编制中"),SAVE("SAVE","已保存"),SUBMIT("SUBMIT","已提交"),AUDIT("AUDIT","已审核"),NOPASS("NOPASS","审核不通过");
 
 	private String name;

@@ -16,6 +16,7 @@ import com.myapp.core.enums.BillState;
 import com.myapp.core.enums.DataTypeEnum;
 import com.myapp.core.model.ColumnModel;
 import com.myapp.entity.ec.basedata.ProStructureInfo;
+import com.myapp.entity.ec.basedata.ProSubInfo;
 import com.myapp.entity.ec.basedata.ProSubItemInfo;
 import com.myapp.entity.ec.basedata.ProjectInfo;
 import com.myapp.entity.ec.plan.ProjectTotalPlanInfo;
@@ -61,6 +62,18 @@ public class ProjectTotalPlanEditController extends BaseBillEditController{
 		psCol.setFormat("id,name,displayName");
 		planItems.getCols().add(psCol);
 		
+		ColumnModel proSubItem = new ColumnModel("proSubItem",DataTypeEnum.F7,"id,name");
+		proSubItem.setClaz(ProSubItemInfo.class);
+		planItems.getCols().add(proSubItem);
+		
+		ColumnModel proSub = new ColumnModel("proSub",DataTypeEnum.F7,"id,name");
+		proSub.setClaz(ProSubInfo.class);
+		planItems.getCols().add(proSub);
+		
+		ColumnModel dutyers = new ColumnModel("dutyers",DataTypeEnum.MUTILF7,"id,name");
+		dutyers.setClaz(UserInfo.class);
+		planItems.getCols().add(dutyers);
+		
 		planItems.getCols().add(new ColumnModel("planBegDate",DataTypeEnum.DATE));
 		planItems.getCols().add(new ColumnModel("planEndDate",DataTypeEnum.DATE));
 		planItems.getCols().add(new ColumnModel("planDays",DataTypeEnum.INT));
@@ -70,7 +83,6 @@ public class ProjectTotalPlanEditController extends BaseBillEditController{
 		planItems.getCols().add(new ColumnModel("progress",DataTypeEnum.NUMBER));
 		planItems.getCols().add(new ColumnModel("content"));
 		planItems.getCols().add(new ColumnModel("proQty"));
-		planItems.getCols().add(new ColumnModel("proPersons"));
 		planItems.getCols().add(new ColumnModel("remark",DataTypeEnum.STRING));
 		cols.add(planItems);
 		return cols;

@@ -15,7 +15,7 @@ import com.myapp.core.util.BaseUtil;
  *
  *-----------MySong---------------
  */
-public enum StoreageTypeEnum implements MyEnum<StoreageTypeEnum,String> {
+public enum StoreageTypeEnum implements MyEnum<StoreageTypeEnum> {
 	FTP("FTP","FTP服务器"),DATABASE("DATABASE","数据库服务器"),APP("APP","应用服务器");
 
 	private String name;

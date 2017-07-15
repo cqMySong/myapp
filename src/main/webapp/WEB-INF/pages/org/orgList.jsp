@@ -23,7 +23,8 @@
 						 <thead>
 							<tr>
 								<th data-field="number">编码</th>
-								<th data-field="name">姓名</th>
+								<th data-field="name">名称</th>
+								<th data-field="orgType" data-type="select">组织类型</th>
 								<th data-field="shortCode" >简码</th>
 								<th data-field="parent_number" >上级编码</th>
 								<th data-field="parent_name" >上级名称</th>

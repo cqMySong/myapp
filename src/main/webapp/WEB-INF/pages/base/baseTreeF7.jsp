@@ -35,7 +35,7 @@ $(document).ready(function() {
 	treeViewer.addTree(treeSetting,[]);
 	treeMain = treeViewer.getTree();
 	var tree_url = '${dataUrl}';
-	var _uiCtx = "${uiCtx}";
+	var _uiCtx = '${uiCtx}';
 	var data = {};
 	if(!webUtil.isEmpty(_uiCtx)){
 		data = webUtil.str2Json(_uiCtx);

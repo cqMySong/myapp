@@ -14,6 +14,7 @@
 			var $thisDom = this.$element;
 			var thisObj = this;
 			if(_type ==DataType.text || _type==DataType.textarea){
+				thisObj.initViewr(_opt);
 				if(!webUtil.isEmpty(_opt)){
 					if(!webUtil.isEmpty(_opt.initData)){
 						thisObj.setData(_opt.initData);
@@ -46,9 +47,12 @@
 			}else if(_type ==DataType.date||_type ==DataType.datetime){
 				thisObj.initViewr({icon:_opt.icon});
 				thisObj.initRender(_opt);
+				thisObj.initEnvent();
 			}else if(_type == DataType.F7){
 				var f7dom = $thisDom.myF7();
 				f7dom.init(_opt);
+				thisObj.initViewr(_opt);
+				thisObj.initEnvent();
 			}
 		},
 		initEnvent:function(_opt){
@@ -57,9 +61,23 @@
 			var $thisDom = this.$element;
 			var thisObj = this;
 			var opt = $.extend(true,{},{name:'',params:undefined,callBack:undefined}, _opt);
-			if(_type == DataType.text||_type == DataType.textarea){
-				
-			}else if(_type ==DataType.select){//下拉选择
+			if(_type == DataType.text||_type == DataType.textarea
+					||_type == DataType.F7
+					||_type ==DataType.date||_type ==DataType.datetime){
+				$thisDom.focus({input:thisObj,el:$thisDom},function(e){
+					var inputCom = e.data.input;
+					if(inputCom.isEnabled()){
+						var val = inputCom.getData();
+						var clearDom = e.data.el.data('clearInput');
+						$('a._clearInput').hide();
+						if(!webUtil.isEmpty(val)){
+							clearDom.show();
+						}
+					}
+				});
+			}
+			
+			if(_type ==DataType.select){//下拉选择
 				
 			}else if(_type ==DataType.checkbox||_type ==DataType.radio){
 				var $parentContainer = $thisDom.parent('.mycheckradiobox_container');
@@ -74,6 +92,7 @@
 								opt.callBack(e.data);
 							}
 						}
+						
 					});
 					
 					$parentContainer.hover(function(){
@@ -82,13 +101,34 @@
 						$(this).find(_clas).removeClass('hover');
 					});
 				}
+			}else if(_type == DataType.F7){
+				$thisDom.focusin({input:thisObj,el:$thisDom},function(e){
+					var inputCom = e.data.input;
+					if(inputCom.isEnabled()){
+						var val = inputCom.getData();
+						var clearDom = e.data.el.data('clearInput');
+						$('a._clearInput').hide();
+						if(!webUtil.isEmpty(val)){
+							clearDom.show();
+						}
+					}
+				});
 			}
 		},
 		initViewr:function(_opt){
 			var _type = this.type;
 			if(webUtil.isEmpty(_type)) return;
 			var $thisDom = this.$element;
-			if(_type ==DataType.select){//下拉选择
+			var myComponent = this;
+			if(_type ==DataType.text || _type==DataType.textarea){
+				var clearDom = $('<a class="glyphicon glyphicon-remove btn form-control-feedback _clearInput" style="pointer-events: auto;"></a>');
+				$thisDom.parent().append(clearDom);
+				clearDom.click({input:myComponent},function(e){
+					e.data.input.setData(null);
+				});
+				clearDom.hide();
+				$thisDom.data('clearInput',clearDom);
+			}else if(_type ==DataType.select){//下拉选择
 				var _defSelOpt = {data:undefined,key:'key',val:'val',selected:undefined};
 				var _selOpt = $.extend(true,{},_defSelOpt, _opt);
 				var _items = _selOpt.data;
@@ -129,6 +169,17 @@
 						$thisDom.after(_iconG);
 					}
 				}
+			}
+			
+			if(_type ==DataType.date||_type ==DataType.datetime
+					||_type == DataType.F7){
+				var clearDom = $('<a class="glyphicon glyphicon-remove btn form-control-feedback _clearInput" style="pointer-events: auto;right:32px;"></a>');
+				$thisDom.parent().append(clearDom);
+				clearDom.click({input:myComponent},function(e){
+					e.data.input.setData(null);
+				});
+				clearDom.hide();
+				$thisDom.data('clearInput',clearDom);
 			}
 		},
 		getLable:function(){
@@ -256,6 +307,26 @@
 			}else if(_type==DataType.F7){
 				$thisDom.myF7().setEnabled(enable);
 			}
+		},
+		isEnabled:function(){
+			var _type = this.type;
+			if(webUtil.isEmpty(_type)) return;
+			var $thisDom = this.$element;
+			var enabled = true;
+			if(_type ==DataType.text||_type == DataType.textarea||_type ==DataType.select
+					||_type ==DataType.date||_type ==DataType.datetime){
+				var propDisable = $thisDom.prop('disabled');
+				if(!webUtil.isEmpty(propDisable)){
+					enabled = !propDisable;
+				}
+			}else if(_type ==DataType.checkbox||_type ==DataType.radio){
+				var $parentContainer = $thisDom.parent('.mycheckradiobox_container');
+				var _toDom = $parentContainer.find('div.my'+_type);
+				enabled = _toDom.hasClass('disabled');
+			}else if(_type==DataType.F7){
+				enabled = $thisDom.myF7().isEnabled();
+			}
+			return enabled;
 		},
 		setRequire:function(_opt){
 			var _type = this.type;

@@ -23,6 +23,7 @@ public class UserInfo extends CoreBaseInfo{
 	private String remark;
 	private BaseOrgInfo defOrg;
 	private Boolean sysUser = Boolean.FALSE;
+	private String linkers;//联系方式
 	
 	@Column(name="fpassword")
 	public String getPassWord() {
@@ -69,5 +70,14 @@ public class UserInfo extends CoreBaseInfo{
 	public void setSysUser(boolean isSysUser) {
 		this.sysUser = isSysUser;
 	}
+	@Column(name="flinkers",length=100)
+	public String getLinkers() {
+		return linkers;
+	}
+	public void setLinkers(String linkers) {
+		this.linkers = linkers;
+	}
+	
+	
 	
 }

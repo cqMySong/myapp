@@ -2,18 +2,21 @@ package com.myapp.core.base.entity;
 
 import java.io.Serializable;
 import java.lang.reflect.InvocationTargetException;
+import java.util.HashMap;
+import java.util.Map;
 
 import javax.persistence.Column;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.MappedSuperclass;
 
-import org.apache.commons.beanutils.BeanUtils;
-import org.apache.commons.beanutils.BeanUtilsBean2;
 import org.apache.commons.beanutils.PropertyUtils;
+import org.apache.log4j.LogManager;
+import org.apache.log4j.Logger;
 import org.hibernate.annotations.GenericGenerator;
 import org.hibernate.annotations.TypeDef;
 
+import com.myapp.core.base.dao.impl.AbstractBaseDao;
 import com.myapp.core.base.usertype.MyEnumType;
 import com.myapp.core.uuid.UuidUtils;
 
@@ -31,6 +34,8 @@ import com.myapp.core.uuid.UuidUtils;
 public class CoreInfo implements Serializable{
 	private Object beanObj = null;
 	private String id;
+	private Map fieldEx = new HashMap();
+	private static Logger log = null;
 	
 	@Id
 	@Column(name="fid",length=50,unique=true)
@@ -50,14 +55,17 @@ public class CoreInfo implements Serializable{
 	
 	public void newInstanceBeanObj(){
 		beanObj = this;
+		log = LogManager.getLogger(beanObj.getClass());
 	}
 	
 	public void put(String property,Object val){
 		try {
 			if(beanObj!=null)
 				PropertyUtils.setProperty(beanObj, property, val);
-		} catch ( NoSuchMethodException | IllegalAccessException | InvocationTargetException e) {
-			e.printStackTrace();
+		} catch ( Exception e) {
+//			e.printStackTrace();
+			log.error(beanObj.getClass().getSimpleName()+" has no property "+property +" has set fieldEx");
+			fieldEx.put(property, val);
 		}
 	}
 	
@@ -66,7 +74,9 @@ public class CoreInfo implements Serializable{
 			if(beanObj!=null)
 				return PropertyUtils.getProperty(beanObj, property);
 		} catch (IllegalAccessException | InvocationTargetException | NoSuchMethodException e) {
-			e.printStackTrace();
+//			e.printStackTrace();
+			log.error(" has no property "+property +" getValue from fieldEx");
+			return fieldEx.get(property);
 		}
 		return null;
 	}

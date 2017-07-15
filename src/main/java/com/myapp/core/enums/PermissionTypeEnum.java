@@ -14,7 +14,7 @@ import com.myapp.core.base.enums.MyEnum;
  * 菜单，功能，菜单及功能
  *-----------MySong---------------
  */
-public enum PermissionTypeEnum implements MyEnum<PermissionTypeEnum,String>{
+public enum PermissionTypeEnum implements MyEnum<PermissionTypeEnum>{
 	PAGE("PAGE","菜单"),FUNCTION("FUNCTION","功能"),PAGEADDFUNCTION("PAGEADDFUNCTION","菜单&功能");
 	private String name;
 	private String value;

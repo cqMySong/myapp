@@ -8,6 +8,6 @@ package com.myapp.core.enums;
  *-----------MySong---------------
  */
 public enum DataTypeEnum {
-	INT,STRING,DATE,DATETIME,ENUM,BOOLEAN,NUMBER,F7,PK,ENTRY;
+	INT,STRING,DATE,DATETIME,ENUM,BOOLEAN,NUMBER,F7,MUTILF7,PK,ENTRY;
 	
 }

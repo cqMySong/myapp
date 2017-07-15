@@ -738,12 +738,34 @@
                           }
                     	 _thisColumn.formatter = function(value, row, index){
                      		var txt = '';
-                     		if(!webUtil.isEmpty(value)&&$.isPlainObject(value)){
-                     			txt = value[displayName];
+                     		if(!webUtil.isEmpty(value)){
+                     			if($.isArray(value)){
+                     				for(var i=0;i<value.length;i++){
+                     					var thisItem = value[i];
+                     					if(i>0) txt +=',';
+                     					txt += thisItem[displayName];
+                     				}
+                     			}else if($.isPlainObject(value)){
+                     				txt = value[displayName];
+                     			}
                      		}
                      		return txt;
                          } 
-                      }
+                      }else if(_thisColumn.type == DataType.select){
+                	  	  var displayName = 'val';
+            			  if(_thisColumn.formatter&&typeof _thisColumn.formatter === 'string'){
+            				 displayName = _thisColumn.formatter;
+                          }
+            			 _thisColumn.formatter = function(value, row, index){
+                      		var txt = '';
+                      		if(!webUtil.isEmpty(value)){
+                      			if($.isPlainObject(value)){
+                      				txt = value[displayName];
+                      			}
+                      		}
+                      		return txt;
+                          }
+                     }
                 }
                 
                 column.push(_thisColumn);

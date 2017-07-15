@@ -136,7 +136,7 @@ public class DateUtil {
         return Long.valueOf(times1 - times2);
     }
 
-    public Date getLastDayOfWeek(Date date) {
+    public static Date getLastDayOfWeek(Date date) {
         Calendar calendar = Calendar.getInstance();
         calendar.setTime(date);
         int min = calendar.getActualMinimum(7);
@@ -147,28 +147,28 @@ public class DateUtil {
         return end;
     }
 
-    public Date addYear(Date date, int year) {
+    public static Date addYear(Date date, int year) {
         Calendar calendar = Calendar.getInstance();
         calendar.setTime(date);
         calendar.set(1, calendar.get(1) + year);
         return calendar.getTime();
     }
 
-    public Date addMonth(Date date, int month) {
+    public static Date addMonth(Date date, int month) {
         Calendar calendar = Calendar.getInstance();
         calendar.setTime(date);
         calendar.set(2, calendar.get(2) + month);
         return calendar.getTime();
     }
 
-    public Date addDay(Date date, int day) {
+    public static Date addDay(Date date, int day) {
         Calendar calendar = Calendar.getInstance();
         calendar.setTime(date);
         calendar.set(5, calendar.get(5) + day);
         return calendar.getTime();
     }
 
-    public Date addHour(Date date, int hour) {
+    public static Date addHour(Date date, int hour) {
         Calendar calendar = Calendar.getInstance();
         calendar.setTime(date);
         calendar.set(11, calendar.get(11) + hour);
@@ -182,14 +182,14 @@ public class DateUtil {
         return calendar.getTime();
     }
 
-    public Date addSecond(Date date, int second) {
+    public static Date addSecond(Date date, int second) {
         Calendar calendar = Calendar.getInstance();
         calendar.setTime(date);
         calendar.set(13, calendar.get(13) + second);
         return calendar.getTime();
     }
 
-    public Date addMillisecond(Date date, int millisecond) {
+    public static Date addMillisecond(Date date, int millisecond) {
         Calendar calendar = Calendar.getInstance();
         calendar.setTime(date);
         calendar.set(14, calendar.get(14) + millisecond);

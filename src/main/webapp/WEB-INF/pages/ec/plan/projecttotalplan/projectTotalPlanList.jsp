@@ -22,7 +22,7 @@
 								<th data-field="name">名称</th>
 								<th data-field="project_name">工程项目</th>
 								<th data-field="bizDate" data-type="date">业务日期</th>
-								<th data-field="billState" data-formarter="billState_formarter">业务状态</th>
+								<th data-field="billState" data-type="select">业务状态</th>
 								<th data-field="createUser_name">创建人</th>
 								<th data-field="createDate" data-type="date">创建日期</th>
 								<th data-field="auditor_name">审核人</th>

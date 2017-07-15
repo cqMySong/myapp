@@ -1,5 +1,6 @@
 package com.myapp.controller.base.org;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -20,9 +21,11 @@ import com.myapp.core.base.service.impl.AbstractBaseService;
 import com.myapp.core.controller.BaseListController;
 import com.myapp.core.controller.BaseTreeListController;
 import com.myapp.core.enums.DataTypeEnum;
+import com.myapp.core.enums.OrgTypeEnum;
 import com.myapp.core.model.ColumnModel;
 import com.myapp.core.service.OrgService;
 import com.myapp.core.util.BaseUtil;
+import com.myapp.core.util.EnumUtil;
 
 /**
  *-----------MySong---------------
@@ -48,6 +51,7 @@ public class OrgListController extends BaseTreeListController {
 		cols.add(new ColumnModel("number"));
 		cols.add(new ColumnModel("remark"));
 		cols.add(new ColumnModel("shortCode"));
+		cols.add(new ColumnModel("orgType",DataTypeEnum.ENUM,OrgTypeEnum.class));
 		ColumnModel orgCol = new ColumnModel("parent",DataTypeEnum.F7,"name,number");
 		cols.add(orgCol);
 		return cols;
@@ -72,6 +76,20 @@ public class OrgListController extends BaseTreeListController {
 			}
 		}
 	}
+	
+	public void executeTreeQueryParams(Criteria query) {
+		super.executeQueryParams(query);
+		String orgType = request.getParameter("orgType");
+		if(!BaseUtil.isEmpty(orgType)){
+			String[] orgTypes = orgType.split(",");
+			List<OrgTypeEnum> params = new ArrayList<OrgTypeEnum>();
+			for(String ot:orgTypes){
+				params.add(EnumUtil.getEnum(OrgTypeEnum.class.getName(), ot));
+			}
+			query.add(Restrictions.in("orgType",params));
+		}
+	}
+
 	public Order getOrder() {
 		return Order.asc("longNumber");
 	}

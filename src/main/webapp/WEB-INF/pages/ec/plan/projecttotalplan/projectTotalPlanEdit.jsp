@@ -68,19 +68,24 @@
 							,toolbar:{title:'项目总计划清单'},defRowData:planItems_defRowData}">
 						<thead>
 							<tr>
-								<th data-field="proStructure" rowspan="2" width="150" data-type="f7" data-formatter="displayName"
+								<th data-field="proStructure" rowspan="2" data-type="f7" data-formatter="displayName"
 										data-editor="{uiWin:{title:'项目结构',height:600,width:300,url:'ec/basedata/proStructureF7',uiParams:getParams}}">项目工程结构</th>
+								<th data-field="proSub" rowspan="2"  data-type="f7" 
+										data-editor="{uiWin:{title:'项目分部工程',height:550,width:680,url:'ec/basedata/proSubF7',uiParams:getParams}}">项目分部工程</th>
+								<th data-field="proSubItem" rowspan="2" data-type="f7"
+										data-editor="{uiWin:{title:'项目分项工程',height:550,width:680,url:'ec/basedata/proSubItemF7',uiParams:getParams}}">项目分项结构</th>
 								<th colspan="3">计划</th>
-								<th data-field="progress" rowspan="2" width="60" data-type="number">当前进度</th>
-								<th data-field="content" rowspan="2" width="200"  data-type="textarea">工作内容</th>
-								<th data-field="proQty" rowspan="2" width="60">工程量</th>
-								<th data-field="proPersons" rowspan="2" width="120">施工人员</th>
-								<th data-field="remark" rowspan="2" width="200" data-type="textarea">备注</th>
+								<th data-field="progress" rowspan="2"  data-type="number">当前进度</th>
+								<th data-field="content" rowspan="2"   data-type="textarea">工作内容</th>
+								<th data-field="proQty" rowspan="2" >工程量</th>
+								<th data-field="dutyers" rowspan="2" data-type="f7"
+										data-editor="{mutil:true,uiWin:{title:'责任人',height:750,width:900,url:'base/userf7',uiParams:getParams}}">责任人</th>
+								<th data-field="remark" rowspan="2" width="500" data-type="textarea">备注</th>
 							</tr>
 							<tr>
-								<th data-field="planBegDate" class="_myMerge" width="100" data-type="date">开始日期</th>
-								<th data-field="planEndDate" width="100" data-type="date">截止日期</th>
-								<th data-field="planDays" width="60" data-locked="true">工期</th>
+								<th data-field="planBegDate" class="_myMerge" data-type="date">开始日期</th>
+								<th data-field="planEndDate"  data-type="date">截止日期</th>
+								<th data-field="planDays"  data-locked="true">持续天数</th>
 							</tr>
 						</thead>
 					</table>
@@ -133,6 +138,17 @@
 <script type="text/javascript">
 	var editUI;
 	var planItemsEntry;
+	function proSubItem_dataChange(oldData,newData){
+		var proStructure = {};
+		proStructure.id = newData.proStruct_id;
+		proStructure.name = newData.proStruct_name;
+		proStructure.displayName = newData.proStruct_displayName;
+		var proSub = {};
+		proSub.id = newData.proSub_id;
+		proSub.name = newData.proSub_name;
+		
+		alert(newData.proStruct_displayName);
+	}
 	function planItems_dataChanged($cell,obj){
 		/* var obj= {};
 		obj.oldVal = oldVal;
@@ -142,17 +158,33 @@
 		obj.column = thisColumn;
 		obj.rowIndex = rowIdx;
 		obj.colIndex = colIdx; */
+		if(webUtil.isEmpty(planItemsEntry)) return;
 		if('planBegDate'==obj.field||"planEndDate"==obj.field){
 			var btimes = obj.rowData['planBegDate'];
 			var etimes = obj.rowData['planEndDate'];
 			var days = webUtil.betweenDateDays(btimes,etimes);
 			if(webUtil.isEmpty(days)) days = null;
-			if(webUtil.isEmpty(planItemsEntry)){
-				planItemsEntry = editUI.getEntryObj('planItems');
-			}
 			if(!webUtil.isEmpty(planItemsEntry)){
 				planItemsEntry.setTableCellValue(obj.rowIndex,'planDays',days);
 			}
+		}else if('proSubItem'==obj.field){
+			var newData = obj.rowData[obj.field];
+			/* var proStructure = {};
+			proStructure.id = newData.proStruct_id;
+			proStructure.displayName = newData.proStruct_displayName; */
+			var proSub = {};
+			proSub.id = newData.proSub_id;
+			proSub.name = newData.proSub_name;
+			proSub.proStruct_id = newData.proStruct_id;
+			proSub.proStruct_displayName = newData.proStruct_displayName;
+			//planItemsEntry.setTableCellValue(obj.rowIndex,'proStructure',proStructure);
+			planItemsEntry.setTableCellValue(obj.rowIndex,'proSub',proSub);
+		}else if('proSub'==obj.field){
+			var newData = obj.rowData[obj.field];
+			var proStructure = {};
+			proStructure.id = newData.proStruct_id;
+			proStructure.displayName = newData.proStruct_displayName;
+			planItemsEntry.setTableCellValue(obj.rowIndex,'proStructure',proStructure);
 		}
 	}
 	
@@ -195,6 +227,9 @@
 		editUI.onLoad();
 		webUtil.initMainPanel('#editPanel');
 		
+		if(webUtil.isEmpty(planItemsEntry)){
+			planItemsEntry = editUI.getEntryObj('planItems');
+		}
 	})
 </script>
 </html>

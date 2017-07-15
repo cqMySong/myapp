@@ -50,7 +50,8 @@ public class ColumnModel {
 		if(DataTypeEnum.DATE.equals(dataType)){
 			this.format = DateUtil.DATEFORMT_YMD;
 			this.claz = Date.class;
-		}else if(DataTypeEnum.F7.equals(dataType)){
+		}else if(DataTypeEnum.F7.equals(dataType)
+				||DataTypeEnum.MUTILF7.equals(dataType)){
 			this.format = "id,name";
 		}
 	}
@@ -59,7 +60,8 @@ public class ColumnModel {
 		this.name = name;
 		this.dataType = dataType;
 		this.claz = claz;
-		if(DataTypeEnum.F7.equals(dataType)){
+		if(DataTypeEnum.F7.equals(dataType)
+				||DataTypeEnum.MUTILF7.equals(dataType)){
 			this.format = "id,name";
 		}
 	}
@@ -104,7 +106,7 @@ public class ColumnModel {
 				format = DateUtil.DATEFORMT_YMD;
 			}if(DataTypeEnum.DATETIME.equals(getDataType())){
 				format = DateUtil.DATEFORMT_YMDHMS;
-			}else if(DataTypeEnum.F7.equals(dataType)){
+			}else if(DataTypeEnum.F7.equals(dataType)||DataTypeEnum.MUTILF7.equals(dataType)){
 				this.format = "id,name";
 			}
 		}
@@ -143,8 +145,9 @@ public class ColumnModel {
 	}
 	public String getAlias_zh() {
 		if(BaseUtil.isEmpty(alias_zh)){
-			if(DataTypeEnum.F7.equals(dataType)){
-				alias_zh = getFormat();
+			if(DataTypeEnum.F7.equals(dataType)
+					||DataTypeEnum.MUTILF7.equals(dataType)){
+				alias_zh = "id,名称";
 			}else{
 				alias_zh = getAlias(); 
 			}
@@ -152,7 +155,6 @@ public class ColumnModel {
 		return alias_zh;
 	}
 	public void setAlias_zh(String alias_zh) {
-		
 		this.alias_zh = alias_zh;
 	}
 	public boolean isQueryFilter() {

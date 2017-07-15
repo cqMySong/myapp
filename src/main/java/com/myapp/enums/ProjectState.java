@@ -13,8 +13,8 @@ import com.myapp.core.base.enums.MyEnum;
  * 项目状态
  *-----------MySong---------------
  */
-public enum ProjectState implements MyEnum<ProjectState,String> {
-	SGZB("SGZB","施工准备"),ZZSG("ZZSG","正在施工"),YJG("YJG","已竣工"),YGB("YGB","已关闭"),YDG("YDG","已停工");
+public enum ProjectState implements MyEnum<ProjectState> {
+	SGZB("SGZB","施工准备"),ZZSG("ZZSG","正在施工"),JG("JG","竣工"),JGJSZ("YGJSZ","竣工结算中"),JGJSWB("JGJSWB","竣工结算完毕"),YDG("YDG","已停工");
 
 	private String name;
 	private String value;
@@ -22,8 +22,9 @@ public enum ProjectState implements MyEnum<ProjectState,String> {
 	static {
         map.put(SGZB.getValue(), SGZB);
         map.put(ZZSG.getValue(), ZZSG);
-        map.put(YJG.getValue(), YJG);
-        map.put(YGB.getValue(), YGB);
+        map.put(JG.getValue(), JG);
+        map.put(JGJSZ.getValue(), JGJSZ);
+        map.put(JGJSWB.getValue(), JGJSWB);
         map.put(YDG.getValue(), YDG);
     }
 

@@ -7,6 +7,8 @@ import org.hibernate.Criteria;
 import org.hibernate.criterion.DetachedCriteria;
 
 import com.myapp.core.base.entity.CoreInfo;
+import com.myapp.core.exception.db.AddNewException;
+import com.myapp.core.exception.db.DeleteException;
 import com.myapp.core.exception.db.QueryException;
 import com.myapp.core.model.PageModel;
 
@@ -19,13 +21,13 @@ import com.myapp.core.model.PageModel;
  *-----------MySong---------------
  */
 public interface IAbstractBaseService {
-	public Serializable addNewEntity(Object entity);
+	public Serializable addNewEntity(Object entity) throws AddNewException;
 	public <T> T loadEntity(Class<T> c,String id);
 	public <T> T getEntity(Class<T> c,String id);
 	public <T> T queryEntity(Class<T> c, String hql, Object[] params);
 	public List<CoreInfo> getEntityCollection(Class claz);
-	public void deleteEntity(Class c,String id);
-	public void deleteEntity(Object entity);
+	public void deleteEntity(Class c,String id) throws DeleteException;
+	public void deleteEntity(Object entity) throws DeleteException;
 	public List findByHQL(String hql, Object[] params); 
 	public PageModel toPageQuery(Integer curPage,Integer pageSize, String hql, Object[] params);
 	public Criteria initQueryCriteria(Class claz)throws QueryException;

@@ -49,7 +49,7 @@
 			<div class="row">
 				<div class="col-sm-6">
 					<div class="input-group">
-						<span class="input-group-addon lable">檐高(m)</span> 
+						<span class="input-group-addon lable">建筑高度(m)</span> 
 						<input name="eavesHeight" class="require input-item">
 					</div>
 				</div>

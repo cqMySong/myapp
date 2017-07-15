@@ -1,5 +1,6 @@
 package com.myapp.controller.ec.basedata.project;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -24,9 +25,11 @@ import com.myapp.core.base.service.impl.AbstractBaseService;
 import com.myapp.core.controller.BaseListController;
 import com.myapp.core.entity.BaseOrgInfo;
 import com.myapp.core.enums.DataTypeEnum;
+import com.myapp.core.enums.OrgTypeEnum;
 import com.myapp.core.model.ColumnModel;
 import com.myapp.core.model.WebDataModel;
 import com.myapp.core.util.BaseUtil;
+import com.myapp.core.util.EnumUtil;
 import com.myapp.enums.IndustryType;
 import com.myapp.enums.ProjectState;
 import com.myapp.service.ec.basedata.ProjectService;
@@ -97,7 +100,13 @@ public class ProjectListController extends BaseListController {
 	@ResponseBody
 	public WebDataModel treeData() {
 		try{
-			data = projectService.getProjectTreeData(null);
+			Map params = new HashMap();
+			String orgType = request.getParameter("orgType");
+			if(!BaseUtil.isEmpty(orgType)){
+				orgType = "'"+orgType.replaceAll(",", "','")+"'";
+				params.put("orgType", orgType);
+			}
+			data = projectService.getProjectTreeData(params);
 		}catch(Exception e){
 			setErrorMesg(e.getMessage());
 		}

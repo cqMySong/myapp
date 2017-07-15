@@ -20,16 +20,19 @@ import org.hibernate.criterion.Projections;
 import org.hibernate.engine.spi.SessionFactoryImplementor;
 import org.hibernate.hql.internal.ast.QueryTranslatorImpl;
 import org.hibernate.persister.entity.AbstractEntityPersister;
-import org.hibernate.sql.JoinType;
 import org.hibernate.transform.Transformers;
 
 import com.myapp.core.base.dao.IAbstractBaseDao;
 import com.myapp.core.base.dao.MyResultTransFormer;
+import com.myapp.core.base.entity.CoreBaseBillInfo;
+import com.myapp.core.base.entity.CoreBaseDataInfo;
 import com.myapp.core.base.entity.CoreBaseInfo;
 import com.myapp.core.base.entity.CoreBaseTreeInfo;
 import com.myapp.core.base.entity.CoreInfo;
 import com.myapp.core.base.setting.SystemConstant;
 import com.myapp.core.entity.SubsystemTreeInfo;
+import com.myapp.core.enums.BillState;
+import com.myapp.core.exception.db.DeleteException;
 import com.myapp.core.exception.db.ReadException;
 import com.myapp.core.model.PageModel;
 import com.myapp.core.util.BaseUtil;
@@ -96,14 +99,27 @@ public abstract class AbstractBaseDao implements IAbstractBaseDao {
 		}
 		return null;
 	}
-	public void deleteEntity(Class claz, String id) {
+	public void deleteEntity(Class claz, String id) throws DeleteException {
 		if(claz!=null||id!=null){
 			deleteEntity(loadEntity(claz,id));
 		}
 	}
 	
-	public void deleteEntity(Object entity) {
+	public void deleteEntity(Object entity) throws DeleteException {
 		if(entity!=null){
+			if(entity instanceof CoreBaseDataInfo){
+				CoreBaseDataInfo cbInfo = (CoreBaseDataInfo) entity;
+				if(cbInfo.getEnabled()){
+					throw new DeleteException("已经启用的都基础数据无法完成删除操作!");
+				}
+			}else if(entity instanceof CoreBaseBillInfo){
+				CoreBaseBillInfo cbInfo = (CoreBaseBillInfo) entity;
+				BillState bs = cbInfo.getBillState();
+				if(bs!=null&&bs.equals(BillState.AUDIT)){
+					throw new DeleteException("已经审核的业务数据无法完成删除操作!");
+				}
+			}
+			
 			Session session = getCurrentSession();
 			session.delete(entity);
 			session.flush();

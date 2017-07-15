@@ -16,12 +16,12 @@ import org.springframework.web.servlet.ModelAndView;
 
 import com.alibaba.fastjson.JSONObject;
 import com.myapp.core.annotation.PermissionItemAnn;
-import com.myapp.core.base.service.impl.AbstractBaseService;
-import com.myapp.core.base.setting.SystemConstant;
 import com.myapp.core.enums.BaseMethodEnum;
 import com.myapp.core.enums.DataTypeEnum;
 import com.myapp.core.enums.PermissionTypeEnum;
+import com.myapp.core.exception.db.QueryException;
 import com.myapp.core.model.ColumnModel;
+import com.myapp.core.model.PageModel;
 import com.myapp.core.model.WebDataModel;
 import com.myapp.core.util.BaseUtil;
 import com.myapp.core.util.DateUtil;
@@ -36,11 +36,7 @@ import com.myapp.core.util.WebUtil;
  *
  *-----------MySong---------------
  */
-public abstract class BaseListController extends CoreBaseController {
-	private Integer curPage;
-	private Integer pageSize;
-	
-	
+public abstract class BaseListController extends BasePageListController {
 	
 	//特殊情况 在处理
 	public String querySQL(){
@@ -71,12 +67,41 @@ public abstract class BaseListController extends CoreBaseController {
 			if(order!=null){
 				query.addOrder(order);
 			}
-			data = getService().toPageQuery(query, getProjectionList(), getCurPage(), getPageSize());
+			afterQuery(getService().toPageQuery(query, getProjectionList(), getCurPage(), getPageSize()));
 		} catch (Exception e) {
 			e.printStackTrace();
 			setExceptionMesg(e.getMessage());
 		}
 		return ajaxModel();
+	}
+	
+	public void afterQuery(PageModel pm) throws QueryException{
+		List datas = pm.getDatas();
+		if(datas!=null&&datas.size()>0){
+			packageDatas(datas);
+			pm.setDatas(datas);
+		}
+		this.data = pm;
+	}
+	public List<ColumnModel> getPackageDataCol(){
+		List<ColumnModel> cols = getDataBinding();
+		List<ColumnModel> toDoCols = new ArrayList<ColumnModel>(); 
+		for(ColumnModel cm:cols){
+			DataTypeEnum dte = cm.getDataType();
+			if(dte.equals(DataTypeEnum.MUTILF7)&&cm.getClaz()!=null){
+				toDoCols.add(cm);
+			}else if(DataTypeEnum.ENUM.equals(dte)&&cm.getClaz()!=null){
+				toDoCols.add(cm);
+			}
+		}
+		return toDoCols;
+	}
+	public void packageDatas(List datas) throws QueryException{
+		if(datas==null||datas.size()<=0) return;
+		List<ColumnModel> cms = getPackageDataCol();
+		if(cms!=null&&cms.size()>0){
+			packageListDataColumns(datas, cms);
+		}
 	}
 
 	public void executeQueryParams(Criteria query) {
@@ -106,7 +131,23 @@ public abstract class BaseListController extends CoreBaseController {
 			}
 		}
 	}
-
+	
+	//TODO 待进一步考虑
+	protected boolean beforeOperate(BaseMethodEnum bme) {
+		boolean toGo = true;
+		init();
+		if(BaseMethodEnum.EDIT.equals(bme)
+				||BaseMethodEnum.VIEW.equals(bme)
+				||BaseMethodEnum.REMOVE.equals(bme)){
+			String billId = getReuestBillId();
+			if(BaseUtil.isEmpty(billId)){
+				setErrorMesg("单据id为空，无法完成"+bme.getName()+"操作!");
+				toGo = false;
+			}
+		}
+		return toGo;
+	}
+	
 	@PermissionItemAnn(name="删除",number="remove")
 	@ResponseBody
 	@RequestMapping(value="/remove",method=RequestMethod.POST)
@@ -133,40 +174,10 @@ public abstract class BaseListController extends CoreBaseController {
 		}
 		return ajaxModel();
 	}
-
-	public Integer getCurPage() {
-		String cpage = request.getParameter("curPage");
-		if(!BaseUtil.isEmpty(cpage)){
-			curPage = Integer.valueOf(cpage);
-		}
-		if (curPage == null)
-			curPage = SystemConstant.DEF_PAGE_BEG;
-		return curPage;
-	}
-
-	public void setCurPage(Integer curPage) {
-		this.curPage = curPage;
-	}
-
-	public Integer getPageSize() {
-		String pgsize = request.getParameter("pageSize");
-		if(!BaseUtil.isEmpty(pgsize)){
-			pageSize = Integer.valueOf(pgsize);
-		}
-		if (pageSize == null)
-			pageSize = SystemConstant.DEF_PAGE_SIZE;
-		return pageSize;
-	}
-
-	public void setPageSize(Integer pageSize) {
-		this.pageSize = pageSize;
-	}
-	
 	
 	@PermissionItemAnn(name="编辑",number="edit",type=PermissionTypeEnum.PAGEADDFUNCTION)
 	@RequestMapping("/edit")
 	public ModelAndView edit(){
-		System.out.println(this.getClass().getName());
 		Map params = new HashMap();
 		init();
 		try {
@@ -208,6 +219,7 @@ public abstract class BaseListController extends CoreBaseController {
 	public void packageUIParams(Map params){
 		String ciCtx = request.getParameter("uiCtx");
 		if(!BaseUtil.isEmpty(ciCtx)){
+			ciCtx = ciCtx.replaceAll("\'", "\"");
 			Map uiCtx = JSONObject.parseObject(ciCtx, new HashMap().getClass());
 			params.put("uiCtx", ciCtx);
 		}

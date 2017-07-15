@@ -12,6 +12,7 @@ import com.myapp.core.exception.db.DeleteException;
 import com.myapp.core.exception.db.QueryException;
 import com.myapp.core.exception.db.ReadException;
 import com.myapp.core.exception.db.SaveException;
+import com.myapp.core.exception.db.UpdateException;
 import com.myapp.core.model.PageModel;
 
 /**
@@ -37,6 +38,6 @@ public interface IAbstractBaseDao {
 	public PageModel toPageDetachedCriteria(Class claz,DetachedCriteria dca,ProjectionList pList,Integer curPage, Integer pageSize) throws QueryException;
 	public Criteria initQueryCriteria(Class claz)throws QueryException;
 	public Criteria initQueryCriteria(String entityName)throws QueryException;
-	public void executeUpdata(String hql,Object[] params);
-	public List executeSQLQuery(String sql,Object[] params);
+	public void executeUpdata(String hql,Object[] params) throws UpdateException;
+	public List executeSQLQuery(String sql,Object[] params) throws QueryException;
 }

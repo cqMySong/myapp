@@ -90,6 +90,7 @@ public class BaseController {
     public void init(){
     	this.statusCode = STATUSCODE_SUCCESS;
 		this.statusMesg = "";
+		this.data = null;
 		this.baseMethod = BaseMethodEnum.ADDNEW;
     }
     

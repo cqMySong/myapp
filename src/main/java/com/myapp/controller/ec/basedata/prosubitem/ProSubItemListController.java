@@ -7,29 +7,22 @@ import java.util.Map;
 import javax.annotation.Resource;
 
 import org.hibernate.Criteria;
-import org.hibernate.criterion.DetachedCriteria;
-import org.hibernate.criterion.MatchMode;
-import org.hibernate.criterion.Order;
-import org.hibernate.criterion.Projections;
-import org.hibernate.criterion.Property;
 import org.hibernate.criterion.Restrictions;
-import org.hibernate.criterion.Subqueries;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import com.alibaba.fastjson.JSONObject;
 import com.myapp.core.annotation.PermissionAnn;
 import com.myapp.core.base.service.impl.AbstractBaseService;
-import com.myapp.core.controller.BaseListController;
-import com.myapp.core.controller.BaseTreeListController;
-import com.myapp.core.entity.BaseOrgInfo;
+import com.myapp.core.controller.BaseDataListController;
 import com.myapp.core.enums.DataTypeEnum;
 import com.myapp.core.model.ColumnModel;
 import com.myapp.core.util.BaseUtil;
+import com.myapp.entity.ec.basedata.ProStructureInfo;
+import com.myapp.entity.ec.basedata.ProSubInfo;
 import com.myapp.entity.ec.basedata.ProSubItemInfo;
 import com.myapp.entity.ec.basedata.ProjectInfo;
 import com.myapp.service.ec.basedata.ProSubItemService;
-import com.myapp.service.ec.basedata.StructTypeService;
 
 /**
  *-----------MySong---------------
@@ -42,7 +35,7 @@ import com.myapp.service.ec.basedata.StructTypeService;
 @PermissionAnn(name="系统管理.现场管理.基础数据.项目分部分项",number="app.ec.basedata.prosubitem")
 @Controller
 @RequestMapping("ec/basedata/prosubitems")
-public class ProSubItemListController extends BaseListController {
+public class ProSubItemListController extends BaseDataListController {
 	
 	@Resource
 	public ProSubItemService proSubItemService;
@@ -53,15 +46,15 @@ public class ProSubItemListController extends BaseListController {
 
 	public List<ColumnModel> getDataBinding() {
 		List<ColumnModel> cols = super.getDataBinding();
-		cols.add(new ColumnModel("name"));
-		cols.add(new ColumnModel("number"));
-		cols.add(new ColumnModel("remark"));
-		ColumnModel parent = new ColumnModel("parent",DataTypeEnum.F7,"id,name,number");
-		parent.setClaz(ProSubItemInfo.class);
-		cols.add(parent);
+		ColumnModel proSub = new ColumnModel("proSub",DataTypeEnum.F7,"id,name");
+		proSub.setClaz(ProSubInfo.class);
+		cols.add(proSub);
 		ColumnModel project = new ColumnModel("project",DataTypeEnum.F7,"id,name");
 		project.setClaz(ProjectInfo.class);
 		cols.add(project);
+		ColumnModel proStruct = new ColumnModel("proStruct",DataTypeEnum.F7,"id,name");
+		proStruct.setClaz(ProStructureInfo.class);
+		cols.add(proStruct);
 		return cols;
 	}
 	public void executeQueryParams(Criteria query) {

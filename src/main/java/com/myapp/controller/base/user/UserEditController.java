@@ -80,10 +80,10 @@ public class UserEditController extends BaseEditController{
 		cols.add(new ColumnModel("name"));
 		cols.add(new ColumnModel("number"));
 		cols.add(new ColumnModel("remark"));
+		cols.add(new ColumnModel("linkers"));
 		cols.add(new ColumnModel("userState",DataTypeEnum.ENUM,UserState.class));
 		cols.add(new ColumnModel("admin",DataTypeEnum.BOOLEAN));
 		cols.add(new ColumnModel("sysUser",DataTypeEnum.BOOLEAN));
-		cols.add(new ColumnModel("createDate",DataTypeEnum.DATE,DateUtil.DATEFORMT_YMDHMS));
 		ColumnModel orgCol = new ColumnModel("defOrg",DataTypeEnum.F7,"id,name");
 		orgCol.setClaz(BaseOrgInfo.class);
 		cols.add(orgCol);

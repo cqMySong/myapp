@@ -16,9 +16,11 @@ import com.myapp.core.annotation.PermissionAnn;
 import com.myapp.core.base.service.impl.AbstractBaseService;
 import com.myapp.core.controller.BaseListController;
 import com.myapp.core.entity.UserInfo;
+import com.myapp.core.enums.BillState;
 import com.myapp.core.enums.DataTypeEnum;
 import com.myapp.core.model.ColumnModel;
 import com.myapp.core.util.BaseUtil;
+import com.myapp.entity.ec.basedata.ProSubInfo;
 import com.myapp.entity.ec.basedata.ProjectInfo;
 import com.myapp.service.ec.plan.ProjectTotalPlanService;
 
@@ -48,11 +50,12 @@ public class ProjectTotalPlanListController extends BaseListController {
 		cols.add(new ColumnModel("remark"));
 		cols.add(new ColumnModel("createDate",DataTypeEnum.DATE));
 		cols.add(new ColumnModel("bizDate",DataTypeEnum.DATE));
-		cols.add(new ColumnModel("billState",DataTypeEnum.ENUM));
+		cols.add(new ColumnModel("billState",DataTypeEnum.ENUM,BillState.class));
 		cols.add(new ColumnModel("auditDate",DataTypeEnum.DATE));
 		ColumnModel project = new ColumnModel("project",DataTypeEnum.F7,"id,name");
 		project.setClaz(ProjectInfo.class);
 		cols.add(project);
+		
 		ColumnModel createUser = new ColumnModel("createUser",DataTypeEnum.F7,"id,name");
 		createUser.setClaz(UserInfo.class);
 		cols.add(createUser);

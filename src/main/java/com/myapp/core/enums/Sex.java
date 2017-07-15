@@ -13,7 +13,7 @@ import com.myapp.core.base.enums.MyEnum;
  *
  *-----------MySong---------------
  */
-public enum Sex implements MyEnum<Sex,String> {
+public enum Sex implements MyEnum<Sex> {
 	MAIL("MAIL","男"),WOMAN("WOMAN","女"),SECRET("SECRET","保密");
 	private String name;
 	private String value;

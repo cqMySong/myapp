@@ -22,8 +22,9 @@
 				<tr>
 					<th data-field="name">姓名</th>
 					<th data-field="number">编码</th>
-					<th data-field="defOrg_name" >行政部门</th>
-					<th data-field="userState" data-formatter="userState_formarter">状态</th>
+					<th data-field="defOrg_name" >所属组织</th>
+					<th data-field="linkers" >联系方式</th>
+					<th data-field="userState" data-type="select">状态</th>
 					<th data-field="createDate" data-type="datetime">创建时间</th>
 					<th data-field="passWord" data-type="password">密码</th>
 					<th data-field="remark" >备注</th>

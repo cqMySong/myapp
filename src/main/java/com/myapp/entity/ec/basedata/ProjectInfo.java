@@ -32,7 +32,7 @@ public class ProjectInfo extends CoreBaseInfo{
 	private IndustryType industryType;//工程行业
 	private String address;//地址
 	private String scale;//规模(建筑面积)
-	private BigDecimal eavesHeight;//檐高(m)
+	private BigDecimal eavesHeight;//建筑高度(m)
 	private BigDecimal floorHeight;//层高(m)
 	private StructTypeInfo structType;//结构类型
 	private BigDecimal area;//占地面积

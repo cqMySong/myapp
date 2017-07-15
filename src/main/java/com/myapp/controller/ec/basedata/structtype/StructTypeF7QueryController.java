@@ -51,13 +51,16 @@ public class StructTypeF7QueryController extends BaseF7QueryController {
 		cols.add(col);
 		return cols;
 	}
+	
 	public void executeQueryParams(Criteria query) {
 		super.executeQueryParams(query);
 		query.add(Restrictions.eq("enabled",Boolean.TRUE));
 	}
+	
 	public Order getOrder() {
 		return Order.asc("number");
 	}
+	
 	public String getUIWinTitle() {
 		return "结构类型查询";
 	}

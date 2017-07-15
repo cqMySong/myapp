@@ -2,6 +2,7 @@ package com.myapp.core.annotation;
 
 import java.lang.annotation.Documented;
 import java.lang.annotation.ElementType;
+import java.lang.annotation.Inherited;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
@@ -16,6 +17,7 @@ import com.myapp.core.enums.PermissionTypeEnum;
  * 权限项控制
  *-----------MySong---------------
  */
+@Inherited   //定义可以被子类继承
 @Retention(RetentionPolicy.RUNTIME)
 @Target({ElementType.METHOD})
 @Documented

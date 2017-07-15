@@ -16,7 +16,9 @@ import org.springframework.web.servlet.ModelAndView;
 import com.alibaba.fastjson.JSONObject;
 import com.myapp.core.base.setting.SystemConstant;
 import com.myapp.core.enums.DataTypeEnum;
+import com.myapp.core.exception.db.QueryException;
 import com.myapp.core.model.ColumnModel;
+import com.myapp.core.model.PageModel;
 import com.myapp.core.model.WebDataModel;
 import com.myapp.core.util.BaseUtil;
 import com.myapp.core.util.DateUtil;
@@ -30,9 +32,7 @@ import com.myapp.core.util.WebUtil;
  *
  *-----------MySong---------------
  */
-public abstract class BaseF7QueryController extends CoreBaseController {
-	private Integer curPage;
-	private Integer pageSize;
+public abstract class BaseF7QueryController extends BasePageListController {
 	private boolean mutil = false;
 	public String getF7URL(){
 		return "base/commonF7";
@@ -79,6 +79,8 @@ public abstract class BaseF7QueryController extends CoreBaseController {
 				type = WebUtil.Web_DataType_number;
 			}else if(DataTypeEnum.BOOLEAN.equals(dte)){
 				type = WebUtil.Web_DataType_checekbox;
+			}else if(DataTypeEnum.ENUM.equals(dte)){
+				type = WebUtil.Web_DataType_select;
 			}
 			Map colMap = new HashMap();
 			colMap.put("field",alias);
@@ -111,9 +113,24 @@ public abstract class BaseF7QueryController extends CoreBaseController {
 		String path = request.getServletPath();
 		path = path.substring(0, path.lastIndexOf("/"))+"/f7Data";
 		params.put("cols", JSONObject.toJSON(displayCols));
-		params.put("mutil", isMutil());
 		params.put("dataUrl", path);
+		boolean toMutil = isMutil();
+		String isMut_ = request.getParameter("mutil");
+		if(!BaseUtil.isEmpty(isMut_)){
+			toMutil = "true".equals(isMut_)||"1".equals(isMut_);
+		}
+		params.put("mutil",toMutil);
+		packageUIParams(params);
 		return toPage(getF7URL(), params);
+	}
+	
+	public void packageUIParams(Map params){
+		String ciCtx = request.getParameter("uiCtx");
+		if(!BaseUtil.isEmpty(ciCtx)){
+			ciCtx = ciCtx.replaceAll("\'", "\"");
+			Map uiCtx = JSONObject.parseObject(ciCtx, new HashMap().getClass());
+			params.put("uiCtx", ciCtx);
+		}
 	}
 	
 	@RequestMapping(value="/f7Data")
@@ -127,12 +144,42 @@ public abstract class BaseF7QueryController extends CoreBaseController {
 			if(order!=null){
 				query.addOrder(order);
 			}
-			data = getService().toPageQuery(query, getProjectionList(), getCurPage(), getPageSize());
+			afterQuery(getService().toPageQuery(query, getProjectionList(), getCurPage(), getPageSize()));
+//			data = getService().toPageQuery(query, getProjectionList(), getCurPage(), getPageSize());
 		} catch (Exception e) {
 			e.printStackTrace();
 			setExceptionMesg(e.getMessage());
 		}
 		return ajaxModel();
+	}
+	
+	public void afterQuery(PageModel pm) throws QueryException{
+		List datas = pm.getDatas();
+		if(datas!=null&&datas.size()>0){
+			packageDatas(datas);
+			pm.setDatas(datas);
+		}
+		this.data = pm;
+	}
+	public List<ColumnModel> getPackageDataCol(){
+		List<ColumnModel> cols = getDataBinding();
+		List<ColumnModel> toDoCols = new ArrayList<ColumnModel>(); 
+		for(ColumnModel cm:cols){
+			DataTypeEnum dte = cm.getDataType();
+			if(dte.equals(DataTypeEnum.MUTILF7)&&cm.getClaz()!=null){
+				toDoCols.add(cm);
+			}else if(DataTypeEnum.ENUM.equals(dte)&&cm.getClaz()!=null){
+				toDoCols.add(cm);
+			}
+		}
+		return toDoCols;
+	}
+	public void packageDatas(List datas) throws QueryException{
+		if(datas==null||datas.size()<=0) return;
+		List<ColumnModel> cms = getPackageDataCol();
+		if(cms!=null&&cms.size()>0){
+			packageListDataColumns(datas, cms);
+		}
 	}
 	
 	public void executeQueryParams(Criteria query) {
@@ -170,33 +217,5 @@ public abstract class BaseF7QueryController extends CoreBaseController {
 	public void setMutil(boolean mutil) {
 		this.mutil = mutil;
 	}	
-	
-	public Integer getCurPage() {
-		String cpage = request.getParameter("curPage");
-		if(!BaseUtil.isEmpty(cpage)){
-			curPage = Integer.valueOf(cpage);
-		}
-		if (curPage == null)
-			curPage = SystemConstant.DEF_PAGE_BEG;
-		return curPage;
-	}
-
-	public void setCurPage(Integer curPage) {
-		this.curPage = curPage;
-	}
-
-	public Integer getPageSize() {
-		String pgsize = request.getParameter("pageSize");
-		if(!BaseUtil.isEmpty(pgsize)){
-			pageSize = Integer.valueOf(pgsize);
-		}
-		if (pageSize == null)
-			pageSize = SystemConstant.DEF_PAGE_SIZE;
-		return pageSize;
-	}
-
-	public void setPageSize(Integer pageSize) {
-		this.pageSize = pageSize;
-	}
 	
 }

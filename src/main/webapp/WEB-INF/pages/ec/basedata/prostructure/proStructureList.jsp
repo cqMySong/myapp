@@ -54,7 +54,9 @@ function beforeAction(opt){
 function openUIParams(operate,params){
 	
 }
-
+function getTreeQueryParams(){
+	return {orgType:"COMPANYORG,PROJECTORG"};
+}
 $(document).ready(function() {
      var treeNode2QueryProp = ["id","name","number","longNumber","type"];
      var editWin ={title:'项目工程结构',width:620,height:450};
@@ -62,7 +64,7 @@ $(document).ready(function() {
          	simpleData: {enable:true,idKey: "id", pIdKey: "parentId",rootPId: ''}
     	 }}};
      var height = 700;
-     thisOrgList = $('body').treeListUI({tableEl:'#tblMain',treeUrl:'ec/basedata/projects/projectTree',baseUrl:'ec/basedata/prostructures',title:'工程项目',height:height,
+     thisOrgList = $('body').treeListUI({tableEl:'#tblMain',listModel:1,treeUrl:'ec/basedata/projects/projectTree',baseUrl:'ec/basedata/prostructures',title:'工程项目',height:height,
     	 treeContainer:"#tree_container",editWin:editWin,toolbar:"#table-toolbar",searchParams:{includeChild:true},treeOpt:treeOpt
     	 ,treeNode2QueryProp:treeNode2QueryProp,extendTableOptions:{toolbar:'#tblMain_toolbar',height:height,sortStable:false}});
      thisOrgList.onLoad();

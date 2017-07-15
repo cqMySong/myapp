@@ -11,6 +11,7 @@ import java.util.Map;
 import java.util.Set;
 
 import org.hibernate.Criteria;
+import org.hibernate.HibernateException;
 import org.hibernate.criterion.Order;
 import org.hibernate.criterion.ProjectionList;
 import org.hibernate.criterion.Projections;
@@ -99,7 +100,6 @@ public abstract class BaseEditController extends CoreBaseController {
 		setEditData(editData);
 	}
 	protected void storeData(BaseMethodEnum bme,Object editData) throws SaveException{
-		
 	}
 	
 	protected boolean beforeOperate(BaseMethodEnum bme) throws ClassNotFoundException, InstantiationException, IllegalAccessException{
@@ -137,17 +137,39 @@ public abstract class BaseEditController extends CoreBaseController {
 	protected boolean verifyEditData(BaseMethodEnum bme){
 		return true;
 	}
-	protected void afterOperate(BaseMethodEnum bme){
+	protected void afterOperate(BaseMethodEnum bme) throws HibernateException, QueryException{
 		packageEditData2Json();
 	}
 	
-	private Object getEditDataVal(ColumnModel col,Object objVal){
+	private Object getEditF7DataVal(Object objVal,String col_format){
+		if(BaseUtil.isEmpty(objVal)) return "{}";
+		if(BaseUtil.isEmpty(col_format)) col_format = "name";
+		if(objVal instanceof CoreBaseInfo){
+			JSONObject jsonObj_f7 = new JSONObject();
+			String[] _cols = col_format.split(",");
+			CoreBaseInfo cbInfo = (CoreBaseInfo) objVal;
+			for(String colItem :_cols){
+				jsonObj_f7.put(colItem, cbInfo.get(colItem));
+			}
+			return jsonObj_f7;
+		}else if(objVal instanceof List){//f7的对象集合处理
+			List items = new ArrayList();
+			List objSet = (List) objVal;
+			for(Object itemObj: objSet) {
+				items.add(getEditF7DataVal(itemObj,col_format));
+			}
+			return items;
+		}
+		return "{}";
+	}
+	
+	private Object getEditDataVal(ColumnModel col,Object objVal) throws HibernateException, QueryException{
 		DataTypeEnum dte = col.getDataType();
 		if(objVal==null){
 			objVal = "";
 			if(DataTypeEnum.F7.equals(dte)){
 				objVal= "{}";
-			}else if(DataTypeEnum.ENTRY.equals(dte)){
+			}else if(DataTypeEnum.ENTRY.equals(dte)||DataTypeEnum.MUTILF7.equals(dte)){
 				objVal = "[]";
 			}
 		}else{
@@ -160,16 +182,19 @@ public abstract class BaseEditController extends CoreBaseController {
 			}else if(DataTypeEnum.ENUM.equals(dte)&&objVal instanceof MyEnum){
 				objVal = ((MyEnum)objVal).getValue();
 			}else if(DataTypeEnum.F7.equals(dte)&&objVal instanceof CoreBaseInfo){
-				String col_format = col.getFormat();
-				if(!BaseUtil.isEmpty(col_format)){
-					JSONObject jsonObj_f7 = new JSONObject();
-					String[] _cols = col_format.split(",");
-					CoreBaseInfo cbInfo = (CoreBaseInfo) objVal;
-					for(String colItem :_cols){
-						jsonObj_f7.put(colItem, cbInfo.get(colItem));
-					}
-					objVal = jsonObj_f7;
+				objVal = getEditF7DataVal(objVal,col.getFormat());
+			}else if(DataTypeEnum.MUTILF7.equals(dte)&&col.getClaz()!=null
+					&&!BaseUtil.isEmpty(objVal)&&objVal instanceof String){//处理id关联对象转变成界面上的f7对象
+				String[] f7ids = objVal.toString().split(",");
+				Criteria query = getService().initQueryCriteria(col.getClaz());
+				query.add(Restrictions.in("id", f7ids));
+				ProjectionList props = Projections.projectionList();
+				for(String colItem :col.getFormat().split(",")){
+					props.add(createBaseField(colItem));
 				}
+				query.setProjection(props);
+				query.setResultTransformer(new MyResultTransFormer(col.getClaz()));
+				objVal = query.list();
 			}else if(DataTypeEnum.ENTRY.equals(dte)&&objVal instanceof Set){
 				Set entrys = (Set) objVal;
 				List _entry = new ArrayList();
@@ -195,7 +220,7 @@ public abstract class BaseEditController extends CoreBaseController {
 		return objVal;
 	} 
 	
-	private void packageEditData2Json(){
+	private void packageEditData2Json() throws HibernateException, QueryException{
 		Object editData = getEditData();
 		if(editData!=null){
 			if(editData instanceof CoreInfo){
@@ -240,6 +265,12 @@ public abstract class BaseEditController extends CoreBaseController {
 					val = getService().getEntity(col.getClaz(), WebUtil.UUID_ReplaceID(val.toString()));
 				}
 				
+			}else if(DataTypeEnum.MUTILF7.equals(dte)){//多选f7的处理
+				if(BaseUtil.isEmpty(val)) {
+					val = "";
+				}else{//id集合支付串
+					val = WebUtil.UUID_ReplaceID(val.toString());
+				}
 			}else if(DataTypeEnum.ENUM.equals(dte)){
 				if(BaseUtil.isEmpty(val)) {
 					val = null;
@@ -460,8 +491,6 @@ public abstract class BaseEditController extends CoreBaseController {
 	private void loadData() throws QueryException{
 		String billId = getReuestBillId();
 		if(!BaseUtil.isEmpty(billId)){
-			//如果是多分录的情况 这样是有问题的 
-			
 			Map editMap = new HashMap();
 			Map entryMap = new HashMap();
 			Criteria billCrteria = getService().initQueryCriteria();
@@ -469,12 +498,16 @@ public abstract class BaseEditController extends CoreBaseController {
 			List<ColumnModel> cols = getDataBinding();
 			List<String> entryCols  = new ArrayList<String>();
 			Map<String,Object> F7Col = new HashMap<String, Object>();
+			Map<String,Object> mutilF7Col = new HashMap<String, Object>();
 			for(ColumnModel cm:cols){
 				if(!DataTypeEnum.ENTRY.equals(cm.getDataType())){
 					packageEditBillCriteria(billCrteria,billProjectList,cm);
 					if(DataTypeEnum.F7.equals(cm.getDataType())){
 						F7Col.put(cm.getName(), cm);
+					}else if(DataTypeEnum.MUTILF7.equals(cm.getDataType())){
+						mutilF7Col.put(cm.getName(), cm);
 					}
+					
 				}else{
 					Class entryClaz = cm.getClaz();
 					List<ColumnModel> entry_cols = cm.getCols();
@@ -483,11 +516,14 @@ public abstract class BaseEditController extends CoreBaseController {
 						entryCrteria.createAlias("parent", "parent", JoinType.INNER_JOIN);
 						ProjectionList entryProjectList = Projections.projectionList();
 						List<ColumnModel> entryF7Col =  new ArrayList<ColumnModel>();
+						List<ColumnModel> entryMutilF7Col =  new ArrayList<ColumnModel>();
 						for(ColumnModel entry_cm:entry_cols){
 							if(!DataTypeEnum.ENTRY.equals(entry_cm.getDataType())){
 								packageEditBillCriteria(entryCrteria,entryProjectList,entry_cm);
 								if(DataTypeEnum.F7.equals(entry_cm.getDataType())){
 									entryF7Col.add(entry_cm);
+								}else if(DataTypeEnum.MUTILF7.equals(entry_cm.getDataType())){
+									entryMutilF7Col.add(entry_cm);
 								}
 							}
 						}
@@ -498,6 +534,9 @@ public abstract class BaseEditController extends CoreBaseController {
 						entryCols.add(cm.getName());
 						if(entryF7Col.size()>0){
 							F7Col.put(cm.getName(), entryF7Col);
+						}
+						if(entryMutilF7Col.size()>0){
+							mutilF7Col.put(cm.getName(), entryMutilF7Col);
 						}
 						entryMap.put(cm.getName(), entryCrteria);
 					}
@@ -514,6 +553,9 @@ public abstract class BaseEditController extends CoreBaseController {
 					if(entryCrteria!=null)
 						editMap.put(entryKey, entryCrteria.list());
 				}
+				//
+				
+				
 			}
 			//然后再把f7的集合处理成对象
 			 for (Map.Entry<String,Object> entry : F7Col.entrySet()) {
@@ -545,7 +587,62 @@ public abstract class BaseEditController extends CoreBaseController {
 					 }
 				 }
 			 }
+			 // 处理多选f7的数据格式
+			 for (Map.Entry<String,Object> entry : mutilF7Col.entrySet()) {
+				 String colName = entry.getKey();
+				 Object colObj = entry.getValue();
+				 if(colObj!=null){
+					 if(colObj instanceof ColumnModel){
+						 ColumnModel cm = (ColumnModel) colObj;
+						 packageMutilF7DataMap(cm,editMap);
+					 }else if(colObj instanceof List){//处理分录中的f7数据
+						Object entrysObj = editMap.get(colName);
+						if(entrysObj!=null&&entrysObj instanceof List){
+							List entryDatas = (List) entrysObj;
+							if(entryDatas.size()>0){
+								List entryF7Cols = (List) colObj;
+								for(int i=0;i<entryDatas.size();i++){
+									Object entryDataMapObj = entryDatas.get(i);
+									if(entryDataMapObj!=null&&entryDataMapObj instanceof Map){
+										Map entryDataMap = (Map) entryDataMapObj;
+										for(int j=0;j<entryF7Cols.size();j++){
+											ColumnModel entryF7col = (ColumnModel) entryF7Cols.get(j);
+											packageMutilF7DataMap(entryF7col,entryDataMap);
+										}
+									}
+								}
+							}
+						}
+						 
+					 }
+				 }
+			 }
+			 
 			setEditData(editMap);
+		}
+	}
+	
+	private void packageMutilF7DataMap(ColumnModel cm,Map dataMap) throws HibernateException, QueryException{
+		if(DataTypeEnum.MUTILF7.equals(cm.getDataType())){
+			String key = cm.getName();
+			Object objVal = dataMap.get(key);
+			List datas = new ArrayList();
+			if(objVal!=null){
+				String[] f7ids = objVal.toString().split(",");
+				Criteria query = getService().initQueryCriteria(cm.getClaz());
+				query.add(Restrictions.in("id", f7ids));
+				ProjectionList props = Projections.projectionList();
+				for(String colItem :cm.getFormat().split(",")){
+					props.add(createBaseField(colItem));
+				}
+				query.setProjection(props);
+				query.setResultTransformer(new MyResultTransFormer(cm.getClaz()));
+				List queryDatas = query.list();
+				if(queryDatas!=null&&queryDatas.size()>0){
+					datas = queryDatas;
+				}
+			}
+			dataMap.put(key, datas);
 		}
 	}
 	

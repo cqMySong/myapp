@@ -13,7 +13,7 @@ import com.myapp.core.base.enums.MyEnum;
  * 工程行业类别
  *-----------MySong---------------
  */
-public enum IndustryType implements MyEnum<IndustryType,String> {
+public enum IndustryType implements MyEnum<IndustryType> {
 	FWJZ("FWJZ","房屋建筑工程"),SLSD("SLSD","水利水电工程"),SZGC("SZGC","市政工程"),GLGC("GLGC","公路工程"),NLGC("NLGC","农林工程");
 
 	private String name;

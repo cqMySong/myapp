@@ -18,10 +18,10 @@
 					<table id="tblMain">
 						 <thead >
 							<tr>
+								<th data-field="proStruct_name">工程结构</th>
+								<th data-field="proSub_name">分部工程</th>
 								<th data-field="number">编码</th>
 								<th data-field="name">名称</th>
-								<th data-field="project_name">工程项目</th>
-								<th data-field="parent_number">上级编码</th>
 								<th data-field="enabled" data-type="checkbox">启用</th>
 								<th data-field="remark" >备注</th>
 							</tr>
@@ -60,7 +60,7 @@ $(document).ready(function() {
          	simpleData: {enable:true,idKey: "id", pIdKey: "parentId",rootPId: ''}
     	 }}};
      var height = 700;
-     thisOrgList = $('body').treeListUI({tableEl:'#tblMain',treeUrl:'ec/basedata/projects/projectTree',baseUrl:'ec/basedata/prosubitems',title:'工程项目',height:height,
+     thisOrgList = $('body').treeListUI({tableEl:'#tblMain',listModel:1,treeUrl:'ec/basedata/projects/projectTree',baseUrl:'ec/basedata/prosubitems',title:'工程项目',height:height,
     	 treeContainer:"#tree_container",editWin:editWin,toolbar:"#table-toolbar",searchParams:{includeChild:true},treeOpt:treeOpt
     	 ,treeNode2QueryProp:treeNode2QueryProp,extendTableOptions:{toolbar:'#tblMain_toolbar',height:height,sortStable:false}});
      thisOrgList.onLoad();

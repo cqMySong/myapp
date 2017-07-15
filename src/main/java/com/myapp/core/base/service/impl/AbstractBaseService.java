@@ -28,6 +28,7 @@ import com.myapp.core.exception.db.DeleteException;
 import com.myapp.core.exception.db.QueryException;
 import com.myapp.core.exception.db.ReadException;
 import com.myapp.core.exception.db.SaveException;
+import com.myapp.core.exception.db.UpdateException;
 import com.myapp.core.model.MyWebContent;
 import com.myapp.core.model.PageModel;
 import com.myapp.core.util.BaseUtil;
@@ -162,17 +163,12 @@ public abstract class AbstractBaseService implements IAbstractBaseService {
 		return getBaseDao().saveEntity(entity);
 	}
 	
-	public void deleteEntity(String id) {
+	public void deleteEntity(String id) throws DeleteException {
 		deleteEntity(getEntityClass(), id);
 	}
 	
-	public void deleteEntity(Class claz, String id) {
-		try {
-			getBaseDao().deleteEntity(claz, id);
-		} catch (DeleteException e) {
-			e.printStackTrace();
-			log.error(e.getMessage());
-		}
+	public void deleteEntity(Class claz, String id) throws DeleteException {
+		getBaseDao().deleteEntity(claz, id);
 	}
 	public void deleteEntity(Object entity) {
 		 try {
@@ -192,14 +188,8 @@ public abstract class AbstractBaseService implements IAbstractBaseService {
 		}
 		return null;
 	}
-	public Serializable addNewEntity(Object entity) {
-		try {
-			return getBaseDao().addNewEntity(entity);
-		} catch (AddNewException e) {
-			e.printStackTrace();
-			log.error(e.getMessage());
-		}
-		return null;
+	public Serializable addNewEntity(Object entity) throws AddNewException {
+		return getBaseDao().addNewEntity(entity);
 	}
 	public PageModel toPageQuery(Integer curPage, Integer pageSize, String hql,
 			Object[] params) {
@@ -280,11 +270,11 @@ public abstract class AbstractBaseService implements IAbstractBaseService {
 		return pm;
 	}
 	
-	public void executeUpdata(String hql,Object[] params){
+	public void executeUpdata(String hql,Object[] params) throws UpdateException{
 		getBaseDao().executeUpdata(hql, params);
 	}
 	
-	public void executeDeleteEntitys(List idparams){
+	public void executeDeleteEntitys(List idparams) throws UpdateException{
 		if(BaseUtil.isEmpty(idparams)||idparams.size()<=0) return;
 		String delHql = "from "+getEntityClass().getSimpleName()+" where id in(?)";
 		List newParams = new ArrayList();

@@ -14,7 +14,7 @@ import com.myapp.core.util.BaseUtil;
  * @system:
  *-----------MySong---------------
  */
-public enum FileUnitEnum implements MyEnum<FileUnitEnum,String> {
+public enum FileUnitEnum implements MyEnum<FileUnitEnum> {
 	B("B","B"),KB("KB","KB"),MB("MB","MB"),GB("GB","GB");
 
 	private String name;

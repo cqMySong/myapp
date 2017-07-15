@@ -22,7 +22,7 @@ import com.myapp.core.util.BaseUtil;
  *-----------MySong---------------
  */
 @MappedSuperclass
-public class CoreBaseTreeInfo<T> extends CoreBaseInfo {
+public class CoreBaseTreeInfo<T> extends CoreBaseDataInfo {
 	private T parent;
 	private Set<T> children = new HashSet<T>();   
 	private Integer level;

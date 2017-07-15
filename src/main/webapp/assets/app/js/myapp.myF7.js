@@ -43,7 +43,18 @@ MyF7.prototype = {
 		if(opt.closeWin&&$.isFunction(opt.closeWin)){
 			this.closeWin = opt.closeWin;
 		}
+		if(!webUtil.isEmpty(opt.mutil)&&typeof(opt.mutil) == 'boolean'){
+			this.setMutil(opt.mutil);
+		}
 		this.addEevent(opt.event);
+	},
+	setMutil:function(mutil){
+		if(!webUtil.isEmpty(mutil)&&typeof(mutil) == 'boolean'){
+			this.$element.data('mutil',mutil+'');
+		}
+	},
+	isMutil:function(){
+		return this.$element.data('mutil');
 	},
 	addEevent:function(event){
 		if(!webUtil.isEmpty(this.f7Btn)){
@@ -68,7 +79,7 @@ MyF7.prototype = {
 			if(!webUtil.isEmpty(_toUrl)){
 				var thisF7 = this;
 				var thisUrl = webUtil.toUrl(_toUrl+"/f7show");
-				_win.url = thisUrl;
+				_win.url = thisUrl+'?mutil='+this.isMutil();
 				_win.btns = ['确定','取消'];
 				_win.maxmin = false;
 				_win.btnCallBack = function(index,layerIndex,layero){
@@ -104,7 +115,15 @@ MyF7.prototype = {
 		}else{
 			var _txt = '';
 			if(!webUtil.isEmpty(data)){
-				_txt = data[this.displayName];
+				if($.isArray(data)){
+					for(var i=0;i<data.length;i++){
+						var itemData = data[i];
+						if(i>0) _txt += ',';
+						_txt += itemData[this.displayName]
+					}
+				}else{
+					_txt = data[this.displayName];
+				}
 			}
 			$(this.$element).val(_txt);
 		}
@@ -114,13 +133,22 @@ MyF7.prototype = {
 	},
 	getValue:function(){
 		var data = $(this.$element).data('data');
+		var commitVal = '';
 		if(!webUtil.isEmpty(data)&&!webUtil.isEmpty(this.commitName)){
-			var val = data[this.commitName];
-			if(!webUtil.isEmpty(val)){
-				return val;
+			if($.isArray(data)){
+				for(var i=0;i<data.length;i++){
+					var itemData = data[i];
+					if(i>0) commitVal += ',';
+					commitVal += itemData[this.commitName]
+				}
+			}else{
+				var val = data[this.commitName];
+				if(!webUtil.isEmpty(val)){
+					commitVal = val;
+				}
 			}
 		}
-		return '';
+		return commitVal;
 	},
 	setEnabled:function(enabled){
 		this.$element.data("f7enabled",enabled);

@@ -4,6 +4,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import com.myapp.core.base.enums.MyEnum;
+import com.myapp.core.util.BaseUtil;
 
 /**
  *-----------MySong---------------
@@ -13,7 +14,7 @@ import com.myapp.core.base.enums.MyEnum;
  *
  *-----------MySong---------------
  */
-public enum Sex_copy implements MyEnum<Sex_copy,Integer> {
+public enum Sex_copy implements MyEnum<Sex_copy> {
 	MAIL(1,"男"),WOMAN(2,"女"),NO(3,"什么也不是");
 	private String name;
 	private Integer value;
@@ -28,10 +29,6 @@ public enum Sex_copy implements MyEnum<Sex_copy,Integer> {
 		this.name = name;
 		this.value = value;
 	}
-	public Sex_copy getEnum(Integer value) {
-		return map.get(value);
-	}
-
 	public String getName() {
 		return this.name;
 	}
@@ -39,7 +36,10 @@ public enum Sex_copy implements MyEnum<Sex_copy,Integer> {
 	public Integer getValue() {
 		return this.value;
 	}
-
-	
-
+	public Sex_copy getEnum(String value) {
+		if(!BaseUtil.isEmpty(value)){
+			return map.get(Integer.valueOf(value));
+		}
+		return null;
+	}
 }

@@ -21,8 +21,6 @@ import com.myapp.core.base.entity.CoreBaseTreeInfo;
 @Table(name="t_ec_proStructure")
 public class ProStructureInfo extends CoreBaseTreeInfo<ProStructureInfo> {
 	private ProjectInfo project;//工程项目
-	private String remark;//备注
-	private Boolean enabled;//启用
 	
 	@OneToOne(fetch=FetchType.LAZY)
 	@JoinColumn(name = "fprojectId")
@@ -32,20 +30,4 @@ public class ProStructureInfo extends CoreBaseTreeInfo<ProStructureInfo> {
 	public void setProject(ProjectInfo project) {
 		this.project = project;
 	}
-	@Column(name="fremark",length=200)
-	public String getRemark() {
-		return remark;
-	}
-	public void setRemark(String remark) {
-		this.remark = remark;
-	}
-	@Column(name="fenabled",length=2)
-	public Boolean getEnabled() {
-		return enabled;
-	}
-	public void setEnabled(Boolean enabled) {
-		this.enabled = enabled;
-	}
-	
-	
 }

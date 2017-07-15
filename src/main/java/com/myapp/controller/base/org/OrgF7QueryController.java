@@ -4,7 +4,9 @@ import java.util.List;
 
 import javax.annotation.Resource;
 
+import org.hibernate.Criteria;
 import org.hibernate.criterion.Order;
+import org.hibernate.criterion.Restrictions;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 
@@ -13,6 +15,7 @@ import com.myapp.core.controller.BaseF7QueryController;
 import com.myapp.core.enums.DataTypeEnum;
 import com.myapp.core.model.ColumnModel;
 import com.myapp.core.service.OrgService;
+import com.myapp.core.util.BaseUtil;
 
 /**
  *-----------MySong---------------
@@ -47,6 +50,14 @@ public class OrgF7QueryController extends BaseF7QueryController {
 	}
 	public Order getOrder() {
 		return Order.asc("longNumber");
+	}
+	
+	public void executeQueryParams(Criteria query) {
+		super.executeQueryParams(query);
+		String orgType = request.getParameter("orgType");
+		if(!BaseUtil.isEmpty(orgType)){
+			query.add(Restrictions.in("orgType",orgType.split(",")));
+		}
 	}
 
 }

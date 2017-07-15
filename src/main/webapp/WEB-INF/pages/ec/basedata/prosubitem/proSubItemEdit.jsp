@@ -39,21 +39,25 @@
 				</div>
 				<div class="col-sm-6 mb15">
 					<div class="input-group">
-						<span class="input-group-addon lable">上级</span>
-						<input name="parent" class="input-item form-control" 
-							data-opt="{type:'f7',uiWin:{title:'分部分项',height:580,width:300,url:'ec/basedata/proSubItemF7',uiParams:parent_data}}" />
+						<span class="input-group-addon lable">工程结构</span>
+						<input name="proStruct" class="input-item form-control read" 
+							data-opt="{type:'f7',uiWin:{title:'工程结构',height:550,width:700}}" />
 					</div>
 				</div>
 			</div>
 			<div class="row">
 				<div class="col-sm-6">
 					<div class="input-group">
-						<span class="input-group-addon lable">启用</span> 
-						<input class="require input-item" name="enabled" data-opt="{type:'checkbox'}" type="checkbox">
+						<span class="input-group-addon lable">分部工程</span>
+						<input name="proSub" class="input-item form-control" 
+							data-opt="{type:'f7',uiWin:{title:'分部工程',height:550,width:700,url:'ec/basedata/proSubF7',uiParams:proSub_data},dataChange:proSub_dataChange}" />
 					</div>
 				</div>
 				<div class="col-sm-6 mb15">
-					
+					<div class="input-group">
+						<span class="input-group-addon lable">启用</span> 
+						<input class="require input-item" name="enabled" data-opt="{type:'checkbox'}" type="checkbox">
+					</div>
 				</div>
 			</div>
 			<div class="row mt10">
@@ -85,11 +89,17 @@
 			}
 		}
 	}
-	function parent_data(){
+	function proSub_data(){
 		var pro = {};
 		pro.projectId = $('input[name="project"]').myF7().getValue();
-		pro.billId = getBillId();
 		return pro;
+	}
+	
+	function proSub_dataChange(oldData,newData){
+		var proStruct = {};
+		proStruct.id = newData.proStruct_id;
+		proStruct.name = newData.proStruct_name;
+		$('input[name="proStruct"]').myF7().setData(proStruct);
 	}
 
 	$(document).ready(function() {

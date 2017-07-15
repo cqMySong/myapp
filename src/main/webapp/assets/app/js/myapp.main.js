@@ -498,7 +498,7 @@ MyDataTable.prototype = {
 			this.$pagination.show();
 		}
 		var _pagination_detail = [];
-		_pagination_detail.push('<div class="pull-left pagination-detail" style="margin-top:0px;">');
+		_pagination_detail.push('<div class="pull-left pagination-detail" style="margin-top:0px;margin-bottom:0px;">');
 			_pagination_detail.push('<span id="tbl_pageinfo" class="pagination-info">显示第 1 到第 0 条记录，总共 0 条记录</span>');
 			_pagination_detail.push('<span class="page-list">每页显示');
 				_pagination_detail.push('<span class="btn-group dropup form-group" style="padding-top: 15px;">');
@@ -661,8 +661,10 @@ MyDataTable.prototype = {
 		if($.isNumeric(index)){
 			_idx = index;
 		}
+		this.checkTable();
 		this.tblMain.bootstrapTable('insertRow',{index:_idx,row:rowData});
 		this.tblMain.bootstrapTable('resetView');
+		
 	},
 	removeRow:function(row){
 		var index = -1;
@@ -727,6 +729,7 @@ MyDataTable.prototype = {
 		var datas = [];
 		var cols = this.getVisibleColumns();
 		var tableDatas = this.getData();
+		this.checkTable();
 		if(!webUtil.isEmpty(cols)&&cols.length>0
 				&&!webUtil.isEmpty(tableDatas)&&tableDatas.length>0){
 			if(!webUtil.isEmpty(otherCol)&&otherCol.length>0&&$.isArray(otherCol)){
@@ -745,8 +748,18 @@ MyDataTable.prototype = {
 					var _type = column.type;
 					if(_type == DataType.F7){
 						var f7Obj = rowData[field];
-						if(!webUtil.isEmpty(f7Obj)&&!webUtil.isEmpty(f7Obj.id)){
-							val = f7Obj.id;
+						if(!webUtil.isEmpty(f7Obj)){
+							if($.isArray(f7Obj)){
+								for(var k=0;k<f7Obj.length;k++){
+                 					var thisItem = f7Obj[k];
+                 					if(k>0) val +=',';
+                 					val += thisItem.id;
+                 				}
+							}else if($.isPlainObject(f7Obj)){
+								if(!webUtil.isEmpty(f7Obj.id)){
+									val = f7Obj.id;
+								}
+							}
 						}else{
 							val = '';
 						}
@@ -935,6 +948,28 @@ MyDataTable.prototype = {
 			}
 		}
 	},
+	checkTable:function(){
+		var thisEditorColumn = this.$element.data('curEditorColumn');
+		var tblOpt = this.$element.data('editorOpt');
+		if(!webUtil.isEmpty(thisEditorColumn)&&!webUtil.isEmpty(tblOpt)){
+			var ridx = thisEditorColumn.rowIndex;
+			var colIdx = thisEditorColumn.colIndex;
+			var curEditor = thisEditorColumn.editor;
+			if(!webUtil.isEmpty(curEditor)){
+				var thisCellVal = curEditor.getTableCellData();
+				var go = true;
+				var endObj= $.extend(true,{},thisEditorColumn, {value:thisCellVal});
+				if(!webUtil.isEmpty(tblOpt.endEdit)&&$.isFunction(tblOpt.endEdit)){
+					go = tblOpt.endEdit($td,endObj);
+				}
+				if(go){
+					this.setTableCellValue(ridx,thisEditorColumn.field,thisCellVal);
+				}
+				thisEditorColumn.cell.data('hasInit','no');
+			}
+			this.$element.data('curEditorColumn',null);
+		}
+	},
 	initTableColumnEditor:function(medthed,opt){
 		//dbl-click-cell 双击事件名
 		if(webUtil.isEmpty(medthed)) medthed = 'click-cell';//单击开始编辑
@@ -942,6 +977,7 @@ MyDataTable.prototype = {
 		if(!webUtil.isEmpty(tblOpt.editDataChanged)&&$.isFunction(tblOpt.editDataChanged)){
 			this.editDataChanged = tblOpt.editDataChanged;
 		}
+		this.$element.data('editorOpt',tblOpt);
 		var thisMyTable = this;
 		this.addTableEvent(medthed,function(e,$td,obj){
 			var toEdit = true;
@@ -1144,18 +1180,16 @@ MyDataTableCellEditor.prototype = {
 		if(!webUtil.isEmpty(_editor)&&!webUtil.isEmpty(type)){
 			var thisMyComponet = _editor.data('componet');
 			if(DataType.F7==type){
-				_editor.focus();
-				thisMyComponet.focusout(function(e) {
+				_editor.blur(function(e) {
 					e.stopPropagation();
 					if(!webUtil.isEmpty(endEdit)&&$.isFunction(endEdit)){
-						endEdit($(this).myF7().getData());
+						endEdit(thisMyComponet.myF7().getData());
 					}
 				});
 			}else if(DataType.date==type||DataType.datetime==type){
-				thisMyComponet.focusout(function(e) {
-					e.stopPropagation();
+				thisMyComponet.parent('.date').on('changeDate',function(e){
 					if(!webUtil.isEmpty(endEdit)&&$.isFunction(endEdit)){
-						endEdit($(this).myComponet(type,{method:'getData'}));
+						endEdit(thisMyComponet.myComponet(type,{method:'getData'}));
 					}
 				});
 			}else if(DataType.select == type){
@@ -1167,12 +1201,17 @@ MyDataTableCellEditor.prototype = {
 			}else{
 				_editor.focus();
 				if(!webUtil.isEmpty(thisMyComponet)){
-					thisMyComponet.focus();
-					thisMyComponet.focusout(function() {
+					_editor.blur(function(e) {
 						if(!webUtil.isEmpty(endEdit)&&$.isFunction(endEdit)){
-							endEdit($(this).myComponet(type,{method:'getdata'}));
+							endEdit(thisMyComponet.myComponet(type,{method:'getdata'}));
 						}
 					});
+				
+				/*	_editor.off('focusout').on('focusout',function(e) {
+						if(!webUtil.isEmpty(endEdit)&&$.isFunction(endEdit)){
+							endEdit(thisMyComponet.myComponet(type,{method:'getdata'}));
+						}
+					});*/
 				}
 			}
 			var thisCell = this;

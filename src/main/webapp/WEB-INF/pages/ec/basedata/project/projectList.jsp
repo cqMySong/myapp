@@ -24,12 +24,12 @@
 							<tr>
 								<th data-field="number" data-align="left">项目编码</th>
 								<th data-field="name">项目名称</th>
-								<th data-field="industryType" data-formatter="industryType_formarter">工程行业</th>
-								<th data-field="proState" data-formatter="proState_formarter">项目状态</th>
+								<th data-field="industryType" data-type="select">工程行业</th>
+								<th data-field="proState" data-type="select">项目状态</th>
 								<th data-field="org_name">所属组织</th>
 								<th data-field="address">项目地址</th>
 								<th data-field="scale" >规模</th>
-								<th data-field="eavesHeight" >檐高(m)</th>
+								<th data-field="eavesHeight" >建筑高度(m)</th>
 								<th data-field="floorHeight" >层高(m)</th>
 								<th data-field="structType_name" >结构类型</th>
 								<th data-field="area" >占地面积</th>
@@ -68,10 +68,12 @@ function proState_formarter(value, row, index){
 		txt = '施工准备';
 	}else if(value=='ZZSG'){
 		txt = '正在施工';
-	}else if(value=='YJG'){
-		txt = '已竣工';
-	}else if(value=='YGB'){
-		txt = '已关闭';
+	}else if(value=='JG'){
+		txt = '竣工';
+	}else if(value=='YGJSZ'){
+		txt = '竣工结算中';
+	}else if(value=='JGJSWB'){
+		txt = '竣工结算完毕';
 	}else if(value=='YDG'){
 		txt = '已停工';
 	}
@@ -111,6 +113,8 @@ $(document).ready(function() {
     	 ,extendTableOptions:{toolbar:'#tblMain_toolbar',height:height,sortStable:false}});
      thisOrgList.onLoad();
 });
-
+function getTreeQueryParams(){
+	return {orgType:"COMPANYORG,PROJECTORG"};
+}
 </script>
 </html>

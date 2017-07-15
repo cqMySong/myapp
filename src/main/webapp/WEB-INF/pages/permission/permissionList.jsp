@@ -31,7 +31,7 @@
 								<th data-field="longNumber" data-formatter ="treeNumber_formarter" data-align="left">编码</th>
 								<th data-field="name">名称</th>
 								<th data-field="url" data-align="left">请求地址</th>
-								<th data-field="type" data-formatter="type_formarter">权限类型</th>
+								<th data-field="type" data-type="select">权限类型</th>
 								<th data-field="parent_number" >上级编码</th>
 								<th data-field="remark" >备注</th>
 							</tr>

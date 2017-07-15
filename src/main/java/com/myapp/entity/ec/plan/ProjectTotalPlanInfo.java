@@ -60,7 +60,12 @@ public class ProjectTotalPlanInfo extends CoreBaseBillInfo {
 	public static void main(String[] args){
 		ProjectTotalPlanInfo p = new ProjectTotalPlanInfo();
 		Object obj = p.get("planItems");
-		System.out.println(obj!=null&&obj instanceof Set);
+		Set ids =  new HashSet();
+		ids.add("1");
+		ids.add("3");
+		p.put("remarkex", ids);
+		System.out.println(p.get("remarkex").toString());
+		
 	}
 	
 }

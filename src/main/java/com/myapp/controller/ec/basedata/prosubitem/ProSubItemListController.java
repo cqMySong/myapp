@@ -8,6 +8,7 @@ import javax.annotation.Resource;
 
 import org.hibernate.Criteria;
 import org.hibernate.criterion.Restrictions;
+import org.hibernate.criterion.SimpleExpression;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 
@@ -18,6 +19,7 @@ import com.myapp.core.controller.BaseDataListController;
 import com.myapp.core.enums.DataTypeEnum;
 import com.myapp.core.model.ColumnModel;
 import com.myapp.core.util.BaseUtil;
+import com.myapp.core.util.WebUtil;
 import com.myapp.entity.ec.basedata.ProStructureInfo;
 import com.myapp.entity.ec.basedata.ProSubInfo;
 import com.myapp.entity.ec.basedata.ProSubItemInfo;
@@ -60,7 +62,7 @@ public class ProSubItemListController extends BaseDataListController {
 	public void executeQueryParams(Criteria query) {
 		super.executeQueryParams(query);
 		String serach = request.getParameter("search");
-		String projectId = "xyz";
+		SimpleExpression se = Restrictions.eq("id","xyz");
 		if(!BaseUtil.isEmpty(serach)){
 			Map searchMap = JSONObject.parseObject(serach, new HashMap().getClass());
 			Object objTree = searchMap.get("tree");
@@ -70,12 +72,19 @@ public class ProSubItemListController extends BaseDataListController {
 				Object type = treeMap.get("type");
 				if(type!=null&&idObj!=null){
 					if("project".equals(type.toString())){
-						projectId = idObj.toString();
+						se = Restrictions.eq("project.id", idObj.toString());
+					}else if("proStructure".equals(type.toString())){
+						Object lnObj = treeMap.get("longNumber");
+						se = Restrictions.like("proStruct.longNumber", lnObj.toString()+"%");
 					}
 				}
 			}
+			Object proSubObj = searchMap.get("proSubId");
+			if(proSubObj!=null){
+				query.add(Restrictions.eq("proSub.id", WebUtil.UUID_ReplaceID(proSubObj.toString())));
+			}
 		}
-		query.add(Restrictions.eq("project.id",projectId));
+		query.add(se);
 	}
 	public String getEditUrl() {
 		return "ec/basedata/prosubitem/proSubItemEdit";

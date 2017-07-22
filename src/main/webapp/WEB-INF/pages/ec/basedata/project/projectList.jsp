@@ -31,7 +31,7 @@
 								<th data-field="scale" >规模</th>
 								<th data-field="eavesHeight" >建筑高度(m)</th>
 								<th data-field="floorHeight" >层高(m)</th>
-								<th data-field="structType_name" >结构类型</th>
+								<th data-field="structTypes" data-type='f7'>结构类型</th>
 								<th data-field="area" >占地面积</th>
 								<th data-field="aseismicLevel" >抗震等级</th>
 								<th data-field="remark" >备注</th>
@@ -45,40 +45,6 @@
 </body>
 <%@include file="../../../base/base_treelist.jsp"%>
 <script type="text/javascript">
-
-function industryType_formarter(value, row, index){
-	var txt = value;
-	if(value=='FWJZ'){
-		txt = '房屋建筑工程';
-	}else if(value=='SLSD'){
-		txt = '水利水电工程';
-	}else if(value=='SZGC'){
-		txt = '市政工程';
-	}else if(value=='GLGC'){
-		txt = '公路工程';
-	}else if(value=='NLGC'){
-		txt = '农林工程';
-	}
-	return txt;
-}
-
-function proState_formarter(value, row, index){
-	var txt = value;
-	if(value=='SGZB'){
-		txt = '施工准备';
-	}else if(value=='ZZSG'){
-		txt = '正在施工';
-	}else if(value=='JG'){
-		txt = '竣工';
-	}else if(value=='YGJSZ'){
-		txt = '竣工结算中';
-	}else if(value=='JGJSWB'){
-		txt = '竣工结算完毕';
-	}else if(value=='YDG'){
-		txt = '已停工';
-	}
-	return txt;
-}
 
 var thisOrgList ;
 var includeChild;
@@ -114,7 +80,7 @@ $(document).ready(function() {
      thisOrgList.onLoad();
 });
 function getTreeQueryParams(){
-	return {orgType:"COMPANYORG,PROJECTORG"};
+	return {orgType:"COMPANYORG,PROJECTORG",includeProOrg:true};
 }
 </script>
 </html>

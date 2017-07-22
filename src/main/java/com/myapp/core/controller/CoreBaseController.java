@@ -1,16 +1,17 @@
 package com.myapp.core.controller;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.hibernate.Criteria;
-import org.hibernate.FetchMode;
-import org.hibernate.criterion.DetachedCriteria;
 import org.hibernate.criterion.Order;
 import org.hibernate.criterion.Projection;
 import org.hibernate.criterion.ProjectionList;
 import org.hibernate.criterion.Projections;
 
+import com.alibaba.fastjson.JSONObject;
 import com.myapp.core.base.controller.BaseController;
 import com.myapp.core.base.service.impl.AbstractBaseService;
 import com.myapp.core.enums.DataTypeEnum;
@@ -104,5 +105,14 @@ public abstract class CoreBaseController extends BaseController{
 		List<ColumnModel> cols = new ArrayList<ColumnModel>();
 		cols.add(new ColumnModel("id",DataTypeEnum.PK));
 		return cols;
+	}
+	
+	public Map getUiCtx(){
+		Map uiCtx = new HashMap();
+		String uiCtxStr = request.getParameter("uiCtx");
+		if(!BaseUtil.isEmpty(uiCtxStr)){
+			uiCtx = JSONObject.parseObject(uiCtxStr, new HashMap().getClass());
+		}
+		return uiCtx;
 	}
 }

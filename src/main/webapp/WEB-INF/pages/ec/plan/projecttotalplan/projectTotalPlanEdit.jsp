@@ -63,12 +63,12 @@
 				</div>
 			</div>
 			<div class="row mt10">
-				<div  class="col-sm-12 " style="border: 1px solid #ddd;">
+				<div class="col-sm-12 " style="border: 1px solid #ddd;">
 					<table name="planItems" class="input-entry" data-opt="{type:'entry',height:430,tableOpt:{editDataChanged:planItems_dataChanged}
-							,toolbar:{title:'项目总计划清单'},defRowData:planItems_defRowData}">
+							,toolbar:{title:'项目总计划清单'}}">
 						<thead>
 							<tr>
-								<th data-field="proStructure" rowspan="2" data-type="f7" data-formatter="displayName"
+								<th data-field="proStructure" rowspan="2" data-type="f7" data-formatter="displayName" data-locked="true"
 										data-editor="{uiWin:{title:'项目结构',height:600,width:300,url:'ec/basedata/proStructureF7',uiParams:getParams}}">项目工程结构</th>
 								<th data-field="proSub" rowspan="2"  data-type="f7" 
 										data-editor="{uiWin:{title:'项目分部工程',height:550,width:680,url:'ec/basedata/proSubF7',uiParams:getParams}}">项目分部工程</th>
@@ -138,6 +138,7 @@
 <script type="text/javascript">
 	var editUI;
 	var planItemsEntry;
+	var planItemsEntryObj;
 	function proSubItem_dataChange(oldData,newData){
 		var proStructure = {};
 		proStructure.id = newData.proStruct_id;
@@ -210,11 +211,21 @@
 			}
 		}
 	}
-	var ridx = 1;
-	function planItems_defRowData(){
-		return {planBegDate:new Date().getTime()}
+	function btnCopyInsertRow(btn){
+		var entry = btn.entry;
+		if(!webUtil.isEmpty(entry)){
+			var selRowsData = entry.getSelections();
+			var rowIdx = entry.getSelectRowIndex();
+			if(!webUtil.isEmpty(selRowsData)&&selRowsData.length>0
+					&&rowIdx>=0){
+				var rowData =  $.extend(true,{},selRowsData[0]);
+				rowData.id = '';
+				entry.insertRow(rowIdx+1,rowData);
+			}else{
+				webUtil.mesg("请先选中行");
+			}
+		}
 	}
-
 	$(document).ready(function() {
 		editUI = $('#editPanel').editUI({
 			title : "项目总计划",billModel:2,
@@ -226,10 +237,13 @@
 		});
 		editUI.onLoad();
 		webUtil.initMainPanel('#editPanel');
-		
-		if(webUtil.isEmpty(planItemsEntry)){
-			planItemsEntry = editUI.getEntryObj('planItems');
+		planItemsEntryObj = editUI.getEntryObj('planItems');
+		if(!webUtil.isEmpty(planItemsEntryObj)){
+			planItemsEntry = planItemsEntryObj.entry;
+			var rightBtnGroup = planItemsEntryObj.toolbar.find('.pull-right>.btn-group').myBtnGroup();
+			rightBtnGroup.addBtn({entry:planItemsEntry,css:'btn-sm',text:'复制插入',icon:"fa fa-edit",clickFun:btnCopyInsertRow});
 		}
+		
 	})
 </script>
 </html>

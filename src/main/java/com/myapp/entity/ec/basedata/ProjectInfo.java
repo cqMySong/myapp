@@ -35,6 +35,7 @@ public class ProjectInfo extends CoreBaseInfo{
 	private BigDecimal eavesHeight;//建筑高度(m)
 	private BigDecimal floorHeight;//层高(m)
 	private StructTypeInfo structType;//结构类型
+	private String structTypes;//结构类型 ；多选
 	private BigDecimal area;//占地面积
 	private String aseismicLevel;//抗震等级
 	private String remark;
@@ -121,5 +122,13 @@ public class ProjectInfo extends CoreBaseInfo{
 	public void setOrg(BaseOrgInfo org) {
 		this.org = org;
 	}
+	@Column(name="fstructTypes",length=200)
+	public String getStructTypes() {
+		return structTypes;
+	}
+	public void setStructTypes(String structTypes) {
+		this.structTypes = structTypes;
+	}
+	
 	
 }

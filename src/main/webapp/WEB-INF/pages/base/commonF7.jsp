@@ -75,24 +75,62 @@ function getData(){
 		}
 		return {};
 	}
-	
 }
 
 function addRow(){
-	
+	if(!webUtil.isEmpty(tblSelMain)
+			&&!webUtil.isEmpty(tblMain)){
+		var selRowsData = tblMain.getSelections();
+		if(!webUtil.isEmpty(selRowsData)&&selRowsData.length>0){
+			for(var i=0;i<selRowsData.length;i++){
+				var rowData =  $.extend(true,{},selRowsData[i]);
+				addToSelTable(rowData);
+				
+			}
+		}else{
+			webUtil.mesg("请先选中行!");
+		}
+	}
+}
+
+function addToSelTable(rowData){
+	if(webUtil.isEmpty(tblSelMain)) return;
+	var ok = true;
+	var datas = tblSelMain.getData();
+	if(!webUtil.isEmpty(datas)&&datas.length>0){
+		for(var i=0;i<datas.length;i++){
+			if(rowData.id==datas[i].id){
+				ok = false;
+				webUtil.mesg("不能重复选择数据!");
+				return;
+			}
+		}
+	}
+	if(ok){
+		tblSelMain.addRow(rowData);
+	}
 }
 
 function removeRow(){
-	
+	if(!webUtil.isEmpty(tblSelMain)){
+		var rIdx = tblSelMain.getSelectRowIndex();
+		if(rIdx>=0){
+			tblSelMain.removeRow(rIdx);
+		}else{
+			webUtil.mesg("请先在已选区选中行!");
+		}
+	}
 }
 function dbClick_toAddrow(row, $element, field){
 	if(!webUtil.isEmpty(tblSelMain)
 			&&!webUtil.isEmpty(tblMain)){
-		tblSelMain.addRow(row);
+		addToSelTable(row);
 	}
 }
 function dbClick_toRemoveRow(row, $element, field){
-	
+	if(!webUtil.isEmpty(tblSelMain)){
+		tblSelMain.removeRow($element);
+	}
 }
 $(document).ready(function() {
 	var tbl_tr = $('#tblMain').find('thead>tr');
@@ -108,7 +146,7 @@ $(document).ready(function() {
 	}
 	mutil = '${mutil}'=='true'?true:false;
 	$(json_cols).each(function(i){
-		var _thHtml = '<th data-field="'+this.field+'" data-type="'+this.type+'" data-query="'+this.filter+'">'+this.name+'</th>';
+		var _thHtml = '<th data-field="'+this.field+'" data-type="'+this.type+'" data-query="'+this.filter+'" data-visible="'+this.visible+'">'+this.name+'</th>';
 		tbl_tr.append($(_thHtml));
 		if(mutil){
 			tblSel_tr.append($(_thHtml));

@@ -10,6 +10,7 @@ import org.hibernate.Criteria;
 import org.hibernate.criterion.Restrictions;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.alibaba.fastjson.JSONObject;
 import com.myapp.core.annotation.PermissionAnn;
@@ -17,10 +18,12 @@ import com.myapp.core.base.service.impl.AbstractBaseService;
 import com.myapp.core.controller.BaseDataListController;
 import com.myapp.core.enums.DataTypeEnum;
 import com.myapp.core.model.ColumnModel;
+import com.myapp.core.model.WebDataModel;
 import com.myapp.core.util.BaseUtil;
 import com.myapp.entity.ec.basedata.ProSubItemInfo;
 import com.myapp.entity.ec.basedata.ProjectInfo;
 import com.myapp.service.ec.basedata.ProStructureService;
+import com.myapp.service.ec.basedata.ProjectService;
 
 /**
  *-----------MySong---------------
@@ -37,6 +40,8 @@ public class ProStructureListController extends BaseDataListController {
 	
 	@Resource
 	public ProStructureService proStructureService;
+	@Resource
+	public ProjectService projectService;
 	
 	public AbstractBaseService getService() {
 		return proStructureService;
@@ -73,6 +78,34 @@ public class ProStructureListController extends BaseDataListController {
 		}
 		query.add(Restrictions.eq("project.id",projectId));
 	}
+	
+	//项目单位工程结构树
+	@RequestMapping(value="/proStructureTree")
+	@ResponseBody
+	public WebDataModel treeData() {
+		try{
+			Map params = new HashMap();
+			List orgList = projectService.getProjectTreeData(params);//项目组织树
+			if(orgList!=null&&orgList.size()>0){
+				//添加项目单位工程
+				StringBuffer sql = new StringBuffer();
+				sql.append(" select a.fid as id,a.fnumber as number,a.fname as name,case when a.fprentid is null then a.fprojectId else a.fprentid end as parentId,a.flongnumber as longNumber,'proStructure' as type");
+				sql.append(" from t_ec_proStructure as a");
+				sql.append(" left join t_ec_project as b on b.fid = a.fprojectId");
+				sql.append(" order by a.flongnumber asc");
+				List orgStruct = projectService.executeSQLQuery(sql.toString(), null);
+				if(orgStruct!=null&&orgStruct.size()>0){
+					orgList.addAll(orgStruct);
+				}
+				data = orgList;
+			}
+		}catch(Exception e){
+			setErrorMesg(e.getMessage());
+		}
+		return ajaxModel();
+	}
+	
+	
 	public String getEditUrl() {
 		return "ec/basedata/prostructure/proStructureEdit";
 	}

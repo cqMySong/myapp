@@ -50,8 +50,8 @@ public class ProSubF7QueryController extends BaseF7QueryController {
 		cols.add(col);
 		
 		col = new ColumnModel("proStruct",DataTypeEnum.F7,ProStructureInfo.class);
-		col.setFormat("id,displayName");
-		col.setAlias_zh("id,工程结构");
+		col.setFormat("id,name,displayName");
+		col.setAlias_zh("id,工程结构,工程全名");
 		cols.add(col);
 		
 		col = new ColumnModel("number");
@@ -69,6 +69,12 @@ public class ProSubF7QueryController extends BaseF7QueryController {
 		cols.add(col);
 		return cols;
 	}
+	public boolean showCol(String colName) {
+		if("proStruct_name".equals(colName)){
+			return false;
+		}
+		return super.showCol(colName);
+	}
 	public void executeQueryParams(Criteria query) {
 		super.executeQueryParams(query);
 		query.add(Restrictions.eq("enabled",Boolean.TRUE));
@@ -81,6 +87,10 @@ public class ProSubF7QueryController extends BaseF7QueryController {
 				Map uiCtx = JSONObject.parseObject(uiCtxObj.toString(), new HashMap().getClass());
 				Object proIdObj =  uiCtx.get("projectId");
 				if(proIdObj!=null) proId = WebUtil.UUID_ReplaceID(proIdObj.toString());
+				Object proStructObj = uiCtx.get("proStructId");
+				if(proStructObj!=null){
+					query.add(Restrictions.eq("proStruct.id",WebUtil.UUID_ReplaceID(proStructObj.toString())));
+				}
 			}
 		}
 		if(!BaseUtil.isEmpty(proId)){

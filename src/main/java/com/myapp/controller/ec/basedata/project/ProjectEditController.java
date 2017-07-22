@@ -71,9 +71,11 @@ public class ProjectEditController extends BaseEditController{
 		cols.add(new ColumnModel("floorHeight",DataTypeEnum.NUMBER));
 		cols.add(new ColumnModel("area",DataTypeEnum.NUMBER));
 		cols.add(new ColumnModel("aseismicLevel"));
-		ColumnModel structType = new ColumnModel("structType",DataTypeEnum.F7,"id,name");
-		structType.setClaz(StructTypeInfo.class);
-		cols.add(structType);
+		
+		ColumnModel structCols = new ColumnModel("structTypes",DataTypeEnum.MUTILF7,"name,number");
+		structCols.setClaz(StructTypeInfo.class);
+		cols.add(structCols);
+		
 		ColumnModel orgCol = new ColumnModel("org",DataTypeEnum.F7,"id,name");
 		orgCol.setClaz(BaseOrgInfo.class);
 		cols.add(orgCol);

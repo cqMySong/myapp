@@ -257,9 +257,6 @@ var webUtil = {
 				}
 			}
 		});
-		
-		
-		
 	},
 	showPrompt:function(_prompt){
 		var _opt = {title:_prompt.title||'请输入',type:_prompt.type||'text'};

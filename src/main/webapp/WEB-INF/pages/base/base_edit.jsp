@@ -98,13 +98,21 @@ EditUI.prototype = {
 				for(var i=0;i<entrys.length;i++){
 					var thisObj = this.entrys[i];
 					if(name==thisObj.name){
-						thisEntryObj = thisObj.entry;
+						thisEntryObj = thisObj;
 						return thisEntryObj;
 					}
 				}
 			}
 		}
 		return thisEntryObj;
+	},
+	getEntry:function(name){
+		var entryObj = this.getEntryObj();
+		if(!webUtil.isEmpty(entryObj)){
+			return entryObj.entry;
+		}else {
+			return null;
+		}
 	},
 	initEntryToolBar:function (_opt){
 		var _defToolBarOpt = {toolbar:true,title:'',icon:'glyphicon glyphicon-list',addBtn:{title:'新增',theme:'btn-success',icon:'fa fa-plus-square'}
@@ -151,7 +159,7 @@ EditUI.prototype = {
 	},
 	initEntryView:function(entryDom){
 		var name = entryDom.attr('name');
-		if(!webUtil.isEmpty(this.getEntryObj(name))) return;
+		if(!webUtil.isEmpty(this.getEntry(name))) return;
 		var _opt = entryDom.data('opt');
 		var dataObj ={};
 		var toClick = false;
@@ -338,6 +346,7 @@ EditUI.prototype = {
 	addNew:function(){
 		var _thisUrl = this.options.baseUrl+"/"+OperateType.addnew;
 		var _dataParams = {};
+		_dataParams.uiCtx = _uiCtx;
 		if(operateParams&&!webUtil.isEmpty(operateParams)&&$.isFunction(operateParams)){
 			operateParams(OperateType.addnew,_dataParams);
 		}

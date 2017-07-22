@@ -53,15 +53,15 @@ var TreeListUI = function(el,options){
 				to_treeNode[prop] = selNode[prop];
 			}
 			var _thisListUI = thisTreeUI.listUI;
+			if(thisTreeUI.options.treeOpt&&thisTreeUI.options.treeOpt.selectChange
+					&&$.isFunction(thisTreeUI.options.treeOpt.selectChange)){
+				thisTreeUI.options.treeOpt.selectChange(event, treeId, treeNode);
+			}
 			if(thisTreeUI.options.treeSectedChange2Query){
 				thisTreeUI.toRefreshTree = false;
 				var thisParms = {tree:to_treeNode};
 				_thisListUI.executeQueryByParams(thisParms);
 				thisTreeUI.toRefreshTree = true;
-			}
-			if(thisTreeUI.options.treeOpt&&thisTreeUI.options.treeOpt.selectChange
-					&&$.isFunction(thisTreeUI.options.treeOpt.selectChange)){
-				thisTreeUI.options.treeOpt.selectChange(event, treeId, treeNode);
 			}
 		}
 		if(thisTreeUI.options.treeOpt&&thisTreeUI.options.treeOpt.setting
@@ -69,6 +69,7 @@ var TreeListUI = function(el,options){
 				&&thisTreeUI.options.treeOpt.setting.callback.onClick){
 			thisTreeUI.options.treeOpt.setting.callback.onClick(event, treeId, treeNode);
 		}
+		
 		return true;
 	}
 	if(thisTreeUI.options.treeOpt&&thisTreeUI.options.treeOpt.setting

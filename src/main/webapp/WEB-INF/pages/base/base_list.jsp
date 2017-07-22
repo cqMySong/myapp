@@ -18,7 +18,7 @@ if(typeof listModel == "undefined"){
 var ListUI = function(el,options){
 	var _Def_listUI = {
 			 tableEl:'#tblMain',baseUrl:"",openModel:"",toolbar:"_table-toolbar",pkCol:'id',hasDefToolbar:true,
-			 editWin:{title:'^~^',openType:'WIN',url:'',maxmin:true,width:800,height:600,callBack:undefined,btns:['关闭']},
+			 editWin:{title:'^~^',openType:'WIN',url:'',maxmin:true,width:800,height:600,callBack:undefined,btns:null},
 			 pageSize :20,curPage :1,listData:undefined,btns:undefined,pagination:true,listModel:0,
 			 extendTableOptions:undefined,totalPages:0,queryColumn:undefined,
 			 search:true,searchParams:undefined

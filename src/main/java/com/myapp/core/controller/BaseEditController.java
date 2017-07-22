@@ -41,6 +41,7 @@ import com.myapp.core.util.BaseUtil;
 import com.myapp.core.util.DateUtil;
 import com.myapp.core.util.EnumUtil;
 import com.myapp.core.util.WebUtil;
+import com.myapp.core.uuid.SysObjectType;
 
 /**
  *-----------MySong---------------
@@ -84,7 +85,7 @@ public abstract class BaseEditController extends CoreBaseController {
 		
 	}
 	
-	protected void storeData(BaseMethodEnum bme) throws SaveException{
+	protected void storeData(BaseMethodEnum bme) throws SaveException, QueryException{
 		Object editData = getEditData();
 		if(editData!=null&&editData instanceof CoreBaseBillInfo){
 			CoreBaseBillInfo cbInfo = (CoreBaseBillInfo) editData;
@@ -97,7 +98,13 @@ public abstract class BaseEditController extends CoreBaseController {
 		}else{
 			storeData(bme,editData);
 		}
-		setEditData(editData);
+		
+		if(editData!=null&&editData instanceof CoreInfo){
+			String billId = ((CoreInfo)editData).getId();
+			if(!BaseUtil.isEmpty(billId)){
+				loadData(billId);
+			}
+		}
 	}
 	protected void storeData(BaseMethodEnum bme,Object editData) throws SaveException{
 	}
@@ -332,9 +339,6 @@ public abstract class BaseEditController extends CoreBaseController {
 				String name = col.getName();
 				if(!BaseUtil.isEmpty(name)&&editData_map.containsKey(name)){
 					if(DataTypeEnum.ENTRY.equals(dte)&&col.getCols().size()>0&&col.getClaz()!=null){
-						//如果单据id不为空都时候 先处理删除该单据下都所有 分录信息
-						//TODO 还是有问题哦
-						
 						Map<String,CoreBaseEntryInfo> entrysMap = new HashMap<String,CoreBaseEntryInfo>();
 						Object objEntrySet = cbInfo.get(name);
 						if(objEntrySet!=null&&objEntrySet instanceof Set){
@@ -348,13 +352,6 @@ public abstract class BaseEditController extends CoreBaseController {
 								}
 							}
 						}
-//						if(!BaseUtil.isEmpty(billId)){
-////							String delHql = "delete from "+col.getClaz().getName()+" where parent.id=?";
-////							getService().executeUpdata(delHql, new String[]{billId});
-//						}else{
-//							entrySet = new HashSet();
-//						}
-						//
 						Set entrySet = new HashSet();
 						Object entrys_str = editData_map.get(name);
 						if(!BaseUtil.isEmpty(entrys_str)){
@@ -488,8 +485,7 @@ public abstract class BaseEditController extends CoreBaseController {
 		}
 	}
 	
-	private void loadData() throws QueryException{
-		String billId = getReuestBillId();
+	private void loadData(String billId) throws QueryException{
 		if(!BaseUtil.isEmpty(billId)){
 			Map editMap = new HashMap();
 			Map entryMap = new HashMap();
@@ -527,6 +523,7 @@ public abstract class BaseEditController extends CoreBaseController {
 								}
 							}
 						}
+						entryProjectList.add(createBaseField("seq","seq"));
 						entryCrteria.setProjection(entryProjectList);
 						entryCrteria.add(Restrictions.eq("parent.id", billId));
 						entryCrteria.addOrder(Order.asc("seq"));
@@ -617,7 +614,7 @@ public abstract class BaseEditController extends CoreBaseController {
 					 }
 				 }
 			 }
-			 
+			System.out.println("$$$$$ editMap : "+JSONObject.toJSONString(editMap));
 			setEditData(editMap);
 		}
 	}
@@ -640,6 +637,7 @@ public abstract class BaseEditController extends CoreBaseController {
 				List queryDatas = query.list();
 				if(queryDatas!=null&&queryDatas.size()>0){
 					datas = queryDatas;
+					log.info("$$$ MUTILF7 "+key +"'s size = "+queryDatas.size());
 				}
 			}
 			dataMap.put(key, datas);
@@ -665,7 +663,7 @@ public abstract class BaseEditController extends CoreBaseController {
 		try{
 			if(bme==null) bme = BaseMethodEnum.VIEW;
 			if(beforeOperate(bme)){
-				loadData();
+				loadData(getReuestBillId());
 				afterOperate(bme);
 				setBaseMethod(bme);
 			}
@@ -706,4 +704,7 @@ public abstract class BaseEditController extends CoreBaseController {
 		}
 		return ajaxModel();
 	}
+	
+	
+	
 }

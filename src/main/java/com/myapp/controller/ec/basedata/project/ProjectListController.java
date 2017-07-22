@@ -30,6 +30,7 @@ import com.myapp.core.model.ColumnModel;
 import com.myapp.core.model.WebDataModel;
 import com.myapp.core.util.BaseUtil;
 import com.myapp.core.util.EnumUtil;
+import com.myapp.entity.ec.basedata.StructTypeInfo;
 import com.myapp.enums.IndustryType;
 import com.myapp.enums.ProjectState;
 import com.myapp.service.ec.basedata.ProjectService;
@@ -65,8 +66,9 @@ public class ProjectListController extends BaseListController {
 		cols.add(new ColumnModel("proState",DataTypeEnum.ENUM,ProjectState.class));
 		cols.add(new ColumnModel("industryType",DataTypeEnum.ENUM,IndustryType.class));
 		cols.add(new ColumnModel("aseismicLevel"));
-		ColumnModel structCol = new ColumnModel("structType",DataTypeEnum.F7,"name,number");
-		cols.add(structCol);
+		ColumnModel structCols = new ColumnModel("structTypes",DataTypeEnum.MUTILF7,"name,number");
+		structCols.setClaz(StructTypeInfo.class);
+		cols.add(structCols);
 		ColumnModel orgCol = new ColumnModel("org",DataTypeEnum.F7,"name");
 		cols.add(orgCol);
 		return cols;
@@ -106,6 +108,12 @@ public class ProjectListController extends BaseListController {
 				orgType = "'"+orgType.replaceAll(",", "','")+"'";
 				params.put("orgType", orgType);
 			}
+			boolean includeProOrg = false;
+			String inPro = request.getParameter("includeProOrg");
+			if(!BaseUtil.isEmpty(inPro)){
+				includeProOrg = inPro.toLowerCase().equals("true")||inPro.equals("1");
+			}
+			params.put("includeProOrg", includeProOrg);
 			data = projectService.getProjectTreeData(params);
 		}catch(Exception e){
 			setErrorMesg(e.getMessage());

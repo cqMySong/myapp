@@ -341,10 +341,16 @@ MyBtnGroups.prototype = {
 		if($.isNumeric(index)){
 			_idx = index;
 		}
-		var defaults = {theme: 'btn-success', icon: '',text:'按钮',clickFun:undefined};
+		var defaults = {theme: 'btn-success',css:'', icon: '',text:'按钮',clickFun:undefined};
 		var _opt = $.extend({}, defaults, opt);
-		var _$btn = $('<button type="button">&nbsp;'+_opt.text+'</button>');
-		_$btn.addClass("btn btn-success");
+		var _$btn = $('<button class="btn" type="button">&nbsp;'+_opt.text+'</button>');
+		if(!webUtil.isEmpty(_opt.theme)){
+			_$btn.addClass(_opt.theme);
+		}
+		if(!webUtil.isEmpty(_opt.css)){
+			_$btn.addClass(_opt.css);
+		}
+		
 		if(!webUtil.isEmpty(_opt.icon)){
 			_$btn.prepend($('<span>').addClass(_opt.icon));
 		}
@@ -450,12 +456,22 @@ var MyDataTable = function(ele, opt){
 	 }
 	 var thisTable = this;
 	 var _opt_onClickRow = opt.onClickRow;
+	 this.curSelRowIdx = -1;
 	 clickRow = function(row, $el, field){
+		var thisCurRowIdx = $el.data('index');
+		var selectChanged = false;
 		var selectModel = thisTable.getSelectModel();
 		if(selectModel===1){
+			var selRow = $el.siblings('tr.selected').eq(0);
+			if(webUtil.isEmpty(selRow)){
+				selectChanged = true;
+			}else{
+				selectChanged = thisCurRowIdx!= selRow.data('index');
+			}
 			$el.siblings('tr.selected').removeClass('selected');
 			$el.addClass('selected');
 		}else if(selectModel===2){
+			selectChanged = true;
 			if($el.hasClass('selected')){
 				$el.removeClass('selected');
 			}else{
@@ -466,6 +482,11 @@ var MyDataTable = function(ele, opt){
 		$el.data('rowData',row);
 		if(!webUtil.isEmpty(_opt_onClickRow)){
 			_opt_onClickRow(row, $el, field);
+		}
+		if(selectChanged){
+			if(!webUtil.isEmpty(opt.selectChanaged)&&$.isFunction(opt.selectChanaged)){
+				opt.selectChanaged(thisCurRowIdx,row,$el);
+			}
 		}
 	 }
 	 opt.onClickRow = undefined;
@@ -691,6 +712,13 @@ MyDataTable.prototype = {
 		}
 		return null;
 	},
+	getSelectRowIndex:function(){
+		var row = this.getSelectRow();
+		if(!webUtil.isEmpty(row)){
+			return row.data('index');
+		}
+		return -1;
+	},
 	getSelectRows:function(){
 		return this.$element.find('tbody>tr.selected');
 	},
@@ -744,7 +772,7 @@ MyDataTable.prototype = {
 					var column = cols[j];
 					var field = column.field;
 					if(field=='_seq') continue;
-					var val ;
+					var val = '' ;
 					var _type = column.type;
 					if(_type == DataType.F7){
 						var f7Obj = rowData[field];
@@ -931,7 +959,27 @@ MyDataTable.prototype = {
 					}
 				}
 				cell.html(_cellHtml);
-				if(oldVal!=newVal){
+				var hasChanged = oldVal!=newVal;
+				var col = this.getColumn(field);
+				if('f7'==col.type){
+					if(!webUtil.isEmpty(oldVal)&&!webUtil.isEmpty(newVal)){
+						if($.isArray(oldVal)&&$.isArray(newVal)){
+							if(oldVal.length!=newVal.length) {
+								hasChanged = true;
+							}else{
+								for(var i=0;i<newVal.length;i++){
+									if(newVal[i].id!=oldVal[i].id){
+										hasChanged = true;
+										return true;
+									}
+								}
+							}
+						}else if($.isPlainObject(oldVal)&&$.isPlainObject(newVal)){
+							hasChanged = newVal.id!=oldVal.id;
+						}
+					}
+				}
+				if(hasChanged){
 					if(!webUtil.isEmpty(this.editDataChanged)&&$.isFunction(this.editDataChanged)){
 						var changeObj= {};
 						changeObj.oldVal = oldVal;

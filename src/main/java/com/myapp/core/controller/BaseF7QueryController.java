@@ -57,6 +57,7 @@ public abstract class BaseF7QueryController extends BasePageListController {
 						colMap.put("type", WebUtil.Web_DataType_text);
 						colMap.put("name", alias_zhs[i]);
 						colMap.put("filter", cm.isQueryFilter());
+						colMap.put("visible", showCol(alias+"_"+f7Item));
 						displayCols.add(colMap);
 					}
 				}
@@ -84,11 +85,16 @@ public abstract class BaseF7QueryController extends BasePageListController {
 			}
 			Map colMap = new HashMap();
 			colMap.put("field",alias);
-			colMap.put("type",type );
+			colMap.put("type",type);
 			colMap.put("name", cm.getAlias_zh());
+			colMap.put("visible", showCol(alias));
 			colMap.put("filter", cm.isQueryFilter());
 			displayCols.add(colMap);
 		}
+	}
+	
+	public boolean showCol(String colName){
+		return true;
 	}
 	
 	public String getUIWinTitle(){

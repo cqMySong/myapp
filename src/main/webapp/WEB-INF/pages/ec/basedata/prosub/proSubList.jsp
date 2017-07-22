@@ -41,9 +41,9 @@ function beforeAction(opt){
 		var params = thisOrgList.uiParams(opt);
 		var tree = thisOrgList.tree;
 		if(!webUtil.isEmpty(params)&&!webUtil.isEmpty(params.tree)
-				&&'project'==params.tree.type){
+				&&('project'==params.tree.type||'proStructure'==params.tree.type)){
 		}else{
-			webUtil.mesg('请先选择的工程项目组织，然后才能做新增操作!');
+			webUtil.mesg('请先选择的工程项目组织或项目工程结构，然后才能做新增操作!');
 			return false;
 		}
 	}
@@ -51,6 +51,7 @@ function beforeAction(opt){
 }
 //界面参数传递扩展方法
 function openUIParams(operate,params){
+	
 }
 $(document).ready(function() {
      var treeNode2QueryProp = ["id","name","number","longNumber","type"];
@@ -59,7 +60,7 @@ $(document).ready(function() {
          	simpleData: {enable:true,idKey: "id", pIdKey: "parentId",rootPId: ''}
     	 }}};
      var height = 700;
-     thisOrgList = $('body').treeListUI({tableEl:'#tblMain',listModel:1,treeUrl:'ec/basedata/projects/projectTree',baseUrl:'ec/basedata/prosubs',title:'工程项目',height:height,
+     thisOrgList = $('body').treeListUI({tableEl:'#tblMain',listModel:1,treeUrl:'ec/basedata/prostructures/proStructureTree',baseUrl:'ec/basedata/prosubs',title:'工程项目',height:height,
     	 treeContainer:"#tree_container",editWin:editWin,toolbar:"#table-toolbar",searchParams:{includeChild:true},treeOpt:treeOpt
     	 ,treeNode2QueryProp:treeNode2QueryProp,extendTableOptions:{toolbar:'#tblMain_toolbar',height:height,sortStable:false}});
      thisOrgList.onLoad();

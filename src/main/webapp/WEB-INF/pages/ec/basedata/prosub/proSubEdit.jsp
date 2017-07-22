@@ -33,7 +33,7 @@
 				<div class="col-sm-6">
 					<div class="input-group">
 						<span class="input-group-addon lable">工程项目</span> 
-						<input name="project" class="require input-item form-control" 
+						<input name="project" class="require input-item form-control read" 
 							data-opt="{type:'f7',uiWin:{title:'工程项目',height:600,width:300,url:'ec/basedata/project'}}" />
 					</div>
 				</div>
@@ -79,10 +79,6 @@
 	function afterAction(_opt){
 		if(_opt==OperateType.addnew){
 			var uiCtx = getUICtx();
-			if(!webUtil.isEmpty(uiCtx)&&$.isPlainObject(uiCtx)
-					&&!webUtil.isEmpty(uiCtx.tree)){
-				$('input[name="project"]').myF7().setData(uiCtx.tree);
-			}
 		}
 	}
 	function proStructure_data(){

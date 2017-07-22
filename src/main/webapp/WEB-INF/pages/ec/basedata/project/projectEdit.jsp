@@ -64,8 +64,8 @@
 				<div class="col-sm-6">
 					<div class="input-group">
 						<span class="input-group-addon lable">结构类型</span> 
-						<input name="structType" class="input-item form-control require" 
-							data-opt="{type:'f7',dataChange:parent_dataChange,uiWin:{title:'结构类型',height:550,width:800,url:'ec/basedata/structTypeF7'}}" />
+						<input name="structTypes" class="input-item form-control require" 
+							data-opt="{mutil:true,type:'f7',dataChange:parent_dataChange,uiWin:{title:'结构类型',height:750,width:900,url:'ec/basedata/structTypeF7'}}" />
 					</div>
 				</div>
 				<div class="col-sm-6 mb15">

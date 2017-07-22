@@ -18,43 +18,43 @@
 	</div>
 	<div class="ui-layout-center">
 		<div class="panel">
-				<div class="" id="tblMain_toolbar">
-					<div class="input-group input-medium date-picker input-daterange">
-						<div class="input-group-addon" id="preWeek" style="width: 50px;min-width: 50px;cursor: pointer;">
-							<span class="glyphicon glyphicon-step-backward"></span>上周
-						</div>
-						<input type="text" class="form-control" id="begDate" readonly="readonly" style="width: 120px;text-align: center;">
-						<span class="input-group-addon">到</span>
-						<input type="text" class="form-control" id="endDate" readonly="readonly" style="width: 120px;text-align: center;">
-						<div class="input-group-addon" id="nextWeek" style="width: 50px;min-width: 50px;cursor: pointer;">
-							<span class="glyphicon glyphicon-step-forward"></span>下周
-						</div>
+			<div class="" id="tblMain_toolbar">
+				<div class="input-group input-medium date-picker input-daterange">
+					<div class="input-group-addon" id="preWeek" style="width: 50px;min-width: 50px;cursor: pointer;">
+						<span class="glyphicon glyphicon-step-backward"></span>上周
+					</div>
+					<input type="text" class="form-control" id="begDate" readonly="readonly" style="width: 120px;text-align: center;">
+					<span class="input-group-addon">到</span>
+					<input type="text" class="form-control" id="endDate" readonly="readonly" style="width: 120px;text-align: center;">
+					<div class="input-group-addon" id="nextWeek" style="width: 50px;min-width: 50px;cursor: pointer;">
+						<span class="glyphicon glyphicon-step-forward"></span>下周
 					</div>
 				</div>
-				<div class="panel-body" style="padding: 0px 2px 2px 2px;">
-					<table id="tblMain">
-						 <thead >
-							<tr>
-								<th data-field="proStructureName" rowspan="2" width="150">项目工程结构</th>
-								<th data-field="proSubName" rowspan="2" width="100">项目分部工程</th>
-								<th data-field="proSubItemName" rowspan="2" width="100">项目分项工程</th>
-								<th colspan="3">计划</th>
-								<th data-field="progress" rowspan="2" width="60" data-type="number">当前进度</th>
-								<th data-field="content" rowspan="2" width="200" >工作内容</th>
-								<th data-field="proQty" rowspan="2" width="60">工程量</th>
-								<th data-field="dutyers" data-type="f7" rowspan="2" width="120">施工人员</th>
-								<th data-field="remark" rowspan="2" width="200">备注</th>
-							</tr>
-							<tr>
-								<th data-field="bd" class="_myMerge" width="100" data-type="date">开始日期</th>
-								<th data-field="ed" width="100" data-type="date">截止日期</th>
-								<th data-field="days" width="60" data-locked="true">持续天数</th>
-							</tr>
-						</thead>
-					</table>
-				</div>
+			</div>
+			<div class="panel-body" style="padding: 0px 2px 2px 2px;">
+				<table id="tblMain">
+					 <thead >
+						<tr>
+							<th data-field="proStructureName" rowspan="2" width="150">项目工程结构</th>
+							<th data-field="proSubName" rowspan="2" width="100">项目分部工程</th>
+							<th data-field="proSubItemName" rowspan="2" width="100">项目分项工程</th>
+							<th colspan="3">计划</th>
+							<th data-field="progress" rowspan="2" width="60" data-type="number">当前进度</th>
+							<th data-field="content" rowspan="2" width="200" >工作内容</th>
+							<th data-field="proQty" rowspan="2" width="60">工程量</th>
+							<th data-field="dutyers" data-type="f7" rowspan="2" width="120">施工人员</th>
+							<th data-field="remark" rowspan="2" width="200">备注</th>
+						</tr>
+						<tr>
+							<th data-field="bd" class="_myMerge" width="100" data-type="date">开始日期</th>
+							<th data-field="ed" width="100" data-type="date">截止日期</th>
+							<th data-field="days" width="60" data-locked="true">持续天数</th>
+						</tr>
+					</thead>
+				</table>
 			</div>
 		</div>
+	</div>
 </body>
 <%@include file="../../../inc/webBase.inc"%>
 <script type="text/javascript">

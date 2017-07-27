@@ -19,7 +19,7 @@
 	<div class="ui-layout-center">
 		<div class="panel">
 			<div class="" id="tblMain_toolbar">
-				<div class="input-group input-medium date-picker input-daterange">
+				<div class="input-group">
 					<div class="input-group-addon" id="preWeek" style="width: 50px;min-width: 50px;cursor: pointer;">
 						<span class="glyphicon glyphicon-step-backward"></span>上周
 					</div>
@@ -166,7 +166,7 @@ function _onLoad(){
 }
 function _onShow(){
 	$('body').layout({ applyDefaultStyles: true,west__size:300});
-	$('#tree_container').css({"padding":'0px'});
+	//$('#tree_container').css({"padding":'0px'});
 }
 $(document).ready(function() {
 	_onLoad();

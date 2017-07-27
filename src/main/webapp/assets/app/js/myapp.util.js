@@ -343,15 +343,18 @@ var webUtil = {
 	               , 'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z'];
 
 	    for(var i=0; i<range; i++){
-	        pos = Math.round(Math.random() * (arr.length-1));
+	        var pos = Math.round(Math.random() * (arr.length-1));
 	        str += arr[pos];
 	    }
 	    return str;
 	},
 	getJqueryDom:function(el,str){
-		var _$dom = el || str;
-		if (typeof (_$dom) == 'string') {
-			_$dom = $(_$dom);
+		var _$dom = el ;
+		if (!webUtil.isEmpty(_$dom)) {
+			if(typeof (_$dom) == 'string') _$dom = $(_$dom);
+		}else if(!webUtil.isEmpty(str)){
+			_$dom = str;
+			if(typeof (_$dom) == 'string') _$dom = $(str);
 		}
 		return _$dom;
 	},

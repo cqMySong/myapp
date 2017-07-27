@@ -93,6 +93,15 @@
 function beforeAction(opt){
 	return true;
 }
+function afterAction(_opt){
+	if(_opt==OperateType.addnew){
+		var uiCtx = getUICtx();
+		if(!webUtil.isEmpty(uiCtx)&&$.isPlainObject(uiCtx)
+				&&!webUtil.isEmpty(uiCtx.tree)){
+			$('input[name="defOrg"]').myF7().setData(uiCtx.tree);
+		}
+	}
+}
 
 $(document).ready(function() {
 	var editUI = $('#editPanel').editUI({title:"用户信息",baseUrl:"base/user",toolbar:"#table-toolbar",form:{el:"#editForm"}});

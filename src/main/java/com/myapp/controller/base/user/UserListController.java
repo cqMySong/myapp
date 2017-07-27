@@ -1,13 +1,19 @@
 package com.myapp.controller.base.user;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import javax.annotation.Resource;
 
+import org.hibernate.Criteria;
+import org.hibernate.criterion.MatchMode;
+import org.hibernate.criterion.Restrictions;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import com.alibaba.fastjson.JSONObject;
 import com.myapp.core.annotation.PermissionAnn;
 import com.myapp.core.annotation.PermissionItemAnn;
 import com.myapp.core.base.service.impl.AbstractBaseService;
@@ -51,6 +57,27 @@ public class UserListController extends BaseListController {
 	
 	public AbstractBaseService getService() {
 		return this.userService;
+	}
+	
+	public void executeQueryParams(Criteria query) {
+		super.executeQueryParams(query);
+		String serach = request.getParameter("search");
+		if(!BaseUtil.isEmpty(serach)){
+			Map searchMap = JSONObject.parseObject(serach, new HashMap().getClass());
+			Object includeChildObj = searchMap.get("includeChild");
+			boolean include = true;
+			if(includeChildObj!=null&&includeChildObj instanceof Boolean){
+				include = (Boolean)includeChildObj;
+			}
+			Object objTree = searchMap.get("tree");
+			if(objTree!=null){
+				Map treeMap = JSONObject.parseObject(objTree.toString(), new HashMap().getClass());
+				Object lnObj = treeMap.get("longNumber");
+				if(lnObj!=null){
+					query.add(Restrictions.like("defOrg.longNumber",lnObj.toString(),include?MatchMode.START:MatchMode.EXACT));
+				}
+			}
+		}
 	}
 	
 	public String getEditUrl() {

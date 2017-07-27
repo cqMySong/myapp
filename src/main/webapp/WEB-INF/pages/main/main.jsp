@@ -1,6 +1,6 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ page import="com.myapp.core.model.MyWebContent" %>
-<!DOCTYPE html>
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
 <html lang="en">
 	<head>
 		<title>${appName }</title>
@@ -177,24 +177,7 @@
 	            				<button class="btn btn-default" type="button"><i class="fa fa-search"></i></button>
 	          				</span>
 						</div>
-						<div class="my-pill-menu" id="userMenus" data-opt="{menus:[
-																{title:'项目管理首页',icon:'fa fa-home'},
-																{title:'基础资料',icon:'fa fa-cogs',child:[
-																	{title:'项目结构类型',icon:'fa fa-cogs',url:'ec/basedata/structTypes/list'}
-																   ,{title:'项目工程结构',icon:'fa fa-cogs',url:'ec/basedata/prostructures/list'}
-																   ,{title:'项目分部工程',icon:'fa fa-cogs',url:'ec/basedata/prosubs/list'}
-																   ,{title:'项目分项工程',icon:'fa fa-cogs',url:'ec/basedata/prosubitems/list'}
-																    ]},
-																{title:'基础数据',icon:'fa fa-home',child:[
-																	{title:'工程项目',icon:'fa fa-building-o',url:'ec/basedata/projects/list'}]},
-																{title:'计划管理',icon:'fa fa-star',child:[
-																	{title:'项目总计划',icon:'fa fa-user',url:'ec/plan/projecttotalplans/list'},
-																	{title:'项目月计划',icon:'fa fa-user',url:'ec/plan/projectplans/monthlist'},
-																	{title:'项目周计划',icon:'fa fa-user',url:'ec/plan/projectplans/weeklist'},
-																	{title:'项目总计划-old',icon:'fa fa-user',url:'ec/plan/projectplans/list'}
-																	]}
-																]}">
-            			</div>
+						<div id="userMenus"></div>
 					</div>
 					<!-- tab-pane -->
 
@@ -302,17 +285,7 @@
 					</div>
 					<!-- tab-pane -->
 					<div class="tab-pane" id="settings">
-						<div class="my-pill-menu" id="sysMenus" data-opt="{menus:[{title:'首页',icon:'fa fa-home'},
-																{title:'系统管理',icon:'fa fa-cogs',child:[
-																	{title:'组织管理',icon:'fa fa-cogs',url:'base/orgs/list'}
-																   ,{title:'人员管理'}
-																   ,{title:'附件管理',icon:'fa fa-server',url:'base/ftps/list'}]},
-																{title:'门户管理',icon:'fa fa-home',child:[{title:'菜单管理'}]},
-																{title:'安全管理',icon:'fa fa-star',child:[
-																	{title:'用户管理',icon:'fa fa-user',active:true,url:'base/users/list'},
-																	{title:'权限管理',icon:'fa fa-tags',url:'base/permissions/list'},
-																	{title:'角色管理',icon:'fa fa-users',url:'base/roles/list'}]}	
-																]}">
+						<div id="sysMenus">
             			</div>
 					</div>
 					<div class="tab-pane" id="more">
@@ -327,21 +300,55 @@
 		<!-- leftpanel -->
 
 		<div class="mainpanel" >
-			<div class="contentpanel my-nav-tabs" style="padding: 0px;margin: 0px;" 
-				id="mainTab" data-opt="{items:[{id:'homeIdex',title:'主页',icon:'fa fa-home',enColse:false,url:'main/home'}]}">
+			<div class="contentpanel my-nav-tabs" style="padding: 0px;margin: 0px;" id="mainTab" >
 			</div>
 		</div>
 	</body>
 	
 <script type="text/javascript">
+	
 function openUserSetUI(){
 	var win = {title:'<i class="fa fa-user"></i>&nbsp;用户信息设置',maxmin:false,height:600,width:400,btns:['关闭'],url:app.root+'/main/toUserSet'};
 	webUtil.openWin(win);
 }
+var mainTab;
+function addMainTab(item){
+	mainTab.addTab(item);
+}
 $(document).ready(function() {
-	myPillTreeMenu.init('#sysMenus');
-	myPillTreeMenu.init('#userMenus');
-	myNavTab.init('#mainTab');
+	var userMenus = {menus:[
+							{title:'项目管理首页',icon:'fa fa-home'},
+							{title:'基础资料',icon:'fa fa-cogs',child:[
+								{title:'项目结构类型',icon:'fa fa-cogs',url:'ec/basedata/structTypes/list'}
+							   ,{title:'项目工程结构',icon:'fa fa-cogs',url:'ec/basedata/prostructures/list'}
+							   ,{title:'项目分部工程',icon:'fa fa-cogs',url:'ec/basedata/prosubs/list'}
+							   ,{title:'项目分项工程',icon:'fa fa-cogs',url:'ec/basedata/prosubitems/list'}
+							    ]},
+							{title:'基础数据',icon:'fa fa-home',child:[
+								{title:'工程项目',icon:'fa fa-building-o',url:'ec/basedata/projects/list'}]},
+							{title:'计划管理',icon:'fa fa-star',child:[
+								{title:'项目总计划',icon:'fa fa-user',url:'ec/plan/projecttotalplans/list'},
+								{title:'项目月计划',icon:'fa fa-user',url:'ec/plan/projectplans/monthlist'},
+								{title:'项目周计划',icon:'fa fa-user',url:'ec/plan/projectplans/weeklist'},
+								{title:'项目总计划-old',icon:'fa fa-user',url:'ec/plan/projectplans/list'}
+								]}
+							]};
+	
+	$('#userMenus').myPillTreeMenu('init',userMenus);
+	var sysMenusOpt = {menus:[{title:'首页',icon:'fa fa-home'},
+	                    {title:'系统管理',icon:'fa fa-cogs',child:[
+							{title:'组织管理',icon:'fa fa-cogs',url:'base/orgs/list'}
+						   ,{title:'人员管理'}
+						   ,{title:'附件管理',icon:'fa fa-server',url:'base/ftps/list'}]
+						},{title:'门户管理',icon:'fa fa-home',child:[{title:'菜单管理'}]}
+						, {title:'安全管理',icon:'fa fa-star',child:[
+							{title:'用户管理',icon:'fa fa-user',active:true,url:'base/users/list'},
+							{title:'权限管理',icon:'fa fa-tags',url:'base/permissions/list'},
+							{title:'角色管理',icon:'fa fa-users',url:'base/roles/list'}]}
+						]};
+	$('#sysMenus').myPillTreeMenu('init',sysMenusOpt);
+	var initTabs = {items:[{id:'homeIdex',title:'主页',icon:'fa fa-home',enColse:false,url:'main/home'}]};
+	mainTab = $('#mainTab').myTab('init',initTabs);
 	
 	$('#userSet').click(function(){
 		openUserSetUI();

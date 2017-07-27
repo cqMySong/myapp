@@ -189,7 +189,7 @@ ListUI.prototype = {
 			} 
 			//winUrl = winUrl.replace(/\"/g,"'"); 
 			_win.url = winUrl;
-			top.myNavTab.addTab('#mainTab', _win);
+			parent.addMainTab(_win);
 		}
 	},
 	addnew:function(btn){

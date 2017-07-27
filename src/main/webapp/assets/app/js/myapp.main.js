@@ -10,28 +10,30 @@
 //theme : white,quirk 只有这两种主题
 var _def_pillmenu = {theme:"white",skin:""};
 var _def_pillmenu_item ={title:"我的标题",url:"",target:"#mainTab",icon:"",active:false,child:[]};
-var myPillTreeMenu = {
-	init:function(el){
-		var _$dom = webUtil.getJqueryDom(el,'.my-pill-menu');
-		_$dom.each(function () {
-			var _$this = $(this);
-			var _menu = _$this.data('opt');
-			if(!webUtil.isEmpty(_menu)){
-				_menu = eval('('+_menu+')');
-				myPillTreeMenu.initStyle(_$this,_menu);
-	        }
-			myPillTreeMenu.addClickEvent(_$this);
-		});
+
+;(function($, window, document,undefined) {
+var MyPillTreeMenu = function(ele, opt){
+	 this.$element = ele;
+	 var defaults = {};
+     this.options = $.extend(true,{},defaults, opt);
+}
+MyPillTreeMenu.prototype = {
+	init:function(opt){
+		var $thisDom = this.$element;
+		if(!webUtil.isEmpty(opt)){
+			this.initStyle(opt);
+			this.addClickEvent();
+		}
 	},
-	initStyle:function(el,_menu){
-		var _$dom = webUtil.getJqueryDom(el,'');
+   initStyle:function(_menu){
+		var _$dom = this.$element;
 		if(!_$dom.hasClass('nav-wrapper')){
             _$dom.addClass('nav-wrapper');
         }
 		var _opt = {};
         $.extend(true,_opt,_def_pillmenu);
         if(_menu&&$.isPlainObject(_menu)){
-            $.extend(true,_opt,_menu);
+            $.extend(_opt,_menu);
         }
         var _theme = _opt.theme;
         _$dom.addClass(_theme);
@@ -45,25 +47,26 @@ var myPillTreeMenu = {
         _$dom.append(_ul);
         var _menus = _opt.menus;
         if(!webUtil.isEmpty(_menus)){
-        	myPillTreeMenu.addMenuList(_ul,_menus);
+        	this.addMenuList(_ul,_menus);
         }
 	},
 	addMenuList:function(ul_el,_menus){//这是加第一级的方法
-		var _$dom = webUtil.getJqueryDom(ul_el,'');
+		var _$dom = ul_el;
 		if(!webUtil.isEmpty(_menus)
 				&&$.isArray(_menus)&&_menus.length>0){
+			var thisMyMenu = this;
 			for(var i=0;i<_menus.length;i++){
 				var _menuItem = _menus[i];
-				var _li = myPillTreeMenu.getLiMenum(_menuItem);
-				myPillTreeMenu.addMenuItem(_li,_menuItem.child);
+				var _li = thisMyMenu.getLiMenum(_menuItem);
+				thisMyMenu.addMenuItem(_li,_menuItem.child);
 				_$dom.append(_li);
 			}
 		}
 	},
 	getLiMenum:function(_item){
 		var _menuItem = {};
-		$.extend(true,_menuItem,_def_pillmenu_item);
-		$.extend(true,_menuItem,_item);
+		$.extend(_menuItem,_def_pillmenu_item);
+		$.extend(_menuItem,_item);
 		var _li = $('<li>');
 		if(_menuItem.active){
 			_li.addClass('active');
@@ -93,8 +96,9 @@ var myPillTreeMenu = {
 			_li.addClass('nav-parent');
 			var _li_ul_child = $('<ul>');
 			_li_ul_child.addClass('children');
+			var thisMyMenu = this;
 			for(var i=0;i<_child.length;i++){
-				var _li_ul_child_li = myPillTreeMenu.getLiMenum(_child[i]);
+				var _li_ul_child_li = thisMyMenu.getLiMenum(_child[i]);
 				_li_ul_child.append(_li_ul_child_li);
 				if(_li_ul_child_li.hasClass('active')){
 					_li.addClass('active');
@@ -103,228 +107,258 @@ var myPillTreeMenu = {
 			_li.append(_li_ul_child);
 		}
 	},
-	addClickEvent:function(el){
-		var _$dom = webUtil.getJqueryDom(el,'my-pill-menu');
-		_$dom.find('a._menuItems').each(function(){
-			$(this).click(function(){
-				var thisA = $(this);
-				var sub = thisA.next('ul.children');
-				if(!webUtil.isEmpty(sub)&&sub.length>0){
-					var parent = thisA.parent();
-					if (sub.is(':visible')) {
-						sub.slideUp(200);
-						if (parent.hasClass('nav-active')) {
-							parent.removeClass('nav-active');
-						}
-					}else{
-						sub.slideDown(200);
-						if (!parent.hasClass('active')) {
-							parent.addClass('nav-active');
-						}
+	addClickEvent:function(){
+		var _$dom =  this.$element;
+		_$dom.on('click','a._menuItems',{menu:this},function(){
+			var thisA = $(this);
+			var sub = thisA.next('ul.children');
+			if(!webUtil.isEmpty(sub)&&sub.length>0){
+				var parent = thisA.parent();
+				if (sub.is(':visible')) {
+					sub.slideUp(200);
+					if (parent.hasClass('nav-active')) {
+						parent.removeClass('nav-active');
 					}
 				}else{
-					_$dom.find('.active').removeClass('active');
-					var _parent = thisA.parent('li');
-					if(!webUtil.isEmpty(_parent)&&_parent.length>0){
-						_parent.addClass('active');
-					}
-					_parent = _parent.parent('ul').parent('li');
-					if(!webUtil.isEmpty(_parent)&&_parent.length>0){
-						_parent.addClass('active');
+					sub.slideDown(200);
+					if (!parent.hasClass('active')) {
+						parent.addClass('nav-active');
 					}
 				}
-				var _menuItem = thisA.data('menuItem');
-				if(!webUtil.isEmpty(_menuItem.url)){
-					var $targetDom = $(_menuItem.target)
-					if(!webUtil.isEmpty($targetDom)){
-						if($targetDom.hasClass('my-nav-tabs')){//以tab为目标
-							var _tabItem = {id:_menuItem.id+"_tab",title:_menuItem.title,icon:_menuItem.icon,url:_menuItem.url};
-							myNavTab.addTab($targetDom, _tabItem);
-						}
+			}else{
+				_$dom.find('.active').removeClass('active');
+				var _parent = thisA.parent('li');
+				if(!webUtil.isEmpty(_parent)&&_parent.length>0){
+					_parent.addClass('active');
+				}
+				_parent = _parent.parent('ul').parent('li');
+				if(!webUtil.isEmpty(_parent)&&_parent.length>0){
+					_parent.addClass('active');
+				}
+			}
+			var _menuItem = thisA.data('menuItem');
+			if(!webUtil.isEmpty(_menuItem.url)){
+				var $targetDom = $(_menuItem.target)
+				if(!webUtil.isEmpty($targetDom)){
+					if($targetDom.hasClass('my-nav-tabs')){//以tab为目标
+						var _tabItem = {id:_menuItem.id+"_tab",title:_menuItem.title,icon:_menuItem.icon,url:_menuItem.url};
+						$targetDom.myTab('addTab',_tabItem);
+						//myNavTab.addTab($targetDom, _tabItem);
 					}
 				}
-			});
+			}
 		});
 	}
-};
+}
+$.fn.myPillTreeMenu = function(method,options) {
+   var settings = $.extend({}, options);
+   var myPillMenu = new MyPillTreeMenu($(this),settings);
+   if(!webUtil.isEmpty(method)){
+	   var _method = method.toLowerCase();
+	   if(_method=='init'){
+		   myPillMenu.init(settings);
+	   }
+   }
+   return myPillMenu;
+}
+})(jQuery, window, document);
+
 var def_tab = {theme:"nav-primary",items:[]};
 var def_tab_item = {id:"",title:"主页",icon:"",enColse:true,url:"",content:"",active:true};
-var myNavTab = {
-	init:function(el,_opt){
-		var _$dom = webUtil.getJqueryDom(el,'.my-nav-tabs');
-		_$dom.each(function () {
-			var _$this = $(this);
+;(function($, window, document,undefined) {
+	var MyTab = function(ele, opt){
+		 this.$element = ele;
+		 var defaults = {};
+	     this.options = $.extend(true,{},defaults, opt);
+	}
+	MyTab.prototype = {
+		init:function(_opt){
+			var _$dom = this.$element;
 			var _tabs = {};
 			$.extend(true,_tabs,def_tab);
-			var _tabs_opt = _$this.data('opt');
-			if(!webUtil.isEmpty(_tabs_opt)){
-				_tabs_opt = eval('('+_tabs_opt+')');
-				$.extend(true,_tabs,_tabs_opt);
-	        }
 			if(!webUtil.isEmpty(_opt)){
 				$.extend(true,_tabs,_opt);
 			}
-			myNavTab.tabsCheck(_$this,_tabs);
+			this.tabsCheck(_tabs);
 			var _items = _tabs.items;
 			if(!webUtil.isEmpty(_items)&&$.isArray(_items)&&_items.length>0){
 				for(var i=0;i<_items.length;i++){
-					myNavTab.addTab(_$this,_items[i]);
+					this.addTab(_items[i]);
 				}
 			}
-		});
-	},
-	tabsCheck:function(el,_opt){
-		var _opts = {theme:"nav-primary"};
-		if(!webUtil.isEmpty(_opt)){
-			$.extend(true,_opts,_opt);
-		}
-		var _$this = webUtil.getJqueryDom(el,null);
-		if(!webUtil.isEmpty(_$this)&&_$this.length>0){
-			var _tab_ul = _$this.find('ul');
-			if(webUtil.isEmpty(_tab_ul)||_tab_ul.length<=0){
-				_tab_ul = $('<ul class="nav nav-tabs"></ul>');
-				_$this.append(_tab_ul);
+		},
+		tabsCheck:function(_opt){
+			var _opts = {theme:"nav-primary"};
+			if(!webUtil.isEmpty(_opt)){
+				$.extend(true,_opts,_opt);
 			}
-			if(!_tab_ul.hasClass('nav')) _tab_ul.addClass('nav');
-			if(!_tab_ul.hasClass('nav-tabs')) _tab_ul.addClass('nav-tabs');
-			if(!webUtil.isEmpty(_opts.theme)){
-				_tab_ul.addClass(_opts.theme);
-			}
-			var _tab_content = _$this.find('div');
-			if(webUtil.isEmpty(_tab_content)||_tab_content.length<=0){
-				_tab_content = $('<div>');
-				_$this.append(_tab_content);
-			}
-			if(!_tab_content.hasClass('tab-content')) _tab_content.addClass('tab-content');
-		}
-	},
-	addTab:function(el,_opt){
-		var _$dom = webUtil.getJqueryDom(el,'.my-nav-tabs');
-		if(!webUtil.isEmpty(_$dom)){
-			var _tabItem = {};
-			$.extend(true,_tabItem,def_tab_item);
-			$.extend(true,_tabItem,_opt);
-			if(webUtil.isEmpty(_tabItem.id)){
-				_tabItem.id = webUtil.getRandomWord(6);
-			}
-			
-			var _tab_obj = myNavTab.getTabItemById(_tabItem.id );
-			if(webUtil.isEmpty(_tab_obj)||_tab_obj.length<=0){//不存在此tab内容
-				var _tab_li = myNavTab.initTabHeadItem(_tabItem); //initHead
-				var _tab_conten_pane = myNavTab.initTabContentItem(_tabItem); //initTabContent
-				myNavTab.tabsCheck(_$dom,_tabItem);
-				_$dom.find('ul.nav-tabs').append(_tab_li);
-			    _$dom.find('div.tab-content').append(_tab_conten_pane);
-				var _curTab = myNavTab.getTabItemById(_tabItem.id );
-				if(_tabItem.active&&!webUtil.isEmpty(_curTab)){
-					_tab_obj = _curTab;
+			var _$this = this.$element;
+			if(!webUtil.isEmpty(_$this)&&_$this.length>0){
+				var _tab_ul = _$this.find('ul');
+				if(webUtil.isEmpty(_tab_ul)||_tab_ul.length<=0){
+					_tab_ul = $('<ul class="nav nav-tabs"></ul>');
+					_$this.append(_tab_ul);
 				}
-				_curTab.click(function(){
-					myNavTab.setTabSelected(this);
-				});
-			}
-			myNavTab.setTabSelected(_tab_obj);
-		}
-	},
-	removeTabItem:function(_itemId){
-		if(!webUtil.isEmpty(_itemId)){
-			var _$tabHead = myNavTab.getTabItemById(_itemId);
-			var _$tab_ul = _$tabHead.parent('li').parent('ul');
-			(_$tabHead.parent('li')).remove();
-			$('#'+_itemId).remove();
-			myNavTab.setTabSelected(myNavTab.getTabItemByIndex(_$tab_ul, -1));
-		}
-	},
-	getTabCount:function(el){
-		var _$tab_ul = webUtil.getJqueryDom(el,null); //ul dom
-		if(!webUtil.isEmpty(_$tab_ul)&&_$tab_ul.length>0){
-			return _$tab_ul.find('li').length;
-		}
-		return -1;
-	},
-	getTabItemByIndex:function(el,index){
-		//返回对应的 a 的item
-		var _$tab_ul = webUtil.getJqueryDom(el,null); //ul dom
-		if(!webUtil.isEmpty(_$tab_ul)&&_$tab_ul.length>0){
-			if(!webUtil.isEmpty(index)&&$.isNumeric(index)){
-				if(index>0){
-					index = index-1;
+				if(!_tab_ul.hasClass('nav')) _tab_ul.addClass('nav');
+				if(!_tab_ul.hasClass('nav-tabs')) _tab_ul.addClass('nav-tabs');
+				if(!webUtil.isEmpty(_opts.theme)){
+					_tab_ul.addClass(_opts.theme);
 				}
-				return _$tab_ul.find('li').eq(index).children('a');
+				var _tab_content = _$this.find('div');
+				if(webUtil.isEmpty(_tab_content)||_tab_content.length<=0){
+					_tab_content = $('<div>');
+					_$this.append(_tab_content);
+				}
+				if(!_tab_content.hasClass('tab-content')) _tab_content.addClass('tab-content');
 			}
-		}
-		return null;
-	},
-	setTabSelected:function(_tabItem$){
-		if(!webUtil.isEmpty(_tabItem$)&&_tabItem$.length>0){
-			var _ul_li = _tabItem$.parent('li');
-			if(!_ul_li.hasClass('active')){
-				var _ul = _ul_li.parent('ul');
-				_ul.parent().find('.active').removeClass('active');
-				_ul_li.addClass('active');
-				var tabItem = _tabItem$.data('tabItem');
-				var _itemId = tabItem.id;
-				$('#'+_itemId).addClass('in active');
-				var _ifm_tabContent = $('#'+_itemId+"_ifm");
-				if(!webUtil.isEmpty(_ifm_tabContent)&&_ifm_tabContent.length>0){
-					var _curUrl = _ifm_tabContent.attr('src');
-					var tabUrl = tabItem.url;
-					if(webUtil.isEmpty(_curUrl)&&!webUtil.isEmpty(tabUrl))
-						_ifm_tabContent.attr("src",app.root+"/"+tabUrl);
-					_ifm_tabContent.load(function(){
-						var elId = _itemId+"_ifm";
-						webUtil.setMainTabHeight(elId);
+		},
+		addTab:function(_opt){
+			var _$dom = this.$element;
+			if(!webUtil.isEmpty(_$dom)){
+				var _tabItem = {};
+				$.extend(true,_tabItem,def_tab_item);
+				$.extend(true,_tabItem,_opt);
+				if(webUtil.isEmpty(_tabItem.id)){
+					_tabItem.id = webUtil.getRandomWord(6);
+				}
+				var _tab_obj = this.getTabItemById(_tabItem.id );
+				if(webUtil.isEmpty(_tab_obj)||_tab_obj.length<=0){//不存在此tab内容
+					var _tab_li = this.initTabHeadItem(_tabItem); //initHead
+					var _tab_conten_pane = this.initTabContentItem(_tabItem); //initTabContent
+					this.tabsCheck(_tabItem);
+					_$dom.find('ul.nav-tabs').append(_tab_li);
+				    _$dom.find('div.tab-content').append(_tab_conten_pane);
+					var _curTab = this.getTabItemById(_tabItem.id );
+					if(_tabItem.active&&!webUtil.isEmpty(_curTab)){
+						_tab_obj = _curTab;
+					}
+					var tabObj ={tab:this};
+					_curTab.click(tabObj,function(e){
+						e.data.tab.setTabSelected(this);
 					});
 				}
+				this.setTabSelected(_tab_obj);
 			}
-		}
-	},
-	getTabItemById:function(_itemId){
-		if(!webUtil.isEmpty(_itemId)){
-			return $("#"+_itemId+"_head_a");
-		}
-		return null;
-	},
-	initTabHeadItem:function(_tabItem){
-		var _tab_li = $('<li>');
-		var _tab_li_a = $('<a href="#'+_tabItem.id+'" data-toggle="tab"></a>');
-		_tab_li_a.attr("id",_tabItem.id+"_head_a");
-		var _this_icon = _tabItem.icon;
-		if(!webUtil.isEmpty(_this_icon)){
-			_tab_li_a.append('<i class="'+_this_icon+'" style="font-size: 14px;"></i>');
-		}
-		
-		var _tab_li_a_text = $('<strong>'+_tabItem.title+'</strong>');
-		if(!webUtil.isEmpty(_this_icon)){
-			_tab_li_a_text.css({"margin-left":"2px"});
-		}
-		
-		if(_tabItem.enColse){
-			var _tab_colse$ = $($.parseHTML('<a style="cursor: pointer;" id="">&nbsp;&nbsp;<i class="fa fa-remove" style="font-size: 12px;"></i></a>'));
-			_tab_li_a_text.append(_tab_colse$)
-			_tab_colse$.click(_tabItem,function(e){
-				myNavTab.removeTabItem(e.data.id);
-				if(_tabItem.colseCallBack&&$.isFunction(_tabItem.colseCallBack)){
-					_tabItem.colseCallBack(e.data);
+		},
+		removeTabItem:function(_itemId){
+			if(!webUtil.isEmpty(_itemId)){
+				var _$tabHead = this.getTabItemById(_itemId);
+				var _$tab_ul = _$tabHead.parent('li').parent('ul');
+				(_$tabHead.parent('li')).remove();
+				this.$element.find('#'+_itemId).remove();
+				this.setTabSelected(this.getTabItemByIndex(-1));
+			}
+		},
+		getTabCount:function(){
+			var _$tab_ul = this.$element.find('ul.nav-tabs');
+			if(!webUtil.isEmpty(_$tab_ul)&&_$tab_ul.length>0){
+				return _$tab_ul.find('li').length;
+			}
+			return -1;
+		},
+		getTabItemByIndex:function(index){
+			//返回对应的 a 的item
+			var _$tab_ul = this.$element.find('ul.nav-tabs'); //ul dom
+			if(!webUtil.isEmpty(_$tab_ul)&&_$tab_ul.length>0){
+				if(!webUtil.isEmpty(index)&&$.isNumeric(index)){
+					if(index>0){
+						index = index-1;
+					}
+					return _$tab_ul.find('li').eq(index).children('a');
 				}
-			});
+			}
+			return null;
+		},
+		setTabSelected:function(_tabItem$){
+			if(!webUtil.isEmpty(_tabItem$)&&_tabItem$.length>0){
+				var _ul_li = _tabItem$.parent('li');
+				if(!_ul_li.hasClass('active')){
+					var _ul = _ul_li.parent('ul');
+					_ul.parent().find('.active').removeClass('active');
+					_ul_li.addClass('active');
+					var tabItem = _tabItem$.data('tabItem');
+					var _itemId = tabItem.id;
+					$('#'+_itemId).addClass('in active');
+					var _ifm_tabContent = $('#'+_itemId+"_ifm");
+					if(!webUtil.isEmpty(_ifm_tabContent)&&_ifm_tabContent.length>0){
+						var _curUrl = _ifm_tabContent.attr('src');
+						var tabUrl = tabItem.url;
+						var elId = _itemId+"_ifm";
+						if(webUtil.isEmpty(_curUrl)&&!webUtil.isEmpty(tabUrl)){
+							_ifm_tabContent.attr("src",webUtil.toUrl(tabUrl));
+							_ifm_tabContent.load(function(){
+								webUtil.setMainTabHeight(elId);
+							});
+						}else{
+							webUtil.setMainTabHeight(elId);
+						}
+					}
+				}
+			}
+		},
+		getTabItemById:function(_itemId){
+			if(!webUtil.isEmpty(_itemId)){
+				return this.$element.find("#"+_itemId+"_head_a");
+			}
+			return null;
+		},
+		initTabHeadItem:function(_tabItem){
+			var _tab_li = $('<li>');
+			var _tab_li_a = $('<a href="#'+_tabItem.id+'" data-toggle="tab"></a>');
+			_tab_li_a.attr("id",_tabItem.id+"_head_a");
+			var _this_icon = _tabItem.icon;
+			if(!webUtil.isEmpty(_this_icon)){
+				_tab_li_a.append('<i class="'+_this_icon+'" style="font-size: 14px;"></i>');
+			}
+			
+			var _tab_li_a_text = $('<strong>'+_tabItem.title+'</strong>');
+			if(!webUtil.isEmpty(_this_icon)){
+				_tab_li_a_text.css({"margin-left":"2px"});
+			}
+			
+			if(_tabItem.enColse){
+				var thisTab = this;
+				var _tab_colse$ = $($.parseHTML('<a style="cursor: pointer;" id="">&nbsp;&nbsp;<i class="fa fa-remove" style="font-size: 12px;"></i></a>'));
+				_tab_li_a_text.append(_tab_colse$)
+				_tab_colse$.click(_tabItem,function(e){
+					var tbItem = e.data;
+					thisTab.removeTabItem(tbItem.id);
+					if(tbItem.colseCallBack&&$.isFunction(tbItem.colseCallBack)){
+						tbItem.colseCallBack(tbItem);
+					}
+				});
+			}
+			_tab_li_a.append(_tab_li_a_text);
+			_tab_li_a.data('tabItem',_tabItem);
+			_tab_li.append(_tab_li_a);
+			return _tab_li;
+		},
+		initTabContentItem:function(_tabItem){
+			var _tab_conten_pane = $('<div class="tab-pane fade" style="padding:0px;" id="'+_tabItem.id+'"></div>');
+			var _url = _tabItem.url;
+			var _content = _tabItem.content;
+			if(!webUtil.isEmpty(_url)){
+				_content = '<iframe src="" id="'+_tabItem.id+'_ifm" width="100%" scrolling="no" marginheight="0" marginwidth="0" frameborder="0"></iframe>';
+			}
+			_tab_conten_pane.append(_content);
+			return _tab_conten_pane;
 		}
-		_tab_li_a.append(_tab_li_a_text);
-		_tab_li_a.data('tabItem',_tabItem);
-		_tab_li.append(_tab_li_a);
-		return _tab_li;
-	},
-	initTabContentItem:function(_tabItem){
-		var _tab_conten_pane = $('<div class="tab-pane fade" style="padding:0px;" id="'+_tabItem.id+'"></div>');
-		var _url = _tabItem.url;
-		var _content = _tabItem.content;
-		if(!webUtil.isEmpty(_url)){
-			_content = '<iframe src="" id="'+_tabItem.id+'_ifm" width="100%" scrolling="no" marginheight="0" marginwidth="0" frameborder="0"></iframe>';
-		}
-		_tab_conten_pane.append(_content);
-		return _tab_conten_pane;
 	}
-}
+	$.fn.myTab = function(method,options) {
+	    var settings = $.extend({}, options);
+	    var myTab = new MyTab($(this),settings);
+	    if(!webUtil.isEmpty(method)){
+	 	   var _method = method.toLowerCase();
+	 	   if(_method=='init'){
+	 		  myTab.init(settings);
+	 	   }else if(_method=='addtab'){
+	 		  myTab.addTab(settings);
+	 	   }
+	    }
+	    return myTab;
+	}
+})(jQuery, window, document);
+
 /**
  * btnGroup 插件方法 
  * 其他方法待补充

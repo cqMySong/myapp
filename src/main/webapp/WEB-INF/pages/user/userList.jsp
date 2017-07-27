@@ -9,13 +9,24 @@
 <script type="text/javascript">
 </script>
 <body style="padding: 5px;margin: 0px;" >
-	<div id="listPanel" class="panel" style="padding:2px;">
+	<div class="ui-layout-north">
 		<div id="table-toolbar">
 				<div class="btn-group">
 					<a id="resetEncrypt" class="btn btn-success">
 						<span class="fa fa-retweet"></span>密码重置
 					</a>
 				</div>
+		</div>
+	</div>
+	<div class="ui-layout-west" id="tree_container" style="margin: 0px;padding: 0px;">
+		
+	</div>
+	<div id="listPanel" class="ui-layout-center">
+		<div class="" id="tblMain_toolbar">
+			<div class="input-group" style="width:160px;">
+                <span class="input-group-addon" style="width:80px;">包含下级</span>
+                <input id="includeChild" class="input-item" type="checkbox"/>
+             </div>
 		</div>
 	     <table id="tblMain">
 			 <thead >
@@ -34,44 +45,55 @@
 	</div>
 </body>
 
-<%@include file="../base/base_list.jsp"%>
+<%@include file="../base/base_treelist.jsp"%>
 <script type="text/javascript">
 /**
  * 一切操作前的接口函数
  */
-var thisListUI ;
 var thisBaseUrl = 'base/users';
+var thisOrgList ;
+var includeChild;
 function beforeAction(opt){
+	if(opt=='addnew'){
+		var params = thisOrgList.uiParams(opt);
+		var tree = thisOrgList.tree;
+		if(webUtil.isEmpty(params)&&tree&&tree.getNodes().length>0){
+			webUtil.mesg('请先选择的组织，然后才能做新增操作!');
+			return false;
+		}
+	}
 	return true;
 }
-function userState_formarter(value, row, index){
-	var txt = value;
-	if(value=='ENABLE'){
-		txt = '正常';
-	}else if(value=='DISABLE'){
-		txt = '失效';
-	}else if(value=='FREEZE'){
-		txt = '冻结';
-	}
-	return txt;
-}
 function reSetUserEncrypt(){
-	var _selRows = thisListUI.getSelectRow();
+	var _selRows = thisOrgList.listUI.getSelectRow();
 	if(!webUtil.isEmpty(_selRows)&&_selRows.length>0){
 		var _thisRowData = _selRows[0];
 		var thisId = _thisRowData.id;
 		var _thisURL = thisBaseUrl+'/resetEncrypt'
 		webUtil.ajaxData({url:_thisURL,async:false,data:{id:thisId},success:function(data){
-			thisListUI.executeQuery();
+			thisOrgList.listUI.executeQuery();
 		}});
 	}
 }
-
+function includeChild_click(){
+	var thisParams = {includeChild:includeChild.getData()};
+	thisOrgList.listUI.executeQueryByParams(thisParams);
+}
 $(document).ready(function() {
-	var editWin ={title:'用户信息',width:620,height:450};
-	thisListUI = $('#listPanel').listUI({tableEl:'#tblMain',height:680,baseUrl:thisBaseUrl,editWin:editWin,toolbar:"#table-toolbar"});
-	thisListUI.onLoad();
 	
+	var _checkOpt = {event:{name:'click',callBack:includeChild_click}};
+    includeChild = $('#includeChild').myComponet('checkbox',{method:'init',opt:_checkOpt});
+    includeChild.setData(true);
+    
+    var editWin ={title:'用户信息',width:620,height:450};
+    var height = 700;
+    thisOrgList = $('body').treeListUI({tableEl:'#tblMain',treeUrl:'base/orgs/tree',baseUrl:thisBaseUrl,title:'组织信息',height:height,
+   	 treeContainer:"#tree_container",editWin:editWin,toolbar:"#table-toolbar",searchParams:{includeChild:true}
+   	 ,extendTableOptions:{toolbar:'#tblMain_toolbar',height:height}});
+    thisOrgList.onLoad();
+    var myLayout = $('body').layout({ applyDefaultStyles: true,west__size:300});
+    myLayout.sizePane('west',280);
+    myLayout.sizePane('center',800);
 	$('#resetEncrypt').click(function(){
 		reSetUserEncrypt();
 	});

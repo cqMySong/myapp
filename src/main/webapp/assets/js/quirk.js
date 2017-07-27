@@ -67,23 +67,23 @@ $(document).ready(function() {
    // Toggle Left Menu
    $('.nav-parent > a').on('click', function() {
 
-     var gran = $(this).closest('.nav');
-     var parent = $(this).parent();
-     var sub = parent.find('> ul');
-
-     if(sub.is(':visible')) {
-       sub.slideUp(200);
-       if(parent.hasClass('nav-active')) { parent.removeClass('nav-active'); }
-     } else {
-
-       $(gran).find('.children').each(function() {
-         $(this).slideUp();
-       });
-
-       sub.slideDown(200);
-       if(!parent.hasClass('active')) { parent.addClass('nav-active'); }
-     }
-    return false;
+//     var gran = $(this).closest('.nav');
+//     var parent = $(this).parent();
+//     var sub = parent.find('> ul');
+//
+//     if(sub.is(':visible')) {
+//       sub.slideUp(200);
+//       if(parent.hasClass('nav-active')) { parent.removeClass('nav-active'); }
+//     } else {
+//
+//       $(gran).find('.children').each(function() {
+//         $(this).slideUp();
+//       });
+//
+//       sub.slideDown(200);
+//       if(!parent.hasClass('active')) { parent.addClass('nav-active'); }
+//     }
+//    return false;
 
    });
 

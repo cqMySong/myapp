@@ -148,6 +148,11 @@
 				var $parentContainer = $thisDom.parent('.mycheckradiobox_container');
 				if(webUtil.isEmpty($parentContainer)||$parentContainer.length==0){
 					$parentContainer = $('<div class="mycheckradiobox_container"></div>');
+					if(_ckrad_opt.height){
+					    var height = _ckrad_opt.height;
+					    var top = (height-22)/2;
+                        $parentContainer.css({"height":height+"px","padding":top+"px 40%"});
+					}
 					$thisDom.wrap($parentContainer);
 					var _div = $('<div></div>');
 					_div.addClass('my'+_type+" "+_ckrad_opt.theme);

@@ -190,7 +190,7 @@ var def_tab_item = {id:"",title:"主页",icon:"",enColse:true,url:"",content:"",
 		tabsCheck:function(_opt){
 			var _opts = {theme:"nav-primary"};
 			if(!webUtil.isEmpty(_opt)){
-				$.extend(true,_opts,_opt);
+				$.extend(_opts,_opt);
 			}
 			var _$this = this.$element;
 			if(!webUtil.isEmpty(_$this)&&_$this.length>0){
@@ -951,83 +951,84 @@ MyDataTable.prototype = {
 	setTableCellValue:function(rowIdx,field,val){
 		if(webUtil.isEmpty(field)) return;
 		var rowData = this.getRowData(rowIdx);
-		if(!webUtil.isEmpty(rowData)){
-			var oldVal = rowData[field];
-			var newVal = val;
-			var thisColumn = null;
-			var colIdx = -1;
-			var _cols = this.getVisibleColumns();
-			$.each(_cols, function (i, column) {
-	            if (column.field === field) {
-	            	thisColumn = column;
-	            	colIdx = i;
-	                return false;
-	            }
-	            return true;
-	        });
-			
-			var cell = this.getCell(rowIdx,colIdx);
-			if(!webUtil.isEmpty(thisColumn)&&!webUtil.isEmpty(cell)){
-				if(!webUtil.isEmpty(val)){
-					if(thisColumn.type == DataType.number){
-						if(!$.isNumeric(val)){
-							webUtil.mesg("请输入有效的数字!");
-							if(!webUtil.isEmpty(oldVal)){
-								newVal = oldVal;
-							}else{
-								newVal = null;
-							}
+		if(webUtil.isEmpty(rowData)){
+			rowData = {};
+		}
+		var oldVal = rowData[field];
+		var newVal = val;
+		var thisColumn = null;
+		var colIdx = -1;
+		var _cols = this.getVisibleColumns();
+		$.each(_cols, function (i, column) {
+            if (column.field === field) {
+            	thisColumn = column;
+            	colIdx = i;
+                return false;
+            }
+            return true;
+        });
+		
+		var cell = this.getCell(rowIdx,colIdx);
+		if(!webUtil.isEmpty(thisColumn)&&!webUtil.isEmpty(cell)){
+			if(!webUtil.isEmpty(val)){
+				if(thisColumn.type == DataType.number){
+					if(!$.isNumeric(val)){
+						webUtil.mesg("请输入有效的数字!");
+						if(!webUtil.isEmpty(oldVal)){
+							newVal = oldVal;
+						}else{
+							newVal = null;
 						}
 					}
 				}
-				
-				rowData[field] = newVal;
-				this.updateRow(rowIdx,rowData);
-				
-				var _cellHtml = newVal;
-				if(!webUtil.isEmpty(thisColumn.formatter)){
-					if($.isFunction(thisColumn.formatter)){
-						_cellHtml = thisColumn.formatter(newVal,rowData,colIdx);
-					}else{
-						_cellHtml = thisColumn.formatter;
-					}
+			}
+			
+			rowData[field] = newVal;
+			this.updateRow(rowIdx,rowData);
+			
+			var _cellHtml = newVal;
+			if(!webUtil.isEmpty(thisColumn.formatter)){
+				if($.isFunction(thisColumn.formatter)){
+					_cellHtml = thisColumn.formatter(newVal,rowData,colIdx);
+				}else{
+					_cellHtml = thisColumn.formatter;
 				}
-				cell.html(_cellHtml);
-				var hasChanged = oldVal!=newVal;
-				var col = this.getColumn(field);
-				if('f7'==col.type){
-					if(!webUtil.isEmpty(oldVal)&&!webUtil.isEmpty(newVal)){
-						if($.isArray(oldVal)&&$.isArray(newVal)){
-							if(oldVal.length!=newVal.length) {
-								hasChanged = true;
-							}else{
-								for(var i=0;i<newVal.length;i++){
-									if(newVal[i].id!=oldVal[i].id){
-										hasChanged = true;
-										return true;
-									}
+			}
+			cell.html(_cellHtml);
+			var hasChanged = oldVal!=newVal;
+			var col = this.getColumn(field);
+			if('f7'==col.type){
+				if(!webUtil.isEmpty(oldVal)&&!webUtil.isEmpty(newVal)){
+					if($.isArray(oldVal)&&$.isArray(newVal)){
+						if(oldVal.length!=newVal.length) {
+							hasChanged = true;
+						}else{
+							for(var i=0;i<newVal.length;i++){
+								if(newVal[i].id!=oldVal[i].id){
+									hasChanged = true;
+									return true;
 								}
 							}
-						}else if($.isPlainObject(oldVal)&&$.isPlainObject(newVal)){
-							hasChanged = newVal.id!=oldVal.id;
 						}
+					}else if($.isPlainObject(oldVal)&&$.isPlainObject(newVal)){
+						hasChanged = newVal.id!=oldVal.id;
 					}
 				}
-				if(hasChanged){
-					if(!webUtil.isEmpty(this.editDataChanged)&&$.isFunction(this.editDataChanged)){
-						var changeObj= {};
-						changeObj.oldVal = oldVal;
-						changeObj.value = newVal;
-						changeObj.rowData = rowData;
-						changeObj.field = field;
-						changeObj.column = thisColumn;
-						changeObj.rowIndex = rowIdx;
-						changeObj.colIndex = colIdx;
-						this.editDataChanged(cell,changeObj);
-					}
-				}
-				this.resetView();
 			}
+			if(hasChanged){
+				if(!webUtil.isEmpty(this.editDataChanged)&&$.isFunction(this.editDataChanged)){
+					var changeObj= {};
+					changeObj.oldVal = oldVal;
+					changeObj.value = newVal;
+					changeObj.rowData = rowData;
+					changeObj.field = field;
+					changeObj.column = thisColumn;
+					changeObj.rowIndex = rowIdx;
+					changeObj.colIndex = colIdx;
+					this.editDataChanged(cell,changeObj);
+				}
+			}
+			this.resetView();
 		}
 	},
 	checkTable:function(){

@@ -3,7 +3,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<title>单位</title>
+<title>方案类型</title>
 </head>
 <style type="text/css">
 </style>
@@ -32,17 +32,12 @@
 			<div class="row">
 				<div class="col-sm-6">
 					<div class="input-group">
-						<span class="input-group-addon lable">单位类型</span> 
-						<select name="unitType" data-opt="{type:'select',selected:'JSDW',url:'base/common/combox?enum=com.myapp.enums.UnitType'}" 
-		                	class="form-control input-item require">
-		                </select>
-					</div>
-				</div>
-				<div class="col-sm-6 mb15">
-					<div class="input-group">
 						<span class="input-group-addon lable">启用</span> 
 						<input class="require input-item" name="enabled" data-opt="{type:'checkbox'}" type="checkbox">
 					</div>
+				</div>
+				<div class="col-sm-6 mb15">
+					
 				</div>
 			</div>
 			<div class="row mt10">
@@ -64,11 +59,12 @@
 	function beforeAction(opt) {
 		return true;
 	}
+	
 
 	$(document).ready(function() {
 		var editUI = $('#editPanel').editUI({
-			title : "单位",
-			baseUrl : "ec/basedata/ecunitEdit",
+			title : "方案类型",
+			baseUrl : "ec/basedata/schemeTypeEdit",
 			toolbar : "#table-toolbar",
 			form : {
 				el : "#editForm"

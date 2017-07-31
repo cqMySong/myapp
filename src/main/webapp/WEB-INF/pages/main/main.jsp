@@ -319,7 +319,10 @@ $(document).ready(function() {
 	var userMenus = {menus:[
 							{title:'项目管理首页',icon:'fa fa-home'},
 							{title:'基础资料',icon:'fa fa-cogs',child:[
-								{title:'项目结构类型',icon:'fa fa-cogs',url:'ec/basedata/structTypes/list'}
+                                {title:'单位',icon:'fa fa-cogs',url:'ec/basedata/ecunitList/list'}     
+                               ,{title:'方案类别',icon:'fa fa-cogs',url:'ec/basedata/schemeTypeList/list'}
+                               ,{title:'施工方案',icon:'fa fa-cogs',url:'ec/basedata/schemelist/list'}
+							   ,{title:'项目结构类型',icon:'fa fa-cogs',url:'ec/basedata/structTypes/list'}
 							   ,{title:'项目工程结构',icon:'fa fa-cogs',url:'ec/basedata/prostructures/list'}
 							   ,{title:'项目分部工程',icon:'fa fa-cogs',url:'ec/basedata/prosubs/list'}
 							   ,{title:'项目分项工程',icon:'fa fa-cogs',url:'ec/basedata/prosubitems/list'}
@@ -331,7 +334,9 @@ $(document).ready(function() {
 								{title:'项目月计划',icon:'fa fa-user',url:'ec/plan/projectplans/monthlist'},
 								{title:'项目周计划',icon:'fa fa-user',url:'ec/plan/projectplans/weeklist'},
 								{title:'项目总计划-old',icon:'fa fa-user',url:'ec/plan/projectplans/list'}
-								]}
+								]},
+							{title:'质量管理',icon:'fa fa-home',child:[
+								{title:'质量交底',icon:'fa fa-building-o',url:'ec/quality/standard/qualityStandardList/list'}]},
 							]};
 	
 	$('#userMenus').myPillTreeMenu('init',userMenus);

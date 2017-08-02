@@ -98,6 +98,7 @@ public class BaseInterceptor implements HandlerInterceptor {
 			}
 		}
 		request.setAttribute("myKey", "我的内容在这里");
+		request.setAttribute("appRoot",request.getContextPath());
 		log.info("BaseInterceptor:preHandle");
 		return toGo;
 	}

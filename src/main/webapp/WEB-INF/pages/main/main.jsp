@@ -338,6 +338,8 @@ $(document).ready(function() {
 								]},
 							{title:'质量管理',icon:'fa fa-home',child:[
 								{title:'质量交底',icon:'fa fa-building-o',url:'ec/quality/standard/qualityStandardList/list'}]},
+							{title:'图纸会审',icon:'fa fa-home',child:[
+								{title:'图纸会审',icon:'fa fa-building-o',url:'ec/discussiondrawings/list'}]},
 							]};
 	
 	$('#userMenus').myPillTreeMenu('init',userMenus);
@@ -350,7 +352,12 @@ $(document).ready(function() {
 						, {title:'安全管理',icon:'fa fa-star',child:[
 							{title:'用户管理',icon:'fa fa-user',active:true,url:'base/users/list'},
 							{title:'权限管理',icon:'fa fa-tags',url:'base/permissions/list'},
-							{title:'角色管理',icon:'fa fa-users',url:'base/roles/list'}]}
+							{title:'角色管理',icon:'fa fa-users',url:'base/roles/list'}]},
+						{title:'流程管理',icon:'fa fa-star',child:[
+								{title:'模型管理',icon:'fa fa-user',url:'base/actmodels/list'},
+								{title:'流程管理',icon:'fa fa-tags',url:'base/actprocesses/list'},
+								{title:'待办事项',icon:'fa fa-tags',url:'base/backlogs/list'}
+								]}
 						]};
 	$('#sysMenus').myPillTreeMenu('init',sysMenusOpt);
 	var initTabs = {items:[{id:'homeIdex',title:'主页',icon:'fa fa-home',enColse:false,url:'main/home'}]};

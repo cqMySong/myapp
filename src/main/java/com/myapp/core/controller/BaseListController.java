@@ -176,7 +176,7 @@ public abstract class BaseListController extends BasePageListController {
 	}
 	
 	@PermissionItemAnn(name="编辑",number="edit",type=PermissionTypeEnum.PAGEADDFUNCTION)
-	@RequestMapping("/edit")
+	@RequestMapping(value = "/edit")
 	public ModelAndView edit(){
 		Map params = new HashMap();
 		init();

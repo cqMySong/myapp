@@ -83,8 +83,8 @@ EditUI.prototype = {
 		
 		if(OperateType.addnew == _operate){//新增
 			this.addNew();
-		}else{// 修改 or 查看
-			this.loadServerData(_operate,billId);
+		}else if(OperateType.edit==_operate|| OperateType.view == _operate){// 修改 or 查看
+		this.loadServerData(_operate,billId);
 		}
 	},
 	getEntrys:function(){

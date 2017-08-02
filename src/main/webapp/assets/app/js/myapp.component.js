@@ -151,7 +151,7 @@
 					if(_ckrad_opt.height){
 					    var height = _ckrad_opt.height;
 					    var top = (height-22)/2;
-                        $parentContainer.css({"height":height+"px","padding":top+"px 40%"});
+                        $parentContainer.css({"height":height+"px","padding":top+"px"});
 					}
 					$thisDom.wrap($parentContainer);
 					var _div = $('<div></div>');
@@ -167,7 +167,7 @@
 				var $parentContainer = $thisDom.parent('.date');
 				if(webUtil.isEmpty($parentContainer)||$parentContainer.length==0){
 					$thisDom.css({"border-radius":"0px"});   
-					$parentContainer = $('<div class="input-group date"></div>');
+					$parentContainer = $('<div class="input-group date" style="width: 100%;"></div>');
 					$thisDom.wrap($parentContainer);
 					if(!webUtil.isEmpty(_dateOpt.icon)){
 						var _iconG  = $('<div class="input-group-addon"><span class="'+_dateOpt.icon+'"></span></div>');

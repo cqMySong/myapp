@@ -82,7 +82,6 @@ public abstract class BaseEditController extends CoreBaseController {
 	}
 	
 	protected void beforeStoreData(BaseMethodEnum bme,Object editData){
-		
 	}
 	
 	protected void storeData(BaseMethodEnum bme) throws SaveException, QueryException{

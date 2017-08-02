@@ -333,6 +333,7 @@ $(document).ready(function() {
 								{title:'项目总计划',icon:'fa fa-user',url:'ec/plan/projecttotalplans/list'},
 								{title:'项目月计划',icon:'fa fa-user',url:'ec/plan/projectplans/monthlist'},
 								{title:'项目周计划',icon:'fa fa-user',url:'ec/plan/projectplans/weeklist'},
+								{title:'项目施工日志',icon:'fa fa-user',url:'ec/plan/projectplanreports/list'},
 								{title:'项目总计划-old',icon:'fa fa-user',url:'ec/plan/projectplans/list'}
 								]},
 							{title:'质量管理',icon:'fa fa-home',child:[

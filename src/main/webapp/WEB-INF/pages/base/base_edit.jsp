@@ -253,7 +253,14 @@ EditUI.prototype = {
 							rowData = dataObj.defRowData
 						}
 					}
-					tblEntry.addRow(rowData);	
+					if(webUtil.isEmpty(rowData)) rowData = {};
+					if($.isArray(rowData)&&rowData.length>0){
+						for(var i=0;i<rowData.length;i++){
+							tblEntry.addRow(rowData[i]);
+						}
+					}else{
+						tblEntry.addRow(rowData);	
+					}
 					if(!webUtil.isEmpty(tbar)&&!webUtil.isEmpty(tbar.afterClick)
 							&&$.isFunction(tbar.afterClick)){
 						tbar.afterClick('addRow',rowData);

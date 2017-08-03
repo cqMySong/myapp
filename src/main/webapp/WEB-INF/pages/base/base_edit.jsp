@@ -83,8 +83,8 @@ EditUI.prototype = {
 		
 		if(OperateType.addnew == _operate){//新增
 			this.addNew();
-		}else if(OperateType.edit==_operate|| OperateType.view == _operate){// 修改 or 查看
-		this.loadServerData(_operate,billId);
+		}else{// 修改 or 查看
+			this.loadServerData(_operate,billId);
 		}
 	},
 	getEntrys:function(){
@@ -237,49 +237,56 @@ EditUI.prototype = {
 		
 		if(toClick&&!webUtil.isEmpty(dataObj.tableOpt.cusTopToolBar)){
 			var tb = $(dataObj.tableOpt.cusTopToolBar);
-			tb.find('.pull-right>.btn-group>._addRow').click(function(){
-				var toAdd = true;
-				var tbar = dataObj.toolbar;
-				if(!webUtil.isEmpty(tbar)&&!webUtil.isEmpty(tbar.beforeClick)
-						&&$.isFunction(tbar.beforeClick)){
-					toAdd = tbar.beforeClick('addRow');
-				}
-				var rowData = {};
-				if(toAdd){
-					if(!webUtil.isEmpty(dataObj.defRowData)){
-						if($.isFunction(dataObj.defRowData)){
-							rowData = dataObj.defRowData();
+			tb.find('.pull-right>.btn-group>._addRow').click({source:tblEntry},function(e){
+				if(!webUtil.isEmpty(dataObj.addRow)&&$.isFunction(dataObj.addRow)){
+					dataObj.addRow(e.source);
+				}else{
+					var toAdd = true;
+					var tbar = dataObj.toolbar;
+					if(!webUtil.isEmpty(tbar)&&!webUtil.isEmpty(tbar.beforeClick)
+							&&$.isFunction(tbar.beforeClick)){
+						toAdd = tbar.beforeClick('addRow');
+					}
+					var rowData = {};
+					if(toAdd){
+						if(!webUtil.isEmpty(dataObj.defRowData)){
+							if($.isFunction(dataObj.defRowData)){
+								rowData = dataObj.defRowData();
+							}else{
+								rowData = dataObj.defRowData
+							}
+						}
+						if(webUtil.isEmpty(rowData)) rowData = {};
+						if($.isArray(rowData)&&rowData.length>0){
+							for(var i=0;i<rowData.length;i++){
+								tblEntry.addRow(rowData[i]);
+							}
 						}else{
-							rowData = dataObj.defRowData
+							tblEntry.addRow(rowData);	
 						}
-					}
-					if(webUtil.isEmpty(rowData)) rowData = {};
-					if($.isArray(rowData)&&rowData.length>0){
-						for(var i=0;i<rowData.length;i++){
-							tblEntry.addRow(rowData[i]);
+						if(!webUtil.isEmpty(tbar)&&!webUtil.isEmpty(tbar.afterClick)
+								&&$.isFunction(tbar.afterClick)){
+							tbar.afterClick('addRow',rowData);
 						}
-					}else{
-						tblEntry.addRow(rowData);	
-					}
-					if(!webUtil.isEmpty(tbar)&&!webUtil.isEmpty(tbar.afterClick)
-							&&$.isFunction(tbar.afterClick)){
-						tbar.afterClick('addRow',rowData);
 					}
 				}
-				
 			});
-			tb.find('.pull-right>.btn-group>._removeRow').click(function(){
-				var tbar = dataObj.toolbar;
-				var toRemove = true;
-				if(!webUtil.isEmpty(tbar)&&!webUtil.isEmpty(tbar.beforeClick)
-						&&$.isFunction(tbar.beforeClick)){
-					toRemove = tbar.beforeClick('removeRow');
-				}
-				if(toRemove){
-					tblEntry.removeRow(tblEntry.getSelectRow());
-					if(!webUtil.isEmpty(tbar)&&!webUtil.isEmpty(tbar.afterClick)
-							&&$.isFunction(tbar.afterClick)){
-						tbar.afterClick('removeRow',null);
+			tb.find('.pull-right>.btn-group>._removeRow').click({source:tblEntry},function(e){
+				if(!webUtil.isEmpty(dataObj.reomveRow)&&$.isFunction(dataObj.reomveRow)){
+					dataObj.reomveRow(e.source);
+				}else{
+					var tbar = dataObj.toolbar;
+					var toRemove = true;
+					if(!webUtil.isEmpty(tbar)&&!webUtil.isEmpty(tbar.beforeClick)
+							&&$.isFunction(tbar.beforeClick)){
+						toRemove = tbar.beforeClick('removeRow');
+					}
+					if(toRemove){
+						tblEntry.removeRow(tblEntry.getSelectRow());
+						if(!webUtil.isEmpty(tbar)&&!webUtil.isEmpty(tbar.afterClick)
+								&&$.isFunction(tbar.afterClick)){
+							tbar.afterClick('removeRow',null);
+						}
 					}
 				}
 			});

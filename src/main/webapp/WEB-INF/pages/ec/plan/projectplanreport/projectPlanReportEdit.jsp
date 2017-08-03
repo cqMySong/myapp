@@ -64,15 +64,15 @@
 			</div>
 			<div class="row mt10">
 				<div class="col-sm-12 " style="border: 1px solid #ddd;">
-					<table name="planReportItems" class="input-entry" data-opt="{type:'entry',height:430,defRowData:importData,toolbar:{title:'施工日志填报',beforeClick:btnBefClick}
-							,tableOpt:{editDataChanged:planItems_dataChanged}}">
+					<table name="planReportItems" class="input-entry" data-opt="{type:'entry',height:430,toolbar:{title:'施工日志填报'}
+							,tableOpt:{editDataChanged:planItems_dataChanged},addRow:tblAddRow}">
 						<thead>
 							<tr>
 								<th data-field="proStructure" rowspan="2" data-type="f7" data-formatter="displayName" data-locked="true"
 										data-editor="{uiWin:{title:'项目结构',height:600,width:300,url:'ec/basedata/proStructureF7',uiParams:getParams}}">项目工程结构</th>
-								<th data-field="proSub" rowspan="2"  data-type="f7" 
+								<th data-field="proSub" rowspan="2"  data-type="f7" data-locked="true"
 										data-editor="{uiWin:{title:'项目分部工程',height:550,width:680,url:'ec/basedata/proSubF7',uiParams:getParams}}">项目分部工程</th>
-								<th data-field="proSubItem" rowspan="2" data-type="f7"
+								<th data-field="proSubItem" rowspan="2" data-type="f7" data-locked="true"
 										data-editor="{uiWin:{title:'项目分项工程',height:550,width:680,url:'ec/basedata/proSubItemF7',uiParams:getParams}}">项目分项结构</th>
 								<th data-field="planContent" data-locked="true" rowspan="2" data-type="textarea">计划内容</th>
 								
@@ -80,7 +80,7 @@
 								<th data-field="filler" rowspan="2" data-type="f7"
 										data-editor="{uiWin:{title:'责任人',height:550,width:680,url:'base/userf7',uiParams:getParams}}">责任人</th>
 								<th data-field="remark" rowspan="2" width="500" data-type="textarea">备注</th>
-								<th data-field="planItemId" data-locked="true" rowspan="2">计划ID</th>
+								<th data-field="planItemId" data-visible="false" data-locked="true" rowspan="2">计划ID</th>
 								
 							</tr>
 							<tr>
@@ -140,17 +140,46 @@
 	var editUI;
 	var planItemsEntry;
 	var planItemsEntryObj;
-	function btnBefClick(btnName){
-		var toGo = true;
-		if('addRow'==btnName){
-			//导入计划分录信息
-			
+	function tblAddRow(table){
+		
+		var _win = {width:900,height:750,maxmin:false};
+		_win.url = webUtil.toUrl('ec/plan/projectplanitems/show')+'?projectId='+$('input[name="project"]').myF7().getValue();
+		_win.btns = ['确定','取消'];
+		_win.title = '计划明细导入';
+		_win.btnCallBack = function(index,layerIndex,layero){
+			if(layero){
+				var iframe_win = $(layero).parent().find('#layui-layer-iframe'+layerIndex)[0].contentWindow;
+				var datas = iframe_win.getData();
+				if(index==1&&datas&&datas.length>0){
+					
+					var hasDoRow = planItemsEntry.getData();
+					var rmp = new Map(); 
+					if(hasDoRow&&hasDoRow.length>0){
+						for(var i=0;i<hasDoRow.length;i++){
+							var sbobj = hasDoRow[i];
+							if(sbobj&&sbobj.planItemId){
+								rmp.put(sbobj.planItemId,sbobj.planItemId);
+							}
+						}
+					}
+					
+					for(var i=0;i<datas.length;i++){
+						var drow = datas[i];
+						if(!rmp.containsKey(drow.id)){
+							var newRow = {};
+							newRow.proStructure = drow.proStructure;
+							newRow.proSub = drow.proSub;
+							newRow.proSubItem = drow.proSubItem;
+							newRow.planContent = drow.content;
+							newRow.planItemId = drow.id;
+							planItemsEntry.addRow(newRow);
+						}
+					}
+				}
+			}
+			return true;
 		}
-		return toGo;
-	}
-	
-	function importData(){
-		return [{remark:'1'},{remark:'2'},{remark:'3'}];
+		webUtil.openWin(_win);
 	}
 	
 	function planItems_dataChanged($cell,obj){

@@ -271,11 +271,7 @@
 			<artifactId>activiti-diagram-rest</artifactId>
 			<version>${activiti.version}</version>
 		</dependency>
-		<dependency>
-			<groupId>org.activiti</groupId>
-			<artifactId>activiti-webapp-explorer2</artifactId>
-			<version>5.22.0</version>
-		</dependency>
+
 	</dependencies>
 
 </project>

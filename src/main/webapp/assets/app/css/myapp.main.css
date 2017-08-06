@@ -42,9 +42,11 @@ span.select2>span.selection>span.require{
 
 
 /*仿照iCheck的样式风格 简化
-包含 checkebox 和radio **/
+包含 checkebox 和radio
+2017-08-05 刘洋 取消padding 40%
+**/
 .mycheckradiobox_container{
-	padding:5px 40%;height:34px;border-radius:0px 2px 2px 0px;
+	padding:5px;height:34px;border-radius:0px 2px 2px 0px;
 	width:100%;border:1px solid #bdc3d1;
 	cursor: pointer;
 	display: inline-block;

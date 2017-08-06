@@ -119,8 +119,9 @@ public class ProjectPlanItemsController extends BasePageListController {
 			query.createAlias("parent", "parent", JoinType.INNER_JOIN);
 			query.createAlias("parent.project", "parentProject", JoinType.INNER_JOIN);
 			query.add(Restrictions.eq("parentProject.id", getProjectId()));
-			query.add(Restrictions.eq("parent.billState", BillState.AUDIT.getValue()));
+			query.add(Restrictions.eq("parent.billState", BillState.AUDIT));
 			query.addOrder(Order.asc("seq"));
+			query.setResultTransformer(new MyResultTransFormer(ProjectTotalPlanItemInfo.class));
 			PageModel pm = getService().toPageQuery(query, getProjectionList(), getCurPage(), getPageSize());
 			List datas = pm.getDatas();
 			if(datas!=null&&datas.size()>0){
@@ -128,7 +129,6 @@ public class ProjectPlanItemsController extends BasePageListController {
 				pm.setDatas(datas);
 			}
 			this.data = pm;
-			
 			
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -143,19 +143,20 @@ public class ProjectPlanItemsController extends BasePageListController {
 		if(row!=null&&row.size()>0&&cm!=null){
 			DataTypeEnum dte = cm.getDataType();
 			String key = cm.getName();
-			Object objval = row.get(key);
-			if(!BaseUtil.isEmpty(key)&&!BaseUtil.isEmpty(objval)){
+			if(!BaseUtil.isEmpty(key)){
 				if(DataTypeEnum.F7.equals(dte)&&cm.getClaz()!=null){
-					
-//					row.put(key, query.list());
+					Map rowMap  = new HashMap();
+					String col_format = cm.getFormat();
+					for(String colItem :col_format.split(",")){
+						rowMap.put(colItem,row.get(key+"_"+colItem));
+					}
+					row.put(key, rowMap);
 				}
 			}
 		}
 	}
 	
-	
 	public void executeQueryParams(Criteria query) {
-		
 		String serach = request.getParameter("search");
 		String projectId = "xyz";
 		if(!BaseUtil.isEmpty(serach)){

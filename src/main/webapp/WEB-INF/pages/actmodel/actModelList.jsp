@@ -65,7 +65,8 @@ function category_formatter(value, row, index){
 }
 $(document).ready(function() {
 	var editWin ={title:'模型信息',width:620,height:380};
-	thisListUI = $('#listPanel').listUI({tableEl:'#tblMain',height:680,baseUrl:thisBaseUrl,editWin:editWin,hasDefToolbar:false,toolbar:"#table-toolbar"});
+	thisListUI = $('#listPanel').listUI({tableEl:'#tblMain',height:680,baseUrl:thisBaseUrl,editWin:editWin
+			,hasDefToolbar:false,toolbar:"#table-toolbar",extendTableOptions:{height:window.outerHeight-255}});
 	thisListUI.onLoad();
 	//添加模型
 	$('#actAdd').on('click',function(){
@@ -118,9 +119,9 @@ $(document).ready(function() {
 								//同步删除操作
 								webUtil.ajaxData({url:_thisURL,async:false,data:_data,success:function(data){
 										thisListUI.executeQuery();
-										}});
-								}
-						}});
+								}});
+						}
+					}});
 			}else{
 					webUtil.mesg('请先选中对应的数据行，方可进行部署操作!');
 			}

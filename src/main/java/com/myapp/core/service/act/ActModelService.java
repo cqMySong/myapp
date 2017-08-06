@@ -121,6 +121,7 @@ public class ActModelService extends BaseInterfaceService<ActModelInfo> {
             }
             ByteArrayInputStream in = new ByteArrayInputStream(bpmnBytes);
             Deployment deployment = repositoryService.createDeployment().name(modelData.getName())
+                    .category(modelData.getCategory()).tenantId(modelData.getTenantId())
                     .addInputStream(processName, in).deploy();
             // 设置流程分类
             List<ProcessDefinition> list = repositoryService.createProcessDefinitionQuery().deploymentId(deployment.getId()).list();

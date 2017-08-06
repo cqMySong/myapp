@@ -47,7 +47,7 @@ var thisBaseUrl = 'base/backlogs';
 
 $(document).ready(function() {
 	thisListUI = $('#listPanel').listUI({tableEl:'#tblMain',height:680,baseUrl:thisBaseUrl,
-			hasDefToolbar:false,toolbar:"#table-toolbar"});
+			hasDefToolbar:false,toolbar:"#table-toolbar",extendTableOptions:{height:window.outerHeight-255}});
 	thisListUI.onLoad();
 	//办理流程
 	$('#transact').on('click',function(){
@@ -55,8 +55,12 @@ $(document).ready(function() {
 		if(!webUtil.isEmpty(_selRows)&&_selRows.length>0){
 			var backLogData = _selRows[0];
 			var url = app.root+"/"+thisBaseUrl+"/transact/"+backLogData.id+"/"+backLogData.taskDefinitionKey+
-					"/"+backLogData.processInstanceId+"/"+backLogData.processDefinitionId+"/"+backLogData.status;
-			webUtil.openWin({title:'办理流程',btns:null,operate:OperateType.audit,width:(window.outerWidth-20),height:(window.outerHeight-100),url:url});
+					"/"+backLogData.processInstanceId+"/"+backLogData.processDefinitionId
+					+"/"+backLogData.status+"/"+backLogData.executionId;
+			webUtil.openWin({title:'办理流程',btns:null,operate:OperateType.audit,width:(window.outerWidth-20),
+					height:(window.outerHeight-100),url:url,colseCallBack:function(){
+						thisListUI.executeQuery();
+					}});
 		}else{
 			webUtil.mesg('请先选中对应的数据行，方可进行办理操作!');
 		}
@@ -67,9 +71,20 @@ $(document).ready(function() {
 		if(!webUtil.isEmpty(_selRows)&&_selRows.length>0){
 			var backLogData = _selRows[0];
 			var url = app.root+"/"+thisBaseUrl+"/photo/"+backLogData.processDefinitionId+"/"+backLogData.executionId;
-			webUtil.openWin({title:'流程进度',btns:null,operate:OperateType.audit,width:(window.outerWidth-20),height:(window.outerHeight-100),url:url});
+			webUtil.openWin({title:'流程进度',btns:null,operate:OperateType.audit,width:(window.outerWidth-80),height:(window.outerHeight-120),url:url});
 		}else{
 			webUtil.mesg('请先选中对应的数据行，方可进行查看!');
+		}
+	});
+	//查看审核意见
+	$('#opinion').on('click',function(){
+		var _selRows = thisListUI.tblMain.getSelections();
+		if(!webUtil.isEmpty(_selRows)&&_selRows.length>0){
+				var backLogData = _selRows[0];
+				var url = app.root+"/"+thisBaseUrl+"/histoic/flow/show/"+backLogData.processInstanceId;
+				webUtil.openWin({title:'审核意见',btns:null,operate:OperateType.audit,width:(window.outerWidth-20),height:(window.outerHeight-100),url:url});
+		}else{
+				webUtil.mesg('请先选中对应的数据行，方可进行查看审核意见!');
 		}
 	});
 });

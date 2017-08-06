@@ -27,6 +27,7 @@ if(typeof OperateType == "undefined"){
 	OperateType.unaudit = 'unAudit';
 	OperateType.attach = 'attach';
 	OperateType.refesh = 'refesh';
+	OperateType.flowAudit='flowAudit';
 }
 //'yyyy-MM-dd h:m:s'
 //yyyy-MM-dd

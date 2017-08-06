@@ -3,6 +3,7 @@ package com.myapp.core.service;
 import java.security.NoSuchAlgorithmException;
 import java.util.List;
 
+import com.myapp.core.exception.db.QueryException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -27,5 +28,14 @@ public class UserService extends BaseInterfaceService<UserInfo> {
 		}else{
 			return "用户不存在不能完成用户都密码重置操作!";
 		}
+	}
+	public UserInfo queryUserByNumber(String number)throws QueryException{
+		UserInfo userInfo = new UserInfo();
+		if("admin".equals(number)){
+			userInfo.setName("管理员");
+		}else{
+			userInfo.setName("测试");
+		}
+		return  userInfo;
 	}
 }

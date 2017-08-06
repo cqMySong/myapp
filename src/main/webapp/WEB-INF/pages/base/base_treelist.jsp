@@ -69,7 +69,6 @@ var TreeListUI = function(el,options){
 				&&thisTreeUI.options.treeOpt.setting.callback.onClick){
 			thisTreeUI.options.treeOpt.setting.callback.onClick(event, treeId, treeNode);
 		}
-		
 		return true;
 	}
 	if(thisTreeUI.options.treeOpt&&thisTreeUI.options.treeOpt.setting
@@ -77,7 +76,7 @@ var TreeListUI = function(el,options){
 			&&thisTreeUI.options.treeOpt.setting.callback.onClick){
 		thisTreeUI.options.treeOpt.setting.callback.onClick = undefined;
 	}
-	
+
 	this.treeOpt =  $.extend(true,{},_defTreeOpt, this.options.treeOpt);
 	if(!webUtil.isEmpty(this.options.treeContainer)){
 		var _defTreeViewer = {theme:"panel-success",title:this.treeOpt.title,height:this.treeOpt.height,search:true};

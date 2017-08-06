@@ -35,11 +35,12 @@
 				<table id="auditDetail">
 					<thead>
 						<tr>
-							<th data-field="name" data-width="120px">执行环节</th>
-							<th data-field="key" data-width="50px">审批结果</th>
-							<th data-field="version">审批意见</th>
-							<th data-field="createTime" data-type="datetime" data-width="120px">开始时间</th>
-							<th data-field="lastUpdateTime" data-type="datetime" data-width="120px">结束时间</th>
+							<th data-field="taskName" data-width="180px">执行环节</th>
+							<th data-field="assigneeName" data-width="80px">执行人</th>
+							<th data-field="pass" data-width="50px" data-formatter="formatter_pass">审批结果</th>
+							<th data-field="reason">审批意见</th>
+							<th data-field="startTime" data-type="datetime" data-width="160px">开始时间</th>
+							<th data-field="endTime" data-type="datetime" data-width="160px">结束时间</th>
 						</tr>
 					</thead>
 				</table>
@@ -47,13 +48,13 @@
 					<div class="col-sm-2 col-lg-2">
 						<div class="input-group">
 							<span class="input-group-addon lable" style="height: 52px;">同意</span>
-							<input name="pass" class="input-item" value="1" data-opt="{type:'radio',height:52}" type="radio"/>
+							<input name="pass" class="input-item" value="1" data-opt="{type:'radio',height:52,checked:true}" type="radio"/>
 						</div>
 					</div>
 					<div class="col-sm-2 col-lg-2">
 						<div class="input-group">
 							<span class="input-group-addon lable" style="height: 52px;">不同意</span>
-							<input name="pass" class="input-item" value="2" data-opt="{type:'radio',height:52}"/>
+							<input name="pass" class="input-item" value="2" data-opt="{type:'radio',height:52}" type="radio"/>
 						</div>
 					</div>
 					<div class="col-sm-8 col-lg-8">
@@ -74,16 +75,27 @@
 function beforeAction(opt){
 	return true;
 }
-
+function formatter_pass(value, row, index){
+	var txt = value;
+	if(value=="1"){
+		txt = '同意';
+	}else if(value=="2"){
+		txt = '不同意';
+	}
+	return txt;
+}
 $(document).ready(function() {
-	var editUI = $('#editPanel').editUI({title:"审核信息",baseUrl:"base/backlog",toolbar:"#table-toolbar",
+	var editUI = $('#transactPanel').editUI({title:"审核信息",baseUrl:"base/backlog",toolbar:"#table-toolbar",
 			form:{el:"#transactForm"},hasDefToolbar:false,operate:OperateType.audit});
 	editUI.onLoad();
 	$('#billInfo').height(window.outerHeight-500);
 	$('#transactForm').height("260");
-	$('#auditDetail').myDataTable({height:200});
+	var auditDetailTable = $('#auditDetail').myDataTable({height:200});
+	auditDetailTable.refreshData('base/backlogs/histoic/flow/${processInstanceId}');
 	$('#showBackLogPic').on('click',function(){
-
+		var url = app.root+"/base/backlogs/photo/${processDefinitionId}/${executionId}";
+		webUtil.openWin({title:'流程进度',btns:null,operate:OperateType.audit,width:(window.outerWidth-80),
+				height:(window.outerHeight-120),url:url});
 	});
 	//提交审核
 	$('#subAudit').on('click',function(){
@@ -96,10 +108,10 @@ $(document).ready(function() {
 				if(operateParams&&!webUtil.isEmpty(operateParams)&&$.isFunction(operateParams)){
 					operateParams(OperateType.save,_toData);
 				}
-				console.log(_toData);
 				var _thisUrl = thisEditUI.options.baseUrl+"/audit";
 				webUtil.ajaxData({url:_thisUrl,async:false,data:_toData,success:function(data){
-
+						var index = parent.layer.getFrameIndex(window.name);
+						parent.layer.close(index);
 				}});
 		}
 	});

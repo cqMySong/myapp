@@ -78,11 +78,12 @@ EditUI.prototype = {
 		this.$element.find('table.input-entry').each(function(){
 			thisEditUI.initEntryView($(this));
 		});
-		
 		this.$element.data('entrys',this.entrys);
 		
 		if(OperateType.addnew == _operate){//新增
 			this.addNew();
+		}else if(OperateType.flowAudit == _operate){//流程审核
+
 		}else{// 修改 or 查看
 			this.loadServerData(_operate,billId);
 		}

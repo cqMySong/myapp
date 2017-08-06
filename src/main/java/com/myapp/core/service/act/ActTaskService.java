@@ -1,12 +1,20 @@
 package com.myapp.core.service.act;
 import com.myapp.core.entity.BackLogInfo;
+import com.myapp.core.entity.UserInfo;
+import com.myapp.core.exception.db.QueryException;
 import com.myapp.core.model.PageModel;
+import com.myapp.core.service.UserService;
 import com.myapp.core.service.base.BaseInterfaceService;
 import org.activiti.bpmn.model.BpmnModel;
 import org.activiti.engine.*;
+import org.activiti.engine.history.HistoricActivityInstance;
+import org.activiti.engine.history.HistoricProcessInstance;
+import org.activiti.engine.history.HistoricVariableInstance;
 import org.activiti.engine.impl.context.Context;
+import org.activiti.engine.impl.identity.Authentication;
 import org.activiti.engine.repository.ProcessDefinition;
 import org.activiti.engine.runtime.ProcessInstance;
+import org.activiti.engine.task.Comment;
 import org.activiti.engine.task.Task;
 import org.activiti.engine.task.TaskQuery;
 import org.apache.commons.lang3.StringUtils;
@@ -42,6 +50,8 @@ public class ActTaskService extends BaseInterfaceService<BackLogInfo> {
     private RepositoryService repositoryService;
     @Autowired
     private IdentityService identityService;
+    @Autowired
+    private UserService userService;
 
     /**
      * 启动流程
@@ -158,13 +168,16 @@ public class ActTaskService extends BaseInterfaceService<BackLogInfo> {
     public void complete(BackLogInfo backLogInfo){
         // 添加意见
         if (StringUtils.isNotBlank(backLogInfo.getProcessInstanceId()) && StringUtils.isNotBlank(backLogInfo.getReason())){
-            taskService.addComment(backLogInfo.getTaskId(), backLogInfo.getProcessInstanceId(), backLogInfo.getReason());
+            Authentication.setAuthenticatedUserId(backLogInfo.getAssignee());
+            taskService.addComment(backLogInfo.getTaskId(), backLogInfo.getProcessInstanceId(),"reason",backLogInfo.getReason());
+            taskService.addComment(backLogInfo.getTaskId(), backLogInfo.getProcessInstanceId(),"pass",backLogInfo.getPass());
         }
         Map<String,Object> vars = backLogInfo.getVars();
         // 设置流程标题
         if (StringUtils.isNotBlank(backLogInfo.getTitle())){
             vars.put("title", backLogInfo.getTitle());
         }
+        vars.put("pass", backLogInfo.getPass());
         // 提交任务
         taskService.complete(backLogInfo.getTaskId(), vars);
     }
@@ -208,4 +221,104 @@ public class ActTaskService extends BaseInterfaceService<BackLogInfo> {
                 .generateDiagram(bpmnModel, "png", activeActivityIds,new ArrayList<String>(),"宋体","宋体","宋体",null,1.0D);
     }
 
+    /**
+     * 获取流转历史列表
+     * @param procInsId 流程实例
+     * @param startAct 开始活动节点名称
+     * @param endAct 结束活动节点名称
+     */
+    public PageModel<BackLogInfo> histoicFlowList(String procInsId, String startAct, String endAct) throws QueryException{
+        List<BackLogInfo> backLogInfos = new ArrayList<>();
+        List<HistoricActivityInstance> list = historyService.createHistoricActivityInstanceQuery()
+                .processInstanceId(procInsId).orderByHistoricActivityInstanceStartTime().asc()
+                .orderByHistoricActivityInstanceEndTime().asc().list();
+
+        boolean start = false;
+        Map<String, Integer> actMap = new HashMap<>();
+        for (int i=0; i<list.size(); i++){
+            HistoricActivityInstance histIns = list.get(i);
+            // 过滤开始节点前的节点
+            if (StringUtils.isNotBlank(startAct) && startAct.equals(histIns.getActivityId())){
+                start = true;
+            }
+            if (StringUtils.isNotBlank(startAct) && !start){
+                continue;
+            }
+            if ("serviceTask".equals(histIns.getActivityType())){
+                continue;
+            }
+            // 只显示开始节点和结束节点，并且执行人不为空的任务
+            //|| "endEvent".equals(histIns.getActivityType())
+            if (StringUtils.isNotBlank(histIns.getAssignee())
+                    || "startEvent".equals(histIns.getActivityType())){
+
+                // 给节点增加一个序号
+                Integer actNum = actMap.get(histIns.getActivityId());
+                if (actNum == null){
+                    actMap.put(histIns.getActivityId(), actMap.size());
+                }
+
+                BackLogInfo backLogInfo = new BackLogInfo();
+                //.setHistIns(histIns);
+                backLogInfo.setTaskName(histIns.getActivityName());
+                backLogInfo.setStartTime(histIns.getStartTime());
+                backLogInfo.setEndTime(histIns.getEndTime());;
+                // 获取流程发起人名称
+                if ("startEvent".equals(histIns.getActivityType())){
+                    List<HistoricProcessInstance> il = historyService.createHistoricProcessInstanceQuery()
+                            .processInstanceId(procInsId).orderByProcessInstanceStartTime().asc().list();
+                    if (il.size() > 0){
+                        if (StringUtils.isNotBlank(il.get(0).getStartUserId())){
+                            UserInfo user = userService.queryUserByNumber(il.get(0).getStartUserId());
+                            if (user != null){
+                                backLogInfo.setAssignee(histIns.getAssignee());
+                                backLogInfo.setAssigneeName(user.getName());
+                            }
+                        }
+                    }
+                }
+                // 获取任务执行人名称
+                if (StringUtils.isNotEmpty(histIns.getAssignee())){
+                    UserInfo user = userService.queryUserByNumber(histIns.getAssignee());
+                    if (user != null){
+                        backLogInfo.setAssignee(histIns.getAssignee());
+                        backLogInfo.setAssigneeName(user.getName());
+                    }
+                }
+                // 获取意见评论内容
+                if (StringUtils.isNotBlank(histIns.getTaskId())){
+                    //获取审核结果
+                    List<Comment> commentList = taskService.getTaskComments(histIns.getTaskId(),"pass");
+                    if (commentList.size()>0){
+                        backLogInfo.setPass(commentList.get(0).getFullMessage());
+                    }
+                    commentList = taskService.getTaskComments(histIns.getTaskId(),"reason");
+                    if (commentList.size()>0){
+                        backLogInfo.setReason(commentList.get(0).getFullMessage());
+                    }
+                }
+                backLogInfos.add(backLogInfo);
+            }
+
+            /*过滤结束节点后的节点
+            if (StringUtils.isNotBlank(endAct) && endAct.equals(histIns.getActivityId())){
+                boolean bl = false;
+                Integer actNum = actMap.get(histIns.getActivityId());
+                // 该活动节点，后续节点是否在结束节点之前，在后续节点中是否存在
+                for (int j=i+1; j<list.size(); j++){
+                    HistoricActivityInstance hi = list.get(j);
+                    Integer actNumA = actMap.get(hi.getActivityId());
+                    if ((actNumA != null && actNumA < actNum) || StringUtils.equals(hi.getActivityId(), histIns.getActivityId())){
+                        bl = true;
+                    }
+                }
+                if (!bl){
+                    break;
+                }
+            }*/
+        }
+        PageModel<BackLogInfo> pageModel = new PageModel<BackLogInfo>(1,backLogInfos.size()==0?1:backLogInfos.size(),backLogInfos.size());
+        pageModel.setDatas(backLogInfos);
+        return pageModel;
+    }
 }

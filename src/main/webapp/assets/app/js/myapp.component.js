@@ -158,6 +158,7 @@
 					_div.addClass('my'+_type+" "+_ckrad_opt.theme);
 					if(_ckrad_opt.checked){
 						_div.addClass('checked');
+						$thisDom.prop("checked",true);
 					}
 					$thisDom.hide();
 					$thisDom.before(_div);
@@ -252,7 +253,7 @@
 						$thisDom.val(thisDate);
 					}
 				}
-			}else if(_type ==DataType.checkbox||_type ==DataType.radio){
+			}else if(_type ==DataType.checkbox){
 				var $parentContainer = $thisDom.parent('.mycheckradiobox_container');
 				if(!webUtil.isEmpty($parentContainer)&&$parentContainer.length>0){
 					var _clas = 'div.my'+_type;
@@ -264,6 +265,23 @@
 						$thisDom.prop("checked", false);
 					}
 				}
+			}else if(_type ==DataType.radio){
+                var $parentContainer = $thisDom.parent('.mycheckradiobox_container');
+                if(!webUtil.isEmpty($parentContainer)&&$parentContainer.length>0){
+                    var _clas = 'div.my'+_type;
+                    var _name = $thisDom.attr("name");
+                    $(".mycheckradiobox_container").find("input[name='"+_name+"']").each(function(i,v){
+                          $(this).parent('.mycheckradiobox_container').find(_clas).removeClass('checked');
+                          $(this).prop("checked", false);
+                    });
+                    if(data){
+                        $parentContainer.find(_clas).addClass('checked');
+                        $thisDom.prop("checked", true);
+                    }else{
+                        $parentContainer.find(_clas).removeClass('checked');
+                        $thisDom.prop("checked", false);
+                    }
+                }
 			}else if(_type==DataType.F7){
 				$thisDom.myF7().setData(data);
 			}else{
@@ -282,7 +300,7 @@
 			}else if(_type ==DataType.date||_type ==DataType.datetime){
 				_data = $thisDom.val();
 			}else if(_type ==DataType.checkbox||_type ==DataType.radio){
-				_data = $thisDom.prop("checked");
+			    _data = $thisDom.prop("checked");
 			}else if(_type==DataType.F7){
 				_data = $thisDom.myF7().getValue();
 			}else{

@@ -15,7 +15,8 @@ import com.myapp.core.base.enums.MyEnum;
  */
 public enum BaseMethodEnum implements MyEnum<BaseMethodEnum>{
 	BILL("BILL","常规"),ADDNEW("addNew","新增"),EDIT("edit","修改"),REMOVE("remove","删除"),VIEW("view","查看")
-	,SAVE("save","保存"),SUBMIT("submit","提交"),AUDIT("audit","审核"),UNAUDIT("unAudit","反审核");
+	,SAVE("save","保存"),SUBMIT("submit","提交"),AUDIT("audit","审核"),UNAUDIT("unAudit","反审核")
+	,FLOWAUDIT("flowAudit","流程审核");
 	private String name;
 	private String value;
 	

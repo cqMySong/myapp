@@ -61,9 +61,11 @@
 	$(document).ready(function() {
 			var treeNode2QueryProp = ["id","name","number","longNumber","type"];
 			var editWin ={title:'图纸会审',width:680,height:580};
-			var treeOpt = {setting:{data: {
-							simpleData: {enable:true,idKey: "id", pIdKey: "parentId",rootPId: ''}
-							}}};
+			var treeOpt = {setting:{
+							data: {
+								simpleData: {enable:true,idKey: "id", pIdKey: "parentId",rootPId: ''}
+							}
+							}};
 			var height = 700;
 			thisOrgList = $('body').treeListUI({tableEl:'#tblMain',treeUrl:'ec/basedata/projects/projectTree',baseUrl:'ec/discussiondrawings',title:'项目工程',height:height,
 							treeContainer:"#tree_container",editWin:editWin,toolbar:"#table-toolbar",searchParams:{includeChild:true},treeOpt:treeOpt

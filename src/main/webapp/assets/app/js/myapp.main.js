@@ -661,7 +661,7 @@ MyDataTable.prototype = {
 			}
 		});
 	},
-	refreshData:function(){
+	refreshData:function(url){
 		var _otherQueryParams = '';
 		if(!webUtil.isEmpty(this.myQueryParams)){
 			if($.isFunction(this.myQueryParams)){
@@ -671,11 +671,17 @@ MyDataTable.prototype = {
 			}
 		}
 		var _data = {};
-		_data.curPage = this.mypagination.curPage;
-		_data.pageSize = this.mypagination.pageSize;
+		var _url = "";
+		if(url){
+		    _url = url;
+		}else{
+		    _data.curPage = this.mypagination.curPage;
+            _data.pageSize = this.mypagination.pageSize;
+            _url = this.mypagination.url;
+		}
 		_data.search = _otherQueryParams;
 		var _myTableMain = this;
-		webUtil.ajaxData({url:this.mypagination.url,data:_data,success:function(data){
+		webUtil.ajaxData({url:_url,data:_data,success:function(data){
 			var _ret_Data = data.data;
 			if(!webUtil.isEmpty(_ret_Data)){
 				if(!webUtil.isEmpty(_myTableMain.$pagination)){

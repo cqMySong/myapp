@@ -50,9 +50,12 @@ public class BackLogEditController extends BaseEditController {
         try {
             super.beforeOperate(BaseMethodEnum.SAVE);
             BackLogInfo backLogInfo = (BackLogInfo)getEditData();
+            backLogInfo.setAssignee(getCurUser().getNumber());
             actTaskService.complete(backLogInfo);
+            setInfoMesg("审核操作成功");
         } catch (Exception e) {
             e.printStackTrace();
+            setInfoMesg(e.getMessage());
         }
         return ajaxModel();
     }
@@ -69,6 +72,7 @@ public class BackLogEditController extends BaseEditController {
         cols.add(new ColumnModel("reason"));
         cols.add(new ColumnModel("taskId"));
         cols.add(new ColumnModel("taskDefinitionKey"));
+        cols.add(new ColumnModel("processInstanceId"));
         return  cols;
     }
 }

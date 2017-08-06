@@ -77,13 +77,13 @@ function suspended_formatter(value, row, index){
 $(document).ready(function() {
 	var editWin ={title:'流程信息',width:620,height:450};
 	thisListUI = $('#listPanel').listUI({tableEl:'#tblMain',height:680,baseUrl:thisBaseUrl,editWin:editWin,
-			hasDefToolbar:false,toolbar:"#table-toolbar"});
+			hasDefToolbar:false,toolbar:"#table-toolbar",extendTableOptions:{height:window.outerHeight-255}});
 	thisListUI.onLoad();
 	//挂起
 	$('#actProcessSuspend').on('click',function(){
 		var actProcess = thisListUI.tblMain.getSelections();
 		if(!webUtil.isEmpty(actProcess)&&actProcess.length>0){
-				webUtil.showConfirm({title:"部署提醒",content:"你将"+(actProcess[0].suspended?"激活":"挂起")
+				webUtil.showConfirm({title:"操作提醒",content:"你将"+(actProcess[0].suspended?"激活":"挂起")
 						+"流程["+actProcess[0].name+"]，是否继续?",
 						callBack:function(ok){
 								if(ok){

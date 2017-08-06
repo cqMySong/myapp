@@ -16,8 +16,9 @@ public class BackLogInfo extends CoreBaseInfo {
     private String title;//任务标题
     private String taskName;//当前办理环节名称
     private String taskId;//当前任务id
-    private String assignee;//代理人
-    private String executionId;//执行人id
+    private String assignee;//办理人
+    private String assigneeName;//办理人姓名
+    private String executionId;//执行id
     private String taskDefinitionKey;//任务定义key
     private String processInstanceId;//流程实例id
     private String processDefinitionId;//流程定义id
@@ -25,6 +26,8 @@ public class BackLogInfo extends CoreBaseInfo {
     private String pass;//审核状态
     private String reason;//审核意见
     private Map<String,Object> vars;//流程变量
+    private Date startTime;//办理开始时间
+    private Date endTime;//办理结束时间
 
     public String getTitle() {
         return title;
@@ -123,5 +126,29 @@ public class BackLogInfo extends CoreBaseInfo {
 
     public void setVars(Map<String, Object> vars) {
         this.vars = vars;
+    }
+
+    public String getAssigneeName() {
+        return assigneeName;
+    }
+
+    public void setAssigneeName(String assigneeName) {
+        this.assigneeName = assigneeName;
+    }
+
+    public Date getStartTime() {
+        return startTime;
+    }
+
+    public void setStartTime(Date startTime) {
+        this.startTime = startTime;
+    }
+
+    public Date getEndTime() {
+        return endTime;
+    }
+
+    public void setEndTime(Date endTime) {
+        this.endTime = endTime;
     }
 }

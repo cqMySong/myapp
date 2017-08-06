@@ -76,7 +76,17 @@ myForm.prototype = {
 		this.$element.find('.input-item').each(function(){
 			var _name = $(this).attr('name');
 			if(!webUtil.isEmpty(_name)){
-				data[_name] = thisObj.getItemData($(this));
+			    var $itemel = webUtil.getJqueryDom($(this));
+			    var _type = $itemel.data('dataType');
+			    if(DataType.radio==_type){
+			        if($(this).attr("value")==undefined){
+                        data[_name] = thisObj.getItemData($(this));
+			        }else if(thisObj.getItemData($(this))){
+                        data[_name] = $(this).val();
+                    }
+			    }else{
+			        data[_name] = thisObj.getItemData($(this));
+			    }
 			}
 		});
 		return data;

@@ -31,6 +31,7 @@ public class UserService extends BaseInterfaceService<UserInfo> {
 	}
 	public UserInfo queryUserByNumber(String number)throws QueryException{
 		UserInfo userInfo = new UserInfo();
+
 		if("admin".equals(number)){
 			userInfo.setName("管理员");
 		}else{

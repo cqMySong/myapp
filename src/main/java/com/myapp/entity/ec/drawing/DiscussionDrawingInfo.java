@@ -25,7 +25,7 @@ public class DiscussionDrawingInfo extends CoreBaseBillInfo {
     private String participants;//参会人员
     private String participantUnits;//参会单位
     private String moderator;//主持人
-    private String type;//1、单位工程 2、分部
+    private String type;//
     private String belongId;//图纸属于对象id
     @Column(name="fConferenceDate")
     public Date getConferenceDate() {
@@ -70,7 +70,7 @@ public class DiscussionDrawingInfo extends CoreBaseBillInfo {
     public void setPersonnelInfos(List<DiscussionDrawingPersonnelInfo> personnelInfos) {
         this.personnelInfos = personnelInfos;
     }*/
-    @Column(name="fType",length = 1)
+    @Column(name="fType",length = 20)
     public String getType() {
         return type;
     }

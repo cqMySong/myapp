@@ -25,10 +25,21 @@ public class UuidUtils {
 	private static final char[] HEX_DIGITS = { '0', '1', '2', '3', '4', '5',
 			'6', '7', '8', '9', 'A', 'B', 'C', 'D', 'E', 'F' };
 
+	/**
+	 * 通过实体的全路径获取对应的entitytype
+	 */
 	public static String getEntityType(String strName){
 		if(BaseUtil.isEmpty(strName)) return null;
-		return toHexString(getStringLong(strName),8);
+		return toHexString(getStringLong(strName),8).toUpperCase();
 	}
+	/**
+	 * 通过id获取对应的entity
+	 */
+	public static String getEntityTypeById(String uuid){
+		if(BaseUtil.isEmpty(uuid)) return null;
+		return SysUuid.getBOSObjectType(uuid, true).toString();
+	}
+	
 	public static long getStringLong(String strName){
 		if(BaseUtil.isEmpty(strName)) return 0l;
 		CRC32 crc32 = new CRC32();
@@ -90,6 +101,7 @@ public class UuidUtils {
 	}
 	
 	
+	
 	public static void main(String[] args) {
 //		String uri = "D:\\ETFMY100PHFUNDBulletin20130325.txt";
 //		System.out.println(getCRC32(uri));
@@ -101,6 +113,9 @@ public class UuidUtils {
 			System.out.println(crc32.getValue());
 		}
 		
+		SysObjectType bostype_1 = SysUuid.getBOSObjectType("M5cz7H7xQdqg2z856MtEXpn32P4=", false);
+		System.out.println(bostype_1.toString());
+//		99f7d8fe
 //		String bostype = UuidUtils.toHexString(crc32.getValue(), 8);
 //		System.out.println(bostype);
 //		for(int i=0;i<10;i++){

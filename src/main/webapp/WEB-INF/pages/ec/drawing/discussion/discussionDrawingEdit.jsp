@@ -29,8 +29,9 @@
 			<div class="col-lg-4 col-sm-6 mb5">
 				<div class="input-group">
 					<span class="input-group-addon lable">图纸所属</span>
+					<input name="type" class="input-item" type="hidden"/>
 					<input name="belongId" class="require input-item form-control"
-						   data-opt="{type:'f7',uiWin:{title:'工程项目',height:600,width:300,url:'ec/basedata/project'}}" />
+						   data-opt="{type:'f7',uiWin:{title:'工程项目',height:600,width:400,url:'ec/discussiondrawing'}}" />
 				</div>
 			</div>
 			<div class="col-lg-4 col-sm-6 mb5">
@@ -120,57 +121,9 @@
 	var editUI;
 	var planItemsEntry;
 	var planItemsEntryObj;
-	function proSubItem_dataChange(oldData,newData){
-		var proStructure = {};
-		proStructure.id = newData.proStruct_id;
-		proStructure.name = newData.proStruct_name;
-		proStructure.displayName = newData.proStruct_displayName;
-		var proSub = {};
-		proSub.id = newData.proSub_id;
-		proSub.name = newData.proSub_name;
-	}
-	function planItems_dataChanged($cell,obj){
-		/* var obj= {};
-		obj.oldVal = oldVal;
-		obj.value = val;
-		obj.rowData = rowData;
-		obj.field = field;
-		obj.column = thisColumn;
-		obj.rowIndex = rowIdx;
-		obj.colIndex = colIdx; */
-		if(webUtil.isEmpty(planItemsEntry)) return;
-		if('planBegDate'==obj.field||"planEndDate"==obj.field){
-			var btimes = obj.rowData['planBegDate'];
-			var etimes = obj.rowData['planEndDate'];
-			var days = webUtil.betweenDateDays(btimes,etimes);
-			if(webUtil.isEmpty(days)) days = null;
-			if(!webUtil.isEmpty(planItemsEntry)){
-				planItemsEntry.setTableCellValue(obj.rowIndex,'planDays',days);
-			}
-		}else if('proSubItem'==obj.field){
-			var newData = obj.rowData[obj.field];
-			/* var proStructure = {};
-			proStructure.id = newData.proStruct_id;
-			proStructure.displayName = newData.proStruct_displayName; */
-			var proSub = {};
-			proSub.id = newData.proSub_id;
-			proSub.name = newData.proSub_name;
-			proSub.proStruct_id = newData.proStruct_id;
-			proSub.proStruct_displayName = newData.proStruct_displayName;
-			//planItemsEntry.setTableCellValue(obj.rowIndex,'proStructure',proStructure);
-			planItemsEntry.setTableCellValue(obj.rowIndex,'proSub',proSub);
-		}else if('proSub'==obj.field){
-			var newData = obj.rowData[obj.field];
-			var proStructure = {};
-			proStructure.id = newData.proStruct_id;
-			proStructure.displayName = newData.proStruct_displayName;
-			planItemsEntry.setTableCellValue(obj.rowIndex,'proStructure',proStructure);
-		}
-	}
-	
 	function getParams(){
 		var pro = {};
-		pro.projectId = $('input[name="belongId"]').myF7().getValue();
+		pro.belongId = $('input[name="belongId"]').myF7().getValue();
 		return pro;
 	}
 	/**
@@ -187,7 +140,11 @@
 			if(!webUtil.isEmpty(uiCtx)&&$.isPlainObject(uiCtx)
 					&&!webUtil.isEmpty(uiCtx.tree)){
 				$('input[name="belongId"]').myF7().setData(uiCtx.tree);
+				$('input[name="type"]').val(uiCtx.tree.type);
 			}
+		}else{
+			var uiCtx = getUICtx();
+			console.log(uiCtx);
 		}
 	}
 	function btnCopyInsertRow(btn){

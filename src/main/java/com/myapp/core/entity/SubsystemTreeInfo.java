@@ -19,7 +19,7 @@ import com.myapp.core.base.entity.CoreInfo;
 public class SubsystemTreeInfo extends CoreInfo {
 	private long seq;
 	private long entitySeq;
-	private String entityType;
+	private String entityObjectType;
 	private String entityClaz;
 	private String entityTable;
 	
@@ -52,10 +52,14 @@ public class SubsystemTreeInfo extends CoreInfo {
 		this.entityTable = entityTable;
 	}
 	@Column(name="fentityType")
-	public String genEntityType() {
-		return entityType;
+	public String getEntityObjectType() {
+		return entityObjectType;
 	}
-	public void setEntityType(String entityType) {
-		this.entityType = entityType;
+	public void setEntityObjectType(String entityObjectType) {
+		this.entityObjectType = entityObjectType;
 	}
 }
+	
+	
+	
+	

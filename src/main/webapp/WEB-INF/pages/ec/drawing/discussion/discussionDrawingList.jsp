@@ -11,7 +11,7 @@
 	<div class="mainContrainer">
 		<div class="leftContainer" id="tree_container"></div>
 		<div class="rightContainer" id="tblMain_container">
-			<div class="panel">
+			<div class="panel" style="margin-bottom: 0px;">
 				<div class="" id="tblMain_toolbar">
 				</div>
 				<div class="panel-body" style="padding: 0px 2px 2px 2px;">
@@ -41,13 +41,13 @@
 		return (value==true)?'完成':'<span style="color: red;">未完成</span>';
 	}
 	var thisOrgList ;
-	var includeChild;
 	function beforeAction(opt){
 			if(opt=='addnew'){
 					var params = thisOrgList.uiParams(opt);
 					var tree = thisOrgList.tree;
 					if(!webUtil.isEmpty(params)&&!webUtil.isEmpty(params.tree)
-							&&'project'==params.tree.type){
+							&&('project'==params.tree.type||'proSub'==params.tree.type
+							||'proStructure'==params.tree.type)){
 					}else{
 							webUtil.mesg('请先选择的工程项目组织，然后才能做新增操作!');
 							return false;
@@ -57,20 +57,29 @@
 	}
 	//界面参数传递扩展方法
 	function openUIParams(operate,params){
+
+	}
+	var curSelTree = {};
+	function treeSelectChange(e, treeId, treeNode){
+			thisOrgList.listUI.tblMain.myQueryParams =webUtil.json2Str({tree:{belongId:treeNode.id,type:treeNode.type}});
+			thisOrgList.listUI.tblMain.refreshData();
 	}
 	$(document).ready(function() {
 			var treeNode2QueryProp = ["id","name","number","longNumber","type"];
 			var editWin ={title:'图纸会审',width:680,height:580};
-			var treeOpt = {setting:{
-							data: {
-								simpleData: {enable:true,idKey: "id", pIdKey: "parentId",rootPId: ''}
-							}
-							}};
-			var height = 700;
-			thisOrgList = $('body').treeListUI({tableEl:'#tblMain',treeUrl:'ec/basedata/projects/projectTree',baseUrl:'ec/discussiondrawings',title:'项目工程',height:height,
+			var treeOpt = {
+					selectChange:treeSelectChange,
+					setting:{
+						data: {
+							simpleData: {enable:true,idKey: "id", pIdKey: "parentId",rootPId: ''}
+						}
+					}};
+			var height = window.outerHeight-265;
+			thisOrgList = $('body').treeListUI({tableEl:'#tblMain',treeUrl:'ec/basedata/prosubs/proSubTree',baseUrl:'ec/discussiondrawings',title:'项目工程',height:height,
 							treeContainer:"#tree_container",editWin:editWin,toolbar:"#table-toolbar",searchParams:{includeChild:true},treeOpt:treeOpt
 							,treeNode2QueryProp:treeNode2QueryProp,extendTableOptions:{toolbar:'#tblMain_toolbar',height:height,sortStable:false}});
 			thisOrgList.onLoad();
+
 	});
 
 </script>

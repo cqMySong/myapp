@@ -1,17 +1,26 @@
 package com.myapp.controller.ec.drawing;
 
+import com.alibaba.fastjson.JSONObject;
 import com.myapp.core.annotation.PermissionAnn;
 import com.myapp.core.base.service.impl.AbstractBaseService;
 import com.myapp.core.controller.BaseListController;
 import com.myapp.core.controller.BaseTreeListController;
+import com.myapp.core.enums.BaseMethodEnum;
 import com.myapp.core.enums.DataTypeEnum;
 import com.myapp.core.model.ColumnModel;
+import com.myapp.core.util.BaseUtil;
+import com.myapp.core.util.WebUtil;
 import com.myapp.service.ec.drawing.DiscussionDrawingService;
+import org.hibernate.Criteria;
+import org.hibernate.criterion.Restrictions;
+import org.hibernate.criterion.SimpleExpression;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import javax.annotation.Resource;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * 包路径：com.myapp.controller.ec.drawing
@@ -39,6 +48,34 @@ public class DiscussionDrawingListController extends BaseListController {
     @Override
     public AbstractBaseService getService() {
         return this.discussionDrawingService;
+    }
+    public void executeQueryParams(Criteria query) {
+        String search = request.getParameter("search");
+        SimpleExpression se = null;
+        if(!BaseUtil.isEmpty(search)){
+            Map searchMap = JSONObject.parseObject(search, new HashMap().getClass());
+            Object objTree = searchMap.get("tree");
+            if(objTree!=null){
+                Map treeMap = JSONObject.parseObject(objTree.toString(), new HashMap().getClass());
+                Object idObj = treeMap.get("belongId");
+                Object type = treeMap.get("type");
+                se = Restrictions.eq("belongId", idObj.toString());
+                query.add(se);
+                se = Restrictions.eq("type", type.toString());
+                query.add(se);
+            }
+        }
+    }
+
+    @Override
+    public void packageUIParams(Map params) {
+        super.packageUIParams(params);
+        if(BaseMethodEnum.ADDNEW.equals(baseMethod)){
+            if(params!=null&&params.get("uiCtx")!=null){
+                String uiCtx = (String) params.get("uiCtx");
+                params.put("uiCtx",WebUtil.UUID_ReplaceID(uiCtx));
+            }
+        }
     }
 
     @Override

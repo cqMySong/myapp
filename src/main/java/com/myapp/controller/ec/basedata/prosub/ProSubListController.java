@@ -6,6 +6,9 @@ import java.util.Map;
 
 import javax.annotation.Resource;
 
+import com.myapp.core.model.WebDataModel;
+import com.myapp.service.ec.basedata.ProStructureService;
+import com.myapp.service.ec.basedata.ProjectService;
 import org.hibernate.Criteria;
 import org.hibernate.criterion.Restrictions;
 import org.hibernate.criterion.SimpleExpression;
@@ -23,6 +26,7 @@ import com.myapp.core.util.BaseUtil;
 import com.myapp.entity.ec.basedata.ProStructureInfo;
 import com.myapp.entity.ec.basedata.ProSubInfo;
 import com.myapp.entity.ec.basedata.ProjectInfo;
+import org.springframework.web.bind.annotation.ResponseBody;
 
 /**
  *-----------MySong---------------
@@ -39,6 +43,10 @@ public class ProSubListController extends BaseDataListController {
 	
 	@Resource
 	public BaseService baseService;
+	@Resource
+	public ProStructureService proStructureService;
+	@Resource
+	public ProjectService projectService;
 	public AbstractBaseService getService() {
 		return baseService.newServicInstance(ProSubInfo.class);
 	}
@@ -84,4 +92,38 @@ public class ProSubListController extends BaseDataListController {
 		return "ec/basedata/prosub/proSubList";
 	}
 
+	//项目分部树
+	@RequestMapping(value="/proSubTree")
+	@ResponseBody
+	public WebDataModel treeData() {
+		try{
+			Map params = new HashMap();
+			List orgList = projectService.getProjectTreeData(params);//项目组织树
+			if(orgList!=null&&orgList.size()>0){
+				//添加项目单位工程
+				StringBuffer sql = new StringBuffer();
+				sql.append(" select a.fid as id,a.fnumber as number,a.fname as name,case when a.fprentid is null then a.fprojectId else a.fprentid end as parentId,a.flongnumber as longNumber,'proStructure' as type");
+				sql.append(" from t_ec_proStructure as a");
+				sql.append(" left join t_ec_project as b on b.fid = a.fprojectId");
+				sql.append(" order by a.flongnumber asc");
+				List orgStruct = projectService.executeSQLQuery(sql.toString(), null);
+				if(orgStruct!=null&&orgStruct.size()>0){
+					orgList.addAll(orgStruct);
+				}
+				//添加项目分部
+				sql = new StringBuffer();
+				sql.append(" select a.fid as id,a.fnumber as number,a.fname as name,");
+				sql.append("a.fproStructId as parentId,'' as longNumber,'proSub' as type");
+				sql.append(" from t_ec_prosub as a");
+				List proSubList = baseService.executeSQLQuery(sql.toString(),null);
+				if(proSubList!=null&&proSubList.size()!=0){
+					orgList.addAll(proSubList);
+				}
+				data = orgList;
+			}
+		}catch(Exception e){
+			setErrorMesg(e.getMessage());
+		}
+		return ajaxModel();
+	}
 }

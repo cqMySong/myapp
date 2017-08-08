@@ -8,16 +8,22 @@ import com.myapp.core.controller.BaseEditController;
 import com.myapp.core.controller.BaseListController;
 import com.myapp.core.entity.BaseOrgInfo;
 import com.myapp.core.entity.UserInfo;
+import com.myapp.core.enums.BaseMethodEnum;
 import com.myapp.core.enums.DataTypeEnum;
+import com.myapp.core.exception.db.QueryException;
 import com.myapp.core.model.ColumnModel;
+import com.myapp.entity.ec.basedata.ProStructureInfo;
+import com.myapp.entity.ec.basedata.ProSubInfo;
 import com.myapp.entity.ec.basedata.ProjectInfo;
 import com.myapp.entity.ec.drawing.DiscussionDrawingInfo;
 import com.myapp.service.ec.drawing.DiscussionDrawingService;
+import org.hibernate.HibernateException;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import javax.annotation.Resource;
 import java.util.List;
+import java.util.Map;
 
 /**
  * 包路径：com.myapp.controller.ec.drawing
@@ -44,6 +50,28 @@ public class DiscussionDrawingEditController extends BaseBillEditController {
     @Override
     public AbstractBaseService getService() {
         return this.discussionDrawingService;
+    }
+
+    @Override
+    protected void afterOperate(BaseMethodEnum bme) throws HibernateException, QueryException {
+        super.afterOperate(bme);
+        CoreBaseInfo coreBaseInfo = null;
+        if(getEditData()!=null){
+            Map data = (Map) getEditData();
+            if(data.get("belongId")==null){
+                return;
+            }
+            if("proSub".equals(data.get("type"))){
+                coreBaseInfo =discussionDrawingService.getEntity(ProSubInfo.class,data.get("belongId").toString());
+            }else if("project".equals(data.get("type"))){
+                coreBaseInfo =discussionDrawingService.getEntity(ProjectInfo.class,data.get("belongId").toString());
+            }else if("proStructure".equals(data.get("type"))){
+                coreBaseInfo =discussionDrawingService.getEntity(ProStructureInfo.class,data.get("belongId").toString());
+            }
+            if(coreBaseInfo!=null){
+                setOtherData(coreBaseInfo.getName());
+            }
+        }
     }
 
     @Override

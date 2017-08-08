@@ -308,7 +308,7 @@ EditUI.prototype = {
 				thisEditUI.editData = _editData;
 				thisEditUI.loadData(_editData);
 				thisEditUI.operate = data.operate||_operate;
-				thisEditUI.actionAfter(_operate);
+				thisEditUI.actionAfter(_operate,data);
 				thisEditUI.initUIStyle();
 			}});
 		}else{
@@ -372,7 +372,7 @@ EditUI.prototype = {
 			_thisEditUI.editData = _editData;
 			_thisEditUI.loadData(_editData);
 			_thisEditUI.operate = data.operate||OperateType.edit;
-			_thisEditUI.actionAfter(OperateType.addnew);
+			_thisEditUI.actionAfter(OperateType.addnew,data);
 			_thisEditUI.initUIStyle();
 		}});
 		
@@ -409,7 +409,7 @@ EditUI.prototype = {
 				thisEditUI.editData = _editData;
 				thisEditUI.loadData(_editData);
 				thisEditUI.operate = data.operate||OperateType.edit;
-				thisEditUI.actionAfter(OperateType.save);
+				thisEditUI.actionAfter(OperateType.save,data);
 				thisEditUI.initUIStyle();
 			}});
 		}
@@ -430,7 +430,7 @@ EditUI.prototype = {
 				thisEditUI.editData = _editData;
 				thisEditUI.loadData(_editData);
 				thisEditUI.operate = data.operate||OperateType.view;
-				thisEditUI.actionAfter(OperateType.submit);
+				thisEditUI.actionAfter(OperateType.submit,data);
 				thisEditUI.initUIStyle();
 			}});
 		}
@@ -448,7 +448,7 @@ EditUI.prototype = {
 					thisEditUI.editData = _editData;
 					thisEditUI.loadData(_editData);
 					thisEditUI.operate = OperateType.view;
-					thisEditUI.actionAfter(OperateType.audit);
+					thisEditUI.actionAfter(OperateType.audit,data);
 					thisEditUI.initUIStyle();
 				}});
 			}else{
@@ -469,7 +469,7 @@ EditUI.prototype = {
 					thisEditUI.editData = _editData;
 					thisEditUI.loadData(_editData);
 					thisEditUI.operate = OperateType.view;
-					thisEditUI.actionAfter(OperateType.unaudit);
+					thisEditUI.actionAfter(OperateType.unaudit,data);
 					thisEditUI.initUIStyle();
 				}});
 			}else{
@@ -540,9 +540,9 @@ EditUI.prototype = {
 			return true;
 		}
 	},
-	actionAfter:function(_opt){
+	actionAfter:function(_opt,data){
 		if(afterAction&&!webUtil.isEmpty(afterAction)&&$.isFunction(afterAction)){
-			afterAction(_opt);
+			afterAction(_opt,data);
 		}
 	}
 }

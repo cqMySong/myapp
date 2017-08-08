@@ -119,8 +119,6 @@
 <%@include file="../../../base/base_edit.jsp"%>
 <script type="text/javascript">
 	var editUI;
-	var planItemsEntry;
-	var planItemsEntryObj;
 	function getParams(){
 		var pro = {};
 		pro.belongId = $('input[name="belongId"]').myF7().getValue();
@@ -130,11 +128,13 @@
 	 * 一切操作前的接口函数
 	 */
 	function beforeAction(opt) {
+		var f7Data = $('input[name="belongId"]').myF7().getData();
+		$('input[name="type"]').val(f7Data.type);
 		return true;
 	}
 	
 	
-	function afterAction(_opt){
+	function afterAction(_opt,data){
 		if(_opt==OperateType.addnew){
 			var uiCtx = getUICtx();
 			if(!webUtil.isEmpty(uiCtx)&&$.isPlainObject(uiCtx)
@@ -143,8 +143,10 @@
 				$('input[name="type"]').val(uiCtx.tree.type);
 			}
 		}else{
-			var uiCtx = getUICtx();
-			console.log(uiCtx);
+			if(data&&data.other&&data.data){
+				$('input[name="belongId"]').myF7().setData({id:data.data.belongId,
+							name:data.other,type:data.data.type});
+			}
 		}
 	}
 	function btnCopyInsertRow(btn){

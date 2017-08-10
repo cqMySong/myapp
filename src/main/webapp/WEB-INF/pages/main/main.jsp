@@ -351,8 +351,8 @@ $(document).ready(function() {
 						},{title:'门户管理',icon:'fa fa-home',child:[{title:'菜单管理'}]}
 						, {title:'安全管理',icon:'fa fa-star',child:[
 							{title:'用户管理',icon:'fa fa-user',active:true,url:'base/users/list'},
+							{title:'岗位管理',icon:'fa fa-users',url:'base/roles/list'}]},
 							{title:'权限管理',icon:'fa fa-tags',url:'base/permissions/list'},
-							{title:'角色管理',icon:'fa fa-users',url:'base/roles/list'}]},
 						{title:'流程管理',icon:'fa fa-star',child:[
 								{title:'模型管理',icon:'fa fa-user',url:'base/actmodels/list'},
 								{title:'流程管理',icon:'fa fa-tags',url:'base/actprocesses/list'},

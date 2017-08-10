@@ -51,7 +51,7 @@
 			<div class="row">
 				<div class="col-sm-6">
 					<div class="input-group">
-						<span class="input-group-addon lable">上级组织</span> 
+						<span class="input-group-addon lable">组织类型</span> 
 						<select name="orgType" data-opt="{type:'select',url:'base/common/combox?enum=com.myapp.core.enums.OrgTypeEnum'}" 
 		                	class="form-control input-item require"></select>
 						

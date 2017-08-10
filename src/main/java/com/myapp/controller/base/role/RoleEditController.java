@@ -13,6 +13,7 @@ import com.myapp.core.annotation.PermissionAnn;
 import com.myapp.core.base.entity.CoreBaseInfo;
 import com.myapp.core.base.service.impl.AbstractBaseService;
 import com.myapp.core.controller.BaseEditController;
+import com.myapp.core.entity.BaseOrgInfo;
 import com.myapp.core.entity.RoleInfo;
 import com.myapp.core.entity.UserInfo;
 import com.myapp.core.enums.BaseMethodEnum;
@@ -50,6 +51,9 @@ public class RoleEditController extends BaseEditController{
 		List<ColumnModel> cols = super.getDataBinding();
 		cols.add(new ColumnModel("name"));
 		cols.add(new ColumnModel("number"));
+		ColumnModel orgCol = new ColumnModel("org",DataTypeEnum.F7,BaseOrgInfo.class);
+		orgCol.setFormat("id,name");
+		cols.add(orgCol);
 		cols.add(new ColumnModel("remark"));
 		return cols;
 	}

@@ -109,7 +109,7 @@ public abstract class AbstractBaseDao implements IAbstractBaseDao {
 		if(entity!=null){
 			if(entity instanceof CoreBaseDataInfo){
 				CoreBaseDataInfo cbInfo = (CoreBaseDataInfo) entity;
-				if(cbInfo.getEnabled()){
+				if(cbInfo.getEnabled()!=null&&cbInfo.getEnabled()){
 					throw new DeleteException("已经启用的都基础数据无法完成删除操作!");
 				}
 			}else if(entity instanceof CoreBaseBillInfo){

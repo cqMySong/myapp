@@ -35,7 +35,7 @@ public class PermissionInfo extends CoreBaseTreeInfo<PermissionInfo> {
 		this.remark = remark;
 	}
 	
-	@Column(name="furl",length=100)
+	@Column(name="furl",length=500)
 	public String getUrl() {
 		return url;
 	}

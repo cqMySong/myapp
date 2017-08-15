@@ -333,7 +333,8 @@ $(document).ready(function() {
 								{title:'项目总计划',icon:'fa fa-user',url:'ec/plan/projecttotalplans/list'},
 								{title:'项目月计划',icon:'fa fa-user',url:'ec/plan/projectplans/monthlist'},
 								{title:'项目周计划',icon:'fa fa-user',url:'ec/plan/projectplans/weeklist'},
-								{title:'项目施工日志',icon:'fa fa-user',url:'ec/plan/projectplanreports/list'},
+								{title:'项目施工日志',icon:'fa fa-user',url:'ec/plan/worklogs/list'},
+								{title:'项目计划汇报',icon:'fa fa-user',url:'ec/plan/projectplanreports/list'},
 								{title:'项目总计划-old',icon:'fa fa-user',url:'ec/plan/projectplans/list'}
 								]},
 							{title:'质量管理',icon:'fa fa-home',child:[
@@ -351,8 +352,9 @@ $(document).ready(function() {
 						},{title:'门户管理',icon:'fa fa-home',child:[{title:'菜单管理'}]}
 						, {title:'安全管理',icon:'fa fa-star',child:[
 							{title:'用户管理',icon:'fa fa-user',active:true,url:'base/users/list'},
-							{title:'岗位管理',icon:'fa fa-users',url:'base/roles/list'}]},
-							{title:'权限管理',icon:'fa fa-tags',url:'base/permissions/list'},
+							{title:'岗位管理',icon:'fa fa-users',url:'base/roles/list'},
+							{title:'权限管理',icon:'fa fa-tags',url:'base/permissions/list'}
+							]},
 						{title:'流程管理',icon:'fa fa-star',child:[
 								{title:'模型管理',icon:'fa fa-user',url:'base/actmodels/list'},
 								{title:'流程管理',icon:'fa fa-tags',url:'base/actprocesses/list'},

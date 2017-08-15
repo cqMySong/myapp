@@ -24,7 +24,7 @@
 							<tr>
 								<th data-field="number" data-align="left">项目编码</th>
 								<th data-field="name">项目名称</th>
-								<th data-field="industryType" data-type="select">工程行业</th>
+								<th data-field="industryType" data-type="select">工程分类</th>
 								<th data-field="proState" data-type="select">项目状态</th>
 								<th data-field="org_name">所属组织</th>
 								<th data-field="address">项目地址</th>

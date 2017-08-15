@@ -22,16 +22,19 @@ import org.hibernate.hql.internal.ast.QueryTranslatorImpl;
 import org.hibernate.persister.entity.AbstractEntityPersister;
 import org.hibernate.transform.Transformers;
 
+import com.myapp.core.annotation.MyEntityAnn;
 import com.myapp.core.base.dao.IAbstractBaseDao;
 import com.myapp.core.base.dao.MyResultTransFormer;
 import com.myapp.core.base.entity.CoreBaseBillInfo;
 import com.myapp.core.base.entity.CoreBaseDataInfo;
+import com.myapp.core.base.entity.CoreBaseEntryInfo;
 import com.myapp.core.base.entity.CoreBaseInfo;
 import com.myapp.core.base.entity.CoreBaseTreeInfo;
 import com.myapp.core.base.entity.CoreInfo;
 import com.myapp.core.base.setting.SystemConstant;
 import com.myapp.core.entity.SubsystemTreeInfo;
 import com.myapp.core.enums.BillState;
+import com.myapp.core.enums.EntityTypeEnum;
 import com.myapp.core.exception.db.DeleteException;
 import com.myapp.core.exception.db.ReadException;
 import com.myapp.core.model.PageModel;
@@ -162,6 +165,20 @@ public abstract class AbstractBaseDao implements IAbstractBaseDao {
 		}
 	}
 	
+	private EntityTypeEnum getEntityType(Object entity){
+		EntityTypeEnum et = EntityTypeEnum.OTHER;
+		if(entity!=null){
+			if(entity instanceof CoreBaseBillInfo){
+				et = EntityTypeEnum.BIZBILL;
+			}else if(entity instanceof CoreBaseDataInfo){
+				et = EntityTypeEnum.BASEDATA;
+			}else if(entity instanceof CoreBaseEntryInfo){
+				et = EntityTypeEnum.ENTRY;
+			}
+		}
+		return et;
+	}
+	
 	public Serializable addNewEntity(Object entity) {
 		if(entity!=null){
 			Session session = getCurrentSession();
@@ -180,6 +197,13 @@ public abstract class AbstractBaseDao implements IAbstractBaseDao {
 					subTree.setEntityObjectType(UuidUtils.getEntityType(entityClaz));
 					subTree.setEntitySeq(new Date().getTime());
 					subTree.setSeq(seq);
+					subTree.setEntityType(getEntityType(entity));
+					String entityName = claz.getSimpleName();
+					MyEntityAnn myA = (MyEntityAnn) claz.getAnnotation(MyEntityAnn.class);
+					if(myA!=null){
+						entityName = myA.name();
+					}
+					subTree.setEntityName(entityName);
 					session.save(subTree);
 				}
 			}

@@ -101,10 +101,10 @@ $(document).ready(function() {
      includeChild.setData(true);
      
      var editWin ={title:'权限项信息',url:'base/permission/edit',width:620,height:430};
-     var height = 680;
+     var height = 720;
      thisOrgList = $('body').treeListUI({tableEl:'#tblMain',baseUrl:'base/permissions',title:'权限信息',height:height,
     	 treeContainer:"#tree_container",editWin:editWin,toolbar:"#table-toolbar",searchParams:{includeChild:true}
-    	 ,extendTableOptions:{toolbar:'#tblMain_toolbar',height:height,sortStable:false}});
+    	 ,extendTableOptions:{toolbar:'#tblMain_toolbar',height:670,sortStable:false}});
      thisOrgList.onLoad();
      
      $('#syncSysPermission').click(function(){

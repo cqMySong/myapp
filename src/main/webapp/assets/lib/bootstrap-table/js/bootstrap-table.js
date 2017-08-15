@@ -2472,9 +2472,10 @@
 
         if (this.options.height) {
             var toolbarHeight = this.$toolbar.outerHeight(true),
-                paginationHeight = this.$pagination.outerHeight(true),
+              //  paginationHeight = this.$pagination.outerHeight(true),
+             //addby songjun 都是自定义的分页组件 此处不计算其高度
+                paginationHeight = 0,
                 height = this.options.height - toolbarHeight - paginationHeight;
-
             this.$tableContainer.css('height', height + 'px');
         }
 

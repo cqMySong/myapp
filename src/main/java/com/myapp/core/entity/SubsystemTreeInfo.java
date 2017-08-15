@@ -4,7 +4,11 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Table;
 
+import org.hibernate.annotations.Parameter;
+import org.hibernate.annotations.Type;
+
 import com.myapp.core.base.entity.CoreInfo;
+import com.myapp.core.enums.EntityTypeEnum;
 
 /**
  *-----------MySong---------------
@@ -22,6 +26,8 @@ public class SubsystemTreeInfo extends CoreInfo {
 	private String entityObjectType;
 	private String entityClaz;
 	private String entityTable;
+	private String entityName;
+	private EntityTypeEnum entityType;
 	
 	@Column(name="fseq")
 	public long getSeq() {
@@ -51,13 +57,30 @@ public class SubsystemTreeInfo extends CoreInfo {
 	public void setEntityTable(String entityTable) {
 		this.entityTable = entityTable;
 	}
-	@Column(name="fentityType")
+	@Column(name="fentityObjectType")
 	public String getEntityObjectType() {
 		return entityObjectType;
 	}
 	public void setEntityObjectType(String entityObjectType) {
 		this.entityObjectType = entityObjectType;
 	}
+	@Column(name="fentityName")
+	public String getEntityName() {
+		return entityName;
+	}
+	public void setEntityName(String entityName) {
+		this.entityName = entityName;
+	}
+	@Column(name="fentityType",length=20)
+	@Type(type="myEnum",parameters={@Parameter(name="enumClass",value="com.myapp.core.enums.EntityTypeEnum")})
+	public EntityTypeEnum getEntityType() {
+		return entityType;
+	}
+	public void setEntityType(EntityTypeEnum entityType) {
+		this.entityType = entityType;
+	}
+	
+	
 }
 	
 	

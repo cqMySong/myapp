@@ -11,7 +11,7 @@
 	<div class="mainContrainer">
 		<div class="leftContainer" id="tree_container"></div>
 		<div class="rightContainer" id="tblMain_container">
-			<div class="panel">
+			<div class="panel" style="margin-bottom: 5px;">
 				<div class="" id="tblMain_toolbar">
 					<div class="input-group" style="width:160px;">
 		                <span class="input-group-addon" style="width:80px;">包含下级</span>
@@ -29,6 +29,42 @@
 							</tr>
 						</thead>
 					</table>
+				</div>
+			</div>
+			<div class="container panel">
+				<div class="row">
+					<div class="col-md-6" style="padding: 2px;">
+						<div class="" id="userTable_toolbar">
+							<div class="btn-group">
+				                <button class="btn btn-success" type="button"><span class="fa fa-tags"></span>&nbsp;用户分配</button>
+			              	</div>
+						</div>
+						<table id="userTable" style="width: 100%;border: 1px solid #bdc3d1;">
+							 <thead>
+								<tr>
+									<th data-field="number">编码</th>
+									<th data-field="name">名称</th>
+									<th data-field="remark" >描述</th>
+								</tr>
+							</thead>
+						</table>
+					</div>
+					<div class="col-md-6" style="padding: 2px;">
+						<div class="" id="permisTable_toolbar">
+							<div class="btn-group">
+				                <button class="btn btn-success" type="button"><span class="fa fa-tag"></span>&nbsp;岗位职责分配</button>
+			              	</div>
+						</div>
+						<table id="permisTable" style="width: 100%;border: 1px solid #bdc3d1;">
+							 <thead>
+								<tr>
+									<th data-field="number">编码</th>
+									<th data-field="name">名称</th>
+									<th data-field="remark" >描述</th>
+								</tr>
+							</thead>
+						</table>
+					</div>
 				</div>
 			</div>
 		</div>
@@ -58,6 +94,12 @@ function includeChild_click(){
 	var thisParams = {includeChild:includeChild.getData()};
 	thisOrgList.listUI.executeQueryByParams(thisParams);
 }
+function queryUserParams(){
+	
+}
+function queryPermissionParams(){
+	
+}
 $(document).ready(function() {
      var _checkOpt = {event:{name:'click',callBack:includeChild_click}};
      includeChild = $('#includeChild').myComponet('checkbox',{method:'init',opt:_checkOpt});
@@ -67,8 +109,19 @@ $(document).ready(function() {
      var height = 700;
      thisOrgList = $('body').treeListUI({tableEl:'#tblMain',treeUrl:'base/orgs/tree',baseUrl:'base/roles',title:'组织信息',height:height,
     	 treeContainer:"#tree_container",editWin:editWin,toolbar:"#table-toolbar",searchParams:{includeChild:true}
-    	 ,extendTableOptions:{toolbar:'#tblMain_toolbar',height:height,sortStable:false}});
+    	 ,extendTableOptions:{toolbar:'#tblMain_toolbar',height:290,sortStable:false}});
      thisOrgList.onLoad();
+     
+     var userTable_opt = {height:280,striped:true,sortStable:true,showRefresh:false,clickToSelect:true
+ 			,cache:false,pageSize:10,showToggle:true,search:true,queryParams:queryUserParams
+ 			,showColumns:true,idField:"id",mypagination:true,url:''};
+     
+     userTable_opt.toolbar = '#userTable_toolbar';
+     $('#userTable').myDataTable(userTable_opt);
+     
+     userTable_opt.toolbar = '#permisTable_toolbar';
+     $('#permisTable').myDataTable(userTable_opt);
+     
 });
 
 </script>

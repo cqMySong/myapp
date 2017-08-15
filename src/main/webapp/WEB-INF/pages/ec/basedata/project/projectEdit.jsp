@@ -70,7 +70,7 @@
 				</div>
 				<div class="col-sm-6 mb15">
 					<div class="input-group">
-						<span class="input-group-addon lable">工程行业</span> 
+						<span class="input-group-addon lable">工程分类</span> 
 						<select name="industryType" data-opt="{type:'select',selected:'FWJZ',url:'base/common/combox?enum=com.myapp.enums.IndustryType'}" 
 		                	class="form-control input-item require">
 		                </select>

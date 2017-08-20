@@ -7,6 +7,7 @@ import javax.persistence.JoinColumn;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
+import com.myapp.core.base.entity.CoreBaseDataInfo;
 import com.myapp.core.base.entity.CoreBaseInfo;
 
 /**
@@ -19,30 +20,6 @@ import com.myapp.core.base.entity.CoreBaseInfo;
  */
 @Entity
 @Table(name="t_pm_Role")
-public class RoleInfo extends CoreBaseInfo {
+public class RoleInfo extends CoreBaseDataInfo {
 
-	private BaseOrgInfo org;//所属组织
-	private String remark;
-	
-	@Column(name="fremark")
-	public String getRemark() {
-		return remark;
-	}
-
-	public void setRemark(String remark) {
-		this.remark = remark;
-	}
-	
-	@OneToOne(fetch=FetchType.LAZY)
-	@JoinColumn(name = "forgId")
-	public BaseOrgInfo getOrg() {
-		return org;
-	}
-
-	public void setOrg(BaseOrgInfo org) {
-		this.org = org;
-	}
-	
-	
-	
 }

@@ -3,7 +3,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<title>角色信息</title>
+<title>岗位信息</title>
 </head>
 <style type="text/css">
 </style>
@@ -32,12 +32,14 @@
 			<div class="row">
 				<div class="col-sm-6">
 					<div class="input-group">
-						<span class="input-group-addon lable">启用</span> 
-						<input class="require input-item" name="enabled" data-opt="{type:'checkbox'}" type="checkbox">
+						<span class="input-group-addon lable">所属组织</span> 
+						<input name="org" class="input-item form-control read" 
+							data-opt="{type:'f7',enabled:false}" />
+
 					</div>
 				</div>
 				<div class="col-sm-6 mb15">
-					
+					<div class="input-group"></div>
 				</div>
 			</div>
 			<div class="row mt10">
@@ -59,11 +61,20 @@
 	function beforeAction(opt) {
 		return true;
 	}
-
+	
+	function afterAction(_opt,data){
+		if(_opt==OperateType.addnew){
+			var uiCtx = getUICtx();
+			if(!webUtil.isEmpty(uiCtx)&&$.isPlainObject(uiCtx)
+					&&!webUtil.isEmpty(uiCtx.tree)){
+				$('input[name="org"]').myF7().setData(uiCtx.tree);
+			}
+		}
+	}
 	$(document).ready(function() {
 		var editUI = $('#editPanel').editUI({
-			title : "角色信息",
-			baseUrl : "base/role",
+			title : "组织岗位",
+			baseUrl : "base/position",
 			toolbar : "#table-toolbar",
 			form : {
 				el : "#editForm"

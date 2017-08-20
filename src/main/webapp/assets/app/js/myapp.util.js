@@ -355,7 +355,11 @@ var webUtil = {
 				uiCtx =  'uiCtx='+webUtil.json2Str(uiCtx);
 			}
 			winUrl += (winUrl.indexOf('?')>0?'&':'?')+encodeURI(uiCtx);
-		} 
+		}
+		var _maxHeight = $(window).height(); 
+		if(_opt.height>_maxHeight){
+			_opt.height = _maxHeight;
+		}
 		//winUrl = encodeURI(winUrl.replace(/\"/g,"'")); 
 		var layer_index = parent.layer.open({type : 2,
 			btn : _opt.btns,title :_opt.title,scrollbar : false,

@@ -322,13 +322,13 @@ $(document).ready(function() {
                                 {title:'单位',icon:'fa fa-cogs',url:'ec/basedata/ecunitList/list'}     
                                ,{title:'方案类别',icon:'fa fa-cogs',url:'ec/basedata/schemeTypeList/list'}
                                ,{title:'施工方案',icon:'fa fa-cogs',url:'ec/basedata/schemelist/list'}
-							   ,{title:'项目结构类型',icon:'fa fa-cogs',url:'ec/basedata/structTypes/list'}
-							   ,{title:'项目单位工程',icon:'fa fa-cogs',url:'ec/basedata/prostructures/list'}
-							   ,{title:'项目分部工程',icon:'fa fa-cogs',url:'ec/basedata/prosubs/list'}
-							   ,{title:'项目分项工程',icon:'fa fa-cogs',url:'ec/basedata/prosubitems/list'}
 							    ]},
-							{title:'基础数据',icon:'fa fa-home',child:[
-								{title:'工程项目',icon:'fa fa-building-o',url:'ec/basedata/projects/list'}]},
+							{title:'项目基础数据',icon:'fa fa-home',child:[
+								{title:'工程项目',icon:'fa fa-building-o',url:'ec/basedata/projects/list'},
+								{title:'项目结构类型',icon:'fa fa-cogs',url:'ec/basedata/structTypes/list'},
+								{title:'项目单位工程',icon:'fa fa-cogs',url:'ec/basedata/prostructures/list'},
+								{title:'项目分部工程',icon:'fa fa-cogs',url:'ec/basedata/prosubs/list'},
+								{title:'项目分项工程',icon:'fa fa-cogs',url:'ec/basedata/prosubitems/list'}]},
 							{title:'计划管理',icon:'fa fa-star',child:[
 								{title:'项目总计划',icon:'fa fa-user',url:'ec/plan/projecttotalplans/list'},
 								{title:'项目月计划',icon:'fa fa-user',url:'ec/plan/projectplans/monthlist'},
@@ -352,7 +352,8 @@ $(document).ready(function() {
 						},{title:'门户管理',icon:'fa fa-home',child:[{title:'菜单管理'}]}
 						, {title:'安全管理',icon:'fa fa-star',child:[
 							{title:'用户管理',icon:'fa fa-user',active:true,url:'base/users/list'},
-							{title:'岗位管理',icon:'fa fa-users',url:'base/roles/list'},
+							{title:'岗位管理',icon:'fa fa-users',url:'base/positions/list'},
+							{title:'角色管理',icon:'fa fa-users',url:'base/roles/list'},
 							{title:'权限管理',icon:'fa fa-tags',url:'base/permissions/list'}
 							]},
 						{title:'流程管理',icon:'fa fa-star',child:[

@@ -251,7 +251,7 @@ var webUtil = {
 			if(!$.isNumeric(endDate)){
 				endDate = Date.parse(endDate);
 			}
-			days = (endDate-begDate)/(24 * 60 * 60 * 1000);
+			days = (endDate-begDate)/(24 * 60 * 60 * 1000)+1;
 		}
 		return days;
 	},

@@ -41,7 +41,31 @@ public class WorkLogEditController extends BaseBillEditController{
 		List<ColumnModel> cols = super.getDataBinding();
 		cols.add(new ColumnModel("name"));
 		cols.add(new ColumnModel("number"));
+		
 		cols.add(new ColumnModel("remark"));
+		cols.add(new ColumnModel("week"));
+		cols.add(new ColumnModel("workSite"));
+		cols.add(new ColumnModel("attendance"));
+		cols.add(new ColumnModel("temperature"));
+		cols.add(new ColumnModel("amweather"));
+		cols.add(new ColumnModel("pmweather"));
+		cols.add(new ColumnModel("sjbg"));
+		cols.add(new ColumnModel("bgwh"));
+		cols.add(new ColumnModel("tzdw"));
+		cols.add(new ColumnModel("jsjd"));
+		cols.add(new ColumnModel("jsjdr"));
+		cols.add(new ColumnModel("ybgcysbw"));
+		cols.add(new ColumnModel("sjskzz"));
+		cols.add(new ColumnModel("cljcsjqk"));
+		cols.add(new ColumnModel("zl"));
+		cols.add(new ColumnModel("aq"));
+		cols.add(new ColumnModel("gz"));
+		cols.add(new ColumnModel("wrokContent"));
+		cols.add(new ColumnModel("optDutyer"));
+		
+		
+		
+		
 		cols.add(new ColumnModel("bizDate",DataTypeEnum.DATE));
 		cols.add(new ColumnModel("billState",DataTypeEnum.ENUM,BillState.class));
 		cols.add(new ColumnModel("createDate",DataTypeEnum.DATE));

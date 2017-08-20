@@ -168,7 +168,7 @@
 				var $parentContainer = $thisDom.parent('.date');
 				if(webUtil.isEmpty($parentContainer)||$parentContainer.length==0){
 					$thisDom.css({"border-radius":"0px"});   
-					$parentContainer = $('<div class="input-group date" style="width: 100%;"></div>');
+					$parentContainer = $('<div class="input-group date" style="width: 100%;height:100%;"></div>');
 					$thisDom.wrap($parentContainer);
 					if(!webUtil.isEmpty(_dateOpt.icon)){
 						var _iconG  = $('<div class="input-group-addon"><span class="'+_dateOpt.icon+'"></span></div>');

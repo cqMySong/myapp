@@ -2051,6 +2051,7 @@
 
             that.updateSelected();
             that.trigger(checked ? 'check' : 'uncheck', row, $this);
+            
         });
 
         $.each(this.header.events, function (i, events) {
@@ -2472,9 +2473,9 @@
 
         if (this.options.height) {
             var toolbarHeight = this.$toolbar.outerHeight(true),
-              //  paginationHeight = this.$pagination.outerHeight(true),
+               // paginationHeight = this.$pagination.outerHeight(true),
              //addby songjun 都是自定义的分页组件 此处不计算其高度
-                paginationHeight = 0,
+               paginationHeight = 0,
                 height = this.options.height - toolbarHeight - paginationHeight;
             this.$tableContainer.css('height', height + 'px');
         }
@@ -3185,7 +3186,7 @@
                     typeof option === 'object' && option);
 
             	if(options.layout == 'fixed'){
-            		$this.css({"table-layout":"fixed"});
+            		$this.css({"table-layout":"automatic"});
             	}
             if (typeof option === 'string') {
                 if ($.inArray(option, allowedMethods) < 0) {

@@ -1181,8 +1181,9 @@ MyDataTableCellEditor.prototype = {
 		if(!webUtil.isEmpty(hasInit)&&hasInit=='yes'){//已经初始化了的
 			return ;
 		}else{
+			this.$element.css({"padding":"0px"});
 			var width = this.$element.innerWidth();
-			var height = this.$element.innerHeight();
+			var height = this.$element.parent().innerHeight()-2;
 			this.$element.html('');
 			var _$editor = $('<div class="input-group"></div>');
 			var type = this.$element.data('dataType');
@@ -1210,14 +1211,14 @@ MyDataTableCellEditor.prototype = {
 					_$editor.data('componet',cell_componet);
 				}
 			}
-			this.$element.css({"padding":"0px"});
+			
 			this.$element.append(_$editor);
 			var thisMyComponet = _$editor.data('componet');
 			if(!webUtil.isEmpty(thisMyComponet)){
 				_$editor.css(cell_css);
 				if(DataType.F7==type
 						||DataType.date==type||DataType.datetime==type){
-					thisMyComponet.height(height); 
+					thisMyComponet.css({"margin":"0px","padding":"0px",'height':(height+10)+"px"}); 
 					if(DataType.F7==type){
 						opt.closeWin = function(isOk,f7Data){
 							var thisData = f7Data;
@@ -1229,6 +1230,7 @@ MyDataTableCellEditor.prototype = {
 							}
 						 }
 					}else if(DataType.date==type||DataType.datetime==type){
+						
 					}
 				}else{
 					thisMyComponet.css(cell_css);
@@ -1236,7 +1238,7 @@ MyDataTableCellEditor.prototype = {
 				
 				this.$element.data('editor',_$editor);
 				this.$element.width(width);
-				this.$element.height(height);
+				this.$element.height(height-2);
 				this.$element.data('hasInit','yes');
 				//1:控件初始化
 				thisMyComponet.myComponet(type,{method:'init',opt:opt});

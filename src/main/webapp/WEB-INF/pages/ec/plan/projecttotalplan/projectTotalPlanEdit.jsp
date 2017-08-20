@@ -68,7 +68,7 @@
 							,toolbar:{title:'项目总计划清单'}}">
 						<thead>
 							<tr>
-								<th data-field="proStructure" rowspan="2" data-type="f7" data-formatter="displayName" data-locked="true"
+								<th data-field="proStructure" data-width="200" rowspan="2" data-type="f7" data-formatter="displayName" data-locked="true"
 										data-editor="{uiWin:{title:'项目结构',height:600,width:300,url:'ec/basedata/proStructureF7',uiParams:getParams}}">项目工程结构</th>
 								<th data-field="proSub" rowspan="2"  data-type="f7" 
 										data-editor="{uiWin:{title:'项目分部工程',height:550,width:680,url:'ec/basedata/proSubF7',uiParams:getParams}}">项目分部工程</th>
@@ -76,11 +76,11 @@
 										data-editor="{uiWin:{title:'项目分项工程',height:550,width:680,url:'ec/basedata/proSubItemF7',uiParams:getParams}}">项目分项结构</th>
 								<th colspan="3">计划</th>
 								<th data-field="progress" rowspan="2"  data-type="number">当前进度</th>
-								<th data-field="content" rowspan="2"   data-type="textarea">工作内容</th>
+								<th data-field="content" rowspan="2" data-width="220"  data-type="textarea">工作内容</th>
 								<th data-field="proQty" rowspan="2" >工程量</th>
 								<th data-field="dutyers" rowspan="2" data-type="f7"
 										data-editor="{mutil:true,uiWin:{title:'责任人',height:750,width:900,url:'base/userf7',uiParams:getParams}}">责任人</th>
-								<th data-field="remark" rowspan="2" width="500" data-type="textarea">备注</th>
+								<th data-field="remark" rowspan="2" data-width="250" data-type="textarea">备注</th>
 							</tr>
 							<tr>
 								<th data-field="planBegDate" class="_myMerge" data-type="date">开始日期</th>
@@ -164,7 +164,9 @@
 			var btimes = obj.rowData['planBegDate'];
 			var etimes = obj.rowData['planEndDate'];
 			var days = webUtil.betweenDateDays(btimes,etimes);
-			if(webUtil.isEmpty(days)) days = null;
+			if(webUtil.isEmpty(days)) {
+				days = null;
+			}
 			if(!webUtil.isEmpty(planItemsEntry)){
 				planItemsEntry.setTableCellValue(obj.rowIndex,'planDays',days);
 			}
@@ -174,17 +176,22 @@
 			proStructure.id = newData.proStruct_id;
 			proStructure.displayName = newData.proStruct_displayName; */
 			var proSub = {};
-			proSub.id = newData.proSub_id;
-			proSub.name = newData.proSub_name;
-			proSub.proStruct_id = newData.proStruct_id;
-			proSub.proStruct_displayName = newData.proStruct_displayName;
+			if(!webUtil.isEmpty(newData)){
+				proSub.id = newData.proSub_id;
+				proSub.name = newData.proSub_name;
+				proSub.proStruct_id = newData.proStruct_id;
+				proSub.proStruct_displayName = newData.proStruct_displayName;
+			}
+			
 			//planItemsEntry.setTableCellValue(obj.rowIndex,'proStructure',proStructure);
 			planItemsEntry.setTableCellValue(obj.rowIndex,'proSub',proSub);
 		}else if('proSub'==obj.field){
 			var newData = obj.rowData[obj.field];
 			var proStructure = {};
-			proStructure.id = newData.proStruct_id;
-			proStructure.displayName = newData.proStruct_displayName;
+			if(!webUtil.isEmpty(newData)){
+				proStructure.id = newData.proStruct_id;
+				proStructure.displayName = newData.proStruct_displayName;
+			}
 			planItemsEntry.setTableCellValue(obj.rowIndex,'proStructure',proStructure);
 		}
 	}
@@ -227,6 +234,7 @@
 		}
 	}
 	$(document).ready(function() {
+		
 		editUI = $('#editPanel').editUI({
 			title : "项目总计划",billModel:2,
 			baseUrl : "ec/plan/projecttotalplan",
@@ -236,14 +244,15 @@
 			}
 		});
 		editUI.onLoad();
-		webUtil.initMainPanel('#editPanel');
+		
 		planItemsEntryObj = editUI.getEntryObj('planItems');
 		if(!webUtil.isEmpty(planItemsEntryObj)){
 			planItemsEntry = planItemsEntryObj.entry;
 			var rightBtnGroup = planItemsEntryObj.toolbar.find('.pull-right>.btn-group').myBtnGroup();
 			rightBtnGroup.addBtn({entry:planItemsEntry,css:'btn-sm',text:'复制插入',icon:"fa fa-edit",clickFun:btnCopyInsertRow});
+			planItemsEntry.resetView();
 		}
-		
+		webUtil.initMainPanel('#editPanel');
 	})
 </script>
 </html>

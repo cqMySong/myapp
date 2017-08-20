@@ -38,21 +38,6 @@
 </body>
 <%@include file="../../../base/base_treelist.jsp"%>
 <script type="text/javascript">
-function billState_formarter(value, row, index){
-	var txt = value;
-	if(value=='ADDNEW'){
-		txt = '编制中';
-	}else if(value=='SAVE'){
-		txt = '已保存';
-	}else if(value=='SUBMIT'){
-		txt = '已提交';
-	}else if(value=='AUDIT'){
-		txt = '已审核';
-	}else if(value=='NOPASS'){
-		txt = '审核不通过';
-	}
-	return txt;
-}
 var thisOrgList ;
 var includeChild;
 function beforeAction(opt){
@@ -77,10 +62,10 @@ $(document).ready(function() {
      var treeOpt = {setting:{data: {
          	simpleData: {enable:true,idKey: "id", pIdKey: "parentId",rootPId: ''}
     	 }}};
-     var height = 700;
+     var height = $(top.window).height()-$('#table-toolbar').innerHeight()-130;
      thisOrgList = $('body').treeListUI({tableEl:'#tblMain',treeUrl:'ec/basedata/projects/projectTree',baseUrl:'ec/plan/projecttotalplans',title:'工程项目',height:height,
     	 treeContainer:"#tree_container",editWin:editWin,toolbar:"#table-toolbar",searchParams:{includeChild:true},treeOpt:treeOpt
-    	 ,treeNode2QueryProp:treeNode2QueryProp,extendTableOptions:{toolbar:'#tblMain_toolbar',height:height,sortStable:false}});
+    	 ,treeNode2QueryProp:treeNode2QueryProp,extendTableOptions:{toolbar:'#tblMain_toolbar',height:height-46,sortStable:false}});
      thisOrgList.onLoad();
 });
 

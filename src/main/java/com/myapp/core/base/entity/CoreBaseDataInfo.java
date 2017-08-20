@@ -26,7 +26,7 @@ public class CoreBaseDataInfo extends CoreBaseInfo {
 	private String remark;
 	private Boolean enabled;
 	
-	@Column(name="fremark",length=150)
+	@Column(name="fremark",length=250)
 	public String getRemark() {
 		return remark;
 	}
@@ -35,7 +35,7 @@ public class CoreBaseDataInfo extends CoreBaseInfo {
 		this.remark = remark;
 	}
 	
-	@Column(name="fenabled",length=150)
+	@Column(name="fenabled",length=2)
 	public Boolean getEnabled() {
 		return enabled;
 	}

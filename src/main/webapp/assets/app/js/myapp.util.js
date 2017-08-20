@@ -256,7 +256,7 @@ var webUtil = {
 		return days;
 	},
 	isEmpty:function(obj){
-		if($.isNumeric(obj)&&(obj ==0 || obj=='0')){
+		if(typeof(obj) == 'number'){
 			return false;
 		}
 		if (typeof(obj) == 'boolean') {
@@ -356,7 +356,7 @@ var webUtil = {
 			}
 			winUrl += (winUrl.indexOf('?')>0?'&':'?')+encodeURI(uiCtx);
 		}
-		var _maxHeight = $(window).height(); 
+		var _maxHeight = $(top.window).height(); 
 		if(_opt.height>_maxHeight){
 			_opt.height = _maxHeight;
 		}

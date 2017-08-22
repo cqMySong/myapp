@@ -36,14 +36,12 @@
 				<div class="col-sm-6 col-sm-6 mb15">
 				  <div class="input-group">
 					<span class="input-group-addon lable">流程分类</span>
-					  <select name="category" data-opt="{type:'select',selected:'DRAWING',url:'base/common/combox?enum=com.myapp.enums.FlowCategory'}"
-							  class="form-control input-item require">
+					  <select name="category" data-opt="{type:'select',url:'subsystem/combox/BIZBILL',
+					  key:'fentityObjectType',val:'fentityName'}"  class="form-control input-item require">
 					  </select>
 				  </div>
 				</div>
-
 			   </div>
-
 			  <div class="row mt10" >
 				<div class="col-sm-12">
 				  <div class="input-group">

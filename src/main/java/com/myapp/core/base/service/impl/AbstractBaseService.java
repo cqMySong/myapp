@@ -144,6 +144,24 @@ public abstract class AbstractBaseService implements IAbstractBaseService {
 		}
 		return getBaseDao().saveEntity(entity);
 	}
+	public Object auditNoPassEntity(Object entity,MyWebContent webCtx) throws SaveException {
+		if(entity!=null&&entity instanceof CoreBaseBillInfo){
+			CoreBaseBillInfo cbbInfo = (CoreBaseBillInfo) entity;
+			cbbInfo.setBillState(BillState.NOPASS);
+			cbbInfo.setAuditDate(new Date());
+			if(webCtx!=null){
+				UserInfo uInfo = webCtx.getCurUserInfo();
+				cbbInfo.setAuditor(uInfo);
+				if(cbbInfo.getLastUpdateUser()==null){
+					cbbInfo.setLastUpdateUser(uInfo);
+				}
+				if(cbbInfo.getLastUpdateDate()==null){
+					cbbInfo.setLastUpdateDate(new Date());
+				}
+			}
+		}
+		return getBaseDao().saveEntity(entity);
+	}
 	public Object unauditEntity(Object entity,MyWebContent webCtx) throws SaveException {
 		if(entity!=null&&entity instanceof CoreBaseBillInfo){
 			CoreBaseBillInfo cbbInfo = (CoreBaseBillInfo) entity;
@@ -281,6 +299,5 @@ public abstract class AbstractBaseService implements IAbstractBaseService {
 		newParams.add(idparams.toArray());
 		executeUpdata(delHql,newParams.toArray());
 	}
-	
-	
+
 }

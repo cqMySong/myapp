@@ -29,14 +29,15 @@ public class UserService extends BaseInterfaceService<UserInfo> {
 			return "用户不存在不能完成用户都密码重置操作!";
 		}
 	}
-	public UserInfo queryUserByNumber(String number)throws QueryException{
-		UserInfo userInfo = new UserInfo();
 
-		if("admin".equals(number)){
-			userInfo.setName("管理员");
-		}else{
-			userInfo.setName("测试");
-		}
-		return  userInfo;
+	/**
+	 * 功能：根据用户名获取登录用户信息
+	 * @param number
+	 * @return
+	 * @throws QueryException
+	 */
+	public UserInfo queryUserByNumber(String number)throws QueryException{
+		String hql = "select u from UserInfo as u where u.number=?";
+		return  queryEntity(hql,new String[]{number});
 	}
 }

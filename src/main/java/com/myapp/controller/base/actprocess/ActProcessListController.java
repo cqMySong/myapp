@@ -1,16 +1,21 @@
 package com.myapp.controller.base.actprocess;
 
+import com.alibaba.fastjson.JSON;
 import com.myapp.core.annotation.PermissionAnn;
 import com.myapp.core.base.service.impl.AbstractBaseService;
 import com.myapp.core.controller.BaseListController;
+import com.myapp.core.enums.EntityTypeEnum;
+import com.myapp.core.exception.db.QueryException;
 import com.myapp.core.model.ColumnModel;
 import com.myapp.core.model.WebDataModel;
 import com.myapp.core.service.act.ActProcessService;
+import com.myapp.core.service.base.BaseSubSystemService;
 import com.myapp.core.util.BaseUtil;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import javax.annotation.Resource;
@@ -30,6 +35,8 @@ import java.util.List;
 public class ActProcessListController extends BaseListController {
     @Resource
     private ActProcessService processService;
+    @Resource
+    private BaseSubSystemService baseSubSystemService;
     @Override
     public String getEditUrl() {
         return "";
@@ -41,8 +48,20 @@ public class ActProcessListController extends BaseListController {
     }
     @Override
     public WebDataModel toList() {
+        init();
         data = processService.processList(getCurPage(),getPageSize(),null);
         return  ajaxModel();
+    }
+    @Override
+    public ModelAndView list() {
+        ModelAndView modelAndView= super.list();
+        try {
+            modelAndView.addObject("category",
+                    JSON.toJSONString(baseSubSystemService.queryByEntityType(EntityTypeEnum.BIZBILL)));
+        } catch (QueryException e) {
+            e.printStackTrace();
+        }
+        return modelAndView;
     }
     /**
      * 挂起、激活流程实例
@@ -90,6 +109,7 @@ public class ActProcessListController extends BaseListController {
         cols.add(new ColumnModel("name"));
         cols.add(new ColumnModel("version"));
         cols.add(new ColumnModel("createDate"));
+        cols.add(new ColumnModel("deploymentId"));
         return cols;
     }
 }

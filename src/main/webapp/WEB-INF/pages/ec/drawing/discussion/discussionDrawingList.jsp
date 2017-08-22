@@ -74,8 +74,8 @@
 							simpleData: {enable:true,idKey: "id", pIdKey: "parentId",rootPId: ''}
 						}
 					}};
-			var height = window.outerHeight-265;
-			thisOrgList = $('body').treeListUI({tableEl:'#tblMain',treeUrl:'ec/basedata/prosubs/proSubTree',baseUrl:'ec/discussiondrawings',title:'项目工程',height:height,
+			var height = window.outerHeight-325;
+			thisOrgList = $('body').treeListUI({tableEl:'#tblMain',treeUrl:'ec/basedata/prosubs/proSubTree',baseUrl:'ec/discussiondrawings',title:'项目工程',height:(height+42),
 							treeContainer:"#tree_container",editWin:editWin,toolbar:"#table-toolbar",searchParams:{includeChild:true},treeOpt:treeOpt
 							,treeNode2QueryProp:treeNode2QueryProp,extendTableOptions:{toolbar:'#tblMain_toolbar',height:height,sortStable:false}});
 			thisOrgList.onLoad();

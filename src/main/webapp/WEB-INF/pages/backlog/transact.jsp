@@ -18,9 +18,6 @@
 					<button class="btn btn-success" type="button" id="showBackLogPic">
 						<span class="glyphicon glyphicon-file"></span>查看流程图
 					</button>
-					<button class="btn btn-success" type="button">
-						<span class="glyphicon glyphicon-file"></span>查看附件
-					</button>
 				</div>
 			</div>
 		   <div class="row">

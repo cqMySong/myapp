@@ -47,7 +47,7 @@ var thisBaseUrl = 'base/backlogs';
 
 $(document).ready(function() {
 	thisListUI = $('#listPanel').listUI({tableEl:'#tblMain',height:680,baseUrl:thisBaseUrl,
-			hasDefToolbar:false,toolbar:"#table-toolbar",extendTableOptions:{height:window.outerHeight-255}});
+			hasDefToolbar:false,toolbar:"#table-toolbar",extendTableOptions:{height:window.outerHeight-295}});
 	thisListUI.onLoad();
 	//办理流程
 	$('#transact').on('click',function(){

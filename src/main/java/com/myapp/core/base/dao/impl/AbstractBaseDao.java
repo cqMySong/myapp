@@ -194,7 +194,7 @@ public abstract class AbstractBaseDao implements IAbstractBaseDao {
 					String tableName = cmd.getTableName();
 					subTree.setEntityTable(tableName);
 					long seq = UuidUtils.getStringLong(entityClaz);
-					subTree.setEntityObjectType(UuidUtils.getEntityType(entityClaz));
+					subTree.setEntityObjectType("_"+UuidUtils.getEntityType(entityClaz));
 					subTree.setEntitySeq(new Date().getTime());
 					subTree.setSeq(seq);
 					subTree.setEntityType(getEntityType(entity));
@@ -268,7 +268,7 @@ public abstract class AbstractBaseDao implements IAbstractBaseDao {
 			throws ReadException {
 		Session session = getCurrentSession();
 		Query entityQuery = initHqlParams(session.createQuery(hql),params);
-		entityQuery.setResultTransformer(Transformers.aliasToBean(claz));
+		//entityQuery.setResultTransformer(Transformers.aliasToBean(claz));
 		return entityQuery.uniqueResult();
 	}
 	

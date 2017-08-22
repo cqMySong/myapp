@@ -9,6 +9,7 @@ import com.myapp.core.entity.UserInfo;
 import com.myapp.core.exception.db.SaveException;
 import com.myapp.core.model.PageModel;
 import com.myapp.core.service.base.BaseInterfaceService;
+import com.sun.org.apache.xpath.internal.operations.Mod;
 import org.activiti.bpmn.converter.BpmnXMLConverter;
 import org.activiti.bpmn.model.BpmnModel;
 import org.activiti.editor.constants.ModelDataJsonConstants;
@@ -25,7 +26,9 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.io.*;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 /**
  * 包路径：com.myapp.core.service.act
@@ -52,7 +55,7 @@ public class ActModelService extends BaseInterfaceService<ActModelInfo> {
         editorNode.put("resourceId", "canvas");
         ObjectNode properties = objectMapper.createObjectNode();
         properties.put("process_author", actModelInfo.getUserInfo().getName());
-        properties.put("process_id", actModelInfo.getCategory().getValue());
+        properties.put("process_id", actModelInfo.getCategory());
         properties.put("name",actModelInfo.getName());
         properties.put("documentation",actModelInfo.getDescription());
         editorNode.put("properties", properties);
@@ -64,7 +67,7 @@ public class ActModelService extends BaseInterfaceService<ActModelInfo> {
         String description = StringUtils.defaultString(actModelInfo.getDescription());
         modelData.setKey(StringUtils.defaultString(actModelInfo.getNumber()));
         modelData.setName(actModelInfo.getName());
-        modelData.setCategory(actModelInfo.getCategory().getValue());
+        modelData.setCategory(actModelInfo.getCategory());
         modelData.setVersion(Integer.parseInt(String.valueOf(repositoryService.createModelQuery().modelKey(modelData.getKey()).count()+1)));
 
         ObjectNode modelObjectNode = objectMapper.createObjectNode();
@@ -133,7 +136,7 @@ public class ActModelService extends BaseInterfaceService<ActModelInfo> {
                 message = "部署失败，没有流程。";
             }
         } catch (Exception e) {
-            throw new ActivitiException("设计模型图不正确，检查模型正确性，模型ID="+id, e);
+            throw new ActivitiException("设计模型图不正确，检查模型正确性，模型ID="+id+e.getMessage(), e);
         }
         return message;
     }

@@ -56,14 +56,18 @@ var thisBaseUrl = 'base/actprocesses';
 function beforeAction(opt){
 	return true;
 }
+var actModelCategory = JSON.parse('${category}');
 function category_formatter(value, row, index){
-		var txt = value;
-		if(value=='BUDGET'){
-				txt = '预算审核';
-				}else if(value=='DRAWING'){
-				txt = '图纸审核';
-				}
-		return txt;
+    if(!actModelCategory){
+        return value;
+    }
+    var txt= "";
+    $.each(actModelCategory,function(i,v){
+        if(v.fentityObjectType==value){
+            txt = v.fentityName;
+        }
+    });
+    return txt;
 }
 function suspended_formatter(value, row, index){
 	var txt = value;
@@ -77,7 +81,7 @@ function suspended_formatter(value, row, index){
 $(document).ready(function() {
 	var editWin ={title:'流程信息',width:620,height:450};
 	thisListUI = $('#listPanel').listUI({tableEl:'#tblMain',height:680,baseUrl:thisBaseUrl,editWin:editWin,
-			hasDefToolbar:false,toolbar:"#table-toolbar",extendTableOptions:{height:window.outerHeight-255}});
+			hasDefToolbar:false,toolbar:"#table-toolbar",extendTableOptions:{height:window.outerHeight-295}});
 	thisListUI.onLoad();
 	//挂起
 	$('#actProcessSuspend').on('click',function(){
@@ -108,7 +112,7 @@ $(document).ready(function() {
 			webUtil.showConfirm({title:"删除提醒",content:"你将删除["+_selRows.length+"]条记录信息，是否继续?",
 					callBack:function(ok){
 							if(ok){
-									var seleIds = _selRows[0].id;
+									var seleIds = _selRows[0].deploymentId;
 									var _thisURL = thisBaseUrl+'/remove';
 									var _data = {};
 									_data.id = seleIds;

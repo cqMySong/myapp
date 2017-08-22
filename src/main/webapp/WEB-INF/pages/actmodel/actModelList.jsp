@@ -54,19 +54,23 @@ var thisBaseUrl = 'base/actmodels';
 function beforeAction(opt){
 	return true;
 }
+var actModelCategory = JSON.parse('${category}');
 function category_formatter(value, row, index){
-	var txt = value;
-	if(value=='BUDGET'){
-			txt = '预算审核';
-	}else if(value=='DRAWING'){
-			txt = '图纸审核';
+    if(!actModelCategory){
+        return value;
 	}
-	return txt;
+    var txt= "";
+    $.each(actModelCategory,function(i,v){
+		if(v.fentityObjectType==value){
+			txt = v.fentityName;
+		}
+	});
+    return txt;
 }
 $(document).ready(function() {
 	var editWin ={title:'模型信息',width:620,height:380};
 	thisListUI = $('#listPanel').listUI({tableEl:'#tblMain',height:680,baseUrl:thisBaseUrl,editWin:editWin
-			,hasDefToolbar:false,toolbar:"#table-toolbar",extendTableOptions:{height:window.outerHeight-255}});
+			,hasDefToolbar:false,toolbar:"#table-toolbar",extendTableOptions:{height:window.outerHeight-295}});
 	thisListUI.onLoad();
 	//添加模型
 	$('#actAdd').on('click',function(){

@@ -2,9 +2,11 @@ package com.myapp.core.service.act;
 import com.myapp.core.entity.BackLogInfo;
 import com.myapp.core.entity.UserInfo;
 import com.myapp.core.exception.db.QueryException;
+import com.myapp.core.exception.db.SaveException;
 import com.myapp.core.model.PageModel;
 import com.myapp.core.service.UserService;
 import com.myapp.core.service.base.BaseInterfaceService;
+import com.myapp.core.service.base.BaseSubSystemService;
 import org.activiti.bpmn.model.BpmnModel;
 import org.activiti.engine.*;
 import org.activiti.engine.history.HistoricActivityInstance;
@@ -52,18 +54,25 @@ public class ActTaskService extends BaseInterfaceService<BackLogInfo> {
     private IdentityService identityService;
     @Autowired
     private UserService userService;
+    @Autowired
+    private BaseSubSystemService baseSubSystemService;
 
     /**
      * 启动流程
-     * @param procDefKey 流程定义KEY
+     * @param billClass 流程对象路径
      * @param businessId	业务表编号
      * @param title	流程标题，显示在待办任务标题
      * @param vars		流程变量
      * @param userName 流程发起人
      * @return 流程实例ID
      */
-    public String startProcess(String procDefKey, String businessId,
-                               String title, Map<String, Object> vars,String userName) {
+    public String startProcess(Class billClass, String businessId,
+                               String title, Map<String, Object> vars,String userName) throws SaveException {
+        //查找业务流程key
+        String procDefKey = baseSubSystemService.queryByEntityClaz(billClass);
+        if(StringUtils.isEmpty(procDefKey)){
+           throw new SaveException("数据未初始化:"+billClass.getName());
+        }
         // 用来设置启动流程的人员ID，引擎会自动把用户ID保存到activiti:initiator中
         identityService.setAuthenticatedUserId(userName);
         // 设置流程变量

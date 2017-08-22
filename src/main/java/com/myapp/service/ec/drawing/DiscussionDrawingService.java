@@ -1,12 +1,17 @@
 package com.myapp.service.ec.drawing;
 
+import com.myapp.core.entity.UserInfo;
 import com.myapp.core.exception.db.SaveException;
+import com.myapp.core.model.MyWebContent;
+import com.myapp.core.service.UserService;
 import com.myapp.core.service.act.ActTaskService;
 import com.myapp.core.service.base.BaseInterfaceService;
 import com.myapp.entity.ec.drawing.DiscussionDrawingInfo;
 import com.myapp.enums.FlowCategory;
 import org.activiti.engine.delegate.DelegateExecution;
+import org.activiti.engine.delegate.ExecutionListener;
 import org.activiti.engine.delegate.JavaDelegate;
+import org.activiti.engine.identity.User;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
@@ -18,20 +23,35 @@ import javax.annotation.Resource;
  * 创建时间: 2017-07-30 19:37
  */
 @Service("discussionDrawingService")
-public class DiscussionDrawingService extends BaseInterfaceService<DiscussionDrawingInfo> implements JavaDelegate{
+public class DiscussionDrawingService extends BaseInterfaceService<DiscussionDrawingInfo> implements ExecutionListener {
     @Resource
     private ActTaskService actTaskService;
-    @Override
-    public void execute(DelegateExecution delegateExecution) throws Exception {
-        System.out.println(delegateExecution.getProcessBusinessKey());
-    }
-
+    @Resource
+    private UserService userService;
     @Override
     public Object submitEntity(Object entity) throws SaveException {
         Object returnObj = super.submitEntity(entity);
         DiscussionDrawingInfo discussionDrawingInfo = (DiscussionDrawingInfo) returnObj;
-        actTaskService.startProcess(FlowCategory.DRAWING.getValue(),discussionDrawingInfo.getId(),
+        actTaskService.startProcess(DiscussionDrawingInfo.class,discussionDrawingInfo.getId(),
                 discussionDrawingInfo.getName(),null,discussionDrawingInfo.getCreateUser().getNumber());
         return returnObj;
     }
+
+    @Override
+    public void notify(DelegateExecution delegateExecution) throws Exception {
+        String businessKey = delegateExecution.getProcessBusinessKey();
+        DiscussionDrawingInfo discussionDrawingInfo = (DiscussionDrawingInfo) getEntity(businessKey);
+        MyWebContent myWebContent = new MyWebContent();
+        UserInfo userInfo = userService.queryUserByNumber("camel");
+        myWebContent.setUserId(userInfo.getId());
+        myWebContent.setUserName(userInfo.getName());
+        myWebContent.setUserNumber(userInfo.getNumber());
+        String pass = delegateExecution.getVariable("pass").toString();
+        if("1".equals(pass)){//审核通过
+            auditEntity(discussionDrawingInfo,myWebContent);
+        }else {
+            auditNoPassEntity(discussionDrawingInfo,myWebContent);
+        }
+    }
+    
 }

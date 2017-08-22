@@ -1,5 +1,6 @@
 package com.myapp.entity.ec.drawing;
 
+import com.myapp.core.annotation.MyEntityAnn;
 import com.myapp.core.base.entity.CoreBaseBillInfo;
 import org.hibernate.annotations.Cascade;
 import org.hibernate.annotations.CascadeType;
@@ -15,6 +16,7 @@ import java.util.List;
  * 创建时间: 2017-07-30 14:52
  */
 @Entity
+@MyEntityAnn(name="图纸审核")
 @Table(name="t_ec_discussion_drawing")
 public class DiscussionDrawingInfo extends CoreBaseBillInfo {
     private Date conferenceDate;//会议时间

@@ -5,6 +5,8 @@ import com.myapp.core.base.entity.CoreBaseInfo;
 import com.myapp.core.base.service.impl.AbstractBaseService;
 import com.myapp.core.controller.BaseEditController;
 import com.myapp.core.entity.ActModelInfo;
+import com.myapp.core.entity.BaseOrgInfo;
+import com.myapp.core.entity.SubsystemTreeInfo;
 import com.myapp.core.enums.BaseMethodEnum;
 import com.myapp.core.enums.DataTypeEnum;
 import com.myapp.core.exception.db.QueryException;
@@ -70,7 +72,7 @@ public class ActModelEditController extends BaseEditController {
         List<ColumnModel> cols = super.getDataBinding();
         cols.add(new ColumnModel("name"));
         cols.add(new ColumnModel("number"));
-        cols.add(new ColumnModel("category", DataTypeEnum.ENUM,FlowCategory.class));
+        cols.add(new ColumnModel("category"));
         cols.add(new ColumnModel("description"));
         return  cols;
     }

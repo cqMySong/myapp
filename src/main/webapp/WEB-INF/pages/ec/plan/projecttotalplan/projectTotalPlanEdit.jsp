@@ -62,6 +62,7 @@
 					</div>
 				</div>
 			</div>
+			
 			<div class="row mt10">
 				<div class="col-sm-12 " style="border: 1px solid #ddd;">
 					<table name="planItems" class="input-entry" data-opt="{type:'entry',height:430,tableOpt:{editDataChanged:planItems_dataChanged}
@@ -234,7 +235,6 @@
 		}
 	}
 	$(document).ready(function() {
-		
 		editUI = $('#editPanel').editUI({
 			title : "项目总计划",billModel:2,
 			baseUrl : "ec/plan/projecttotalplan",
@@ -252,7 +252,8 @@
 			rightBtnGroup.addBtn({entry:planItemsEntry,css:'btn-sm',text:'复制插入',icon:"fa fa-edit",clickFun:btnCopyInsertRow});
 			planItemsEntry.resetView();
 		}
-		webUtil.initMainPanel('#editPanel');
+		var height = $(top.window).height()-120;
+		$('#editPanel').height(height);
 	})
 </script>
 </html>

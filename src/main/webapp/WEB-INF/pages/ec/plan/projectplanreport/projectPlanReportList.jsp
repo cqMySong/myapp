@@ -18,16 +18,18 @@
 					<table id="tblMain">
 						 <thead >
 							<tr>
+								<th data-field="project_name">工程项目</th>
+								<th data-field="planInfo_number">进度计划编码</th>
 								<th data-field="number">编码</th>
 								<th data-field="name">名称</th>
-								<th data-field="project_name">工程项目</th>
 								<th data-field="bizDate" data-type="date">业务日期</th>
+								<th data-field="begDate" data-type="date">业务日期</th>
+								<th data-field="endDate" data-type="date">业务日期</th>
 								<th data-field="billState" data-type="select">业务状态</th>
 								<th data-field="createUser_name">创建人</th>
 								<th data-field="createDate" data-type="date">创建日期</th>
 								<th data-field="auditor_name">审核人</th>
 								<th data-field="auditDate" data-type="date">审核日期</th>
-								<th data-field="remark" >备注</th>
 							</tr>
 						</thead>
 					</table>
@@ -58,7 +60,7 @@ function openUIParams(operate,params){
 }
 $(document).ready(function() {
      var treeNode2QueryProp = ["id","name","number","longNumber","type"];
-     var editWin ={title:'项目施工日志',width:980,height:730,openType:'MAINTAB',id:"proplanReport_tab"};
+     var editWin ={title:'项目施工日志汇报',width:980,height:730,openType:'MAINTAB',id:"proplanReport_tab"};
      var treeOpt = {setting:{data: {
          	simpleData: {enable:true,idKey: "id", pIdKey: "parentId",rootPId: ''}
     	 }}};

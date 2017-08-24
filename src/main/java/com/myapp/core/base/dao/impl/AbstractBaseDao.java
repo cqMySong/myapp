@@ -145,6 +145,9 @@ public abstract class AbstractBaseDao implements IAbstractBaseDao {
 	
 	public List findByHQL(String hql, Object[] params) {
 		Query query = createQuery(hql,params);  
+		if(hql.indexOf("select")>=0){
+			query.setResultTransformer(CriteriaSpecification.ALIAS_TO_ENTITY_MAP);
+		}
         if(query!=null) return query.list();
 		return null;
 	}

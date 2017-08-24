@@ -17,20 +17,35 @@
 			<div class="row">
 				<div class="col-sm-4">
 					<div class="input-group">
-						<span class="input-group-addon lable">总计划编码</span> 
+						<span class="input-group-addon lable">汇报编码</span> 
 						<input class="require input-item" name="number">
 					</div>
 				</div>
+				<div class="col-sm-8">
+					<div class="input-group">
+						<span class="input-group-addon lable">汇报名称</span>
+						<input name="name" class="input-item form-control"/>
+					</div>
+				</div>
+			</div>
+			<div class="row mt10">
 				<div class="col-sm-4">
 					<div class="input-group">
-						<span class="input-group-addon lable">总计划名称</span>
-						<input name="name" class="input-item form-control"/>
+						<span class="input-group-addon lable">总进度计划编码</span> 
+						<input name="planInfo" class="require input-item form-control read" 
+							data-opt="{type:'f7'}" />
 					</div>
 				</div>
 				<div class="col-sm-4">
 					<div class="input-group">
-						<span class="input-group-addon lable">业务日期</span>
-						 <input type="text" name="bizDate" class="form-control input-item" data-opt="{type:'date'}">
+						<span class="input-group-addon lable">开始日期</span>
+						<input name="begDate" class="form-control input-item" data-opt="{type:'date'}">
+					</div>
+				</div>
+				<div class="col-sm-4">
+					<div class="input-group">
+						<span class="input-group-addon lable">截止日期</span>
+						<input name="endDate" class="form-control input-item" data-opt="{type:'date'}">
 					</div>
 				</div>
 			</div>
@@ -51,7 +66,10 @@
 					</div>
 				</div>
 				<div class="col-sm-4">
-					<div class="input-group">&nbsp;</div>
+					<div class="input-group">
+						<span class="input-group-addon lable">业务日期</span>
+						 <input type="text" name="bizDate" class="form-control input-item" data-opt="{type:'date'}">
+					</div>
 				</div>
 			</div>
 			<div class="row mt10">
@@ -68,25 +86,16 @@
 							,tableOpt:{editDataChanged:planItems_dataChanged},addRow:tblAddRow}">
 						<thead>
 							<tr>
-								<th data-field="proStructure" rowspan="2" data-type="f7" data-formatter="displayName" data-locked="true"
-										data-editor="{uiWin:{title:'项目结构',height:600,width:300,url:'ec/basedata/proStructureF7',uiParams:getParams}}">项目工程结构</th>
-								<th data-field="proSub" rowspan="2"  data-type="f7" data-locked="true"
-										data-editor="{uiWin:{title:'项目分部工程',height:550,width:680,url:'ec/basedata/proSubF7',uiParams:getParams}}">项目分部工程</th>
-								<th data-field="proSubItem" rowspan="2" data-type="f7" data-locked="true"
-										data-editor="{uiWin:{title:'项目分项工程',height:550,width:680,url:'ec/basedata/proSubItemF7',uiParams:getParams}}">项目分项结构</th>
+								<th data-field="proStructure" data-width="200" rowspan="2" data-type="f7" data-formatter="displayName" data-locked="true">项目工程结构</th>
+								<th data-field="proSub" rowspan="2" data-width="100" data-type="f7" data-locked="true">项目分部工程</th>
+								<th data-field="proSubItem" data-width="100" rowspan="2" data-type="f7" data-locked="true">项目分项结构</th>
 								<th data-field="planContent" data-locked="true" rowspan="2" data-type="textarea">计划内容</th>
-								
-								<th colspan="3">工作日志</th>
-								<th data-field="filler" rowspan="2" data-type="f7"
-										data-editor="{uiWin:{title:'责任人',height:550,width:680,url:'base/userf7',uiParams:getParams}}">责任人</th>
-								<th data-field="remark" rowspan="2" width="500" data-type="textarea">备注</th>
+								<th colspan="2" data-width="210">工作日志</th>
 								<th data-field="planItemId" data-visible="false" data-locked="true" rowspan="2">计划ID</th>
-								
 							</tr>
 							<tr>
-								<th data-field="fillDate" class="_myMerge" data-type="date">填报日期</th>
-								<th data-field="progress" data-type="number">完成进度</th>
-								<th data-field="finishContent" data-type="textarea">完成内容</th>
+								<th data-field="begDate" class="_myMerge" data-type="date">开始日期</th>
+								<th data-field="endDate" data-type="date">完成日期</th>
 							</tr>
 						</thead>
 					</table>
@@ -226,13 +235,7 @@
 	}
 	
 	function afterAction(_opt){
-		if(_opt==OperateType.addnew){
-			var uiCtx = getUICtx();
-			if(!webUtil.isEmpty(uiCtx)&&$.isPlainObject(uiCtx)
-					&&!webUtil.isEmpty(uiCtx.tree)){
-				$('input[name="project"]').myF7().setData(uiCtx.tree);
-			}
-		}
+		
 	}
 	function btnCopyInsertRow(btn){
 		var entry = btn.entry;
@@ -259,14 +262,15 @@
 			}
 		});
 		editUI.onLoad();
-		webUtil.initMainPanel('#editPanel');
+		//webUtil.initMainPanel('#editPanel');
 		planItemsEntryObj = editUI.getEntryObj('planReportItems');
 		if(!webUtil.isEmpty(planItemsEntryObj)){
 			planItemsEntry = planItemsEntryObj.entry;
 			var rightBtnGroup = planItemsEntryObj.toolbar.find('.pull-right>.btn-group').myBtnGroup();
 			rightBtnGroup.addBtn({entry:planItemsEntry,css:'btn-sm',text:'复制插入',icon:"fa fa-edit",clickFun:btnCopyInsertRow});
 		}
-		
+		var height = $(top.window).height()-110;
+		$('#editPanel').height(height);
 	})
 </script>
 </html>

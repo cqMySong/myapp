@@ -38,6 +38,9 @@ public class ProjectPlanReportItemInfo extends CoreBaseEntryInfo<ProjectPlanRepo
 	private String remark;
 	private String planItemId;//计划分录明细id
 	
+	private Date begDate;//开始日期
+	private Date endDate;//截止日期
+	
 	@OneToOne(fetch=FetchType.LAZY)
 	@JoinColumn(name = "fproStructureId")
 	public ProStructureInfo getProStructure() {
@@ -114,6 +117,20 @@ public class ProjectPlanReportItemInfo extends CoreBaseEntryInfo<ProjectPlanRepo
 	}
 	public void setPlanItemId(String planItemId) {
 		this.planItemId = planItemId;
+	}
+	@Column(name="fbegDate")
+	public Date getBegDate() {
+		return begDate;
+	}
+	public void setBegDate(Date begDate) {
+		this.begDate = begDate;
+	}
+	@Column(name="fendDate")
+	public Date getEndDate() {
+		return endDate;
+	}
+	public void setEndDate(Date endDate) {
+		this.endDate = endDate;
 	}
 	
 	

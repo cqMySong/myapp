@@ -148,7 +148,7 @@ public abstract class BaseEditController extends CoreBaseController {
 	}
 	
 	private Object getEditF7DataVal(Object objVal,String col_format){
-		if(BaseUtil.isEmpty(objVal)) return "{}";
+		if(objVal==null&&BaseUtil.isEmpty(objVal)) return "{}";
 		if(BaseUtil.isEmpty(col_format)) col_format = "name";
 		if(objVal instanceof CoreBaseInfo){
 			JSONObject jsonObj_f7 = new JSONObject();

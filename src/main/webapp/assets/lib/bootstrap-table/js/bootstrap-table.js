@@ -3186,6 +3186,7 @@
                     typeof option === 'object' && option);
 
             	if(options.layout == 'fixed'){
+            		//automatic
             		$this.css({"table-layout":"automatic"});
             	}
             if (typeof option === 'string') {

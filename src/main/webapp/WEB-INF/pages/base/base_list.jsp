@@ -4,7 +4,6 @@
 .panel {
   width: 100%;
   height: 100%;
-  overflow:hidden;
   padding: 0px 2px 2px 2px;
 }
 </style>

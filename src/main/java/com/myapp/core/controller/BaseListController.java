@@ -55,7 +55,6 @@ public abstract class BaseListController extends BasePageListController {
 		return toPage(getListUrl(), params);
 	}
 	
-	@PermissionItemAnn(name="查询",number="query")
 	@RequestMapping(value="/query")
 	@ResponseBody
 	public WebDataModel toList() {
@@ -175,7 +174,7 @@ public abstract class BaseListController extends BasePageListController {
 		return ajaxModel();
 	}
 	
-	@PermissionItemAnn(name="编辑",number="edit",type=PermissionTypeEnum.PAGEADDFUNCTION)
+	@PermissionItemAnn(name="编辑",number="edit",type=PermissionTypeEnum.FUNCTION)
 	@RequestMapping(value = "/edit")
 	public ModelAndView edit(){
 		Map params = new HashMap();
@@ -195,7 +194,7 @@ public abstract class BaseListController extends BasePageListController {
 		}
 		return toPage(getEditUrl(), params);
 	}
-	@PermissionItemAnn(name="查看",number="view",type=PermissionTypeEnum.PAGEADDFUNCTION)
+	@PermissionItemAnn(name="查看",number="view",type=PermissionTypeEnum.FUNCTION)
 	@RequestMapping("/view")
 	public ModelAndView view(){
 		Map params = new HashMap();

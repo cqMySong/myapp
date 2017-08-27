@@ -765,6 +765,14 @@
                       		}
                       		return txt;
                           }
+                     }else if(_thisColumn.type==DataType.textarea){
+                    	 _thisColumn.formatter = function(value, row, index){
+                       		var txt = '';
+                       		if(!webUtil.isEmpty(value)){
+                       			txt = '<pre class="tablepre">'+value+'</pre>';
+                       		}
+                       		return txt;
+                           }
                      }
                 }
                 

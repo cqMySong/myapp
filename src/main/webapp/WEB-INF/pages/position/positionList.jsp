@@ -7,7 +7,7 @@
 <script type="text/javascript">
 </script>
 <body style="padding: 5px;">
-	<div id="table-toolbar" class="panel" style="height:60px;margin-bottom:5px;"></div>
+	<div id="table-toolbar" class="panel" style="height:40px;margin-bottom:5px;"></div>
 	<div class="mainContrainer">
 		<div class="leftContainer" id="tree_container"></div>
 		<div class="rightContainer" id="tblMain_container">
@@ -106,13 +106,13 @@ $(document).ready(function() {
      includeChild.setData(true);
      
      var editWin ={title:'组织岗位',width:620,height:360};
-     var height = 700;
+     var height = top.getTopMainHeight()-45;
      thisOrgList = $('body').treeListUI({tableEl:'#tblMain',treeUrl:'base/orgs/tree',baseUrl:'base/positions',title:'组织信息',height:height,
     	 treeContainer:"#tree_container",editWin:editWin,toolbar:"#table-toolbar",searchParams:{includeChild:true}
-    	 ,extendTableOptions:{toolbar:'#tblMain_toolbar',height:290,sortStable:false}});
+    	 ,extendTableOptions:{toolbar:'#tblMain_toolbar',height:310,sortStable:false}});
      thisOrgList.onLoad();
      
-     var userTable_opt = {height:280,striped:true,sortStable:true,showRefresh:false,clickToSelect:true
+     var userTable_opt = {height:310,striped:true,sortStable:true,showRefresh:false,clickToSelect:true
  			,cache:false,pageSize:10,showToggle:true,search:true,queryParams:queryUserParams
  			,showColumns:true,idField:"id",mypagination:true,url:''};
      

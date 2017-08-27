@@ -86,10 +86,10 @@ $(document).ready(function() {
     includeChild.setData(true);
     
     var editWin ={title:'用户信息',width:620,height:450};
-    var height = 700;
+    var height = top.getTopMainHeight()-90;
     thisOrgList = $('body').treeListUI({tableEl:'#tblMain',treeUrl:'base/orgs/tree',baseUrl:thisBaseUrl,title:'组织信息',height:height,
    	 treeContainer:"#tree_container",editWin:editWin,toolbar:"#table-toolbar",searchParams:{includeChild:true}
-   	 ,extendTableOptions:{toolbar:'#tblMain_toolbar',height:height}});
+   	 ,extendTableOptions:{toolbar:'#tblMain_toolbar',height:height-60}});
     thisOrgList.onLoad();
     var myLayout = $('body').layout({ applyDefaultStyles: true,west__size:300});
     myLayout.sizePane('west',280);

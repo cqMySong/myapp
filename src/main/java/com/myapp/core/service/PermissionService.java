@@ -38,7 +38,6 @@ import com.myapp.core.util.BaseUtil;
 @Service("permissionService")
 public class PermissionService extends BaseInterfaceService<PermissionInfo> {
 	
-	
 	public Map<String, PermissionModel> getAppPermission(HttpServletRequest request){
 		 Map<String, PermissionModel> pmMap = new TreeMap<String, PermissionModel>();
 		ServletContext servletContext = request.getSession().getServletContext();
@@ -81,7 +80,6 @@ public class PermissionService extends BaseInterfaceService<PermissionInfo> {
 	public Map<String,Integer> syncSysPermission(HttpServletRequest request) throws SaveException{
 		Map<String, PermissionModel> appPermissions =  getAppPermission(request);
 		Map<String ,PermissionInfo> dbPerInfoMap = new HashMap<String ,PermissionInfo>();
-		int total = appPermissions.size();
 		int insert = 0;
 		int update = 0;
 		
@@ -131,7 +129,7 @@ public class PermissionService extends BaseInterfaceService<PermissionInfo> {
 		}
 		
 		Map<String,Integer> reMap = new HashMap<String,Integer>();
-		reMap.put("total",total);
+		reMap.put("total",insert+update);
 		reMap.put("insert",insert);
 		reMap.put("update",update);
 		return reMap;

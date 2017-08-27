@@ -9,7 +9,7 @@
 	<% MyWebContent webCtx = (MyWebContent)request.getSession().getAttribute("webCtx"); %>
 	<link rel="stylesheet" href="<%=appRoot%>/assets/css/main.css"/>
 	<body>
-		<div class="headerpanel">
+		<div id="headPanel" class="headerpanel">
 			<div class="logopanel">
 				<h2><a href="#">${appName } - ${version }</a></h2>
 			</div>
@@ -315,6 +315,9 @@ var mainTab;
 function addMainTab(item){
 	mainTab.addTab(item);
 }
+function getTopMainHeight(){
+	return $(top.window).height()-($('#headPanel').innerHeight()+$('#mainTab>ul.nav-tabs').innerHeight())-10;
+}
 $(document).ready(function() {
 	var userMenus = {menus:[
 							{title:'项目管理首页',icon:'fa fa-home'},
@@ -353,6 +356,7 @@ $(document).ready(function() {
 						, {title:'安全管理',icon:'fa fa-star',child:[
 							{title:'用户管理',icon:'fa fa-user',active:true,url:'base/users/list'},
 							{title:'岗位管理',icon:'fa fa-users',url:'base/positions/list'},
+							{title:'工作职责',icon:'fa fa-users',url:'base/jobdutys/list'},
 							{title:'角色管理',icon:'fa fa-users',url:'base/roles/list'},
 							{title:'权限管理',icon:'fa fa-tags',url:'base/permissions/list'}
 							]},

@@ -78,6 +78,22 @@ public abstract class AbstractBaseDao implements IAbstractBaseDao {
 		return null;
 	}
 	
+	private boolean isEquals(Object obj1,Object obj2){
+		if(obj1==null||obj2==null){
+			return obj1==null&&obj2==null;
+		}else{
+			String eq1 = obj1.toString();
+			String eq2 = obj2.toString();
+			if(obj1 instanceof CoreInfo){
+				eq1 = ((CoreInfo)obj1).getId();
+			}
+			if(obj2 instanceof CoreInfo){
+				eq2 = ((CoreInfo)obj2).getId();
+			}
+			return eq1.equals(eq2);
+		}
+	}
+	
 	public Object saveEntity(Object entity) {
 		if(entity!=null){
 			Serializable pk = null;
@@ -92,9 +108,20 @@ public abstract class AbstractBaseDao implements IAbstractBaseDao {
 				pk = addNewEntity(entity);
 			}else{
 				Session sesion = getCurrentSession();
-				sesion.merge(entity);
-//				sesion.update(entity);
+				boolean toUpTree = false;
+				if(entity instanceof CoreBaseTreeInfo){
+					CoreBaseTreeInfo curTreeInfo = (CoreBaseTreeInfo) entity;
+					CoreBaseTreeInfo dbTreeInfo = (CoreBaseTreeInfo) sesion.get(entity.getClass(), pk);
+					toUpTree = isEquals(curTreeInfo.getName(),dbTreeInfo.getName())
+							||isEquals(curTreeInfo.getNumber(),dbTreeInfo.getNumber());
+				}
+				if(toUpTree){
+					updateTreeData(sesion,(CoreBaseTreeInfo) entity);
+				}else{
+					sesion.merge(entity);	
+				}
 				sesion.flush();
+				
 			}
 			if(pk!=null) {
 				return entity;
@@ -102,6 +129,39 @@ public abstract class AbstractBaseDao implements IAbstractBaseDao {
 		}
 		return null;
 	}
+	
+	private void updateTreeData(Session sesion,CoreBaseTreeInfo treeInfo){
+		if(treeInfo==null) return;
+		String longNumber = treeInfo.getNumber();
+		String displayName = treeInfo.getName();
+		if(treeInfo.getParent()!=null){
+			CoreBaseTreeInfo ptreeInfo = (CoreBaseTreeInfo)treeInfo.getParent();
+			longNumber = ptreeInfo.getLongNumber();
+			if(!BaseUtil.isEmpty(longNumber)){
+				longNumber = longNumber+"!"+treeInfo.getNumber();
+			}else{
+				longNumber = treeInfo.getNumber();
+			}
+			displayName = ptreeInfo.getDisplayName();
+			if(!BaseUtil.isEmpty(displayName)){
+				displayName = displayName+"_"+treeInfo.getName();
+			}else{
+				displayName = treeInfo.getName();
+			}
+		}
+		
+		treeInfo.setLongNumber(longNumber);
+		treeInfo.setDisplayName(displayName);
+		sesion.merge(treeInfo);
+		
+		Set<CoreBaseTreeInfo> children =  treeInfo.getChildren();
+		if(children!=null&&children.size()>0){
+			for(CoreBaseTreeInfo tInfo:children){
+				updateTreeData(sesion,tInfo);
+			}
+		}
+	}
+	
 	public void deleteEntity(Class claz, String id) throws DeleteException {
 		if(claz!=null||id!=null){
 			deleteEntity(loadEntity(claz,id));
@@ -110,6 +170,13 @@ public abstract class AbstractBaseDao implements IAbstractBaseDao {
 	
 	public void deleteEntity(Object entity) throws DeleteException {
 		if(entity!=null){
+			if(entity instanceof CoreBaseTreeInfo){
+				CoreBaseTreeInfo treeInfo = (CoreBaseTreeInfo) entity;
+				Set treeChildren = treeInfo.getChildren();
+				if(treeChildren!=null&&treeChildren.size()>0){
+					throw new DeleteException("还存在下级节点无法完成删除操作!");
+				}
+			}
 			if(entity instanceof CoreBaseDataInfo){
 				CoreBaseDataInfo cbInfo = (CoreBaseDataInfo) entity;
 				if(cbInfo.getEnabled()!=null&&cbInfo.getEnabled()){
@@ -122,8 +189,23 @@ public abstract class AbstractBaseDao implements IAbstractBaseDao {
 					throw new DeleteException("已经审核的业务数据无法完成删除操作!");
 				}
 			}
-			
 			Session session = getCurrentSession();
+			if(entity instanceof CoreBaseTreeInfo){
+				CoreBaseTreeInfo treeInfo = (CoreBaseTreeInfo) entity;
+				CoreBaseTreeInfo ptreeInfo = (CoreBaseTreeInfo) treeInfo.getParent();
+				if(ptreeInfo!=null){
+					Class clas = ptreeInfo.getClass();
+					String hql = "select id from "+clas.getSimpleName()+" where id !=? and parent.id=?";
+					Query query = initHqlParams(session.createQuery(hql),new String[]{treeInfo.getId(),ptreeInfo.getId()});
+					if(query!=null){
+						List datas = query.list();
+						if(datas!=null&&datas.size()>0){
+							ptreeInfo.setIsLeaf(true);
+							session.merge(ptreeInfo);
+						}
+					}
+				}
+			}
 			session.delete(entity);
 			session.flush();
 		}
@@ -152,21 +234,6 @@ public abstract class AbstractBaseDao implements IAbstractBaseDao {
 		return null;
 	}
 	
-	private void initTreeNewData(CoreBaseTreeInfo treeInfo){
-		if(treeInfo==null) return;
-		Date curDate = new Date();
-		treeInfo.setCreateDate(curDate);
-		treeInfo.setLastUpdateDate(curDate);
-		Set<CoreBaseTreeInfo> children =  treeInfo.getChildren();
-		if(children!=null&&children.size()>0){
-			treeInfo.setLeaf(false);
-			for(CoreBaseTreeInfo tInfo:children){
-				initTreeNewData(tInfo);
-			}
-		}else{
-			treeInfo.setLeaf(true);
-		}
-	}
 	
 	private EntityTypeEnum getEntityType(Object entity){
 		EntityTypeEnum et = EntityTypeEnum.OTHER;
@@ -211,8 +278,38 @@ public abstract class AbstractBaseDao implements IAbstractBaseDao {
 				}
 			}
 			if(entity instanceof CoreBaseTreeInfo){
-				initTreeNewData((CoreBaseTreeInfo)entity);
-			}else if(entity instanceof CoreBaseInfo){
+				CoreBaseTreeInfo treeInfo = (CoreBaseTreeInfo)entity;
+				Integer level = 1;
+				String longNumber = treeInfo.getNumber();
+				String displayName = treeInfo.getName();
+				Boolean isLeaf = Boolean.TRUE;
+				if(treeInfo.getParent()!=null){
+					CoreBaseTreeInfo ptreeInfo = (CoreBaseTreeInfo)treeInfo.getParent();
+					longNumber = ptreeInfo.getLongNumber();
+					if(!BaseUtil.isEmpty(longNumber)){
+						longNumber = longNumber+"!"+treeInfo.getNumber();
+					}else{
+						longNumber = treeInfo.getNumber();
+					}
+					displayName = ptreeInfo.getDisplayName();
+					if(!BaseUtil.isEmpty(displayName)){
+						displayName = displayName+"_"+treeInfo.getName();
+					}else{
+						displayName = treeInfo.getName();
+					}
+					level = ptreeInfo.getLevel();
+					if(level!=null){
+						level = level+1;
+					}else{
+						level = 1;
+					}
+				}
+				treeInfo.setIsLeaf(isLeaf);
+				treeInfo.setLevel(level);
+				treeInfo.setLongNumber(longNumber);
+				treeInfo.setDisplayName(displayName);
+			}
+			if(entity instanceof CoreBaseInfo){
 				CoreBaseInfo cbinfo = (CoreBaseInfo) entity;
 				Date curDate = new Date();
 				cbinfo.setCreateDate(curDate);
@@ -220,6 +317,15 @@ public abstract class AbstractBaseDao implements IAbstractBaseDao {
 			}
 			Serializable pk = session.save(entity);
 			session.merge(entity);
+			if(entity instanceof CoreBaseTreeInfo){
+				CoreBaseTreeInfo treeInfo = (CoreBaseTreeInfo)entity;
+				Object pObj = treeInfo.getParent();
+				if(pObj!=null&&pObj instanceof CoreBaseTreeInfo){
+					CoreBaseTreeInfo pTreeInfo = (CoreBaseTreeInfo)pObj;
+					pTreeInfo.setIsLeaf(false);
+					session.merge(pTreeInfo);
+				}
+			}
 			session.flush();
 			return pk;
 		}

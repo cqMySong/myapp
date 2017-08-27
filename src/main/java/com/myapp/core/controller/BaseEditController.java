@@ -673,14 +673,14 @@ public abstract class BaseEditController extends CoreBaseController {
 		return ajaxModel();
 	}
 	
-	@PermissionItemAnn(name="查看",number="view",type=PermissionTypeEnum.PAGEADDFUNCTION)
+	@PermissionItemAnn(name="查看",number="view",type=PermissionTypeEnum.FUNCTION)
 	@ResponseBody
 	@RequestMapping(value="/view",method=RequestMethod.POST)
 	public WebDataModel view() {
 		return loadData(BaseMethodEnum.VIEW);
 	}
 	
-	@PermissionItemAnn(name="编辑",number="edit",type=PermissionTypeEnum.PAGEADDFUNCTION)
+	@PermissionItemAnn(name="编辑",number="edit",type=PermissionTypeEnum.FUNCTION)
 	@ResponseBody
 	@RequestMapping(value="/edit",method=RequestMethod.POST)
 	public WebDataModel edit() {

@@ -28,7 +28,7 @@ public class CoreBaseTreeInfo<T> extends CoreBaseDataInfo {
 	private Integer level;
 	private String longNumber;
 	private String displayName;
-	private boolean isLeaf;
+	private Boolean isLeaf;
 	
 	@ManyToOne   
 	@JoinColumn(name="fprentid")  
@@ -48,18 +48,18 @@ public class CoreBaseTreeInfo<T> extends CoreBaseDataInfo {
 	
 	@Column(name="flevel",nullable=false)
 	public Integer getLevel() {
-		if(!BaseUtil.isEmpty(level)) return level;
-		if(level==null){
-			if(this.getParent()!=null){
-				level = ((CoreBaseTreeInfo)this.getParent()).getLevel();
-				if(level!=null){
-					level = level+1;
-				}
-			}
-			if(level==null) {
-				level = 1;
-			}
-		}
+//		if(!BaseUtil.isEmpty(level)) return level;
+//		if(level==null){
+//			if(this.getParent()!=null){
+//				level = ((CoreBaseTreeInfo)this.getParent()).getLevel();
+//				if(level!=null){
+//					level = level+1;
+//				}
+//			}
+//			if(level==null) {
+//				level = 1;
+//			}
+//		}
 		return level;
 	}
 	public void setLevel(Integer level) {
@@ -68,19 +68,19 @@ public class CoreBaseTreeInfo<T> extends CoreBaseDataInfo {
 	
 	@Column(name="flongnumber",nullable=false)
 	public String getLongNumber() {
-		if(!BaseUtil.isEmpty(longNumber)) return longNumber;
-		String curNumber = getNumber();
-		if(BaseUtil.isEmpty(curNumber)) curNumber = "01";
-		if(this.getParent()!=null){
-			longNumber = ((CoreBaseTreeInfo)this.getParent()).getLongNumber();
-			if(!BaseUtil.isEmpty(longNumber)){
-				longNumber = longNumber+"!"+curNumber;
-			}else{
-				longNumber = curNumber;
-			}
-		}else{
-			longNumber = curNumber;
-		}
+//		if(!BaseUtil.isEmpty(longNumber)) return longNumber;
+//		String curNumber = getNumber();
+//		if(BaseUtil.isEmpty(curNumber)) curNumber = "01";
+//		if(this.getParent()!=null){
+//			longNumber = ((CoreBaseTreeInfo)this.getParent()).getLongNumber();
+//			if(!BaseUtil.isEmpty(longNumber)){
+//				longNumber = longNumber+"!"+curNumber;
+//			}else{
+//				longNumber = curNumber;
+//			}
+//		}else{
+//			longNumber = curNumber;
+//		}
 		
 		return longNumber;
 	}
@@ -91,32 +91,39 @@ public class CoreBaseTreeInfo<T> extends CoreBaseDataInfo {
 	
 	@Column(name="fdisplayname",nullable=false)
 	public String getDisplayName() {
-		if(!BaseUtil.isEmpty(displayName)) return displayName;
-		String curName = getName();
-		if(BaseUtil.isEmpty(curName)) curName = "01";
-		if(this.getParent()!=null){
-			displayName = ((CoreBaseTreeInfo)this.getParent()).getDisplayName();
-			if(!BaseUtil.isEmpty(displayName)){
-				displayName = displayName+"_"+curName;
-			}else{
-				displayName = curName;
-			}
-		}else{
-			displayName = curName;
-		}
-		
+//		if(!BaseUtil.isEmpty(displayName)) return displayName;
+//		String curName = getName();
+//		if(BaseUtil.isEmpty(curName)) curName = "01";
+//		if(this.getParent()!=null){
+//			displayName = ((CoreBaseTreeInfo)this.getParent()).getDisplayName();
+//			if(!BaseUtil.isEmpty(displayName)){
+//				displayName = displayName+"_"+curName;
+//			}else{
+//				displayName = curName;
+//			}
+//		}else{
+//			displayName = curName;
+//		}
+//		
 		return displayName;
 	}
 	public void setDisplayName(String displayName) {
 		this.displayName = displayName;
 	}
+	
 	@Column(name="fisleaf",nullable=false)
-	public boolean isLeaf() {
+	public Boolean getIsLeaf() {
+//		if(isLeaf==null){
+//			Set children = this.getChildren();
+//			isLeaf = children!=null&&children.size()>0?Boolean.FALSE:Boolean.TRUE;
+//		}
 		return isLeaf;
 	}
-	public void setLeaf(boolean isLeaf) {
+	public void setIsLeaf(Boolean isLeaf) {
 		this.isLeaf = isLeaf;
 	}
+	
+	
 	
 	
 }

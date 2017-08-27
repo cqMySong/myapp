@@ -628,6 +628,17 @@ input::-ms-clear{display:none;}
 	min-width: 100px;
 	text-align: right;
 }
-
-
+/**表格内部的pre样式显示值**/
+td>pre.tablepre {
+  padding: 0px;
+  margin: 0px;
+  background:none;
+  display: block;
+  line-height: 1.42857143;
+  word-break: break-all;
+  word-wrap: break-word;
+  border: 0px;border-radius:0px;
+  text-align:left;
+  font-size: 12px;
+}
 

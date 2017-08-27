@@ -7,7 +7,7 @@
 <script type="text/javascript">
 </script>
 <body style="padding: 5px;">
-	<div id="table-toolbar" class="panel" style="height:60px;margin-bottom:5px;"></div>
+	<div id="table-toolbar" class="panel" style="height:40px;margin-bottom:5px;"></div>
 	<div class="mainContrainer">
 		<div class="leftContainer" id="tree_container"></div>
 		<div class="rightContainer" id="tblMain_container">
@@ -66,10 +66,10 @@ $(document).ready(function() {
      includeChild.setData(true);
      
      var editWin ={title:'组织信息',url:'base/orgs/edit',width:620,height:400};
-     var height = 700;
+     var height = top.getTopMainHeight()-48;
      thisOrgList = $('body').treeListUI({tableEl:'#tblMain',baseUrl:'base/orgs',title:'组织信息',height:height,
     	 treeContainer:"#tree_container",editWin:editWin,toolbar:"#table-toolbar",searchParams:{includeChild:true}
-    	 ,extendTableOptions:{toolbar:'#tblMain_toolbar',height:height}});
+    	 ,extendTableOptions:{toolbar:'#tblMain_toolbar',height:height-50}});
      thisOrgList.onLoad();
 });
 

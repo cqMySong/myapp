@@ -25,7 +25,7 @@ public class BudgetingDetailInfo extends CoreBaseEntryInfo<BudgetingInfo> {
     private BigDecimal unitPrice;//单价
     private DataDictionaryInfo dataDic;//物料信息
 
-    @Column(name="fQuantity",scale = 10,precision = 2)
+    @Column(name="fQuantity",precision = 2)
     public BigDecimal getQuantity() {
         return quantity;
     }
@@ -33,7 +33,7 @@ public class BudgetingDetailInfo extends CoreBaseEntryInfo<BudgetingInfo> {
     public void setQuantity(BigDecimal quantity) {
         this.quantity = quantity;
     }
-    @Column(name="fUnitPrice",scale = 10,precision = 4)
+    @Column(name="fUnitPrice",precision = 4)
     public BigDecimal getUnitPrice() {
         return unitPrice;
     }

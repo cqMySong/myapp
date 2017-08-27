@@ -7,11 +7,8 @@ import com.myapp.core.service.UserService;
 import com.myapp.core.service.act.ActTaskService;
 import com.myapp.core.service.base.BaseInterfaceService;
 import com.myapp.entity.ec.drawing.DiscussionDrawingInfo;
-import com.myapp.enums.FlowCategory;
 import org.activiti.engine.delegate.DelegateExecution;
 import org.activiti.engine.delegate.ExecutionListener;
-import org.activiti.engine.delegate.JavaDelegate;
-import org.activiti.engine.identity.User;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;

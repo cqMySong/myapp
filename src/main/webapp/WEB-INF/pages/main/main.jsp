@@ -325,6 +325,7 @@ $(document).ready(function() {
                                 {title:'单位',icon:'fa fa-cogs',url:'ec/basedata/ecunitList/list'}     
                                ,{title:'方案类别',icon:'fa fa-cogs',url:'ec/basedata/schemeTypeList/list'}
                                ,{title:'施工方案',icon:'fa fa-cogs',url:'ec/basedata/schemelist/list'}
+                               ,{title:'数据字典',icon:'fa fa-cogs',url:'ec/basedata/datadics/list'}
 							    ]},
 							{title:'项目基础数据',icon:'fa fa-home',child:[
 								{title:'工程项目',icon:'fa fa-building-o',url:'ec/basedata/projects/list'},
@@ -344,6 +345,8 @@ $(document).ready(function() {
 								{title:'质量交底',icon:'fa fa-building-o',url:'ec/quality/standard/qualityStandardList/list'}]},
 							{title:'图纸会审',icon:'fa fa-home',child:[
 								{title:'图纸会审',icon:'fa fa-building-o',url:'ec/discussiondrawings/list'}]},
+							{title:'预算编制',icon:'fa fa-home',child:[
+								{title:'预算编制',icon:'fa fa-building-o',url:'ec/budget/budgetings/list'}]},
 							]};
 	
 	$('#userMenus').myPillTreeMenu('init',userMenus);

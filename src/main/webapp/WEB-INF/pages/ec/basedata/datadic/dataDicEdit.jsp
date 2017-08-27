@@ -64,7 +64,7 @@
 		</form>
 	</div>
 </body>
-<%@include file="../base/base_edit.jsp"%>
+<%@include file="../../../base/base_edit.jsp"%>
 <script src="<%=appRoot%>/assets/lib/pinyin/dict/pinyin_dict_withtone.js" type="text/javascript"></script>
 <script src="<%=appRoot%>/assets/lib/pinyin/dict/pinyin_dict_polyphone.js" type="text/javascript"></script>
 <script src="<%=appRoot%>/assets/lib/pinyin/pinyinUtil.js" type="text/javascript"></script>

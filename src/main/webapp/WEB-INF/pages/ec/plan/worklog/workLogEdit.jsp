@@ -14,23 +14,47 @@
 		<div id="editPanel" class="myMainContent panel">
 		<div id="table-toolbar"></div>
 		<form id="editForm">
+			<div style="display:none;">
+				<input class="input-item" name="number">
+				<input name="billState" class="input-item"/>
+			</div>
 			<div class="row">
 				<div class="col-sm-4">
 					<div class="input-group">
-						<span class="input-group-addon lable">日志编码</span> 
-						<input class="require input-item" name="number">
-					</div>
-				</div>
-				<div class="col-sm-4">
-					<div class="input-group">
 						<span class="input-group-addon lable">日志名称</span>
-						<input name="name" class="input-item form-control"/>
+						<input type="text" name="name" class="input-item" >
 					</div>
 				</div>
 				<div class="col-sm-4">
 					<div class="input-group">
-						<span class="input-group-addon lable">填报日期</span>
-						 <input type="text" name="bizDate" class="form-control input-item" data-opt="{type:'date'}">
+						<span class="input-group-addon lable">日期</span>
+						<input type="text" name="bizDate" class="form-control input-item" data-opt="{type:'date'}">
+					</div>
+				</div>
+				<div class="col-sm-4">
+					<div class="input-group">
+						<span class="input-group-addon lable">星期</span>
+						<input name="week" class="input-item"/>
+					</div>
+				</div>
+			</div>
+			<div class="row mt10">
+				<div class="col-sm-4">
+					<div class="input-group">
+						<span class="input-group-addon lable">气温(℃)</span>
+						<input name="temperature" class="input-item"/>
+					</div>
+				</div>
+				<div class="col-sm-4">
+					<div class="input-group">
+						<span class="input-group-addon lable">上午天气</span>
+						<input type="text" name="amweather" class="input-item">
+					</div>
+				</div>
+				<div class="col-sm-4">
+					<div class="input-group">
+						<span class="input-group-addon lable">下午天气</span>
+						<input type="text" name="pmweather" class="input-item">
 					</div>
 				</div>
 			</div>
@@ -44,26 +68,129 @@
 				</div>
 				<div class="col-sm-4">
 					<div class="input-group">
-						<span class="input-group-addon lable">业务状态</span>
-						<select name="billState" data-opt="{type:'select',selected:'ADDNEW',url:'base/common/combox?enum=com.myapp.core.enums.BillState'}" 
-		                	class="form-control input-item require read">
-		                </select>
+						<span class="input-group-addon lable">施工部位</span>
+						<input name="workSite" class="input-item"/>
 					</div>
 				</div>
 				<div class="col-sm-4">
-					<div class="input-group">&nbsp;</div>
+					<div class="input-group">
+						<span class="input-group-addon lable">出勤人数(人)</span>
+						<input name="attendance" class="input-item"/>
+					</div>
 				</div>
 			</div>
 			<div class="row mt10">
 				<div class="col-sm-12">
 					<div class="input-group">
-						<span class="input-group-addon lable">备注</span>
-						<textarea name="remark" style="height:40px;" class="input-item form-control"></textarea>
+						<span class="input-group-addon lable">施工内容</span>
+						<textarea name="wrokContent" style="height:80px;" class="input-item"></textarea>
 					</div>
 				</div>
 			</div>
 			
 			<div class="row mt10">
+				<div class="col-sm-4">
+					<div class="input-group">
+						<span class="input-group-addon lable">设计变更</span>
+						<input name="sjbg" class="input-item"/>
+					</div>
+				</div>
+				<div class="col-sm-4">
+					<div class="input-group">
+						<span class="input-group-addon lable">文号</span>
+						<input name="bgwh" class="input-item">
+					</div>
+				</div>
+				<div class="col-sm-4">
+					<div class="input-group">
+						<span class="input-group-addon lable">通知单位</span>
+						<input name="tzdw" class="input-item">
+					</div>
+				</div>
+			</div>
+			<div class="row mt10">
+				<div class="col-sm-8">
+					<div class="input-group">
+						<span class="input-group-addon lable">技术交底</span>
+						<input name="jsjd" class="input-item"/>
+					</div>
+				</div>
+				<div class="col-sm-4">
+					<div class="input-group">
+						<span class="input-group-addon lable">接受交底人</span>
+						<input name="jsjdr" class="input-item">
+					</div>
+				</div>
+			</div>
+			<div class="row mt10">
+				<div class="col-sm-12">
+					<div class="input-group" style="width: 100%;">
+						<span class="input-group-addon lable" style="width: 120px;">隐蔽工程验收部位</span>
+						<input name="ybgcysbw" class="input-item">
+					</div>
+				</div>
+			</div>
+			<div class="row mt10">
+				<div class="col-sm-12">
+					<div class="input-group" style="width: 100%;">
+						<span class="input-group-addon lable" style="width: 120px;">砼砂浆试块制作</span>
+						<input name="sjskzz" class="input-item">
+					</div>
+				</div>
+			</div>
+			<div class="row mt10">
+				<div class="col-sm-12">
+					<div class="input-group" style="width: 100%;">
+						<span class="input-group-addon lable" style="width: 120px;">材料进场送检情况</span>
+						<input name="cljcsjqk" class="input-item">
+					</div>
+				</div>
+			</div>
+			<div class="row mt10">
+				<div class="col-sm-12">
+					<div class="input-group">
+						<span class="input-group-addon lable">质量</span>
+						<input name="zl" class="input-item">
+					</div>
+				</div>
+			</div>
+			<div class="row mt10">
+				<div class="col-sm-12">
+					<div class="input-group">
+						<span class="input-group-addon lable">安全</span>
+						<input name="aq" class="input-item">
+					</div>
+				</div>
+			</div>
+			<div class="row mt10">
+				<div class="col-sm-12">
+					<div class="input-group">
+						<span class="input-group-addon lable">其他</span>
+						<input name="remark" class="input-item">
+					</div>
+				</div>
+			</div>
+			
+			<div class="row mt10">
+				<div class="col-sm-4">
+					<div class="input-group">
+						<span class="input-group-addon lable">工长</span>
+						<input name="gz" class="input-item"/>
+					</div>
+				</div>
+				<div class="col-sm-4">
+					
+				</div>
+				<div class="col-sm-4">
+					<div class="input-group">
+						<span class="input-group-addon lable">记录员</span>
+						<input name="jly" class="input-item">
+					</div>
+				</div>
+			</div>
+			
+			
+			<div class="row mt10" style="display:none;">
 				<div class="col-sm-4">
 					<div class="input-group">
 						<span class="input-group-addon lable">创建人</span> 
@@ -83,7 +210,7 @@
 					</div>
 				</div>
 			</div>
-			<div class="row mt10">
+			<div class="row mt10" style="display:none;">
 				<div class="col-sm-4">
 					<div class="input-group">
 						<span class="input-group-addon lable">创建日期</span> 
@@ -103,6 +230,7 @@
 					</div>
 				</div>
 			</div>
+			
 			</form>
 		</div>
 </body>
@@ -133,7 +261,7 @@
 			if(!webUtil.isEmpty(uiCtx)&&$.isPlainObject(uiCtx)
 					&&!webUtil.isEmpty(uiCtx.tree)){
 				$('input[name="project"]').myF7().setData(uiCtx.tree);
-				var defName = uiCtx.tree.name +'-'+curDate;
+				var defName = uiCtx.tree.name +'-施工日志';
 				$('input[name="name"]').myComponet(DataType.text,{method:'setdata',opt:defName});
 			}
 		}
@@ -149,6 +277,8 @@
 			}
 		});
 		editUI.onLoad();
+		var height = $(top.window).height()-120;
+		$('#editPanel').height(height);
 	})
 </script>
 </html>

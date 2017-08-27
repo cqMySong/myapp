@@ -48,6 +48,7 @@ public class CoreBaseTreeInfo<T> extends CoreBaseDataInfo {
 	
 	@Column(name="flevel",nullable=false)
 	public Integer getLevel() {
+		if(!BaseUtil.isEmpty(level)) return level;
 		if(level==null){
 			if(this.getParent()!=null){
 				level = ((CoreBaseTreeInfo)this.getParent()).getLevel();
@@ -67,6 +68,7 @@ public class CoreBaseTreeInfo<T> extends CoreBaseDataInfo {
 	
 	@Column(name="flongnumber",nullable=false)
 	public String getLongNumber() {
+		if(!BaseUtil.isEmpty(longNumber)) return longNumber;
 		String curNumber = getNumber();
 		if(BaseUtil.isEmpty(curNumber)) curNumber = "01";
 		if(this.getParent()!=null){
@@ -89,6 +91,7 @@ public class CoreBaseTreeInfo<T> extends CoreBaseDataInfo {
 	
 	@Column(name="fdisplayname",nullable=false)
 	public String getDisplayName() {
+		if(!BaseUtil.isEmpty(displayName)) return displayName;
 		String curName = getName();
 		if(BaseUtil.isEmpty(curName)) curName = "01";
 		if(this.getParent()!=null){

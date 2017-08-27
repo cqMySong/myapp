@@ -91,7 +91,6 @@ public class BaseInterceptor implements HandlerInterceptor {
 			}
 			PermissionItemAnn pitem = hm.getMethod().getAnnotation(PermissionItemAnn.class);
 			PermissionAnn clazPi = hm.getBean().getClass().getAnnotation(PermissionAnn.class);
-			baseService.newServicInstance(UserInfo.class).getEntityCollection();
 			if(pitem!=null&&clazPi!=null){
 				System.out.println(pitem.name()+"  -- "+pitem.number()+ " --"+pitem.type().name());
 				System.out.println(clazPi.name()+"  -- "+clazPi.number());

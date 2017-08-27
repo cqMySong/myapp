@@ -1,5 +1,6 @@
 package com.myapp.controller.ec.plan.worklog;
 
+import java.util.Date;
 import java.util.List;
 
 import javax.annotation.Resource;
@@ -16,7 +17,6 @@ import com.myapp.core.enums.BillState;
 import com.myapp.core.enums.DataTypeEnum;
 import com.myapp.core.model.ColumnModel;
 import com.myapp.entity.ec.basedata.ProjectInfo;
-import com.myapp.entity.ec.plan.ProjectTotalPlanInfo;
 import com.myapp.entity.ec.plan.WorkLogInfo;
 import com.myapp.service.ec.plan.WorkLogService;
 
@@ -45,8 +45,8 @@ public class WorkLogEditController extends BaseBillEditController{
 		cols.add(new ColumnModel("remark"));
 		cols.add(new ColumnModel("week"));
 		cols.add(new ColumnModel("workSite"));
-		cols.add(new ColumnModel("attendance"));
-		cols.add(new ColumnModel("temperature"));
+		cols.add(new ColumnModel("attendance",DataTypeEnum.INT));
+		cols.add(new ColumnModel("temperature",DataTypeEnum.NUMBER));
 		cols.add(new ColumnModel("amweather"));
 		cols.add(new ColumnModel("pmweather"));
 		cols.add(new ColumnModel("sjbg"));
@@ -60,10 +60,9 @@ public class WorkLogEditController extends BaseBillEditController{
 		cols.add(new ColumnModel("zl"));
 		cols.add(new ColumnModel("aq"));
 		cols.add(new ColumnModel("gz"));
+		cols.add(new ColumnModel("jly"));
 		cols.add(new ColumnModel("wrokContent"));
 		cols.add(new ColumnModel("optDutyer"));
-		
-		
 		
 		
 		cols.add(new ColumnModel("bizDate",DataTypeEnum.DATE));
@@ -80,6 +79,9 @@ public class WorkLogEditController extends BaseBillEditController{
 	
 	public Object createNewData() {
 		WorkLogInfo wlInfo = new WorkLogInfo();
+		wlInfo.setJly(getCurUser().getName());
+		wlInfo.setCreateUser(getCurUser());
+		wlInfo.setBizDate(new Date());
 		return wlInfo;
 	}
 

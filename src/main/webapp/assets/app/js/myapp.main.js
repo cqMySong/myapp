@@ -795,7 +795,7 @@ MyDataTable.prototype = {
 	},
 	getSubmitData:function(otherCol){
 		var datas = [];
-		var cols = this.getVisibleColumns();
+		var cols = this.getColumns();
 		var tableDatas = this.getData();
 		this.checkTable();
 		if(!webUtil.isEmpty(cols)&&cols.length>0
@@ -855,9 +855,17 @@ MyDataTable.prototype = {
 	getVisibleColumns:function(){
 		return this.tblMain.bootstrapTable('getVisibleColumns');
 	},
+	getHiddenColumns:function(){
+		return this.tblMain.bootstrapTable('getHiddenColumns');
+	},
+	getColumns:function(){
+		var col1 = this.getVisibleColumns()||[];
+		var col2 = this.getHiddenColumns()||[];
+		return col1.concat( col2 );
+	},
 	getColumn:function(field){
 		if(webUtil.isEmpty(field)) return null;
-		var cols = this.getVisibleColumns();
+		var cols = this.getColumns();
 		if(!webUtil.isEmpty(cols)&&cols.length>0){
 			if($.isNumeric(field)){
 				if(field>=0&&field<cols.length){

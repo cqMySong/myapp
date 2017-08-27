@@ -358,7 +358,11 @@ var webUtil = {
 		}
 		var _maxHeight = $(top.window).height(); 
 		if(_opt.height>_maxHeight){
-			_opt.height = _maxHeight;
+			_opt.height = _maxHeight-2;
+		}
+		var _maxWidth = $(top.window).width();
+		if(_opt.width>_maxWidth){
+			_opt.width = _maxWidth-2;
 		}
 		//winUrl = encodeURI(winUrl.replace(/\"/g,"'")); 
 		var layer_index = parent.layer.open({type : 2,
@@ -545,7 +549,8 @@ var webUtil = {
 		var dom = ifrm.contentDocument? ifrm.contentDocument:ifrm.contentWindow.document; 
 		ifrm.style.visibility = 'hidden'; 
 		ifrm.style.height = '10px';
-		ifrm.style.height = (webUtil.getMainTabBodyHeight(dom)) + "px"; 
+		var maxHeight = Math.max($(top.window).height()-115,webUtil.getMainTabBodyHeight(dom));
+		ifrm.style.height = maxHeight + "px"; 
 		ifrm.style.visibility = 'visible'; 
 		var _parent = $("#"+elId).parent('div');
 		 if(!webUtil.isEmpty(_parent)){

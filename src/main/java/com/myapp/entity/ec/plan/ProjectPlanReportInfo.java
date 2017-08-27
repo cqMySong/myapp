@@ -1,6 +1,6 @@
 package com.myapp.entity.ec.plan;
 
-import java.util.HashSet;
+import java.util.Date;
 import java.util.Set;
 
 import javax.persistence.CascadeType;
@@ -28,6 +28,11 @@ import com.myapp.entity.ec.basedata.ProjectInfo;
 @Table(name="t_ec_proWorkPlanReport")
 public class ProjectPlanReportInfo extends CoreBaseBillInfo {
 	private ProjectInfo project;//工程项目
+	
+	private ProjectTotalPlanInfo planInfo;//总进度计划
+	private Date begDate;//开始日期
+	private Date endDate;//截止日期
+	
 	private String remark;//备注
 	private Set<ProjectPlanReportItemInfo> planReportItems;
 	
@@ -54,7 +59,27 @@ public class ProjectPlanReportInfo extends CoreBaseBillInfo {
 	public void setPlanReportItems(Set<ProjectPlanReportItemInfo> planReportItems) {
 		this.planReportItems = planReportItems;
 	}
-	
-	
+	@OneToOne(fetch=FetchType.LAZY)
+	@JoinColumn(name = "ftotalplanId")
+	public ProjectTotalPlanInfo getPlanInfo() {
+		return planInfo;
+	}
+	public void setPlanInfo(ProjectTotalPlanInfo planInfo) {
+		this.planInfo = planInfo;
+	}
+	@Column(name="fbegDate")
+	public Date getBegDate() {
+		return begDate;
+	}
+	public void setBegDate(Date begDate) {
+		this.begDate = begDate;
+	}
+	@Column(name="fendDate")
+	public Date getEndDate() {
+		return endDate;
+	}
+	public void setEndDate(Date endDate) {
+		this.endDate = endDate;
+	}
 	
 }

@@ -73,10 +73,10 @@ $(document).ready(function() {
      includeChild.setData(true);
      
      var editWin ={title:'工程项目',width:620,height:580};
-     var height = 700;
+     var height = $(top.window).height()-$('#table-toolbar').innerHeight()-130;
      thisOrgList = $('body').treeListUI({tableEl:'#tblMain',treeUrl:'base/orgs/tree',baseUrl:'ec/basedata/projects',title:'工程项目',height:height,
     	 treeContainer:"#tree_container",editWin:editWin,toolbar:"#table-toolbar",searchParams:{includeChild:true}
-    	 ,extendTableOptions:{toolbar:'#tblMain_toolbar',height:height,sortStable:false}});
+    	 ,extendTableOptions:{toolbar:'#tblMain_toolbar',height:height-46,sortStable:false}});
      thisOrgList.onLoad();
 });
 function getTreeQueryParams(){

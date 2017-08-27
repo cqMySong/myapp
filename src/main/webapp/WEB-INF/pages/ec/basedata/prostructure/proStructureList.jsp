@@ -63,10 +63,10 @@ $(document).ready(function() {
      var treeOpt = {setting:{data: {
          	simpleData: {enable:true,idKey: "id", pIdKey: "parentId",rootPId: ''}
     	 }}};
-     var height = 700;
+     var height = $(top.window).height()-$('#table-toolbar').innerHeight()-130;
      thisOrgList = $('body').treeListUI({tableEl:'#tblMain',listModel:1,treeUrl:'ec/basedata/projects/projectTree',baseUrl:'ec/basedata/prostructures',title:'工程项目',height:height,
     	 treeContainer:"#tree_container",editWin:editWin,toolbar:"#table-toolbar",searchParams:{includeChild:true},treeOpt:treeOpt
-    	 ,treeNode2QueryProp:treeNode2QueryProp,extendTableOptions:{toolbar:'#tblMain_toolbar',height:height,sortStable:false}});
+    	 ,treeNode2QueryProp:treeNode2QueryProp,extendTableOptions:{toolbar:'#tblMain_toolbar',height:height-45,sortStable:false}});
      thisOrgList.onLoad();
 });
 

@@ -21,6 +21,7 @@ import com.myapp.core.enums.DataTypeEnum;
 import com.myapp.core.model.ColumnModel;
 import com.myapp.core.util.BaseUtil;
 import com.myapp.entity.ec.basedata.ProjectInfo;
+import com.myapp.entity.ec.plan.ProjectTotalPlanInfo;
 import com.myapp.service.ec.plan.ProjectPlanReportService;
 
 /**
@@ -49,11 +50,17 @@ public class ProjectPlanReportListController extends BaseListController {
 		cols.add(new ColumnModel("remark"));
 		cols.add(new ColumnModel("createDate",DataTypeEnum.DATE));
 		cols.add(new ColumnModel("bizDate",DataTypeEnum.DATE));
+		cols.add(new ColumnModel("begDate",DataTypeEnum.DATE));
+		cols.add(new ColumnModel("endDate",DataTypeEnum.DATE));
 		cols.add(new ColumnModel("billState",DataTypeEnum.ENUM,BillState.class));
 		cols.add(new ColumnModel("auditDate",DataTypeEnum.DATE));
 		ColumnModel project = new ColumnModel("project",DataTypeEnum.F7,"id,name");
 		project.setClaz(ProjectInfo.class);
 		cols.add(project);
+		
+		ColumnModel planInfo = new ColumnModel("planInfo",DataTypeEnum.F7,"id,name");
+		planInfo.setClaz(ProjectTotalPlanInfo.class);
+		cols.add(planInfo);
 		
 		ColumnModel createUser = new ColumnModel("createUser",DataTypeEnum.F7,"id,name");
 		createUser.setClaz(UserInfo.class);

@@ -46,6 +46,7 @@ public class WorkLogInfo extends CoreBaseBillInfo {
 	private String gz;//工长
 	private String wrokContent;//施工内容
 	private String optDutyer;//操作负责人
+	private String jly;//记录员
 	
 	@OneToOne(fetch=FetchType.LAZY)
 	@JoinColumn(name = "fprojectId")
@@ -195,6 +196,15 @@ public class WorkLogInfo extends CoreBaseBillInfo {
 	public void setOptDutyer(String optDutyer) {
 		this.optDutyer = optDutyer;
 	}
+	@Column(name="fjly",length=100)
+	public String getJly() {
+		return jly;
+	}
+	public void setJly(String jly) {
+		this.jly = jly;
+	}
+	
+	
 	
 	
 }

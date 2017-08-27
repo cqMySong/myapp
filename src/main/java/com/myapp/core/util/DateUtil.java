@@ -1,8 +1,5 @@
 package com.myapp.core.util;
 
-import java.io.IOException;
-import java.io.InputStream;
-import java.sql.Blob;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
@@ -11,6 +8,10 @@ import java.util.Date;
 public class DateUtil {
     public static String DATEFORMT_YMDHMS = "yyyy-MM-dd HH:mm:ss";
     public static String DATEFORMT_YMD = "yyyy-MM-dd";
+	private static int DAY = 24;
+	private static int HOUR = 60;
+	private static int MINUTE = 60;
+	private static int SECOND = 1000;
     /**
      * 日期大小判断
      */
@@ -119,32 +120,31 @@ public class DateUtil {
         return c.getTimeInMillis();
     }
 
-    public Date getFirstDayOfWeek(Date date) {
-        Calendar calendar = Calendar.getInstance();
-        calendar.setTime(date);
-        int min = calendar.getActualMinimum(7);
-        int current = calendar.get(7);
-        calendar.add(7, min - current);
-        Date start = calendar.getTime();
-        return start;
-    }
+	public static Date getFirstDayOfWeek(Date date) {
+		Calendar cal = Calendar.getInstance();
+		cal.setTime(date);
+		// 判断要计算的日期是否是周日，如果是则减一天计算周六的，否则会出问题，计算到下一周去了
+		int dayWeek = cal.get(Calendar.DAY_OF_WEEK);// 获得当前日期是一个星期的第几天
+		if (1 == dayWeek) {
+			cal.add(Calendar.DAY_OF_MONTH, -1);
+		}
+		// 设置一个星期的第一天，按中国的习惯一个星期的第一天是星期一
+		cal.setFirstDayOfWeek(Calendar.MONDAY);
+		// 获得当前日期是一个星期的第几天
+		int day = cal.get(Calendar.DAY_OF_WEEK);
+		// 根据日历的规则，给当前日期减去星期几与一个星期第一天的差值
+		cal.add(Calendar.DATE, cal.getFirstDayOfWeek() - day);
+		return cal.getTime();
+	}
 
     public static Long dateDiff(Date date1, Date date2) {
         long times1 = date1 == null ? 0L : date1.getTime();
         long times2 = date2 == null ? 0L : date2.getTime();
-
         return Long.valueOf(times1 - times2);
     }
 
     public static Date getLastDayOfWeek(Date date) {
-        Calendar calendar = Calendar.getInstance();
-        calendar.setTime(date);
-        int min = calendar.getActualMinimum(7);
-        int current = calendar.get(7);
-        calendar.add(7, min - current);
-        calendar.add(7, 6);
-        Date end = calendar.getTime();
-        return end;
+    	return addDay(getFirstDayOfWeek(date),6);
     }
 
     public static Date addYear(Date date, int year) {
@@ -195,29 +195,112 @@ public class DateUtil {
         calendar.set(14, calendar.get(14) + millisecond);
         return calendar.getTime();
     }
-
-    public static long getDaysBetween(Date left, Date right) {
-        Calendar calendar = Calendar.getInstance();
-        Calendar calendar2 = Calendar.getInstance();
-
-        calendar.setTime(left);
-        calendar2.setTime(right);
-
-        calendar.set(11, 0);
-        calendar.set(12, 0);
-        calendar.set(13, 0);
-        calendar.set(14, 0);
-
-        calendar2.set(11, 0);
-        calendar2.set(12, 0);
-        calendar2.set(13, 0);
-        calendar2.set(14, 0);
-
-        long leftL = calendar.getTimeInMillis();
-        long rightL = calendar2.getTimeInMillis();
-        long result = rightL - leftL;
-        return result / 86400000L;
+	/**
+	 * 两日期相差天数
+	 * @return
+	 */
+    public static long betweenDays(Date edate, Date bdate) {
+    	if(BaseUtil.isEmpty(bdate)||BaseUtil.isEmpty(edate)) return 0;
+    	Calendar c1 = Calendar.getInstance();
+		Calendar c2 = Calendar.getInstance();
+		if(bdate.before(edate)){
+			c1.setTime(bdate);
+			c2.setTime(edate);
+		}else{
+			c2.setTime(bdate);
+			c1.setTime(edate);
+		}
+		return (int) ((c2.getTimeInMillis()-c1.getTimeInMillis())/(DAY * HOUR*MINUTE * SECOND));
     }
+    /**
+	 * 当前日期月份对应的第一天日期
+	 */
+	public static Date getMonthFirstDay(Date date){
+		Calendar c1 = Calendar.getInstance();
+		c1.setTime(date);
+		c1.set(Calendar.DAY_OF_MONTH, 1);
+		return c1.getTime();
+	}
+	/**
+	 * 返回两个日期相差的月数
+	 */
+	public static int betweenMonths(Date bdate, Date edate,boolean hasDay){
+		if(BaseUtil.isEmpty(bdate)||BaseUtil.isEmpty(edate)) return 0;
+		Calendar c1 = Calendar.getInstance();
+		Calendar c2 = Calendar.getInstance();
+		
+		if(bdate.before(edate)){
+			c1.setTime(bdate);
+			c2.setTime(edate);
+		}else{
+			c1.setTime(edate);
+			c2.setTime(bdate);
+		}
+		int months = (c2.get(Calendar.YEAR)-c1.get(Calendar.YEAR))*12+(c2.get(Calendar.MONTH)-c1.get(Calendar.MONTH));
+		if(hasDay){
+			if(c2.get(Calendar.DAY_OF_MONTH)+1<c1.get(Calendar.DAY_OF_MONTH)){
+				months = months-1;
+			}
+		}
+		return months;
+	}
+	
+	
+	/**
+	 * 返回当期月的下一个月1号
+	 * @param year
+	 * @param month
+	 * @return
+	 */
+	public static Date getNextFirstDate(int curYear,int curMonth){
+		Calendar c = Calendar.getInstance();
+		c.set(curYear, curMonth, 1);
+		Date curDate = c.getTime();
+		return curDate;
+	}
+	
+	/**
+	 * 获得上一个月1号
+	 * @param curYear
+	 * @param curMonth
+	 * @return
+	 */
+	public static Date getPreFirstDate(int curYear,int curMonth){
+		Calendar c = Calendar.getInstance();
+		c.set(curYear, curMonth, 1);
+		Date curDate = c.getTime();
+		return addMonth(curDate, -1);
+	}
+	/**
+	 * 获取当前日期的总天数
+	 * @param curDate
+	 * @return
+	 */
+	public static int getCurMonthDays(Date curDate){
+		Calendar c = Calendar.getInstance();
+		c.set(getYear(curDate), getMonth(curDate), 1);
+		Date curMm = addDay(c.getTime(), -1);
+		return getDay(curMm);
+	}
+	
+	/**
+	 * 得到指定月的天数
+	 * @param year
+	 * @param month
+	 * @return
+	 */
+	public static int getMonthDays(int year, int month) {
+		Calendar a = Calendar.getInstance();
+		a.set(Calendar.YEAR, year);
+		a.set(Calendar.MONTH, month - 1);
+		a.set(Calendar.DATE, 1);// 把日期设置为当月第一天
+		a.roll(Calendar.DATE, -1);// 日期回滚一天，也就是最后一天
+		int maxDate = a.get(Calendar.DATE);
+		return maxDate;
+	}
     
+    public static void main(String[] args){
+    	System.out.println(formatDate(getLastDayOfWeek(new Date())));
+    }
     
 }

@@ -28,7 +28,7 @@ import java.util.Map;
  * 创建人： ly
  * 创建时间: 2017-07-30 14:49
  */
-@PermissionAnn(name="系统管理.图纸.图纸会审",number="app.ec.drawing.discussiondrawing")
+@PermissionAnn(name="系统管理.现场管理.图纸.图纸会审",number="app.ec.drawing.discussiondrawing")
 @Controller
 @RequestMapping("ec/discussiondrawings")
 public class DiscussionDrawingListController extends BaseListController {

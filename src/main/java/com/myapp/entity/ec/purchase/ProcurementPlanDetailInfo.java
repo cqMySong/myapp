@@ -1,27 +1,24 @@
-package com.myapp.entity.ec.budget;
+package com.myapp.entity.ec.purchase;
 
 import com.myapp.core.annotation.MyEntityAnn;
-import com.myapp.core.base.entity.CoreBaseBillInfo;
-import com.myapp.core.base.entity.CoreBaseDataInfo;
 import com.myapp.core.base.entity.CoreBaseEntryInfo;
 import com.myapp.entity.ec.basedata.DataDictionaryInfo;
-import com.myapp.entity.ec.plan.ProjectPlanReportInfo;
+import com.myapp.entity.ec.budget.BudgetingInfo;
 import com.myapp.enums.DataDicType;
-import org.hibernate.mapping.ToOne;
 
 import javax.persistence.*;
 import java.math.BigDecimal;
 
 /**
- * 包路径：com.myapp.entity.ec.budget
- * 功能说明：预算编制
+ * 包路径：com.myapp.entity.ec.purchase
+ * 功能说明：
  * 创建人： ly
- * 创建时间: 2017-08-25 15:21
+ * 创建时间: 2017-08-28 21:10
  */
 @Entity
-@MyEntityAnn(name="预算编制明细")
-@Table(name="t_ec_budgeting_detail")
-public class BudgetingDetailInfo extends CoreBaseEntryInfo<BudgetingInfo> {
+@MyEntityAnn(name="采购计划清单")
+@Table(name="t_ec_procurement_plan_detail")
+public class ProcurementPlanDetailInfo  extends CoreBaseEntryInfo<ProcurementPlanInfo> {
     private BigDecimal quantity;//数量
     private BigDecimal unitPrice;//单价
     private DataDictionaryInfo dataDic;//物料信息

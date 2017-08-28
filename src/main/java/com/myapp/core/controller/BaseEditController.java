@@ -494,6 +494,7 @@ public abstract class BaseEditController extends CoreBaseController {
 			List<String> entryCols  = new ArrayList<String>();
 			Map<String,Object> F7Col = new HashMap<String, Object>();
 			Map<String,Object> mutilF7Col = new HashMap<String, Object>();
+			Map<String,Object> entryEnum = new HashMap<String,Object>();
 			for(ColumnModel cm:cols){
 				if(!DataTypeEnum.ENTRY.equals(cm.getDataType())){
 					packageEditBillCriteria(billCrteria,billProjectList,cm);
@@ -512,6 +513,7 @@ public abstract class BaseEditController extends CoreBaseController {
 						ProjectionList entryProjectList = Projections.projectionList();
 						List<ColumnModel> entryF7Col =  new ArrayList<ColumnModel>();
 						List<ColumnModel> entryMutilF7Col =  new ArrayList<ColumnModel>();
+						List<ColumnModel> entryEnumCol =  new ArrayList<ColumnModel>();
 						for(ColumnModel entry_cm:entry_cols){
 							if(!DataTypeEnum.ENTRY.equals(entry_cm.getDataType())){
 								packageEditBillCriteria(entryCrteria,entryProjectList,entry_cm);
@@ -519,6 +521,8 @@ public abstract class BaseEditController extends CoreBaseController {
 									entryF7Col.add(entry_cm);
 								}else if(DataTypeEnum.MUTILF7.equals(entry_cm.getDataType())){
 									entryMutilF7Col.add(entry_cm);
+								}else if(DataTypeEnum.ENUM.equals(entry_cm.getDataType())){
+									entryEnumCol.add(entry_cm);
 								}
 							}
 						}
@@ -533,6 +537,9 @@ public abstract class BaseEditController extends CoreBaseController {
 						}
 						if(entryMutilF7Col.size()>0){
 							mutilF7Col.put(cm.getName(), entryMutilF7Col);
+						}
+						if(entryEnumCol.size()>0){
+							entryEnum.put(cm.getName(),entryEnumCol);
 						}
 						entryMap.put(cm.getName(), entryCrteria);
 					}
@@ -613,6 +620,40 @@ public abstract class BaseEditController extends CoreBaseController {
 					 }
 				 }
 			 }
+			 //处理枚举类型
+			for (Map.Entry<String,Object> entry : entryEnum.entrySet()) {
+				String colName = entry.getKey();
+				Object colObj = entry.getValue();
+				if(colObj!=null){
+					List entryEnumList = (List) colObj;
+					if(entryEnumList.size()>0){
+						Object entrysObj = editMap.get(colName);
+						if(entrysObj!=null&&entrysObj instanceof List) {
+							List entryDatas = (List) entrysObj;
+							if (entryDatas.size() > 0) {
+								for(int i=0;i<entryDatas.size();i++){
+									Object entryDataMapObj = entryDatas.get(i);
+									if(entryDataMapObj!=null&&entryDataMapObj instanceof Map){
+										Map entryDataMap = (Map) entryDataMapObj;
+										for(int j=0;j<entryEnumList.size();j++){
+											ColumnModel entryEnumModel = (ColumnModel) entryEnumList.get(j);
+											Class enClaz = entryEnumModel.getClaz();
+											Object obj = EnumUtil.getEnum(enClaz.getName(),entryDataMap.get(entryEnumModel.getName()).toString());
+											if(obj!=null&&obj instanceof MyEnum){
+												MyEnum myEnum = (MyEnum) obj;
+												Map kevMap = new HashMap();
+												kevMap.put("key", myEnum.getValue());
+												kevMap.put("val", myEnum.getName());
+												entryDataMap.put(entryEnumModel.getName(),kevMap);
+											}
+										}
+									}
+								}
+							}
+						}
+					}
+				}
+			}
 			System.out.println("$$$$$ editMap : "+JSONObject.toJSONString(editMap));
 			setEditData(editMap);
 		}

@@ -831,6 +831,11 @@ MyDataTable.prototype = {
 						}else{
 							val = '';
 						}
+					}else if(_type == DataType.select){
+                        var selectObj = rowData[field];
+                        if(selectObj){
+                            val = selectObj.key;
+						}
 					}else{
 						val = rowData[field];
 						if(!webUtil.isEmpty(val)&&$.isNumeric(val)

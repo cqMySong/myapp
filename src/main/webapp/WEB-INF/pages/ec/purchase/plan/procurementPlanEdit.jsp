@@ -3,7 +3,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-	<title>预算编制</title>
+	<title>采购计划</title>
 </head>
 <style type="text/css">
 </style>
@@ -17,13 +17,13 @@
 		<div class="row">
 			<div class="col-sm-3">
 				<div class="input-group">
-					<span class="input-group-addon lable">预算编码</span>
+					<span class="input-group-addon lable">计划编码</span>
 					<input class="require input-item" name="number">
 				</div>
 			</div>
 			<div class="col-sm-3">
 				<div class="input-group">
-					<span class="input-group-addon lable">预算名称</span>
+					<span class="input-group-addon lable">计划名称</span>
 					<input name="name" class="input-item form-control"/>
 				</div>
 			</div>
@@ -53,7 +53,7 @@
 		</div>
 		<div class="row mt10">
 			<div class="col-sm-12 " style="border: 1px solid #ddd;">
-				<table name="budgetingDetailInfos" class="input-entry" >
+				<table name="procurementPlanDetails" class="input-entry" >
 					<thead>
 					<tr>
 						<th data-field="dataDicType" data-width="150" data-type="select" data-locked="true"
@@ -112,7 +112,7 @@
 	</form>
 </div>
 </body>
-<%@include file="../../base/base_edit.jsp"%>
+<%@include file="../../../base/base_edit.jsp"%>
 <script type="text/javascript">
     var editUI;
     var budgetingDetailInfosEntry;
@@ -120,7 +120,7 @@
     function proSubItem_dataChange(oldData,newData){
 
     }
-    function budgetingDetailInfos_dataChanged($cell,obj){
+    function procurementPlanDetails_dataChanged($cell,obj){
         if(webUtil.isEmpty(budgetingDetailInfosEntry)) return;
         if(obj.field=='dataDic'){
             if(!webUtil.isEmpty(budgetingDetailInfosEntry)){
@@ -177,12 +177,12 @@
     }
     $(document).ready(function() {
         var height = window.outerHeight-470
-        var entryOption = "{type:'entry',height:"+height+",tableOpt:{editDataChanged:budgetingDetailInfos_dataChanged}"+
-            ",toolbar:{title:'预算清单'}}";
+        var entryOption = "{type:'entry',height:"+height+",tableOpt:{editDataChanged:procurementPlanDetails_dataChanged}"+
+            ",toolbar:{title:'采购计划清单'}}";
 		$("table.input-entry").attr("data-opt",entryOption);
         editUI = $('#editPanel').editUI({
-            title : "预算编制",billModel:2,
-            baseUrl : "ec/budget/budgeting",
+            title : "采购计划",billModel:2,
+            baseUrl : "ec/purchase/plan/procurementplan",
             toolbar : "#table-toolbar",
             form : {
                 el : "#editForm"
@@ -190,7 +190,7 @@
         });
         editUI.onLoad();
 
-        budgetingDetailInfosEntryObj = editUI.getEntryObj('budgetingDetailInfos');
+        budgetingDetailInfosEntryObj = editUI.getEntryObj('procurementPlanDetails');
         if(!webUtil.isEmpty(budgetingDetailInfosEntryObj)){
             budgetingDetailInfosEntry = budgetingDetailInfosEntryObj.entry;
             var rightBtnGroup = budgetingDetailInfosEntryObj.toolbar.find('.pull-right>.btn-group').myBtnGroup();

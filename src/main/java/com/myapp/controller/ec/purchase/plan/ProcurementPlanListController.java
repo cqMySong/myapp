@@ -1,4 +1,4 @@
-package com.myapp.controller.ec.budget;
+package com.myapp.controller.ec.purchase.plan;
 
 import com.alibaba.fastjson.JSONObject;
 import com.myapp.core.annotation.PermissionAnn;
@@ -11,13 +11,10 @@ import com.myapp.core.enums.DataTypeEnum;
 import com.myapp.core.model.ColumnModel;
 import com.myapp.core.util.BaseUtil;
 import com.myapp.core.util.WebUtil;
-import com.myapp.entity.ec.basedata.ProStructureInfo;
 import com.myapp.entity.ec.basedata.ProjectInfo;
-import com.myapp.service.ec.budget.BudgetingService;
-import com.myapp.service.ec.drawing.DiscussionDrawingService;
+import com.myapp.service.ec.purchase.ProcurementPlanService;
 import org.hibernate.Criteria;
 import org.hibernate.criterion.Restrictions;
-import org.hibernate.criterion.SimpleExpression;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 
@@ -27,31 +24,31 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * 包路径：com.myapp.controller.ec.budget
- * 功能说明：预算编制列表信息
+ * 包路径：com.myapp.controller.ec.purchase.plan
+ * 功能说明：采购计划
  * 创建人： ly
- * 创建时间: 2017-07-30 14:49
+ * 创建时间: 2017-08-28 21:02
  */
-@PermissionAnn(name="系统管理.现场管理.预算.预算编制",number="app.ec.budget.budgeting")
+@PermissionAnn(name="系统管理.现场管理.采购管理.采购计划",number="app.ec.purchase.procurementplan")
 @Controller
-@RequestMapping("ec/budget/budgetings")
-public class BudgetingListController extends BaseListController {
+@RequestMapping("ec/purchase/plan/procurementplans")
+public class ProcurementPlanListController  extends BaseListController {
     @Resource
-    private BudgetingService budgetingService;
+    private ProcurementPlanService procurementPlanService;
 
     @Override
     public String getEditUrl() {
-        return "ec/budget/budgetingEdit";
+        return "ec/purchase/plan/procurementPlanEdit";
     }
 
     @Override
     public String getListUrl() {
-        return "ec/budget/budgetingList";
+        return "ec/purchase/plan/procurementPlanList";
     }
 
     @Override
     public AbstractBaseService getService() {
-        return this.budgetingService;
+        return this.procurementPlanService;
     }
 
     @Override
@@ -60,7 +57,7 @@ public class BudgetingListController extends BaseListController {
         if(BaseMethodEnum.ADDNEW.equals(baseMethod)){
             if(params!=null&&params.get("uiCtx")!=null){
                 String uiCtx = (String) params.get("uiCtx");
-                params.put("uiCtx",WebUtil.UUID_ReplaceID(uiCtx));
+                params.put("uiCtx", WebUtil.UUID_ReplaceID(uiCtx));
             }
         }
     }
@@ -89,7 +86,7 @@ public class BudgetingListController extends BaseListController {
         List<ColumnModel> cols = super.getDataBinding();
         cols.add(new ColumnModel("name"));
         cols.add(new ColumnModel("number"));
-        cols.add(new ColumnModel("billState",DataTypeEnum.ENUM,BillState.class));
+        cols.add(new ColumnModel("billState", DataTypeEnum.ENUM,BillState.class));
         cols.add(new ColumnModel("remark"));
         ColumnModel project = new ColumnModel("project",DataTypeEnum.F7,"id,name");
         project.setClaz(ProjectInfo.class);

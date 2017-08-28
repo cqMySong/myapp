@@ -2,7 +2,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<title>预算编制</title>
+<title>采购计划</title>
 </head>
 <script type="text/javascript">
 </script>
@@ -18,8 +18,8 @@
 					<table id="tblMain">
 						 <thead >
 							<tr>
-								<th data-field="name">预算名称</th>
-								<th data-field="number">预算编号</th>
+								<th data-field="name">采购计划名称</th>
+								<th data-field="number">采购计划编号</th>
 								<th data-field="project_name">工程项目</th>
 								<th data-field="billState" data-type="select">业务状态</th>
 								<th data-field="remark">备注</th>
@@ -31,7 +31,7 @@
 		</div>
 	</div>
 </body>
-<%@include file="../../base/base_treelist.jsp"%>
+<%@include file="../../../base/base_treelist.jsp"%>
 <script type="text/javascript">
 	var thisBudgetList ;
 	function beforeAction(opt){
@@ -54,7 +54,7 @@
 
 	$(document).ready(function() {
 			var treeNode2QueryProp = ["id","name","number","longNumber","type"];
-			var editWin ={title:'预算编制',width:(window.outerWidth-50),height:(window.outerHeight-100)};
+			var editWin ={title:'采购计划',width:(window.outerWidth-50),height:(window.outerHeight-100)};
 			var treeOpt = {
 					setting:{
 						data: {
@@ -62,7 +62,7 @@
 						}
 					}};
 			var height = window.outerHeight-325;
-			thisOrgList = $('body').treeListUI({tableEl:'#tblMain',treeUrl:'ec/basedata/projects/projectTree',baseUrl:'ec/budget/budgetings',title:'项目工程',height:(height+42),
+			thisOrgList = $('body').treeListUI({tableEl:'#tblMain',treeUrl:'ec/basedata/projects/projectTree',baseUrl:'ec/purchase/plan/procurementplans',title:'项目工程',height:(height+42),
 							treeContainer:"#tree_container",editWin:editWin,toolbar:"#table-toolbar",searchParams:{includeChild:true},treeOpt:treeOpt
 							,treeNode2QueryProp:treeNode2QueryProp,extendTableOptions:{toolbar:'#tblMain_toolbar',height:height,sortStable:false}});
 			thisOrgList.onLoad();

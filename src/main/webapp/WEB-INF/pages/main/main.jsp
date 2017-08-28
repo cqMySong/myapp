@@ -347,6 +347,8 @@ $(document).ready(function() {
 								{title:'图纸会审',icon:'fa fa-building-o',url:'ec/discussiondrawings/list'}]},
 							{title:'预算编制',icon:'fa fa-home',child:[
 								{title:'预算编制',icon:'fa fa-building-o',url:'ec/budget/budgetings/list'}]},
+							{title:'采购管理',icon:'fa fa-home',child:[
+								{title:'采购计划',icon:'fa fa-building-o',url:'ec/purchase/plan/procurementplans/list'}]},
 							]};
 	
 	$('#userMenus').myPillTreeMenu('init',userMenus);

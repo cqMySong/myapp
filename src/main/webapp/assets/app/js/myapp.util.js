@@ -272,7 +272,11 @@ var webUtil = {
 		}
 	},
 	toUrl:function(url){
-		return app.root+'/'+url;
+		var toURL = app.root;
+		if(url.indexOf('/')!=0){
+			toURL += '/';
+		}
+		return toURL+url;
 	},
 	uuIdReplaceID:function(billId){
 		if(billId){
@@ -455,9 +459,11 @@ var webUtil = {
 				if(statusCode!=0){ //异常或者错误或者提示或者警告
 					var msgObj = {title:".::系统提示::.",type:"info"};//==1 提示
 					msgObj.content = $(data).attr('statusMesg');
-					if(statusCode==-99){//检查需要重新登录的ajax
+					if(statusCode==-99){//权限验证或登陆验证
 						parent.layer.open({title:data.title,icon:5,content:data.statusMesg,end:function(){
-							window.open(data.loginUrl,'_top');
+							if(!webUtil.isEmpty(data.toUrl)){
+								window.open(data.toUrl,'_top');
+							}
 						}});
 					}else{
 						if(statusCode<0){//异常 错误

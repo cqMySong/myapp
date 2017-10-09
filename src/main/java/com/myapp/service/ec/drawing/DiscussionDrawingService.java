@@ -2,7 +2,7 @@ package com.myapp.service.ec.drawing;
 
 import com.myapp.core.entity.UserInfo;
 import com.myapp.core.exception.db.SaveException;
-import com.myapp.core.model.MyWebContent;
+import com.myapp.core.model.MyWebContext;
 import com.myapp.core.service.UserService;
 import com.myapp.core.service.act.ActTaskService;
 import com.myapp.core.service.base.BaseInterfaceService;
@@ -38,7 +38,7 @@ public class DiscussionDrawingService extends BaseInterfaceService<DiscussionDra
     public void notify(DelegateExecution delegateExecution) throws Exception {
         String businessKey = delegateExecution.getProcessBusinessKey();
         DiscussionDrawingInfo discussionDrawingInfo = (DiscussionDrawingInfo) getEntity(businessKey);
-        MyWebContent myWebContent = new MyWebContent();
+        MyWebContext myWebContent = new MyWebContext();
         UserInfo userInfo = userService.queryUserByNumber("camel");
         myWebContent.setUserId(userInfo.getId());
         myWebContent.setUserName(userInfo.getName());

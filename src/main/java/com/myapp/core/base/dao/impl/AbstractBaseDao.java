@@ -264,7 +264,7 @@ public abstract class AbstractBaseDao implements IAbstractBaseDao {
 					String tableName = cmd.getTableName();
 					subTree.setEntityTable(tableName);
 					long seq = UuidUtils.getStringLong(entityClaz);
-					subTree.setEntityObjectType("_"+UuidUtils.getEntityType(entityClaz));
+					subTree.setEntityObjectType(UuidUtils.getEntityType(entityClaz));
 					subTree.setEntitySeq(new Date().getTime());
 					subTree.setSeq(seq);
 					subTree.setEntityType(getEntityType(entity));

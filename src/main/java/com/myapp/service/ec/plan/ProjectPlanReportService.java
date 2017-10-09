@@ -6,7 +6,7 @@ import java.util.Set;
 import org.springframework.stereotype.Service;
 
 import com.myapp.core.exception.db.SaveException;
-import com.myapp.core.model.MyWebContent;
+import com.myapp.core.model.MyWebContext;
 import com.myapp.core.service.base.BaseInterfaceService;
 import com.myapp.core.service.base.BaseService;
 import com.myapp.core.util.BaseUtil;
@@ -25,7 +25,7 @@ import com.myapp.entity.ec.plan.ProjectTotalPlanItemInfo;
 @Service("projectPlanReportService")
 public class ProjectPlanReportService extends BaseInterfaceService<ProjectPlanReportInfo> {
 	
-	public Object auditEntity(Object entity, MyWebContent webCtx)
+	public Object auditEntity(Object entity, MyWebContext webCtx)
 			throws SaveException {
 		if(entity!=null&&entity instanceof ProjectPlanReportInfo){
 			ProjectPlanReportInfo plrInfo = (ProjectPlanReportInfo) entity;
@@ -52,7 +52,7 @@ public class ProjectPlanReportService extends BaseInterfaceService<ProjectPlanRe
 		return super.auditEntity(entity, webCtx);
 	}
 	
-	public Object unauditEntity(Object entity, MyWebContent webCtx)
+	public Object unauditEntity(Object entity, MyWebContext webCtx)
 			throws SaveException {
 		return super.unauditEntity(entity, webCtx);
 	}

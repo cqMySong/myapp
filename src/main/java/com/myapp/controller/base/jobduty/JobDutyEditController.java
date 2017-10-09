@@ -15,6 +15,7 @@ import com.myapp.core.base.service.impl.AbstractBaseService;
 import com.myapp.core.controller.BaseDataEditController;
 import com.myapp.core.controller.BaseEditController;
 import com.myapp.core.entity.JobDutyInfo;
+import com.myapp.core.entity.PermissionInfo;
 import com.myapp.core.entity.RoleInfo;
 import com.myapp.core.entity.UserInfo;
 import com.myapp.core.enums.BaseMethodEnum;
@@ -43,7 +44,14 @@ public class JobDutyEditController extends BaseDataEditController{
 	public AbstractBaseService getService() {
 		return jobDutyService;
 	}
-
+	
+	public List<ColumnModel> getDataBinding() {
+		List<ColumnModel> cols = super.getDataBinding();
+		ColumnModel shortCutMenu = new ColumnModel("shortCutMenu",DataTypeEnum.F7,"id,name,displayName");
+		shortCutMenu.setClaz(PermissionInfo.class);
+		cols.add(shortCutMenu);
+		return cols;
+	}
 	public Object createNewData() {
 		return new JobDutyInfo();
 	}

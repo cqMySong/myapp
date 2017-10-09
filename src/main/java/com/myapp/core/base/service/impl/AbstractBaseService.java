@@ -29,7 +29,7 @@ import com.myapp.core.exception.db.QueryException;
 import com.myapp.core.exception.db.ReadException;
 import com.myapp.core.exception.db.SaveException;
 import com.myapp.core.exception.db.UpdateException;
-import com.myapp.core.model.MyWebContent;
+import com.myapp.core.model.MyWebContext;
 import com.myapp.core.model.PageModel;
 import com.myapp.core.util.BaseUtil;
 
@@ -126,7 +126,7 @@ public abstract class AbstractBaseService implements IAbstractBaseService {
 		return getBaseDao().saveEntity(entity);
 	}
 	
-	public Object auditEntity(Object entity,MyWebContent webCtx) throws SaveException {
+	public Object auditEntity(Object entity,MyWebContext webCtx) throws SaveException {
 		if(entity!=null&&entity instanceof CoreBaseBillInfo){
 			CoreBaseBillInfo cbbInfo = (CoreBaseBillInfo) entity;
 			cbbInfo.setBillState(BillState.AUDIT);
@@ -144,7 +144,7 @@ public abstract class AbstractBaseService implements IAbstractBaseService {
 		}
 		return getBaseDao().saveEntity(entity);
 	}
-	public Object auditNoPassEntity(Object entity,MyWebContent webCtx) throws SaveException {
+	public Object auditNoPassEntity(Object entity,MyWebContext webCtx) throws SaveException {
 		if(entity!=null&&entity instanceof CoreBaseBillInfo){
 			CoreBaseBillInfo cbbInfo = (CoreBaseBillInfo) entity;
 			cbbInfo.setBillState(BillState.NOPASS);
@@ -162,7 +162,7 @@ public abstract class AbstractBaseService implements IAbstractBaseService {
 		}
 		return getBaseDao().saveEntity(entity);
 	}
-	public Object unauditEntity(Object entity,MyWebContent webCtx) throws SaveException {
+	public Object unauditEntity(Object entity,MyWebContext webCtx) throws SaveException {
 		if(entity!=null&&entity instanceof CoreBaseBillInfo){
 			CoreBaseBillInfo cbbInfo = (CoreBaseBillInfo) entity;
 			cbbInfo.setBillState(BillState.SUBMIT);
@@ -188,6 +188,15 @@ public abstract class AbstractBaseService implements IAbstractBaseService {
 	public void deleteEntity(Class claz, String id) throws DeleteException {
 		getBaseDao().deleteEntity(claz, id);
 	}
+	
+	public void bathDeleteEntity(String[] ids) throws DeleteException{
+		if(ids!=null&&ids.length>0){
+			for(int i=0;i<ids.length;i++){
+				deleteEntity(ids[i]);
+			}
+		}
+	}
+	
 	public void deleteEntity(Object entity) {
 		 try {
 			getBaseDao().deleteEntity(entity);

@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.Map;
 
 import com.myapp.core.entity.UserInfo;
+import com.myapp.core.util.BaseUtil;
 
 /**
  *-----------MySong---------------
@@ -13,14 +14,19 @@ import com.myapp.core.entity.UserInfo;
  * web的通用上下文
  *-----------MySong---------------
  */
-public class MyWebContent {
+public class MyWebContext {
 	private String userName;//用户名
 	private String userId;//用户id
 	private String userNumber;//用户编码
 	private String orgId;//默认组织id
 	private String orgName;//默认组织名
+	private String mainPosition;
+	private String linker;
+	private List<Map<String,Object>> positions;//用户岗位范围
 	private List<Map<String,String>> orgs;//用户组织范围
-	private List<Map<String,String>> permission;//用户权限范围
+	private Map<String,Map<String,String>> permission;//用户权限范围 :<url,<其他属性值>>
+	private Boolean admin = Boolean.FALSE;
+	private Boolean sysUser = Boolean.FALSE;
 	public String getUserName() {
 		return userName;
 	}
@@ -57,10 +63,11 @@ public class MyWebContent {
 	public void setOrgs(List<Map<String, String>> orgs) {
 		this.orgs = orgs;
 	}
-	public List<Map<String, String>> getPermission() {
+	
+	public Map<String, Map<String, String>> getPermission() {
 		return permission;
 	}
-	public void setPermission(List<Map<String, String>> permission) {
+	public void setPermission(Map<String, Map<String, String>> permission) {
 		this.permission = permission;
 	}
 	public UserInfo getCurUserInfo(){
@@ -70,6 +77,39 @@ public class MyWebContent {
 		u.setNumber(getUserNumber());
 		return u;
 	}
+	public List<Map<String, Object>> getPositions() {
+		return positions;
+	}
+	public void setPositions(List<Map<String, Object>> positions) {
+		this.positions = positions;
+	}
+	public String getMainPosition() {
+		return mainPosition;
+	}
+	public void setMainPosition(String mainPosition) {
+		this.mainPosition = mainPosition;
+	}
 	
+	public String getMainPositionStr(){
+		return getOrgName()+(BaseUtil.isEmpty(getMainPosition())?"":("("+getMainPosition()+")"));
+	}
+	public String getLinker() {
+		return linker;
+	}
+	public void setLinker(String linker) {
+		this.linker = linker;
+	}
+	public Boolean getAdmin() {
+		return admin;
+	}
+	public void setAdmin(Boolean admin) {
+		if(admin!=null) this.admin = admin;
+	}
+	public Boolean getSysUser() {
+		return sysUser;
+	}
+	public void setSysUser(Boolean sysUser) {
+		if(sysUser!=null) this.sysUser = sysUser;
+	}
 	
 }

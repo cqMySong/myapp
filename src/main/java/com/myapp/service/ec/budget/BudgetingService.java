@@ -2,7 +2,7 @@ package com.myapp.service.ec.budget;
 
 import com.myapp.core.entity.UserInfo;
 import com.myapp.core.exception.db.SaveException;
-import com.myapp.core.model.MyWebContent;
+import com.myapp.core.model.MyWebContext;
 import com.myapp.core.service.UserService;
 import com.myapp.core.service.act.ActTaskService;
 import com.myapp.core.service.base.BaseInterfaceService;

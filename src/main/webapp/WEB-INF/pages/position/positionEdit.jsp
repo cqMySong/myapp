@@ -10,10 +10,9 @@
 <script type="text/javascript">
 	
 </script>
-<body style="padding: 5px;">
+<body style="padding: 4px;">
 	<div id="editPanel" class="panel">
-		<div id="table-toolbar">
-		</div>
+		<div id="table-toolbar"></div>
 		<form id="editForm">
 			<div class="row">
 				<div class="col-sm-6">
@@ -22,14 +21,14 @@
 						<input class="require input-item" name="number">
 					</div>
 				</div>
-				<div class="col-sm-6 mb15">
+				<div class="col-sm-6">
 					<div class="input-group">
 						<span class="input-group-addon lable">名称</span>
 						<input name="name" class="input-item form-control">
 					</div>
 				</div>
 			</div>
-			<div class="row">
+			<div class="row mt10">
 				<div class="col-sm-6">
 					<div class="input-group">
 						<span class="input-group-addon lable">所属组织</span> 
@@ -38,16 +37,50 @@
 
 					</div>
 				</div>
-				<div class="col-sm-6 mb15">
-					<div class="input-group"></div>
+				<div class="col-sm-6">
+					<div class="input-group">
+						<span class="input-group-addon lable">上级岗位</span> 
+						<input name="parent" class="input-item form-control require" 
+							data-opt="{type:'f7',uiWin:{title:'工作岗位',height:600,width:800,url:'base/positionf7'}}" />
+							
+					</div>
+				</div>
+			</div>
+			<div class="row mt10">
+				<div class="col-sm-6">
+					<div class="input-group">
+						<span class="input-group-addon lable">负责人岗</span> 
+						<input class="require input-item" name="respible" data-opt="{type:'checkbox'}" type="checkbox">
+
+					</div>
+				</div>
+				<div class="col-sm-6">
+					<div class="input-group">
+						<span class="input-group-addon lable">启用</span> 
+						<input class="require input-item" name="enabled" data-opt="{type:'checkbox'}" type="checkbox">
+					</div>
 				</div>
 			</div>
 			<div class="row mt10">
 				<div class="col-sm-12">
 					<div class="input-group">
-						<span class="input-group-addon lable">备注信息</span>
+						<span class="input-group-addon lable">岗位描述</span>
 						<textarea name="remark" class="input-item form-control" rows="2"></textarea>
 					</div>
+				</div>
+			</div>
+			<div class="row mt10">
+				<div class="col-sm-12 " style="border: 1px solid #ddd;">
+					<table name="jobDutyItems" class="input-entry" data-opt="{type:'entry',height:170,toolbar:{title:'岗位职责'}}">
+						<thead>
+							<tr>
+								<th data-field="jobDuty" data-type="f7"
+									data-editor="{uiWin:{title:'工作职责',height:600,width:800,url:'base/jobDutyf7',uiParams:getParams}}">
+									工作职责</th>
+								<th data-field="remark" data-width="250" data-type="textarea">备注</th>
+							</tr>
+						</thead>
+					</table>
 				</div>
 			</div>
 		</form>
@@ -70,6 +103,9 @@
 				$('input[name="org"]').myF7().setData(uiCtx.tree);
 			}
 		}
+	}
+	function getParams(){
+		
 	}
 	$(document).ready(function() {
 		var editUI = $('#editPanel').editUI({

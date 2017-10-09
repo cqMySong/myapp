@@ -13,15 +13,16 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
 import com.alibaba.fastjson.JSONObject;
-import com.myapp.core.annotation.NeedLoginAnn;
+import com.myapp.core.annotation.AuthorAnn;
 import com.myapp.core.base.controller.BaseController;
 import com.myapp.core.base.service.impl.AbstractBaseService;
 import com.myapp.core.entity.BaseOrgInfo;
 import com.myapp.core.entity.UserInfo;
 import com.myapp.core.enums.UserState;
-import com.myapp.core.model.MyWebContent;
+import com.myapp.core.model.MyWebContext;
 import com.myapp.core.model.WebDataModel;
 import com.myapp.core.service.UserService;
+import com.myapp.core.service.base.WebContextService;
 import com.myapp.core.util.BaseUtil;
 import com.myapp.entity.ec.plan.ProjectTotalPlanInfo;
 import com.myapp.entity.ec.plan.ProjectTotalPlanItemInfo;
@@ -42,30 +43,29 @@ public class MainController extends BaseController {
 	public UserService userService;
 	
 	@Resource
-	public ProjectTotalPlanService projectTotalPlanService;
-	public AbstractBaseService getService() {
-		return projectTotalPlanService;
-	}
+	public WebContextService webContextService;
 	
 	@RequestMapping("/index")
+	@AuthorAnn(doLongin=true,doPermission=false)
 	public ModelAndView index(){
 		Map params = new HashMap();
 		return toPage("main/main", params);
 	}
 	
 	@RequestMapping("/home")
+	@AuthorAnn(doLongin=true,doPermission=false)
 	public ModelAndView toHome(){
 		Map params = new HashMap();
 		return toPage("main/home", params);
 	}
-	@NeedLoginAnn(doLongin=false)
+	@AuthorAnn(doLongin=false,doPermission=false)
 	@RequestMapping("/login")
 	public ModelAndView login(){
 		Map params = new HashMap();
 		return toPage("main/login", params);
 	}
 	
-	@NeedLoginAnn(doLongin=false)
+	@AuthorAnn(doLongin=false,doPermission=false)
 	@RequestMapping("/logout")
 	public ModelAndView logout(){
 		Map params = new HashMap();
@@ -73,7 +73,7 @@ public class MainController extends BaseController {
 		return toPage("main/login", params);
 	}
 	
-	@NeedLoginAnn(doLongin=false)
+	@AuthorAnn(doLongin=false,doPermission=false)
 	@ResponseBody
 	@RequestMapping("/tologin")
 	public WebDataModel tologin(){
@@ -90,19 +90,11 @@ public class MainController extends BaseController {
 				if(inputPd.equals(dbPd)){
 					UserState us = uInfo.getUserState();
 					if(UserState.ENABLE.equals(us)){
+						webContextService.initWebContext(request, uInfo);
+						
 						JSONObject jsonObj = new JSONObject();
 						jsonObj.put("userName", un);
 						jsonObj.put("indexUrl", request.getContextPath()+"/main/index");
-						MyWebContent myWebCtx = new MyWebContent();
-						myWebCtx.setUserId(uInfo.getId());
-						myWebCtx.setUserName(uInfo.getName());
-						myWebCtx.setUserNumber(uInfo.getNumber());
-						BaseOrgInfo org = uInfo.getDefOrg();
-						if(org!=null){
-							myWebCtx.setOrgId(org.getId());
-							myWebCtx.setOrgName(org.getName());
-						}
-						request.getSession().setAttribute("webCtx", myWebCtx);
 						this.data = jsonObj;
 					}else{
 						setInfoMesg("用户状态已经"+us.getName()+",不能登录!");
@@ -121,6 +113,7 @@ public class MainController extends BaseController {
 	}
 	
 	@RequestMapping("/toUserSet")
+	@AuthorAnn(doLongin=true,doPermission=false)
 	public ModelAndView toUserSetting(){
 		Map params = new HashMap();
 		return toPage("main/userSetting", params);
@@ -128,6 +121,7 @@ public class MainController extends BaseController {
 	
 	@ResponseBody
 	@RequestMapping("/userSet")
+	@AuthorAnn(doLongin=true,doPermission=false)
 	public WebDataModel userSet(){
 		return ajaxModel();
 	}

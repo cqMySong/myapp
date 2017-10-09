@@ -2,6 +2,7 @@ package com.myapp.core.base.interceptors;
 
 import java.io.PrintWriter;
 import java.lang.reflect.Method;
+import java.util.Map;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
@@ -14,14 +15,15 @@ import org.springframework.web.servlet.HandlerInterceptor;
 import org.springframework.web.servlet.ModelAndView;
 
 import com.alibaba.fastjson.JSONObject;
-import com.myapp.core.annotation.NeedLoginAnn;
+import com.myapp.core.annotation.AuthorAnn;
 import com.myapp.core.annotation.PermissionAnn;
 import com.myapp.core.annotation.PermissionItemAnn;
 import com.myapp.core.entity.BaseOrgInfo;
 import com.myapp.core.entity.UserInfo;
-import com.myapp.core.model.MyWebContent;
+import com.myapp.core.model.MyWebContext;
 import com.myapp.core.service.base.BaseService;
 import com.myapp.core.util.BaseUtil;
+import com.myapp.core.uuid.SysObjectType;
 
 /**
  *-----------MySong---------------
@@ -33,6 +35,7 @@ import com.myapp.core.util.BaseUtil;
  */
 public class BaseInterceptor implements HandlerInterceptor {
 	private static final Logger log = LogManager.getLogger(BaseInterceptor.class);
+	
 	@Resource
 	public BaseService baseService;
 	/**
@@ -47,46 +50,104 @@ public class BaseInterceptor implements HandlerInterceptor {
 			HandlerMethod hm = (HandlerMethod) object;
 			Method method = hm.getMethod();
 			boolean isNeedLogin = true;
-			NeedLoginAnn nla = method.getAnnotation(NeedLoginAnn.class);
+			AuthorAnn nla = method.getAnnotation(AuthorAnn.class);
+			Boolean doPermission = true;
+			MyWebContext myContext = null;
+			Object webCtxObj = request.getSession().getAttribute("webCtx");
+			if(webCtxObj!=null&&webCtxObj instanceof MyWebContext){
+				myContext = (MyWebContext)webCtxObj;
+			}
+			String appRoot = request.getContextPath();
+			String toUrl = "";
+			String mesg = "";
+			String mesgTitle = "";
 			if(nla!=null){
 				isNeedLogin = nla.doLongin();
+				doPermission = nla.doPermission();
 			}
 			if(isNeedLogin){//需要登录
 				//检查session 是否有对应的用户信息
-				Object webCtxObj = request.getSession().getAttribute("webCtx");
-				if(webCtxObj!=null&&webCtxObj instanceof MyWebContent){
-					toGo = !BaseUtil.isEmpty(((MyWebContent)webCtxObj).getUserId());
-				}else{
+				if(myContext==null){
 					toGo = false;
+					doPermission=null;
+				}else{
+					toGo = myContext!=null&&!BaseUtil.isEmpty(myContext.getUserId());
 				}
 				if(!toGo){
-					PrintWriter pw = response.getWriter();
-					boolean isAjaxRequest = (request.getHeader("X-Requested-With") != null  
-						    && "XMLHttpRequest".equals(request.getHeader("X-Requested-With").toString()));
-					String appRoot = request.getContextPath();
-					String loginUrl = appRoot+"/main/login";
-					String logInMesg = "用户未登录或者登录超时，请重新登录!";
-					String logTitle = "用户检测异常!";
-					if(isAjaxRequest){
-						JSONObject json = new JSONObject();
-						json.put("statusCode", -99);
-						json.put("statusMesg",logInMesg);
-						json.put("loginUrl", loginUrl);
-						json.put("title", logTitle);
-						pw.write(json.toJSONString());
-					}else{
-						StringBuffer sb = new StringBuffer();
-						sb.append("<script src='"+appRoot+"/assets/lib/jquery/jquery.js'></script>");
-						sb.append("<script src='"+appRoot+"/assets/lib/layer/layer.js'></script>");
-						sb.append("<script type='text/javascript'>");
-							sb.append("parent.layer.open({title:'"+logTitle+"',content:'"+logInMesg+"',icon:5,end:function(){");
-								sb.append("window.open('"+loginUrl+"','_top');");
-							sb.append("}});");
-						sb.append("</script>");
-						sb.append("<body style='height:500px;width:400px;'> &nbsp;");
-						sb.append("</body>");
-						pw.write(sb.toString());
+					toUrl = appRoot+"/main/login";
+					mesg = "用户未登录或者登录超时，请重新登录!";
+					mesgTitle = "用户检测异常!";
+				}
+			}
+			if(myContext!=null&&toGo){
+				if(myContext.getAdmin()&&myContext.getSysUser()){//系统内置的管理员不需要权限验证
+					doPermission = false;
+				}
+			}
+			if(doPermission!=null&&doPermission&&toGo){
+				if(myContext==null){
+					toGo = false;
+				}else{
+					Map<String, Map<String, String>> perms =  myContext.getPermission();
+					String uri = request.getRequestURI();
+					if(perms!=null&&perms.size()>0&&!BaseUtil.isEmpty(uri)&&uri.length()>appRoot.length()){
+						uri = uri.substring(appRoot.length());
+						System.out.println("URI = "+uri);
+						toGo = perms.containsKey(uri)&&isNeedLogin;
 					}
+				}
+				if(!toGo){
+					mesg = "用户未操作此功能权限，无权访问!";
+					mesgTitle = "用户权限验证失败!";
+				}
+				
+			}
+			
+			if(!toGo){
+				PrintWriter pw = response.getWriter();
+				boolean isAjaxRequest = (request.getHeader("X-Requested-With") != null  
+					    && "XMLHttpRequest".equals(request.getHeader("X-Requested-With").toString()));
+				
+				if(isAjaxRequest){
+					JSONObject json = new JSONObject();
+					json.put("statusCode", -99);
+					json.put("statusMesg",mesg);
+					json.put("toUrl", toUrl);
+					json.put("title", mesgTitle);
+					pw.write(json.toJSONString());
+				}else{
+					StringBuffer sb = new StringBuffer();
+					sb.append("<script src='"+appRoot+"/assets/lib/jquery/jquery.js'></script>");
+					sb.append("<script src='"+appRoot+"/assets/lib/layer/layer.js'></script>");
+					if(doPermission!=null&&doPermission){
+						sb.append("<link rel='stylesheet' href='"+appRoot+"/assets/css/quirk.css'/>");
+					}else{
+						sb.append("<script type='text/javascript'>");
+						sb.append("parent.layer.open({title:'"+mesgTitle+"',content:'"+mesg+"',icon:5,end:function(){");
+							if(!BaseUtil.isEmpty(toUrl)){
+								sb.append("window.open('"+toUrl+"','_top');");
+							}
+						sb.append("}});");
+						sb.append("</script>");
+					}
+					sb.append("<body class='contenstpanel' style='padding:5px;height:100%;width:100%;'>");
+					if(doPermission!=null&&doPermission){
+						sb.append("<div class='row'>");
+							sb.append("<div class='col-md-12'>");
+								sb.append("<div class='panel panel-danger'>");
+									sb.append("<div class='panel-heading'><h3 class='panel-title'>");
+										sb.append(mesgTitle);
+									sb.append("</h3></div>");
+									sb.append("<div class='panel-body'>");
+										sb.append(mesg);
+									sb.append("</div>");
+								sb.append("</div>");
+							sb.append("</div>");
+						sb.append("</div>");
+					}
+//						sb.append(mesgTitle+"："+mesg);
+					sb.append("</body>");
+					pw.write(sb.toString());
 				}
 			}
 			PermissionItemAnn pitem = hm.getMethod().getAnnotation(PermissionItemAnn.class);

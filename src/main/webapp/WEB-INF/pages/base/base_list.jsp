@@ -374,7 +374,7 @@ function beforeAction(opt){
 	return true;
 }
 
-function afterAction(){
+function afterAction(opt){
 	
 }
 

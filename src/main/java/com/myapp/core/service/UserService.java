@@ -19,7 +19,7 @@ public class UserService extends BaseInterfaceService<UserInfo> {
 	
 	
 	public String resetUserEncrypt(String userId) throws NoSuchAlgorithmException, SaveException{
-		if(BaseUtil.isEmpty(userId)) return "用户id为空无法完成用户密码都重置操作!";
+		if(BaseUtil.isEmpty(userId)) return "用户id为空无法完成用户密码的重置操作!";
 		UserInfo uInfo = (UserInfo) getEntity(userId);
 		if(uInfo!=null){
 			uInfo.setPassWord(BaseUtil.md5Encrypt(SystemConstant.DEF_USERPWD_INIT));

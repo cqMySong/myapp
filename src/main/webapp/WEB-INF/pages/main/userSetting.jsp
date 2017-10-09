@@ -1,5 +1,5 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
-<%@ page import="com.myapp.core.model.MyWebContent" %>
+<%@ page import="com.myapp.core.model.MyWebContext" %>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -9,7 +9,7 @@
 </style>
 <%@include file="../inc/webBase.inc"%>
 <link rel="stylesheet" href="<%=appRoot%>/assets/css/main.css"/>
-<% MyWebContent webCtx = (MyWebContent)request.getSession().getAttribute("webCtx"); %>
+<% MyWebContext webCtx = (MyWebContext)request.getSession().getAttribute("webCtx"); %>
 <script type="text/javascript">
 </script>
 <body style="padding: 5px;">

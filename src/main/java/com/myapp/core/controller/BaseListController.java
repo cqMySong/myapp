@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
 import com.alibaba.fastjson.JSONObject;
+import com.myapp.core.annotation.AuthorAnn;
 import com.myapp.core.annotation.PermissionItemAnn;
 import com.myapp.core.enums.BaseMethodEnum;
 import com.myapp.core.enums.DataTypeEnum;
@@ -55,6 +56,7 @@ public abstract class BaseListController extends BasePageListController {
 		return toPage(getListUrl(), params);
 	}
 	
+	@AuthorAnn(doLongin=false,doPermission=false)
 	@RequestMapping(value="/query")
 	@ResponseBody
 	public WebDataModel toList() {

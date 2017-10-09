@@ -41,7 +41,9 @@ function enableClick(btn){
 
 $(document).ready(function() {
 	var editWin ={title:'结构类型',width:620,height:360};
-	listUI = $('#listPanel').listUI({tableEl:'#tblMain',listModel:1,baseUrl:'ec/basedata/structTypes',editWin:editWin,toolbar:"#table-toolbar"});
+	var height = top.getTopMainHeight()-45;
+	listUI = $('#listPanel').listUI({tableEl:'#tblMain',listModel:1,baseUrl:'ec/basedata/structTypes'
+		,editWin:editWin,toolbar:"#table-toolbar",extendTableOptions:{height:height-40}});
 	listUI.onLoad();
 })
 </script>

@@ -1,12 +1,11 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
-<%@ page import="com.myapp.core.model.MyWebContent" %>
-<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<%@ page import="com.myapp.core.model.MyWebContext" %>
 <html lang="en">
 	<head>
 		<title>${appName }</title>
 	</head>
 	<%@include file="../inc/webBase.inc"%>
-	<% MyWebContent webCtx = (MyWebContent)request.getSession().getAttribute("webCtx"); %>
+	<% MyWebContext webCtx = (MyWebContext)request.getSession().getAttribute("webCtx"); %>
 	<link rel="stylesheet" href="<%=appRoot%>/assets/css/main.css"/>
 	<body>
 		<div id="headPanel" class="headerpanel">
@@ -316,7 +315,7 @@ function addMainTab(item){
 	mainTab.addTab(item);
 }
 function getTopMainHeight(){
-	return $(top.window).height()-($('#headPanel').innerHeight()+$('#mainTab>ul.nav-tabs').innerHeight())-10;
+	return $(top.document).height()-($('#headPanel').innerHeight()+$('#mainTab>ul.nav-tabs').height())-10;
 }
 $(document).ready(function() {
 	var userMenus = {menus:[
@@ -355,13 +354,12 @@ $(document).ready(function() {
 	var sysMenusOpt = {menus:[{title:'首页',icon:'fa fa-home'},
 	                    {title:'系统管理',icon:'fa fa-cogs',child:[
 							{title:'组织管理',icon:'fa fa-cogs',url:'base/orgs/list'}
-						   ,{title:'人员管理'}
 						   ,{title:'附件管理',icon:'fa fa-server',url:'base/ftps/list'}]
 						},{title:'门户管理',icon:'fa fa-home',child:[{title:'菜单管理'}]}
 						, {title:'安全管理',icon:'fa fa-star',child:[
-							{title:'用户管理',icon:'fa fa-user',active:true,url:'base/users/list'},
-							{title:'岗位管理',icon:'fa fa-users',url:'base/positions/list'},
 							{title:'工作职责',icon:'fa fa-users',url:'base/jobdutys/list'},
+							{title:'岗位管理',icon:'fa fa-users',url:'base/positions/list'},
+							{title:'用户管理',icon:'fa fa-user',active:true,url:'base/users/list'},
 							{title:'角色管理',icon:'fa fa-users',url:'base/roles/list'},
 							{title:'权限管理',icon:'fa fa-tags',url:'base/permissions/list'}
 							]},
@@ -374,6 +372,8 @@ $(document).ready(function() {
 	$('#sysMenus').myPillTreeMenu('init',sysMenusOpt);
 	var initTabs = {items:[{id:'homeIdex',title:'主页',icon:'fa fa-home',enColse:false,url:'main/home'}]};
 	mainTab = $('#mainTab').myTab('init',initTabs);
+	$('#mainTab').find('ul.nav-tabs').css({"position":'fixed',"width":'100%'});
+	$('#mainTab').find('div.tab-content').css({"padding-top":'45px'});
 	
 	$('#userSet').click(function(){
 		openUserSetUI();

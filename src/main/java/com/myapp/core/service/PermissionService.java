@@ -1,6 +1,7 @@
 package com.myapp.core.service;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.TreeMap;
@@ -149,11 +150,14 @@ public class PermissionService extends BaseInterfaceService<PermissionInfo> {
 		}
 	}
 	
+	
 	public static void main(String[] args){
 		String strs = "a!b!c!d!e";
 		Map m = new TreeMap();
 		packageString(strs,m);
 		System.out.println(m.values());
 	}
+	
+	
 	
 }

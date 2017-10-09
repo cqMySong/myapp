@@ -216,7 +216,17 @@ public abstract class BaseF7QueryController extends BasePageListController {
 			}
 		}
 	}
-	
+	public Map getQueryUiCtx() {
+		String serach = request.getParameter("search");
+		if(!BaseUtil.isEmpty(serach)){
+			Map searchMap = JSONObject.parseObject(serach, new HashMap().getClass());
+			if(searchMap!=null&&searchMap.containsKey("uiCtx")){
+				Object uiCtxObj = searchMap.get("uiCtx");
+				if(uiCtxObj!=null) return JSONObject.parseObject(uiCtxObj.toString(), new HashMap().getClass());
+			}
+		}
+		return null;
+	}
 	public boolean isMutil() {
 		return mutil;
 	}

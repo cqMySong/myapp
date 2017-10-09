@@ -7,7 +7,7 @@
 <script type="text/javascript">
 </script>
 <body style="padding: 5px;">
-	<div id="table-toolbar" class="panel" style="height:60px;margin-bottom:5px;"></div>
+	<div id="table-toolbar" class="panel" style="height:40px;margin-bottom:5px;"></div>
 	<div class="mainContrainer">
 		<div class="leftContainer" id="tree_container"></div>
 		<div class="rightContainer" id="tblMain_container">
@@ -73,10 +73,10 @@ $(document).ready(function() {
      includeChild.setData(true);
      
      var editWin ={title:'工程项目',width:620,height:580};
-     var height = $(top.window).height()-$('#table-toolbar').innerHeight()-130;
+     var height = top.getTopMainHeight()-45;
      thisOrgList = $('body').treeListUI({tableEl:'#tblMain',treeUrl:'base/orgs/tree',baseUrl:'ec/basedata/projects',title:'工程项目',height:height,
     	 treeContainer:"#tree_container",editWin:editWin,toolbar:"#table-toolbar",searchParams:{includeChild:true}
-    	 ,extendTableOptions:{toolbar:'#tblMain_toolbar',height:height-46,sortStable:false}});
+    	 ,extendTableOptions:{toolbar:'#tblMain_toolbar',height:height-53,sortStable:false}});
      thisOrgList.onLoad();
 });
 function getTreeQueryParams(){

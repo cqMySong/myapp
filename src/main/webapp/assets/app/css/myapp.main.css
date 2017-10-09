@@ -640,5 +640,6 @@ td>pre.tablepre {
   border: 0px;border-radius:0px;
   text-align:left;
   font-size: 12px;
+  white-space: pre-wrap;
 }
 

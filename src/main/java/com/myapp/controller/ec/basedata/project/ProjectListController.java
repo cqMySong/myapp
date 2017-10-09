@@ -20,6 +20,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.alibaba.fastjson.JSONObject;
+import com.myapp.core.annotation.AuthorAnn;
 import com.myapp.core.annotation.PermissionAnn;
 import com.myapp.core.base.service.impl.AbstractBaseService;
 import com.myapp.core.controller.BaseListController;
@@ -98,6 +99,7 @@ public class ProjectListController extends BaseListController {
 		}
 	}
 	
+	@AuthorAnn(doPermission=false)
 	@RequestMapping(value="/projectTree")
 	@ResponseBody
 	public WebDataModel treeData() {

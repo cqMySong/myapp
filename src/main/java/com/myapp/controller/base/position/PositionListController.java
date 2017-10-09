@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import com.alibaba.fastjson.JSONObject;
 import com.myapp.core.annotation.PermissionAnn;
 import com.myapp.core.base.service.impl.AbstractBaseService;
+import com.myapp.core.controller.BaseDataListController;
 import com.myapp.core.controller.BaseListController;
 import com.myapp.core.enums.DataTypeEnum;
 import com.myapp.core.model.ColumnModel;
@@ -32,7 +33,7 @@ import com.myapp.core.util.BaseUtil;
 @PermissionAnn(name="系统管理.岗位管理",number="app.position")
 @Controller
 @RequestMapping("base/positions")
-public class PositionListController extends BaseListController {
+public class PositionListController extends BaseDataListController {
 	
 	@Resource
 	public PositionService positionService;
@@ -43,11 +44,11 @@ public class PositionListController extends BaseListController {
 	
 	public List<ColumnModel> getDataBinding() {
 		List<ColumnModel> cols = super.getDataBinding();
-		cols.add(new ColumnModel("name"));
-		cols.add(new ColumnModel("number"));
 		ColumnModel orgCol = new ColumnModel("org",DataTypeEnum.F7,"name");
 		cols.add(orgCol);
-		cols.add(new ColumnModel("remark"));
+		ColumnModel parent = new ColumnModel("parent",DataTypeEnum.F7,"name");
+		cols.add(parent);
+		cols.add(new ColumnModel("respible", DataTypeEnum.BOOLEAN));
 		return cols;
 	}
 	

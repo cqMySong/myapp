@@ -277,7 +277,7 @@
 			}
 		});
 		editUI.onLoad();
-		var height = $(top.window).height()-120;
+		var height = top.getTopMainHeight()+10;
 		$('#editPanel').height(height);
 	})
 </script>

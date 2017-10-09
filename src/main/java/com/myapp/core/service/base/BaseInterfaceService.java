@@ -35,7 +35,6 @@ public class BaseInterfaceService<T> extends AbstractBaseService {
 				this.claz = (Class)types[0];
 			}
 		}
-		
 	}
 	
 	protected Class getEntityClass() {

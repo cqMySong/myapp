@@ -31,6 +31,8 @@ MyF7.prototype = {
 		if(opt.commitName){
 			this.commitName = opt.commitName;
 		}
+		$thisDom.data('displayName',this.displayName);
+		$thisDom.data('commitName',this.commitName);
 		if(opt.dataFormat){
 			this.dataFormat = opt.dataFormat;
 		}
@@ -114,15 +116,16 @@ MyF7.prototype = {
 			this.dataFormat(this.$element,data);
 		}else{
 			var _txt = '';
+			var displayName = this.$element.data('displayName');
 			if(!webUtil.isEmpty(data)){
 				if($.isArray(data)){
 					for(var i=0;i<data.length;i++){
 						var itemData = data[i];
 						if(i>0) _txt += ',';
-						_txt += itemData[this.displayName]
+						_txt += itemData[displayName];
 					}
 				}else{
-					_txt = data[this.displayName];
+					_txt = data[displayName];
 				}
 			}
 			$(this.$element).val(_txt);

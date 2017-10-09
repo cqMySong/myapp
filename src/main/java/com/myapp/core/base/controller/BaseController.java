@@ -13,7 +13,7 @@ import org.springframework.web.servlet.ModelAndView;
 
 import com.myapp.core.entity.UserInfo;
 import com.myapp.core.enums.BaseMethodEnum;
-import com.myapp.core.model.MyWebContent;
+import com.myapp.core.model.MyWebContext;
 import com.myapp.core.model.WebDataModel;
 import com.myapp.core.util.BaseUtil;
 
@@ -145,15 +145,15 @@ public class BaseController {
     	return paramter;
     }
     
-    public MyWebContent getCurWebContext(){
+    public MyWebContext getCurWebContext(){
     	Object objCtx = request.getSession().getAttribute("webCtx");
-    	if(objCtx!=null&&objCtx instanceof MyWebContent){
-    		return (MyWebContent)objCtx;
+    	if(objCtx!=null&&objCtx instanceof MyWebContext){
+    		return (MyWebContext)objCtx;
     	}
     	return null;
     }
     public UserInfo getCurUser(){
-    	MyWebContent webCtx = getCurWebContext();
+    	MyWebContext webCtx = getCurWebContext();
     	if(webCtx!=null) return webCtx.getCurUserInfo();
     	return null;
     }

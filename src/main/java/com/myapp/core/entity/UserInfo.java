@@ -1,10 +1,15 @@
 package com.myapp.core.entity;
 
+import java.util.Set;
+
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.JoinColumn;
+import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
+import javax.persistence.OrderBy;
 import javax.persistence.Table;
 
 import org.hibernate.annotations.Parameter;
@@ -25,6 +30,8 @@ public class UserInfo extends CoreBaseInfo{
 	private Boolean sysUser = Boolean.FALSE;
 	private String linkers;//联系方式
 	
+	private Set<UserPositionInfo> positionItems;
+	
 	@Column(name="fpassword")
 	public String getPassWord() {
 		return passWord;
@@ -33,10 +40,10 @@ public class UserInfo extends CoreBaseInfo{
 		this.passWord = passWord;
 	}
 	@Column(name="fisAdmin")
-	public boolean isAdmin() {
+	public Boolean getAdmin() {
 		return admin;
 	}
-	public void setAdmin(boolean isAdmin) {
+	public void setAdmin(Boolean isAdmin) {
 		this.admin = isAdmin;
 	}
 	@Column(name="fuserState",length=20)
@@ -64,10 +71,10 @@ public class UserInfo extends CoreBaseInfo{
 		this.defOrg = defOrg;
 	}
 	@Column(name="fisSysUser",length=2)
-	public boolean isSysUser() {
+	public Boolean getSysUser() {
 		return sysUser;
 	}
-	public void setSysUser(boolean isSysUser) {
+	public void setSysUser(Boolean isSysUser) {
 		this.sysUser = isSysUser;
 	}
 	@Column(name="flinkers",length=100)
@@ -76,6 +83,14 @@ public class UserInfo extends CoreBaseInfo{
 	}
 	public void setLinkers(String linkers) {
 		this.linkers = linkers;
+	}
+	@OneToMany(cascade={CascadeType.ALL},mappedBy="parent")
+	@OrderBy("seq ASC")
+	public Set<UserPositionInfo> getPositionItems() {
+		return positionItems;
+	}
+	public void setPositionItems(Set<UserPositionInfo> positionItems) {
+		this.positionItems = positionItems;
 	}
 	
 	

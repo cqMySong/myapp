@@ -451,7 +451,7 @@ var webUtil = {
 	ajaxData:function(_opt){
 		var opt = $.extend(true,{},ajax_defaultOpt,_opt);
 		var _thisUrl = webUtil.toUrl(_opt.url)
-		var loadIdx = layer.msg('数据加载中...', {icon: 16,time:0,shade : true,shade: 0.1});
+		var loadIdx = layer.msg('数据处理中...', {icon: 16,time:0,shade : true,shade: 0.1});
 		$.ajax({type:opt.type,url:_thisUrl,async:opt.async,data:opt.data,dataType:opt.dataType,success:function(data){
 			layer.close(loadIdx);
 			if(!webUtil.isEmpty(data)){
@@ -485,7 +485,7 @@ var webUtil = {
 		}
 		,error:function(event, XMLHttpRequest, ajaxOptions, thrownError){
 			layer.close(loadIdx);
-			alert('请求失败');
+			webUtil.showMesg('请求失败');
 		}
 		});
 	},

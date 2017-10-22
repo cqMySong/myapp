@@ -82,7 +82,7 @@
 			</div>
 			<div class="row mt10">
 				<div class="col-sm-12 " style="border: 1px solid #ddd;">
-					<table name="planReportItems" class="input-entry" data-opt="{type:'entry',height:430,toolbar:{title:'施工日志填报'}
+					<table name="planReportItems" class="input-entry" data-opt="{type:'entry',height:420,toolbar:{title:'施工日志填报'}
 							,tableOpt:{editDataChanged:planItems_dataChanged},addRow:tblAddRow}">
 						<thead>
 							<tr>
@@ -192,26 +192,14 @@
 	}
 	
 	function planItems_dataChanged($cell,obj){
-		/* var obj= {};
-		obj.oldVal = oldVal;
-		obj.value = val;
-		obj.rowData = rowData;
-		obj.field = field;
-		obj.column = thisColumn;
-		obj.rowIndex = rowIdx;
-		obj.colIndex = colIdx; */
 		if(webUtil.isEmpty(planItemsEntry)) return;
 		if('proSubItem'==obj.field){
 			var newData = obj.rowData[obj.field];
-			/* var proStructure = {};
-			proStructure.id = newData.proStruct_id;
-			proStructure.displayName = newData.proStruct_displayName; */
 			var proSub = {};
 			proSub.id = newData.proSub_id;
 			proSub.name = newData.proSub_name;
 			proSub.proStruct_id = newData.proStruct_id;
 			proSub.proStruct_displayName = newData.proStruct_displayName;
-			//planItemsEntry.setTableCellValue(obj.rowIndex,'proStructure',proStructure);
 			planItemsEntry.setTableCellValue(obj.rowIndex,'proSub',proSub);
 		}else if('proSub'==obj.field){
 			var newData = obj.rowData[obj.field];
@@ -262,15 +250,14 @@
 			}
 		});
 		editUI.onLoad();
-		//webUtil.initMainPanel('#editPanel');
 		planItemsEntryObj = editUI.getEntryObj('planReportItems');
 		if(!webUtil.isEmpty(planItemsEntryObj)){
 			planItemsEntry = planItemsEntryObj.entry;
 			var rightBtnGroup = planItemsEntryObj.toolbar.find('.pull-right>.btn-group').myBtnGroup();
 			rightBtnGroup.addBtn({entry:planItemsEntry,css:'btn-sm',text:'复制插入',icon:"fa fa-edit",clickFun:btnCopyInsertRow});
 		}
-		var height = $(top.window).height()-110;
-		$('#editPanel').height(height);
+		var height = top.getTopMainHeight();
+		$('#editPanel').height(height+15);
 	})
 </script>
 </html>

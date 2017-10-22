@@ -100,7 +100,7 @@ $(document).ready(function() {
 					var retData = data.data;
 					setTimeout(function(){
 						window.location.href = retData.indexUrl; 
-					},1000)
+					},500)
 				}else{
 					var mesg = data.statusMesg;
 					if(mesg){
@@ -108,7 +108,7 @@ $(document).ready(function() {
 					}
 				}
 			  },complete:function(){
-					layer.close(loadIdx);
+				  
 				}
 			});
 		}else{

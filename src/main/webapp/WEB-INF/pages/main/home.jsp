@@ -26,39 +26,7 @@
 <body>
 	<div class="contentpanel" style="padding:5px;">
 		<div class="row profile-wrapper" >
-			<div class="col-xs-12 col-md-3 col-lg-2 profile-left" id="leftpanel">
-				<div class="profile-left-heading">
-					<ul class="panel-options">
-						<li><a><i class="glyphicon glyphicon-option-vertical"></i></a></li>
-					</ul>
-					<a href="" class="profile-photo">
-						<img class="img-circle img-responsive" src="<%=appRoot%>/assets/images/photos/profilepic.png" alt=""></a>
-					<h2 class="profile-name"><%=webCtx.getUserName()%></h2>
-					<h4 class="profile-designation"><%=webCtx.getMainPositionStr()%></h4>
-
-					<ul class="list-group">
-						<li class="list-group-item">登陆地址: <a href="#">127.0.0.1</a></li>
-						<li class="list-group-item">上次登录时间： <a href="#">2017-08-31</a></li>
-					</ul>
-				</div>
-				<div class="profile-left-body">
-					<h4 class="panel-title">联系方式</h4>
-					<p><i class="glyphicon glyphicon-phone mr5"></i><%=webCtx.getLinker() %></p>
-					<hr class="fadeout">
-					<h4 class="panel-title">天气情况</h4>
-					<p><i class="glyphicon glyphicon-briefcase mr5"></i> 晴....</p>
-					<hr class="fadeout">
-					<h4 class="panel-title">其他快捷入口</h4>
-					<ul class="list-inline profile-social">
-						<li><a href=""><i class="fa fa-facebook-official"></i></a></li>
-						<li><a href=""><i class="fa fa-twitter"></i></a></li>
-						<li><a href=""><i class="fa fa-dribbble"></i></a></li>
-						<li><a href=""><i class="fa fa-linkedin"></i></a></li>
-					</ul>
-					
-				</div>
-			</div>
-			<div class="col-md-6 col-lg-8 profile-right">
+			<div class="col-md-10 col-lg-9 profile-right">
 				<div class="profile-right-body">
 					<!-- Nav tabs -->
 					<ul class="nav nav-tabs nav-justified nav-line">
@@ -103,7 +71,7 @@
 											}
 										}
 							%>
-							<div class="col-md-12">
+							<div class="col-md-12 col-lg-6">
 									<div class="panel <%=theme %>" style="padding: 10px 10px 0px 10px;margin-bottom: 10px;">
 										<div class="panel-heading">
 											<h3 class="panel-title">
@@ -117,8 +85,8 @@
 								                  <thead>
 								                    <tr>
 								                      <th style="width: 30px;"> №</th>
-								                      <th class="text-center" style="width: 150px;">职责名称</th>
-								                      <th class="text-center" style="width: 200px;">菜单</th>
+								                      <th class="text-center" style="width: 100px;">职责名称</th>
+								                      <th class="text-center" style="width: 130px;">菜单</th>
 								                      <th class="text-center">职责描述</th>
 								                    </tr>
 								                  </thead>
@@ -181,7 +149,7 @@
 					</div>
 				</div>
 			</div>
-			<div class="col-md-3 col-lg-2 profile-sidebar"  style="padding-left:5px;">
+			<div class="col-md-2 col-lg-3 profile-sidebar"  style="padding-left:5px;">
 				<div class="panel panel-warning list-announcement">
                 <div class="panel-heading">
                   <h4 class="panel-title">系统通知</h4>
@@ -227,8 +195,8 @@ function toSimpleUid(billId){
     return billId;
 }
 $(document).ready(function() {
-    var height = top.getTopMainHeight()+25;
-    $('#leftpanel').height(height);
+    var height = top.getTopMainHeight()-60;
+    $('.tab-pane').height(height);
     $('.toTab').click(function(){
     	if($(this).hasClass('lineThrough')){
     		webUtil.mesg('未分配此权限,不能操作!');

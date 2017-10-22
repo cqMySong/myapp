@@ -40,7 +40,7 @@
 				<div class="col-sm-6">
 					<div class="input-group">
 						<span class="input-group-addon lable">上级岗位</span> 
-						<input name="parent" class="input-item form-control require" 
+						<input name="parent" class="input-item form-control" 
 							data-opt="{type:'f7',uiWin:{title:'工作岗位',height:600,width:800,url:'base/positionf7'}}" />
 							
 					</div>

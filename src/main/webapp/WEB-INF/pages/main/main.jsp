@@ -103,7 +103,7 @@
 							data-target="#loguserinfo" ><span class="userName"><%=webCtx.getUserName()%></span> 
 							<a class="pull-right"> <i class="fa fa-angle-down"></i></a>
 						</h4>
-						<h5 class="media-heading">@软件工程师
+						<h5 class="media-heading"><%=webCtx.getMainPosition()%>
 							<a class="pull-right" style="cursor:pointer;"> <i class="fa fa-lock tooltips" title="锁定"></i></a>
 						</h5>
 					</div>
@@ -116,24 +116,8 @@
 					<h5 class="sidebar-title">联系方式：</h5>
 					<ul class="list-group">
 						<li class="list-group-item">
-							<label class="pull-left">Email</label>
-							<span class="pull-right">me@themepixels.com</span>
-						</li>
-						<li class="list-group-item">
-							<label class="pull-left">Home</label>
-							<span class="pull-right">(032) 1234 567</span>
-						</li>
-						<li class="list-group-item">
-							<label class="pull-left">Mobile</label>
-							<span class="pull-right">+63012 3456 789</span>
-						</li>
-						<li class="list-group-item">
-							<label class="pull-left">Social</label>
-							<div class="social-icons pull-right">
-								<a href="#"><i class="fa fa-facebook-official"></i></a>
-								<a href="#"><i class="fa fa-twitter"></i></a>
-								<a href="#"><i class="fa fa-pinterest"></i></a>
-							</div>
+							<label class="pull-left">Tel</label>
+							<span class="pull-right"><%=webCtx.getLinker()%></span>
 						</li>
 					</ul>
 				</div>
@@ -307,7 +291,7 @@
 <script type="text/javascript">
 	
 function openUserSetUI(){
-	var win = {title:'<i class="fa fa-user"></i>&nbsp;用户信息设置',maxmin:false,height:600,width:400,btns:['关闭'],url:app.root+'/main/toUserSet'};
+	var win = {title:'<i class="fa fa-user"></i>&nbsp;用户信息设置',maxmin:false,height:500,width:350,btns:null,url:app.root+'/main/toUserSet'};
 	webUtil.openWin(win);
 }
 var mainTab;
@@ -325,6 +309,9 @@ $(document).ready(function() {
                                ,{title:'方案类别',icon:'fa fa-cogs',url:'ec/basedata/schemeTypeList/list'}
                                ,{title:'施工方案',icon:'fa fa-cogs',url:'ec/basedata/schemelist/list'}
                                ,{title:'数据字典',icon:'fa fa-cogs',url:'ec/basedata/datadics/list'}
+                               ,{title:'技术分类',icon:'fa fa-cogs',url:'ec/basedata/skillclasss/list'}
+                               ,{title:'施工技术交底',icon:'fa fa-cogs',url:'ec/basedata/qmskillitems/list'}
+                               ,{title:'安全技术交底',icon:'fa fa-cogs',url:'ec/basedata/smskillitems/list'}
 							    ]},
 							{title:'项目基础数据',icon:'fa fa-home',child:[
 								{title:'工程项目',icon:'fa fa-building-o',url:'ec/basedata/projects/list'},
@@ -351,23 +338,27 @@ $(document).ready(function() {
 							]};
 	
 	$('#userMenus').myPillTreeMenu('init',userMenus);
-	var sysMenusOpt = {menus:[{title:'首页',icon:'fa fa-home'},
-	                    {title:'系统管理',icon:'fa fa-cogs',child:[
-							{title:'组织管理',icon:'fa fa-cogs',url:'base/orgs/list'}
-						   ,{title:'附件管理',icon:'fa fa-server',url:'base/ftps/list'}]
-						},{title:'门户管理',icon:'fa fa-home',child:[{title:'菜单管理'}]}
-						, {title:'安全管理',icon:'fa fa-star',child:[
-							{title:'工作职责',icon:'fa fa-users',url:'base/jobdutys/list'},
-							{title:'岗位管理',icon:'fa fa-users',url:'base/positions/list'},
-							{title:'用户管理',icon:'fa fa-user',active:true,url:'base/users/list'},
-							{title:'角色管理',icon:'fa fa-users',url:'base/roles/list'},
-							{title:'权限管理',icon:'fa fa-tags',url:'base/permissions/list'}
-							]},
-						{title:'流程管理',icon:'fa fa-star',child:[
+	var sysMenusOpt = {menus:[{title:'首页',icon:'fa fa-home'}
+	                          ,{title:'基础数据',icon:'fa fa-cogs',child:[
+	                              {title:'计量单位',icon:'fa fa-cogs',url:'base/measureunits/list'}
+	                          ]}
+	                         ,{title:'系统管理',icon:'fa fa-cogs',child:[
+								{title:'组织管理',icon:'fa fa-cogs',url:'base/orgs/list'}
+						   		,{title:'附件管理',icon:'fa fa-server',url:'base/ftps/list'}
+							 ]}
+	                        ,{title:'门户管理',icon:'fa fa-home',child:[{title:'菜单管理'}]}
+							,{title:'安全管理',icon:'fa fa-star',child:[
+								{title:'工作职责',icon:'fa fa-users',url:'base/jobdutys/list'},
+								{title:'岗位管理',icon:'fa fa-users',url:'base/positions/list'},
+								{title:'用户管理',icon:'fa fa-user',active:true,url:'base/users/list'},
+								{title:'角色管理',icon:'fa fa-users',url:'base/roles/list'},
+								{title:'权限管理',icon:'fa fa-tags',url:'base/permissions/list'}
+							]}
+							,{title:'流程管理',icon:'fa fa-star',child:[
 								{title:'模型管理',icon:'fa fa-user',url:'base/actmodels/list'},
 								{title:'流程管理',icon:'fa fa-tags',url:'base/actprocesses/list'},
 								{title:'待办事项',icon:'fa fa-tags',url:'base/backlogs/list'}
-								]}
+							]}
 						]};
 	$('#sysMenus').myPillTreeMenu('init',sysMenusOpt);
 	var initTabs = {items:[{id:'homeIdex',title:'主页',icon:'fa fa-home',enColse:false,url:'main/home'}]};

@@ -1,5 +1,6 @@
 package com.myapp.controller.base;
 
+import java.security.NoSuchAlgorithmException;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
@@ -19,6 +20,7 @@ import com.myapp.core.base.service.impl.AbstractBaseService;
 import com.myapp.core.entity.BaseOrgInfo;
 import com.myapp.core.entity.UserInfo;
 import com.myapp.core.enums.UserState;
+import com.myapp.core.exception.db.SaveException;
 import com.myapp.core.model.MyWebContext;
 import com.myapp.core.model.WebDataModel;
 import com.myapp.core.service.UserService;
@@ -119,11 +121,30 @@ public class MainController extends BaseController {
 		return toPage("main/userSetting", params);
 	}
 	
-	@ResponseBody
-	@RequestMapping("/userSet")
 	@AuthorAnn(doLongin=true,doPermission=false)
-	public WebDataModel userSet(){
+	@ResponseBody
+	@RequestMapping("/resetPwd")
+	public WebDataModel resetPwd(){
+		init();
+		String un = request.getParameter("un");
+		String pd = request.getParameter("pd");
+		String hql = " from UserInfo where number=?";
+		UserInfo uInfo = userService.getEntity(hql, new String[]{un});
+		if(uInfo!=null){
+			try {
+				uInfo.setPassWord(BaseUtil.md5Encrypt(pd));
+				userService.saveEntity(uInfo);
+				setInfoMesg("用户密码修改成功!");
+			} catch (NoSuchAlgorithmException e) {
+				e.printStackTrace();
+				setErrorMesg("用户密码加密错误!"+e.getMessage());
+			} catch (SaveException e) {
+				e.printStackTrace();
+				setErrorMesg("用户密码设置异常!"+e.getMessage());
+			}
+		}else{
+			setInfoMesg("用户名不存在,修改密码失败!");
+		}
 		return ajaxModel();
 	}
-	
 }

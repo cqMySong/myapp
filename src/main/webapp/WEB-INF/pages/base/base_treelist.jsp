@@ -105,7 +105,9 @@ var TreeListUI = function(el,options){
 TreeListUI.prototype = {
 	onLoad:function(){
 		this.refreshTree();
+		this.toRefreshTree = false;
 		this.listUI.onLoad();
+		this.toRefreshTree = true;
 	},
 	refreshTree:function(){
 		if(!webUtil.isEmpty(this.treeViewer)){
@@ -116,7 +118,7 @@ TreeListUI.prototype = {
 				var hasSelnode = thisTreeList.getSelectNode();
 				webUtil.ajaxData({url:tree_url,async:false,data:_data,success:function(data){
 					var treeDatas = data.data;
-					if (treeDatas.length>0&&!webUtil.isEmpty(thisTreeList.tree)) {
+					if (!webUtil.isEmpty(treeDatas)&&!webUtil.isEmpty(thisTreeList.tree)) {
 						thisTreeList.tree.reLoadTree(treeDatas)
 						if(!webUtil.isEmpty(hasSelnode)){
 							thisTreeList.tree.selectNode(hasSelnode);

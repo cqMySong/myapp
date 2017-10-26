@@ -14,13 +14,13 @@ import com.myapp.core.base.enums.MyEnum;
  *-----------MySong---------------
  */
 public enum Sex implements MyEnum<Sex> {
-	MAIL("MAIL","男"),WOMAN("WOMAN","女"),SECRET("SECRET","保密");
+	MALE("MALE","男"),FEMALE("FEMALE","女"),SECRET("SECRET","保密");
 	private String name;
 	private String value;
 	private static final Map<String, Sex> map = new HashMap<String, Sex>();
 	static {
-        map.put(MAIL.getValue(), MAIL);
-        map.put(WOMAN.getValue(), WOMAN);
+        map.put(MALE.getValue(), MALE);
+        map.put(FEMALE.getValue(), FEMALE);
         map.put(SECRET.getValue(), SECRET);
     }
 	Sex(String value,String name){

@@ -6,6 +6,12 @@
   height: 100%;
   padding: 0px 2px 2px 2px;
 }
+.layui-layer-lan .layui-layer-title{
+	background-color:#0C70B6;
+}
+.layui-layer-lan .layui-layer-content{
+	border: 2px solid #0C70B6;
+}
 </style>
 <script type="text/javascript">
 if(typeof listModel == "undefined"){
@@ -17,7 +23,7 @@ if(typeof listModel == "undefined"){
 var ListUI = function(el,options){
 	var _Def_listUI = {
 			 tableEl:'#tblMain',baseUrl:"",openModel:"",toolbar:"_table-toolbar",pkCol:'id',hasDefToolbar:true,
-			 editWin:{title:'^~^',openType:'WIN',url:'',maxmin:true,width:800,height:600,callBack:undefined,btns:null},
+			 editWin:{title:'^~^',openType:'WIN',url:'',maxmin:false,width:800,height:600,callBack:undefined,btns:null},
 			 pageSize :20,curPage :1,listData:undefined,btns:undefined,pagination:true,listModel:0,
 			 extendTableOptions:undefined,totalPages:0,queryColumn:undefined,
 			 search:true,searchParams:undefined

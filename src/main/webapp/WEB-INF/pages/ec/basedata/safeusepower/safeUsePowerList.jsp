@@ -2,24 +2,24 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<title>方案类型</title>
+<title>结构类型</title>
 </head>
 <style type="text/css">
 </style>
 <script type="text/javascript">
 </script>
-<body style="padding: 5px;" >
+<body style="padding: 5px;">
 	<div id="listPanel" class="panel">
-		<div id="table-toolbar" style="height:40px;margin-bottom:5px;">
+		<div id="table-toolbar">
 		</div>
 	     <table id="tblMain">
 			 <thead >
 				<tr>
 					<th data-field="number">编码</th>
-					<th data-field="name">名称</th>
-					<th data-field="skillType" data-type="select">技术类别</th>
+					<th data-field="name">用电项</th>
+					<th data-field="standard" data-type="textarea">安全标准</th>
 					<th data-field="enabled" data-type="checkbox">启用</th>
-					<th data-field="remark" data-width="450">备注</th>
+					<th data-field="remark" >备注</th>
 				</tr>
 			</thead>
 		</table>
@@ -36,12 +36,15 @@ function beforeAction(opt){
 	return true;
 }
 
+function enableClick(btn){
+	alert(btn.text);
+}
+
 $(document).ready(function() {
-	var height = top.getTopMainHeight()-90;
-	var editWin ={title:'方案类型',width:620,height:300};
-	listUI = $('#listPanel').listUI({tableEl:'#tblMain',listModel:1
-		,baseUrl:'ec/basedata/skillclasss',editWin:editWin,toolbar:"#table-toolbar"
-		,extendTableOptions:{height:height}});
+	var editWin ={title:'施工安全用电标准',width:620,height:400};
+	var height = top.getTopMainHeight()-45;
+	listUI = $('#listPanel').listUI({tableEl:'#tblMain',listModel:1,baseUrl:'ec/basedata/safeusepowers'
+		,editWin:editWin,toolbar:"#table-toolbar",extendTableOptions:{height:height-40}});
 	listUI.onLoad();
 })
 </script>

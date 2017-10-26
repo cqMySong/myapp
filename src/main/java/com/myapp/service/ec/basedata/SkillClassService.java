@@ -7,7 +7,7 @@ import org.springframework.stereotype.Service;
 
 import com.myapp.core.service.base.BaseInterfaceService;
 import com.myapp.entity.ec.basedata.SkillClassInfo;
-import com.myapp.enums.SkillType;
+import com.myapp.enums.ec.SkillType;
 
 /**
  *-----------MySong---------------

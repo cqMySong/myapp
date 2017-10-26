@@ -10,7 +10,7 @@
 <script type="text/javascript">
 	
 </script>
-<body style="padding: 5px;">
+<body style="padding: 5px;overflow:hidden;" class="panel">
 	<div id="editPanel" class="panel">
 		<div id="table-toolbar">
 		</div>
@@ -33,7 +33,7 @@
 				<div class="col-sm-6">
 					<div class="input-group">
 						<span class="input-group-addon lable">技术类别</span> 
-						<select name="skillType" data-opt="{type:'select',selected:'SGZB',url:'base/common/combox?enum=com.myapp.enums.SkillType'}" 
+						<select name="skillType" data-opt="{type:'select',selected:'SGZB',url:'base/common/combox?enum=com.myapp.enums.ec.SkillType'}" 
 		                	class="form-control input-item require">
 		                </select>
 					</div>

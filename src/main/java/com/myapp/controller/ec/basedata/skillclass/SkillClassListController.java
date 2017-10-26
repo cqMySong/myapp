@@ -19,7 +19,7 @@ import com.myapp.core.model.ColumnModel;
 import com.myapp.core.model.WebDataModel;
 import com.myapp.core.util.BaseUtil;
 import com.myapp.core.util.EnumUtil;
-import com.myapp.enums.SkillType;
+import com.myapp.enums.ec.SkillType;
 import com.myapp.service.ec.basedata.SkillClassService;
 
 @PermissionAnn(name="系统管理.现场管理.基础数据.技术分类",number="app.ec.basedata.skillclass")

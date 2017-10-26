@@ -312,6 +312,9 @@ $(document).ready(function() {
                                ,{title:'技术分类',icon:'fa fa-cogs',url:'ec/basedata/skillclasss/list'}
                                ,{title:'施工技术交底',icon:'fa fa-cogs',url:'ec/basedata/qmskillitems/list'}
                                ,{title:'安全技术交底',icon:'fa fa-cogs',url:'ec/basedata/smskillitems/list'}
+                               ,{title:'检验批划分',icon:'fa fa-cogs',url:'ec/basedata/batchtests/list'}
+                               ,{title:'施工现场检查项目',icon:'fa fa-cogs',url:'ec/basedata/workcheckitems/list'}
+                               ,{title:'施工安全用电标准',icon:'fa fa-cogs',url:'ec/basedata/safeusepowers/list'}
 							    ]},
 							{title:'项目基础数据',icon:'fa fa-home',child:[
 								{title:'工程项目',icon:'fa fa-building-o',url:'ec/basedata/projects/list'},

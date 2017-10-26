@@ -373,7 +373,7 @@ var webUtil = {
 			btn : _opt.btns,title :_opt.title,scrollbar : false,
 			shadeClose : false,close : false,shade : true,shade : 0.1,zIndex:2500,
 			maxmin : _opt.maxmin,area:[ _opt.width+'px', _opt.height+'px' ],
-			content : winUrl,
+			content : winUrl,skin: _opt.skin||'layui-layer-lan',
 			btn1:function(index,layero) {
 				var toClose = true;
 				if(btns.length>0){

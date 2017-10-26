@@ -1,7 +1,8 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@include file="../inc/webBase.inc"%>
 <script src="<%=appRoot%>/assets/app/js/myapp.form.js?v=25" type="text/javascript"></script>
-
+<style type="text/css">
+</style>
 <% 
 String _uiCtx = "";
 Object uiCtxObj = request.getAttribute("uiCtx");

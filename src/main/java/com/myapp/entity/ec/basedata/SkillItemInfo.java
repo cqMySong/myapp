@@ -11,7 +11,7 @@ import org.hibernate.annotations.Parameter;
 import org.hibernate.annotations.Type;
 
 import com.myapp.core.base.entity.CoreBaseDataInfo;
-import com.myapp.enums.SkillType;
+import com.myapp.enums.ec.SkillType;
 
 /**
  *-----------MySong---------------
@@ -30,7 +30,7 @@ public class SkillItemInfo extends CoreBaseDataInfo {
 	private SkillClassInfo skillClass;
 	
 	@Column(name="fskilltype",length=10)
-	@Type(type="myEnum",parameters={@Parameter(name="enumClass",value="com.myapp.enums.SkillType")})
+	@Type(type="myEnum",parameters={@Parameter(name="enumClass",value="com.myapp.enums.ec.SkillType")})
 	public SkillType getSkillType() {
 		return skillType;
 	}

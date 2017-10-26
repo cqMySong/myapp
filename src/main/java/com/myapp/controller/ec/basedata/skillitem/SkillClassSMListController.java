@@ -20,7 +20,7 @@ import com.myapp.core.model.ColumnModel;
 import com.myapp.core.util.BaseUtil;
 import com.myapp.core.util.WebUtil;
 import com.myapp.entity.ec.basedata.SkillClassInfo;
-import com.myapp.enums.SkillType;
+import com.myapp.enums.ec.SkillType;
 import com.myapp.service.ec.basedata.SkillItemService;
 
 @PermissionAnn(name="系统管理.现场管理.基础数据.安全技术交底",number="app.ec.basedata.smskillitem")

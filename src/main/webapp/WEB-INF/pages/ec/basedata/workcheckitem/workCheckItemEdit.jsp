@@ -3,7 +3,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-<title>施工技术交底</title>
+<title>施工现场检查项目</title>
 </head>
 <style type="text/css">
 </style>
@@ -16,28 +16,28 @@
 		</div>
 		<form id="editForm">
 			<div style="display: none;">
-				<input class="input-item" name="skillType" value="QM">
 			</div>
 			<div class="row">
 				<div class="col-sm-6">
 					<div class="input-group">
-						<span class="input-group-addon lable">编码</span> 
+						<span class="input-group-addon lable">项目编码</span> 
 						<input class="require input-item" name="number">
 					</div>
 				</div>
 				<div class="col-sm-6">
 					<div class="input-group">
-						<span class="input-group-addon lable">名称</span>
-						<input name="name" class="require input-item form-control">
+						<span class="input-group-addon lable">检查类别</span>
+						<select id="wct" name="workCheckType" class="require input-item form-control" 
+							data-opt="{type:'select',url:'base/common/combox?enum=com.myapp.enums.ec.WorkCheckType'}" >
+						</select>
 					</div>
 				</div>
 			</div>
-			<div class="row mt20">
+			<div class="row mt10">
 				<div class="col-sm-6">
 					<div class="input-group">
-						<span class="input-group-addon lable">技术分类</span> 
-						<input name="skillClass" class="require input-item form-control read" 
-							data-opt="{type:'f7'}" />
+						<span class="input-group-addon lable">检查项目</span>
+						<input name="name" class="require input-item form-control">
 					</div>
 				</div>
 				<div class="col-sm-6">
@@ -47,11 +47,19 @@
 					</div>
 				</div>
 			</div>
-			<div class="row mt20">
+			<div class="row mt10">
+				<div class="col-sm-12">
+					<div class="input-group">
+						<span class="input-group-addon lable">检查要求</span>
+						<textarea name="checkRequire" class="input-item form-control" rows="2"></textarea>
+					</div>
+				</div>
+			</div>
+			<div class="row mt10">
 				<div class="col-sm-12">
 					<div class="input-group">
 						<span class="input-group-addon lable">备注</span>
-						<textarea name="remark" class="input-item form-control" rows="2"></textarea>
+						<textarea name="remark" class="input-item form-control" rows="1"></textarea>
 					</div>
 				</div>
 			</div>
@@ -72,15 +80,15 @@
 			var uiCtx = getUICtx();
 			if(!webUtil.isEmpty(uiCtx)&&$.isPlainObject(uiCtx)
 					&&!webUtil.isEmpty(uiCtx.tree)){
-				$('input[name="skillClass"]').myF7().setData(uiCtx.tree);
+				$('#wct').myComponet(DataType.select,{method:'setdata',opt:uiCtx.tree.id});
 			}
 		}
 	}
 
 	$(document).ready(function() {
 		var editUI = $('#editPanel').editUI({
-			title : "施工技术交底",
-			baseUrl : "ec/basedata/qmskillitem",
+			title : "施工现场检查项目",
+			baseUrl : "ec/basedata/workcheckitem",
 			toolbar : "#table-toolbar",
 			form : {
 				el : "#editForm"

@@ -10,8 +10,8 @@
 <script type="text/javascript">
 	
 </script>
-<body style="padding: 5px;">
-	<div id="editPanel" class="panel">
+<body style="padding: 5px;" class="panel">
+	<div id="editPanel">
 		<div id="table-toolbar">
 		</div>
 		<form id="editForm">

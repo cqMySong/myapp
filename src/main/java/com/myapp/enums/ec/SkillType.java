@@ -1,4 +1,4 @@
-package com.myapp.enums;
+package com.myapp.enums.ec;
 
 import java.util.HashMap;
 import java.util.Map;

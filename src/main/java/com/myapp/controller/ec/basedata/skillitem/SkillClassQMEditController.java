@@ -15,7 +15,7 @@ import com.myapp.core.enums.DataTypeEnum;
 import com.myapp.core.model.ColumnModel;
 import com.myapp.entity.ec.basedata.SkillClassInfo;
 import com.myapp.entity.ec.basedata.SkillItemInfo;
-import com.myapp.enums.SkillType;
+import com.myapp.enums.ec.SkillType;
 import com.myapp.service.ec.basedata.SkillItemService;
 
 @PermissionAnn(name="系统管理.现场管理.基础数据.施工技术交底",number="app.ec.basedata.qmskillitem")

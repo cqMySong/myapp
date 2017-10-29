@@ -314,6 +314,7 @@ $(document).ready(function() {
                                ,{title:'检验批划分',icon:'fa fa-cogs',url:'ec/basedata/batchtests/list'}
                                ,{title:'施工现场检查项目',icon:'fa fa-cogs',url:'ec/basedata/workcheckitems/list'}
                                ,{title:'施工安全用电标准',icon:'fa fa-cogs',url:'ec/basedata/safeusepowers/list'}
+                               ,{title:'安全资料分类',icon:'fa fa-cogs',url:'base/datagroups/list?code=safedata'}
 							    ]},
 							{title:'项目基础数据',icon:'fa fa-home',child:[
 								{title:'工程项目',icon:'fa fa-building-o',url:'ec/basedata/projects/list'},

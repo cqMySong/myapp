@@ -52,8 +52,12 @@ public abstract class BaseListController extends BasePageListController {
 	@RequestMapping("/list")
 	public ModelAndView list(){
 		Map params = new HashMap();
-		packageUIParams(params);
+		toListUIParams(params);
 		return toPage(getListUrl(), params);
+	}
+	
+	public void toListUIParams(Map params){
+		packageUIParams(params);
 	}
 	
 	@AuthorAnn(doLongin=false,doPermission=false)
@@ -64,9 +68,11 @@ public abstract class BaseListController extends BasePageListController {
 			init();
 			Criteria query = initQueryCriteria();
 			executeQueryParams(query);
-			Order order = getOrder();
-			if(order!=null){
-				query.addOrder(order);
+			List<Order> orders = getOrders();
+			if(query!=null&&orders!=null&&orders.size()>0){
+				for(Order order:orders){
+					query.addOrder(order);
+				}
 			}
 			afterQuery(getService().toPageQuery(query, getProjectionList(), getCurPage(), getPageSize()));
 		} catch (Exception e) {
@@ -176,6 +182,10 @@ public abstract class BaseListController extends BasePageListController {
 		return ajaxModel();
 	}
 	
+	public void toEditUIParams(Map params){
+		packageUIParams(params);
+	}
+	
 	@PermissionItemAnn(name="编辑",number="edit",type=PermissionTypeEnum.FUNCTION)
 	@RequestMapping(value = "/edit")
 	public ModelAndView edit(){
@@ -184,7 +194,7 @@ public abstract class BaseListController extends BasePageListController {
 		try {
 			setBaseMethod(BaseMethodEnum.EDIT);
 			String billId = getReuestBillId();
-			packageUIParams(params);
+			toEditUIParams(params);
 			if(!BaseUtil.isEmpty(billId)){
 				params.put(getEntityPk(),billId);
 			}else{
@@ -204,7 +214,7 @@ public abstract class BaseListController extends BasePageListController {
 		try {
 			setBaseMethod(BaseMethodEnum.VIEW);
 			String billId = getReuestBillId();
-			packageUIParams(params);
+			toEditUIParams(params);
 			if(!BaseUtil.isEmpty(billId)){
 				params.put(getEntityPk(), billId);
 			}else{
@@ -224,6 +234,13 @@ public abstract class BaseListController extends BasePageListController {
 			Map uiCtx = JSONObject.parseObject(ciCtx, new HashMap().getClass());
 			params.put("uiCtx", ciCtx);
 		}
+		String title = getTitle();
+		if(!BaseUtil.isEmpty(title)){
+			params.put("title", title);
+		}
+	}
+	public String getTitle(){
+		return "";
 	}
 	@PermissionItemAnn(name="新增",number="addnew",type=PermissionTypeEnum.PAGEADDFUNCTION)
 	@RequestMapping("/addnew")
@@ -231,12 +248,18 @@ public abstract class BaseListController extends BasePageListController {
 		init();
 		setBaseMethod(BaseMethodEnum.ADDNEW);
 		Map params = new HashMap();
-		packageUIParams(params);
+		toEditUIParams(params);
 		return toPage(getEditUrl(), params);
 	}
 	
 	public void initAddNewParams(HashMap params){
 		
+	}
+	
+	public List<Order> getOrders(){
+		List<Order> orders = new ArrayList<Order>();
+		orders.add(getOrder());
+		return orders;
 	}
 	
 	public Order getOrder() {

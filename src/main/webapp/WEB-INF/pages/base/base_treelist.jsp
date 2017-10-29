@@ -146,18 +146,19 @@ TreeListUI.prototype = {
 		var params = {};
 		if(operate=='addnew'){
 			var selNode = this.getSelectNode();
-			if(webUtil.isEmpty(selNode)) return {};
-			var to_treeNode = {};
-			var props = this.options.treeNode2QueryProp;
-			for(var i=0;i<props.length;i++){
-				var prop = props[i];
-				var val = selNode[prop];
-				if(prop == 'id'&&!webUtil.isEmpty(val)){
-					val = webUtil.uuIdReplaceID(val);
+			if(!webUtil.isEmpty(selNode)) {
+				var to_treeNode = {};
+				var props = this.options.treeNode2QueryProp;
+				for(var i=0;i<props.length;i++){
+					var prop = props[i];
+					var val = selNode[prop];
+					if(prop == 'id'&&!webUtil.isEmpty(val)){
+						val = webUtil.uuIdReplaceID(val);
+					}
+					to_treeNode[prop] = val;
 				}
-				to_treeNode[prop] = val;
+				params.tree = to_treeNode;
 			}
-			params.tree = to_treeNode;
 		}
 		if(openUIParams&&$.isFunction(openUIParams)){
 			openUIParams(operate,params);

@@ -3,6 +3,7 @@ package com.myapp.core.controller;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.hibernate.Criteria;
 import org.hibernate.criterion.Order;
@@ -17,6 +18,7 @@ import com.myapp.core.enums.DataTypeEnum;
 import com.myapp.core.exception.db.QueryException;
 import com.myapp.core.model.ColumnModel;
 import com.myapp.core.model.WebDataModel;
+import com.myapp.core.util.BaseUtil;
 
 /**
  *-----------MySong---------------
@@ -37,9 +39,11 @@ public abstract class BaseTreeListController extends BaseListController {
 			init();
 			Criteria query = initTreeQueryCriteria();
 			executeTreeQueryParams(query);
-			Order order = getTreeOrder();
-			if(order!=null){
-				query.addOrder(order);
+			List<Order> orders = getTreeOrders();
+			if(query!=null&&orders!=null&&orders.size()>0){
+				for(Order order:orders){
+					query.addOrder(order);
+				}
 			}
 			data = excueteTreeQuery(query);
 		} catch (Exception e) {
@@ -48,13 +52,27 @@ public abstract class BaseTreeListController extends BaseListController {
 		}
 		return ajaxModel();
 	}
-	
-	public Order getTreeOrder(){
-		return Order.asc("longNumber");
+	public void toListUIParams(Map params) {
+		super.toListUIParams(params);
+		String treeTitle = getTreeTitle();
+		if(BaseUtil.isEmpty(treeTitle)){
+			params.put("treeTitle", treeTitle);
+		}
 	}
 	
-	public Order getOrder() {
-		return Order.asc("longNumber");
+	public String getTreeTitle(){
+		return "";
+	}
+	
+	
+	public List<Order> getTreeOrders(){
+		List<Order> treeOrds = new ArrayList<Order>();
+		treeOrds.add(Order.asc("longNumber"));
+		return treeOrds;
+	}
+	
+	public List<Order> getOrders() {
+		return getTreeOrders();
 	}
 	
 	protected Criteria initTreeQueryCriteria() throws QueryException{

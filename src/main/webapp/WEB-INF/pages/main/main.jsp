@@ -317,12 +317,14 @@ $(document).ready(function() {
                                ,{title:'安全资料分类',icon:'fa fa-cogs',url:'base/datagroups/list?code=safedata'}
 							    ]},
 							{title:'项目基础数据',icon:'fa fa-home',child:[
-								{title:'工程项目',icon:'fa fa-building-o',url:'ec/basedata/projects/list'},
-								{title:'项目结构类型',icon:'fa fa-cogs',url:'ec/basedata/structTypes/list'},
-								{title:'施工方案',icon:'fa fa-cogs',url:'ec/basedata/schemelist/list'},
-								{title:'项目单位工程',icon:'fa fa-cogs',url:'ec/basedata/prostructures/list'},
-								{title:'项目分部工程',icon:'fa fa-cogs',url:'ec/basedata/prosubs/list'},
-								{title:'项目分项工程',icon:'fa fa-cogs',url:'ec/basedata/prosubitems/list'}]},
+								{title:'工程项目',icon:'fa fa-building-o',url:'ec/basedata/projects/list'}
+								,{title:'项目结构类型',icon:'fa fa-cogs',url:'ec/basedata/structTypes/list'}
+								,{title:'施工方案',icon:'fa fa-cogs',url:'ec/basedata/schemelist/list'}
+								,{title:'项目单位工程',icon:'fa fa-cogs',url:'ec/basedata/prostructures/list'}
+								,{title:'项目分部工程',icon:'fa fa-cogs',url:'ec/basedata/prosubs/list'}
+								,{title:'项目分项工程',icon:'fa fa-cogs',url:'ec/basedata/prosubitems/list'}
+								,{title:'安保人员值班记录',icon:'fa fa-cogs',url:'ec/basedata/ondutyrecords/list'}
+							  ]},
 							{title:'计划管理',icon:'fa fa-star',child:[
 								{title:'项目总计划',icon:'fa fa-user',url:'ec/plan/projecttotalplans/list'},
 								{title:'项目月计划',icon:'fa fa-user',url:'ec/plan/projectplans/monthlist'},

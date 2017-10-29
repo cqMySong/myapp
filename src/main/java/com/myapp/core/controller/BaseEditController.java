@@ -54,7 +54,7 @@ import com.myapp.core.uuid.SysObjectType;
 public abstract class BaseEditController extends CoreBaseController {
 	
 	public abstract Object createNewData();
-	public abstract CoreBaseInfo getEntityInfo();
+	public abstract CoreInfo getEntityInfo();
 	
 	protected boolean verifyInput(Object editData){
 		boolean isVerify = true;
@@ -252,7 +252,7 @@ public abstract class BaseEditController extends CoreBaseController {
 		Object val =  editData_map.get(name);
 		if(val!=null) {
 			DataTypeEnum dte = col.getDataType();
-			if(DataTypeEnum.DATE.equals(dte)){
+			if(DataTypeEnum.DATE.equals(dte)||DataTypeEnum.DATETIME.equals(dte)){
 				if(BaseUtil.isEmpty(val)){
 					val = null;
 				}else{
@@ -324,12 +324,12 @@ public abstract class BaseEditController extends CoreBaseController {
 		String editData_str = request.getParameter("editData");
 		if(BaseUtil.isEmpty(editData_str)) return;
 		Map editData_map = JSONObject.parseObject(editData_str, new HashMap().getClass());
-		CoreBaseInfo cbInfo = null;
+		CoreInfo cbInfo = null;
 		String billId = (String)editData_map.get("id");
 		if(BaseUtil.isEmpty(billId)){
 			cbInfo = getEntityInfo();
 		}else{
-			cbInfo = (CoreBaseInfo) getService().getEntity(billId);
+			cbInfo = (CoreInfo) getService().getEntity(billId);
 		}
 		if(cbInfo!=null){
 			List<ColumnModel> cols = getDataBinding();

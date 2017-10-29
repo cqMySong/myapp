@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
 import com.alibaba.fastjson.JSONObject;
+import com.myapp.core.annotation.AuthorAnn;
 import com.myapp.core.base.setting.SystemConstant;
 import com.myapp.core.enums.DataTypeEnum;
 import com.myapp.core.exception.db.QueryException;
@@ -101,6 +102,7 @@ public abstract class BaseF7QueryController extends BasePageListController {
 		return "信息查询!";
 	}
 	
+	@AuthorAnn(doPermission=false)
 	@RequestMapping("/f7show")
 	public ModelAndView f7show(){
 		init();
@@ -139,6 +141,7 @@ public abstract class BaseF7QueryController extends BasePageListController {
 		}
 	}
 	
+	@AuthorAnn(doPermission=false)
 	@RequestMapping(value="/f7Data")
 	@ResponseBody
 	public WebDataModel toList() {

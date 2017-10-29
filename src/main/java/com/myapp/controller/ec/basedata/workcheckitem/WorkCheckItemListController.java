@@ -80,7 +80,7 @@ public class WorkCheckItemListController extends BaseDataListController {
 			if(objTree!=null){
 				Map treeMap = JSONObject.parseObject(objTree.toString(), new HashMap().getClass());
 				Object skIdObj = treeMap.get("id");
-				if(skIdObj!=null){
+				if(!BaseUtil.isEmpty(skIdObj)){
 					WorkCheckType uc = EnumUtil.getEnum(WorkCheckType.class.getName(), skIdObj.toString());
 					query.add(Restrictions.eq("workCheckType",uc));
 				}

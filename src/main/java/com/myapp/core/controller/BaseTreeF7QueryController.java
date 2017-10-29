@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
 import com.alibaba.fastjson.JSONObject;
+import com.myapp.core.annotation.AuthorAnn;
 import com.myapp.core.enums.DataTypeEnum;
 import com.myapp.core.exception.db.QueryException;
 import com.myapp.core.model.ColumnModel;
@@ -47,6 +48,7 @@ public abstract class BaseTreeF7QueryController extends CoreBaseController {
 		return cols;
 	}
 	
+	@AuthorAnn(doPermission=false)
 	@RequestMapping("/f7show")
 	public ModelAndView f7show(){
 		String path = request.getServletPath();
@@ -76,6 +78,7 @@ public abstract class BaseTreeF7QueryController extends CoreBaseController {
 		return criter;
 	}
 	
+	@AuthorAnn(doPermission=false)
 	@RequestMapping(value="/treeData")
 	@ResponseBody
 	public WebDataModel treeData() {

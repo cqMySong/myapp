@@ -306,8 +306,7 @@ $(document).ready(function() {
 							{title:'项目管理首页',icon:'fa fa-home'},
 							{title:'基础资料',icon:'fa fa-cogs',child:[
                                 {title:'单位',icon:'fa fa-cogs',url:'ec/basedata/ecunitList/list'}     
-                               ,{title:'方案类别',icon:'fa fa-cogs',url:'ec/basedata/schemeTypeList/list'}
-                               ,{title:'施工方案',icon:'fa fa-cogs',url:'ec/basedata/schemelist/list'}
+                               ,{title:'施工方案类别',icon:'fa fa-cogs',url:'ec/basedata/schemeTypeList/list'}
                                ,{title:'数据字典',icon:'fa fa-cogs',url:'ec/basedata/datadics/list'}
                                ,{title:'技术分类',icon:'fa fa-cogs',url:'ec/basedata/skillclasss/list'}
                                ,{title:'施工技术交底',icon:'fa fa-cogs',url:'ec/basedata/qmskillitems/list'}
@@ -319,6 +318,7 @@ $(document).ready(function() {
 							{title:'项目基础数据',icon:'fa fa-home',child:[
 								{title:'工程项目',icon:'fa fa-building-o',url:'ec/basedata/projects/list'},
 								{title:'项目结构类型',icon:'fa fa-cogs',url:'ec/basedata/structTypes/list'},
+								{title:'施工方案',icon:'fa fa-cogs',url:'ec/basedata/schemelist/list'},
 								{title:'项目单位工程',icon:'fa fa-cogs',url:'ec/basedata/prostructures/list'},
 								{title:'项目分部工程',icon:'fa fa-cogs',url:'ec/basedata/prosubs/list'},
 								{title:'项目分项工程',icon:'fa fa-cogs',url:'ec/basedata/prosubitems/list'}]},

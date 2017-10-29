@@ -12,6 +12,7 @@ import com.myapp.core.base.service.impl.AbstractBaseService;
 import com.myapp.core.controller.BaseF7QueryController;
 import com.myapp.core.enums.DataTypeEnum;
 import com.myapp.core.model.ColumnModel;
+import com.myapp.enums.ec.WorkSchemeGroup;
 import com.myapp.service.ec.basedata.SchemeTypeService;
 
 @Controller
@@ -32,6 +33,10 @@ public class SchemeTypeF7QueryController extends BaseF7QueryController {
 		cols.add(col);
 		col = new ColumnModel("name");
 		col.setAlias_zh("名称");
+		cols.add(col);
+		
+		col = new ColumnModel("workSchemeGroup",DataTypeEnum.ENUM,WorkSchemeGroup.class);
+		col.setAlias_zh("分类");
 		cols.add(col);
 		
 		col = new ColumnModel("enabled",DataTypeEnum.BOOLEAN);

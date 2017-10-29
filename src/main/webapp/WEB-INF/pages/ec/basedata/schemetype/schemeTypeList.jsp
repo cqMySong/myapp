@@ -9,40 +9,64 @@
 <script type="text/javascript">
 </script>
 <body style="padding: 5px;" >
-	<div id="listPanel" class="panel">
-		<div id="table-toolbar">
+	<div id="table-toolbar" class="panel" style="height:40px;margin-bottom:5px;"></div>
+	<div class="mainContrainer">
+		<div class="leftContainer" id="tree_container"></div>
+		<div class="rightContainer" id="tblMain_container">
+			<div class="panel">
+				<div class="" id="tblMain_toolbar">
+				</div>
+				<div class="panel-body" style="padding: 0px 2px 2px 2px;">
+					<table id="tblMain">
+						 <thead >
+							<tr>
+								<th data-field="workSchemeGroup" data-type="select">方案类别</th>
+								<th data-field="number">方案编码</th>
+								<th data-field="name">方案名称</th>
+								<th data-field="enabled" data-type="checkbox">启用</th>
+								<th data-field="remark" data-width="300" data-type="textarea">备注</th>
+							</tr>
+						</thead>
+					</table>
+				</div>
+			</div>
 		</div>
-	     <table id="tblMain">
-			 <thead >
-				<tr>
-					<th data-field="number">编码</th>
-					<th data-field="name">名称</th>
-					<th data-field="enabled" data-type="checkbox">启用</th>
-					<th data-field="remark" >备注</th>
-				</tr>
-			</thead>
-		</table>
 	</div>
 </body>
 
-<%@include file="../../../base/base_list.jsp"%>
+<%@include file="../../../base/base_treelist.jsp"%>
 <script type="text/javascript">
-/**
- * 一切操作前的接口函数
- */
-var listUI;
+
+var thisOrgList ;
 function beforeAction(opt){
+	if(opt=='addnew'){
+		var params = thisOrgList.uiParams(opt);
+		var tree = thisOrgList.tree;
+		if(!webUtil.isEmpty(params)&&!webUtil.isEmpty(params.tree)
+				&&!webUtil.isEmpty(params.tree.id)){
+		}else{
+			webUtil.mesg('请先选择具体的施工方案类别，然后才能做新增操作!');
+			return false;
+		}
+	}
 	return true;
 }
-
-function enableClick(btn){
-	alert(btn.text);
+//界面参数传递扩展方法
+function openUIParams(operate,params){
+	
 }
-
 $(document).ready(function() {
-	var editWin ={title:'方案类型',width:620,height:360};
-	listUI = $('#listPanel').listUI({tableEl:'#tblMain',listModel:1,baseUrl:'ec/basedata/schemeTypeList',editWin:editWin,toolbar:"#table-toolbar"});
-	listUI.onLoad();
-})
+     var treeNode2QueryProp = ["id","name"];
+     var editWin ={title:'施工方案分类',width:620,height:320};
+     var treeOpt = {setting:{data: {
+         	simpleData: {enable:false,idKey: "id"}
+    	 }}};
+     var height = top.getTopMainHeight()-45;
+     thisOrgList = $('body').treeListUI({tableEl:'#tblMain',listModel:1,treeUrl:'ec/basedata/schemeTypeList/treeData'
+    	 ,baseUrl:'ec/basedata/schemeTypeList',title:'施工方案类别',height:height,
+    	 treeContainer:"#tree_container",editWin:editWin,toolbar:"#table-toolbar",searchParams:{includeChild:true},treeOpt:treeOpt
+    	 ,treeNode2QueryProp:treeNode2QueryProp,extendTableOptions:{toolbar:'#tblMain_toolbar',height:height-53,sortStable:false}});
+     thisOrgList.onLoad();
+});
 </script>
 </html>

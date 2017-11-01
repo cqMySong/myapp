@@ -324,6 +324,9 @@ $(document).ready(function() {
 								,{title:'项目分部工程',icon:'fa fa-cogs',url:'ec/basedata/prosubs/list'}
 								,{title:'项目分项工程',icon:'fa fa-cogs',url:'ec/basedata/prosubitems/list'}
 								,{title:'安保人员值班记录',icon:'fa fa-cogs',url:'ec/basedata/ondutyrecords/list'}
+								,{title:'项目安保预案',icon:'fa fa-cogs',url:'ec/basedata/prosecuritycases/list'}
+								,{title:'到访人员登记',icon:'fa fa-cogs',url:'ec/basedata/personvisitrecords/list'}
+								,{title:'到访车辆登记',icon:'fa fa-cogs',url:'ec/basedata/carvisitrecords/list'}
 							  ]},
 							{title:'计划管理',icon:'fa fa-star',child:[
 								{title:'项目总计划',icon:'fa fa-user',url:'ec/plan/projecttotalplans/list'},

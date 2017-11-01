@@ -3,7 +3,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-<title>安保值班 记录</title>
+<title>重点要点部位安保预案</title>
 </head>
 <style type="text/css">
 </style>
@@ -24,42 +24,25 @@
 					</div>
 				</div>
 				<div class="col-sm-6">
-					
-				</div>
-			</div>
-			<div class="row mt10">
-				<div class="col-sm-6">
 					<div class="input-group">
-						<span class="input-group-addon lable">值班时间</span> 
-						<input name="dutyDate" class="input-item form-control require" data-opt="{type:'datetime'}">
-					</div>
-				</div>
-				<div class="col-sm-6">
-					<div class="input-group">
-						<span class="input-group-addon lable">安保岗位</span>
-						<input name="dutyPosition" class="input-item form-control require">
-					</div>
-				</div>
-			</div>
-			<div class="row mt10">
-				<div class="col-sm-6">
-					<div class="input-group">
-						<span class="input-group-addon lable">计划值班人</span> 
-						<input name="planDutyor" class="input-item form-control require">
-					</div>
-				</div>
-				<div class="col-sm-6">
-					<div class="input-group">
-						<span class="input-group-addon lable">实际值班人</span>
-						<input name="realDutyor" class="input-item form-control require">
+						<span class="input-group-addon lable">部位</span> 
+						<input name="part" class="input-item form-control require" >
 					</div>
 				</div>
 			</div>
 			<div class="row mt10">
 				<div class="col-sm-12">
 					<div class="input-group">
-						<span class="input-group-addon lable">交班事项</span>
+						<span class="input-group-addon lable">隐患内容</span>
 						<textarea name="content" class="input-item form-control" rows="2"></textarea>
+					</div>
+				</div>
+			</div>
+			<div class="row mt10">
+				<div class="col-sm-12">
+					<div class="input-group">
+						<span class="input-group-addon lable">安保办法</span>
+						<textarea name="secCase" class="input-item form-control" rows="1"></textarea>
 					</div>
 				</div>
 			</div>
@@ -101,8 +84,8 @@
 
 	$(document).ready(function() {
 		var editUI = $('#editPanel').editUI({
-			title : "安保值班记录",
-			baseUrl : "ec/basedata/ondutyrecord",
+			title : "安保预案",
+			baseUrl : "ec/basedata/prosecuritycase",
 			toolbar : "#table-toolbar",
 			form : {
 				el : "#editForm"

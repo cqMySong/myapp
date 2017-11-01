@@ -1,4 +1,4 @@
-package com.myapp.controller.ec.basedata.ondutyrecord;
+package com.myapp.controller.ec.basedata.provisitrecord;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -23,44 +23,51 @@ import com.myapp.core.enums.DataTypeEnum;
 import com.myapp.core.model.ColumnModel;
 import com.myapp.core.util.BaseUtil;
 import com.myapp.entity.ec.basedata.ProjectInfo;
+import com.myapp.enums.ec.IDType;
+import com.myapp.enums.ec.VisitType;
 import com.myapp.service.ec.basedata.OnDutyRecordService;
+import com.myapp.service.ec.basedata.ProSecurityCaseService;
+import com.myapp.service.ec.basedata.ProVisitRecordService;
 
 /**
  *-----------MySong---------------
  * ©MySong基础框架搭建
- * @author mySong @date 2017年6月7日 
- * @system:
- *
+ * @author mySong @date 2017年10月30日 
+ * @system: 项目安保预案
  *-----------MySong---------------
  */
-@PermissionAnn(name="系统管理.现场管理.基础数据.安保值班记录",number="app.ec.basedata.ondutyrecord")
+@PermissionAnn(name="系统管理.现场管理.基础数据.到访车辆记录",number="app.ec.basedata.carvisitrecord")
 @Controller
-@RequestMapping("ec/basedata/ondutyrecords")
-public class OnDutyRecordListController extends BaseListController {
+@RequestMapping("ec/basedata/carvisitrecords")
+public class CarVisitRecordListController extends BaseListController {
 	
 	@Resource
-	public OnDutyRecordService onDutyRecordService;
+	public ProVisitRecordService proVisitRecordService;
 	public AbstractBaseService getService() {
-		return onDutyRecordService;
+		return proVisitRecordService;
 	}
 
 	public List<ColumnModel> getDataBinding() {
 		List<ColumnModel> cols = super.getDataBinding();
-		cols.add(new ColumnModel("dutyDate",DataTypeEnum.DATETIME));
-		cols.add(new ColumnModel("dutyPosition"));
-		cols.add(new ColumnModel("planDutyor"));
-		cols.add(new ColumnModel("realDutyor"));
-		cols.add(new ColumnModel("content"));
+		cols.add(new ColumnModel("visitDate",DataTypeEnum.DATE));
+		cols.add(new ColumnModel("cause"));
+		
+		cols.add(new ColumnModel("carType"));
+		cols.add(new ColumnModel("carNo"));
+		
+		cols.add(new ColumnModel("inDate",DataTypeEnum.DATETIME));
+		cols.add(new ColumnModel("outDate",DataTypeEnum.DATETIME));
+		cols.add(new ColumnModel("confirm"));
+		
 		ColumnModel creator = new ColumnModel("creator",DataTypeEnum.F7,"id,name");
 		creator.setClaz(UserInfo.class);
 		cols.add(creator);
-		ColumnModel project = new ColumnModel("project",DataTypeEnum.F7,"id,name");
-		project.setClaz(ProjectInfo.class);
-		cols.add(project);
 		return cols;
 	}
+	
 	public void executeQueryParams(Criteria query) {
 		super.executeQueryParams(query);
+		query.add(Restrictions.eq("visitType", VisitType.CAR));
 		String serach = request.getParameter("search");
 		SimpleExpression se = Restrictions.eq("id","xyz");
 		if(!BaseUtil.isEmpty(serach)){
@@ -81,16 +88,15 @@ public class OnDutyRecordListController extends BaseListController {
 	}
 	public List<Order> getOrders() {
 		List<Order> orders = new ArrayList<Order>();
-		orders.add(Order.asc("project.number"));
-		orders.add(Order.asc("dutyDate"));
+		orders.add(Order.asc("inDate"));
 		return orders;
 	}
 	public String getEditUrl() {
-		return "ec/basedata/ondutyrecord/onDutyRecordEdit";
+		return "ec/basedata/provisitrecord/carVisitRecordEdit";
 	}
 
 	public String getListUrl() {
-		return "ec/basedata/ondutyrecord/onDutyRecordList";
+		return "ec/basedata/provisitrecord/carVisitRecordList";
 	}
 
 }

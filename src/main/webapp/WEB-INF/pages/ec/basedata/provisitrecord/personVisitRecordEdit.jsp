@@ -3,7 +3,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-<title>安保值班 记录</title>
+<title>到访人员记录</title>
 </head>
 <style type="text/css">
 </style>
@@ -24,42 +24,61 @@
 					</div>
 				</div>
 				<div class="col-sm-6">
-					
-				</div>
-			</div>
-			<div class="row mt10">
-				<div class="col-sm-6">
 					<div class="input-group">
-						<span class="input-group-addon lable">值班时间</span> 
-						<input name="dutyDate" class="input-item form-control require" data-opt="{type:'datetime'}">
-					</div>
-				</div>
-				<div class="col-sm-6">
-					<div class="input-group">
-						<span class="input-group-addon lable">安保岗位</span>
-						<input name="dutyPosition" class="input-item form-control require">
+						<span class="input-group-addon lable">到访日</span> 
+						<input name="visitDate" class="input-item form-control read" data-opt="{type:'date'}">
 					</div>
 				</div>
 			</div>
 			<div class="row mt10">
 				<div class="col-sm-6">
 					<div class="input-group">
-						<span class="input-group-addon lable">计划值班人</span> 
-						<input name="planDutyor" class="input-item form-control require">
+						<span class="input-group-addon lable">到访人员</span> 
+						<input name="visitor" class="require input-item form-control"  />
 					</div>
 				</div>
 				<div class="col-sm-6">
 					<div class="input-group">
-						<span class="input-group-addon lable">实际值班人</span>
-						<input name="realDutyor" class="input-item form-control require">
+						<span class="input-group-addon lable">证件类型</span> 
+						<select name=idType data-opt="{type:'select',selected:'SGZB',url:'base/common/combox?enum=com.myapp.enums.ec.IDType'}" 
+		                	class="form-control input-item require">
+		                </select>
+					</div>
+				</div>
+			</div>
+			<div class="row mt10">
+				<div class="col-sm-6">
+					<div class="input-group">
+						<span class="input-group-addon lable">到访确认</span> 
+						<input name="confirm" class="input-item form-control"  />
+					</div>
+				</div>
+				<div class="col-sm-6">
+					<div class="input-group">
+						<span class="input-group-addon lable">证件号码</span> 
+						<input name="idNo" class="require input-item form-control"  />
+					</div>
+				</div>
+			</div>
+			<div class="row mt10">
+				<div class="col-sm-6">
+					<div class="input-group">
+						<span class="input-group-addon lable">入场时间</span> 
+						<input name="inDate" class="input-item form-control" data-opt="{type:'datetime'}">
+					</div>
+				</div>
+				<div class="col-sm-6">
+					<div class="input-group">
+						<span class="input-group-addon lable">出场时间</span> 
+						<input name="outDate" class="input-item form-control" data-opt="{type:'datetime'}">
 					</div>
 				</div>
 			</div>
 			<div class="row mt10">
 				<div class="col-sm-12">
 					<div class="input-group">
-						<span class="input-group-addon lable">交班事项</span>
-						<textarea name="content" class="input-item form-control" rows="2"></textarea>
+						<span class="input-group-addon lable">到访事由</span>
+						<textarea name="cause" class="input-item form-control" rows="2"></textarea>
 					</div>
 				</div>
 			</div>
@@ -101,8 +120,8 @@
 
 	$(document).ready(function() {
 		var editUI = $('#editPanel').editUI({
-			title : "安保值班记录",
-			baseUrl : "ec/basedata/ondutyrecord",
+			title : "到访人员记录",
+			baseUrl : "ec/basedata/personvisitrecord",
 			toolbar : "#table-toolbar",
 			form : {
 				el : "#editForm"

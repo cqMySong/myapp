@@ -1,4 +1,4 @@
-package com.myapp.controller.ec.basedata.ondutyrecord;
+package com.myapp.controller.ec.basedata.prosecuritycase;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -24,32 +24,31 @@ import com.myapp.core.model.ColumnModel;
 import com.myapp.core.util.BaseUtil;
 import com.myapp.entity.ec.basedata.ProjectInfo;
 import com.myapp.service.ec.basedata.OnDutyRecordService;
+import com.myapp.service.ec.basedata.ProSecurityCaseService;
 
 /**
  *-----------MySong---------------
  * ©MySong基础框架搭建
- * @author mySong @date 2017年6月7日 
- * @system:
- *
+ * @author mySong @date 2017年10月30日 
+ * @system: 项目安保预案
  *-----------MySong---------------
  */
-@PermissionAnn(name="系统管理.现场管理.基础数据.安保值班记录",number="app.ec.basedata.ondutyrecord")
+@PermissionAnn(name="系统管理.现场管理.基础数据.安保预案",number="app.ec.basedata.prosecuritycase")
 @Controller
-@RequestMapping("ec/basedata/ondutyrecords")
-public class OnDutyRecordListController extends BaseListController {
+@RequestMapping("ec/basedata/prosecuritycases")
+public class ProSecurityCaseListController extends BaseListController {
 	
 	@Resource
-	public OnDutyRecordService onDutyRecordService;
+	public ProSecurityCaseService proSecurityCaseService;
 	public AbstractBaseService getService() {
-		return onDutyRecordService;
+		return proSecurityCaseService;
 	}
 
 	public List<ColumnModel> getDataBinding() {
 		List<ColumnModel> cols = super.getDataBinding();
-		cols.add(new ColumnModel("dutyDate",DataTypeEnum.DATETIME));
-		cols.add(new ColumnModel("dutyPosition"));
-		cols.add(new ColumnModel("planDutyor"));
-		cols.add(new ColumnModel("realDutyor"));
+		cols.add(new ColumnModel("createDate",DataTypeEnum.DATETIME));
+		cols.add(new ColumnModel("part"));
+		cols.add(new ColumnModel("secCase"));
 		cols.add(new ColumnModel("content"));
 		ColumnModel creator = new ColumnModel("creator",DataTypeEnum.F7,"id,name");
 		creator.setClaz(UserInfo.class);
@@ -59,6 +58,7 @@ public class OnDutyRecordListController extends BaseListController {
 		cols.add(project);
 		return cols;
 	}
+	
 	public void executeQueryParams(Criteria query) {
 		super.executeQueryParams(query);
 		String serach = request.getParameter("search");
@@ -82,15 +82,15 @@ public class OnDutyRecordListController extends BaseListController {
 	public List<Order> getOrders() {
 		List<Order> orders = new ArrayList<Order>();
 		orders.add(Order.asc("project.number"));
-		orders.add(Order.asc("dutyDate"));
+		orders.add(Order.asc("part"));
 		return orders;
 	}
 	public String getEditUrl() {
-		return "ec/basedata/ondutyrecord/onDutyRecordEdit";
+		return "ec/basedata/prosecuritycase/proSecurityCaseEdit";
 	}
 
 	public String getListUrl() {
-		return "ec/basedata/ondutyrecord/onDutyRecordList";
+		return "ec/basedata/prosecuritycase/proSecurityCaseList";
 	}
 
 }

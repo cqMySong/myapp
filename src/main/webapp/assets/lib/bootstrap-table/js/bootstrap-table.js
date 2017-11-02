@@ -759,7 +759,13 @@
             			 _thisColumn.formatter = function(value, row, index){
                       		var txt = '';
                       		if(!webUtil.isEmpty(value)){
-                      			if($.isPlainObject(value)){
+                      			if($.isArray(value)){
+                      				for(var i=0;i<value.length;i++){
+                     					var thisItem = value[i];
+                     					if(i>0) txt +=',';
+                     					txt += thisItem[displayName];
+                     				}
+                      			}else if($.isPlainObject(value)){
                       				txt = value[displayName];
                       			}
                       		}

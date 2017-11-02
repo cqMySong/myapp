@@ -57,6 +57,19 @@ public class EnumUtil {
 		return items;
 	}
 	
+	public static KeyValueModel getEnumItemKv(String enClazName,String val){
+		if(!BaseUtil.isEmpty(enClazName)&&!BaseUtil.isEmpty(val)){
+			Object obj = getEnum(enClazName,val);
+			if(obj!=null&&obj instanceof MyEnum){
+				MyEnum myEnum = (MyEnum) obj;
+				return new KeyValueModel(myEnum.getValue().toString(),myEnum.getName());
+			}
+		}
+		return null;
+	}
+	
+	
+	
 	public static void main(String[] args){
 		Object[] objs = getEnums(Sex.class.getName());
 		for(Object sx:objs){

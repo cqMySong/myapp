@@ -97,7 +97,8 @@ public abstract class BaseListController extends BasePageListController {
 			DataTypeEnum dte = cm.getDataType();
 			if(dte.equals(DataTypeEnum.MUTILF7)&&cm.getClaz()!=null){
 				toDoCols.add(cm);
-			}else if(DataTypeEnum.ENUM.equals(dte)&&cm.getClaz()!=null){
+			}else if((DataTypeEnum.ENUM.equals(dte)||DataTypeEnum.MUTILENUM.equals(dte))
+					&&cm.getClaz()!=null){
 				toDoCols.add(cm);
 			}
 		}

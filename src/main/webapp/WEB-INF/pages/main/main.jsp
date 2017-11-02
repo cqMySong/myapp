@@ -327,6 +327,7 @@ $(document).ready(function() {
 								,{title:'项目安保预案',icon:'fa fa-cogs',url:'ec/basedata/prosecuritycases/list'}
 								,{title:'到访人员登记',icon:'fa fa-cogs',url:'ec/basedata/personvisitrecords/list'}
 								,{title:'到访车辆登记',icon:'fa fa-cogs',url:'ec/basedata/carvisitrecords/list'}
+								,{title:'安保监督检查',icon:'fa fa-cogs',url:'ec/basedata/safecheckrecords/list'}
 							  ]},
 							{title:'计划管理',icon:'fa fa-star',child:[
 								{title:'项目总计划',icon:'fa fa-user',url:'ec/plan/projecttotalplans/list'},

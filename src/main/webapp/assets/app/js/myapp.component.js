@@ -92,7 +92,6 @@
 								opt.callBack(e.data);
 							}
 						}
-						
 					});
 					
 					$parentContainer.hover(function(){
@@ -296,7 +295,16 @@
 			if(_type ==DataType.text||_type == DataType.textarea){
 				_data = $thisDom.val();
 			}else if(_type ==DataType.select){//下拉选择
-				_data = $thisDom.select2().val();
+				var selVal =  $thisDom.select2().val();
+				if($.isArray(selVal)){
+					for(var i=0;i<selVal.length;i++){
+     					var thisItem = selVal[i];
+     					if(i>0) _data +=',';
+     					_data +=thisItem;
+     				}
+				}else{
+					_data = selVal;
+				}
 			}else if(_type ==DataType.date||_type ==DataType.datetime){
 				_data = $thisDom.val();
 			}else if(_type ==DataType.checkbox||_type ==DataType.radio){

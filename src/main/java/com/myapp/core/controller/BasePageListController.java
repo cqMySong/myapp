@@ -90,15 +90,19 @@ public abstract class BasePageListController extends CoreBaseController {
 					query.setProjection(props);
 					query.setResultTransformer(new MyResultTransFormer(cm.getClaz()));
 					row.put(key, query.list());
-				}else if(DataTypeEnum.ENUM.equals(dte)&&cm.getClaz()!=null){
-					Class enClaz = cm.getClaz();
-					Object obj = EnumUtil.getEnum(enClaz.getName(),objval.toString());
-					if(obj!=null&&obj instanceof MyEnum){
-						MyEnum myEnum = (MyEnum) obj;
-						Map kevMap = new HashMap();
-						kevMap.put("key", myEnum.getValue());
-						kevMap.put("val", myEnum.getName());
-						row.put(key,kevMap);
+				}else if((DataTypeEnum.ENUM.equals(dte)||DataTypeEnum.MUTILENUM.equals(dte))
+						&&cm.getClaz()!=null){
+					String enClazName = cm.getClaz().getName();
+					boolean isMutil = DataTypeEnum.MUTILENUM.equals(dte);
+					if(isMutil){
+						String[] ems = objval.toString().split(",");
+						List emList = new ArrayList();
+						for(String em:ems){
+							emList.add(EnumUtil.getEnumItemKv(enClazName,em));
+						}
+						row.put(key,emList);
+					}else{
+						row.put(key,EnumUtil.getEnumItemKv(enClazName,objval.toString()));
 					}
 				}
 			}

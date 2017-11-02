@@ -36,12 +36,12 @@ import com.myapp.core.enums.PermissionTypeEnum;
 import com.myapp.core.exception.db.QueryException;
 import com.myapp.core.exception.db.SaveException;
 import com.myapp.core.model.ColumnModel;
+import com.myapp.core.model.KeyValueModel;
 import com.myapp.core.model.WebDataModel;
 import com.myapp.core.util.BaseUtil;
 import com.myapp.core.util.DateUtil;
 import com.myapp.core.util.EnumUtil;
 import com.myapp.core.util.WebUtil;
-import com.myapp.core.uuid.SysObjectType;
 
 /**
  *-----------MySong---------------
@@ -175,7 +175,9 @@ public abstract class BaseEditController extends CoreBaseController {
 			objVal = "";
 			if(DataTypeEnum.F7.equals(dte)){
 				objVal= "{}";
-			}else if(DataTypeEnum.ENTRY.equals(dte)||DataTypeEnum.MUTILF7.equals(dte)){
+			}else if(DataTypeEnum.ENTRY.equals(dte)
+					||DataTypeEnum.MUTILF7.equals(dte)
+					||DataTypeEnum.MUTILENUM.equals(dte)){
 				objVal = "[]";
 			}
 		}else{
@@ -187,6 +189,18 @@ public abstract class BaseEditController extends CoreBaseController {
 				objVal = ((Boolean)objVal).booleanValue();
 			}else if(DataTypeEnum.ENUM.equals(dte)&&objVal instanceof MyEnum){
 				objVal = ((MyEnum)objVal).getValue();
+			}else if(DataTypeEnum.MUTILENUM.equals(dte)&&col.getClaz()!=null
+					&&!BaseUtil.isEmpty(objVal)&&objVal instanceof String){//多选的枚举
+				String[] ems = objVal.toString().split(",");
+				String enClazName = col.getClaz().getName();
+				List vals = new ArrayList();
+				for(String em:ems){
+					Object eum = EnumUtil.getEnum(enClazName, em);
+					if(eum!=null&&eum instanceof MyEnum){
+						vals.add(((MyEnum)eum).getValue());
+					}
+				}
+				objVal = vals;
 			}else if(DataTypeEnum.F7.equals(dte)&&objVal instanceof CoreBaseInfo){
 				objVal = getEditF7DataVal(objVal,col.getFormat());
 			}else if(DataTypeEnum.MUTILF7.equals(dte)&&col.getClaz()!=null
@@ -282,6 +296,10 @@ public abstract class BaseEditController extends CoreBaseController {
 					val = null;
 				}else{
 					val = EnumUtil.getEnum(col.getClaz().getName(), val.toString());
+				}
+			}else if(DataTypeEnum.MUTILENUM.equals(dte)){//多选枚举
+				if(BaseUtil.isEmpty(val)) {
+					val = "";
 				}
 			}else if(DataTypeEnum.NUMBER.equals(dte)){
 				if(BaseUtil.isEmpty(val)){
@@ -494,7 +512,7 @@ public abstract class BaseEditController extends CoreBaseController {
 			List<String> entryCols  = new ArrayList<String>();
 			Map<String,Object> F7Col = new HashMap<String, Object>();
 			Map<String,Object> mutilF7Col = new HashMap<String, Object>();
-			Map<String,Object> entryEnum = new HashMap<String,Object>();
+			Map<String,Object> enumCols = new HashMap<String,Object>();
 			for(ColumnModel cm:cols){
 				if(!DataTypeEnum.ENTRY.equals(cm.getDataType())){
 					packageEditBillCriteria(billCrteria,billProjectList,cm);
@@ -502,8 +520,9 @@ public abstract class BaseEditController extends CoreBaseController {
 						F7Col.put(cm.getName(), cm);
 					}else if(DataTypeEnum.MUTILF7.equals(cm.getDataType())){
 						mutilF7Col.put(cm.getName(), cm);
+					}else if(DataTypeEnum.MUTILENUM.equals(cm.getDataType())){
+						enumCols.put(cm.getName(), cm);
 					}
-					
 				}else{
 					Class entryClaz = cm.getClaz();
 					List<ColumnModel> entry_cols = cm.getCols();
@@ -521,7 +540,8 @@ public abstract class BaseEditController extends CoreBaseController {
 									entryF7Col.add(entry_cm);
 								}else if(DataTypeEnum.MUTILF7.equals(entry_cm.getDataType())){
 									entryMutilF7Col.add(entry_cm);
-								}else if(DataTypeEnum.ENUM.equals(entry_cm.getDataType())){
+								}else if(DataTypeEnum.ENUM.equals(entry_cm.getDataType())
+										||DataTypeEnum.MUTILENUM.equals(entry_cm.getDataType())){//枚举多选
 									entryEnumCol.add(entry_cm);
 								}
 							}
@@ -539,7 +559,7 @@ public abstract class BaseEditController extends CoreBaseController {
 							mutilF7Col.put(cm.getName(), entryMutilF7Col);
 						}
 						if(entryEnumCol.size()>0){
-							entryEnum.put(cm.getName(),entryEnumCol);
+							enumCols.put(cm.getName(),entryEnumCol);
 						}
 						entryMap.put(cm.getName(), entryCrteria);
 					}
@@ -621,30 +641,27 @@ public abstract class BaseEditController extends CoreBaseController {
 				 }
 			 }
 			 //处理枚举类型
-			for (Map.Entry<String,Object> entry : entryEnum.entrySet()) {
+			for (Map.Entry<String,Object> entry : enumCols.entrySet()) {
 				String colName = entry.getKey();
 				Object colObj = entry.getValue();
 				if(colObj!=null){
-					List entryEnumList = (List) colObj;
-					if(entryEnumList.size()>0){
-						Object entrysObj = editMap.get(colName);
-						if(entrysObj!=null&&entrysObj instanceof List) {
-							List entryDatas = (List) entrysObj;
-							if (entryDatas.size() > 0) {
-								for(int i=0;i<entryDatas.size();i++){
-									Object entryDataMapObj = entryDatas.get(i);
-									if(entryDataMapObj!=null&&entryDataMapObj instanceof Map){
-										Map entryDataMap = (Map) entryDataMapObj;
-										for(int j=0;j<entryEnumList.size();j++){
-											ColumnModel entryEnumModel = (ColumnModel) entryEnumList.get(j);
-											Class enClaz = entryEnumModel.getClaz();
-											Object obj = EnumUtil.getEnum(enClaz.getName(),entryDataMap.get(entryEnumModel.getName()).toString());
-											if(obj!=null&&obj instanceof MyEnum){
-												MyEnum myEnum = (MyEnum) obj;
-												Map kevMap = new HashMap();
-												kevMap.put("key", myEnum.getValue());
-												kevMap.put("val", myEnum.getName());
-												entryDataMap.put(entryEnumModel.getName(),kevMap);
+					if(colObj instanceof ColumnModel){
+						 ColumnModel cm = (ColumnModel) colObj;
+						 packageEnumsDataMap(false,cm,editMap);
+					}else if(colObj instanceof List){//处理分录中的枚举类型
+						List entryEnumList = (List) colObj;
+						if(entryEnumList.size()>0){
+							Object entrysObj = editMap.get(colName);
+							if(entrysObj!=null&&entrysObj instanceof List) {
+								List entryDatas = (List) entrysObj;
+								if (entryDatas.size() > 0) {
+									for(int i=0;i<entryDatas.size();i++){
+										Object entryDataMapObj = entryDatas.get(i);
+										if(entryDataMapObj!=null&&entryDataMapObj instanceof Map){
+											Map entryDataMap = (Map) entryDataMapObj;
+											for(int j=0;j<entryEnumList.size();j++){
+												ColumnModel entryEnumModel = (ColumnModel) entryEnumList.get(j);
+												packageEnumsDataMap(true,entryEnumModel,entryDataMap);
 											}
 										}
 									}
@@ -681,6 +698,41 @@ public abstract class BaseEditController extends CoreBaseController {
 				}
 			}
 			dataMap.put(key, datas);
+		}
+	}
+	
+	//处理枚举对象包括多选枚举 到界面上
+	//注意分录中的枚举和表单上的枚举 封装不一样的
+	private void packageEnumsDataMap(boolean isEntry,ColumnModel colM,Map dataMap){
+		String enClazName = colM.getClaz().getName();
+		String colKey = colM.getName();
+		if(dataMap.containsKey(colKey)){
+			Object objVal = dataMap.get(colKey);
+			boolean isMutil = DataTypeEnum.MUTILENUM.equals(colM.getDataType());
+			if(!BaseUtil.isEmpty(objVal)){
+				if(isMutil){
+					List emList = new ArrayList();
+					String[] ems = objVal.toString().split(",");
+					for(String em:ems){
+						KeyValueModel kvm = EnumUtil.getEnumItemKv(enClazName,em);
+						if(isEntry){
+							emList.add(kvm);
+						}else{
+							emList.add(kvm.getKey());
+						}
+					}
+					dataMap.put(colKey,emList);
+				}else{
+					KeyValueModel kvm = EnumUtil.getEnumItemKv(enClazName,objVal.toString());
+					if(isEntry){
+						dataMap.put(colKey,kvm);
+					}else{
+						dataMap.put(colKey,kvm.getKey());
+					}
+				}
+			}else{
+				dataMap.put(colKey, isMutil?"[]":"");
+			}
 		}
 	}
 	

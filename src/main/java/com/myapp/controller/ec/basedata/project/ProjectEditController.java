@@ -72,7 +72,7 @@ public class ProjectEditController extends BaseEditController{
 		cols.add(new ColumnModel("area",DataTypeEnum.NUMBER));
 		cols.add(new ColumnModel("aseismicLevel"));
 		
-		ColumnModel structCols = new ColumnModel("structTypes",DataTypeEnum.MUTILF7,"name,number");
+		ColumnModel structCols = new ColumnModel("structTypes",DataTypeEnum.MUTILF7,"id,name,number");
 		structCols.setClaz(StructTypeInfo.class);
 		cols.add(structCols);
 		

@@ -22,7 +22,7 @@
 				}
 				thisObj.initEnvent();
 			}else if(_type ==DataType.select){
-				var _defSelOpt = {url:'',data:undefined,key:'key',val:'val',selected:undefined,opt:undefined};
+				var _defSelOpt = {url:'',data:undefined,key:'key',val:'val',selected:undefined,opt:{multiple:false}};
 				var _selOpt = $.extend(true,{},_defSelOpt, _opt);
 				var _items = _selOpt.data;
 				if(!webUtil.isEmpty(_items)&&$.isArray(_items)){

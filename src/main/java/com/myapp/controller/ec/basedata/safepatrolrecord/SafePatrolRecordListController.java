@@ -1,4 +1,4 @@
-package com.myapp.controller.ec.basedata.safecheckrecord;
+package com.myapp.controller.ec.basedata.safepatrolrecord;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -23,35 +23,35 @@ import com.myapp.core.enums.DataTypeEnum;
 import com.myapp.core.model.ColumnModel;
 import com.myapp.core.util.BaseUtil;
 import com.myapp.entity.ec.basedata.ProjectInfo;
-import com.myapp.enums.ec.SafeCheckItem;
-import com.myapp.service.ec.basedata.OnDutyRecordService;
-import com.myapp.service.ec.basedata.SafeCheckRecordService;
+import com.myapp.enums.ec.DoWayType;
+import com.myapp.service.ec.basedata.SafePatrolRecordService;
 
 /**
  *-----------MySong---------------
  * ©MySong基础框架搭建
- * @author mySong @date 2017年11月2日 
+ * @author mySong @date 2017年11月02日 
  * @system:
- * 安保监督检查
+ * 安保巡查记录
  *-----------MySong---------------
  */
-@PermissionAnn(name="系统管理.现场管理.基础数据.安保监督检查",number="app.ec.basedata.safecheckrecord")
+@PermissionAnn(name="系统管理.现场管理.基础数据.安保巡查记录",number="app.ec.basedata.safepatrolrecord")
 @Controller
-@RequestMapping("ec/basedata/safecheckrecords")
-public class SafeCheckRecordListController extends BaseListController {
+@RequestMapping("ec/basedata/safepatrolrecords")
+public class SafePatrolRecordListController extends BaseListController {
 	
 	@Resource
-	public SafeCheckRecordService safeCheckRecordService;
+	public SafePatrolRecordService safePatrolRecordService;
 	public AbstractBaseService getService() {
-		return safeCheckRecordService;
+		return safePatrolRecordService;
 	}
 
 	public List<ColumnModel> getDataBinding() {
 		List<ColumnModel> cols = super.getDataBinding();
-		cols.add(new ColumnModel("checkDate",DataTypeEnum.DATE));
-		cols.add(new ColumnModel("position"));
-		cols.add(new ColumnModel("question"));
-		cols.add(new ColumnModel("content",DataTypeEnum.MUTILENUM,SafeCheckItem.class));
+		cols.add(new ColumnModel("patrolDate",DataTypeEnum.DATE));
+		cols.add(new ColumnModel("range"));
+		cols.add(new ColumnModel("attention"));
+		cols.add(new ColumnModel("hasQuestion",DataTypeEnum.BOOLEAN));
+		cols.add(new ColumnModel("doWay",DataTypeEnum.MUTILENUM,DoWayType.class));
 		ColumnModel creator = new ColumnModel("creator",DataTypeEnum.F7,"id,name");
 		creator.setClaz(UserInfo.class);
 		cols.add(creator);
@@ -83,16 +83,16 @@ public class SafeCheckRecordListController extends BaseListController {
 	public List<Order> getOrders() {
 		List<Order> orders = new ArrayList<Order>();
 		orders.add(Order.asc("project.number"));
-		orders.add(Order.asc("checkDate"));
+		orders.add(Order.asc("patrolDate"));
 		return orders;
 	}
 	
 	public String getEditUrl() {
-		return "ec/basedata/safecheckrecord/safeCheckRecordEdit";
+		return "ec/basedata/safepatrolrecord/safePatrolRecordEdit";
 	}
 
 	public String getListUrl() {
-		return "ec/basedata/safecheckrecord/safeCheckRecordList";
+		return "ec/basedata/safepatrolrecord/safePatrolRecordList";
 	}
 
 }

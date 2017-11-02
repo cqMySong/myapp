@@ -1,46 +1,42 @@
 package com.myapp.controller.ec.budget;
 
+import cn.afterturn.easypoi.excel.entity.ImportParams;
 import com.myapp.core.annotation.PermissionAnn;
 import com.myapp.core.base.entity.CoreBaseInfo;
+import com.myapp.core.base.service.IImportConvertService;
 import com.myapp.core.base.service.impl.AbstractBaseService;
-import com.myapp.core.controller.BaseBillEditController;
+import com.myapp.core.controller.BaseBillEditImportController;
+import com.myapp.core.entity.MeasureUnitInfo;
 import com.myapp.core.entity.UserInfo;
-import com.myapp.core.enums.BaseMethodEnum;
 import com.myapp.core.enums.BillState;
 import com.myapp.core.enums.DataTypeEnum;
-import com.myapp.core.exception.db.QueryException;
 import com.myapp.core.model.ColumnModel;
-import com.myapp.entity.ec.basedata.DataDictionaryInfo;
-import com.myapp.entity.ec.basedata.ProStructureInfo;
-import com.myapp.entity.ec.basedata.ProSubInfo;
+import com.myapp.core.entity.MaterialInfo;
 import com.myapp.entity.ec.basedata.ProjectInfo;
 import com.myapp.entity.ec.budget.BudgetingDetailInfo;
 import com.myapp.entity.ec.budget.BudgetingInfo;
-import com.myapp.entity.ec.drawing.DiscussionDrawingInfo;
-import com.myapp.entity.ec.plan.ProjectPlanReportItemInfo;
-import com.myapp.enums.DataDicType;
+import com.myapp.core.enums.MaterialType;
+import com.myapp.model.BudgetingModel;
 import com.myapp.service.ec.budget.BudgetingService;
-import com.myapp.service.ec.drawing.DiscussionDrawingService;
-import org.hibernate.HibernateException;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import javax.annotation.Resource;
 import java.util.List;
-import java.util.Map;
 
 /**
- * 包路径：com.myapp.controller.ec.budget
- * 功能说明：预算编制
- * 创建人： ly
- * 创建时间: 2017-07-30 14:49
+ * @path：com.myapp.controller.ec.budget
+ * @description：预算编制
+ * @author ： ly
+ * @date: 2017-07-30 14:49
  */
 @PermissionAnn(name="系统管理.现场管理.预算.预算编制",number="app.ec.budget.budgeting")
 @Controller
 @RequestMapping("ec/budget/budgeting")
-public class BudgetingEditController extends BaseBillEditController {
+public class BudgetingEditController extends BaseBillEditImportController {
     @Resource
     private BudgetingService budgetingService;
+
     @Override
     public Object createNewData() {
         return new BudgetingInfo();
@@ -56,6 +52,15 @@ public class BudgetingEditController extends BaseBillEditController {
         return this.budgetingService;
     }
 
+    @Override
+    public IImportConvertService getImportConvertService() {
+       return this.budgetingService;
+    }
+
+    @Override
+    public String getImportTemplateName() {
+        return "budget.xls";
+    }
 
     @Override
     public List<ColumnModel> getDataBinding() {
@@ -77,18 +82,37 @@ public class BudgetingEditController extends BaseBillEditController {
         ColumnModel budgetingDetail = new ColumnModel("budgetingDetailInfos",DataTypeEnum.ENTRY,
                 BudgetingDetailInfo.class);
 
-        ColumnModel dataDic = new ColumnModel("dataDic",DataTypeEnum.F7,"id,name");
-        dataDic.setClaz(DataDictionaryInfo.class);
-        budgetingDetail.getCols().add(dataDic);
+        ColumnModel material = new ColumnModel("material",DataTypeEnum.F7,"id,name,specification");
+        material.setClaz(MaterialInfo.class);
+        budgetingDetail.getCols().add(material);
+
+        ColumnModel measureUnitInfo = new ColumnModel("measureUnitInfo",DataTypeEnum.F7,"id,name");
+        measureUnitInfo.setClaz(MeasureUnitInfo.class);
+        budgetingDetail.getCols().add(measureUnitInfo);
 
         budgetingDetail.getCols().add(new ColumnModel("id",DataTypeEnum.PK));
-        budgetingDetail.getCols().add(new ColumnModel("unitPrice",DataTypeEnum.NUMBER));
+        budgetingDetail.getCols().add(new ColumnModel("budgetaryPrice",DataTypeEnum.NUMBER));
         budgetingDetail.getCols().add(new ColumnModel("quantity",DataTypeEnum.NUMBER));
+        budgetingDetail.getCols().add(new ColumnModel("specification"));
         budgetingDetail.getCols().add(new ColumnModel("remark"));
+        budgetingDetail.getCols().add(new ColumnModel("materialName"));
         budgetingDetail.getCols().add(new ColumnModel("totalPrice",DataTypeEnum.NUMBER));
-        budgetingDetail.getCols().add(new ColumnModel("dataDicType",DataTypeEnum.ENUM, DataDicType.class));
+        budgetingDetail.getCols().add(new ColumnModel("materialType",DataTypeEnum.ENUM, MaterialType.class));
         cols.add(budgetingDetail);
 
         return cols;
+    }
+
+    @Override
+    public Class getExcelToEntityClass() {
+        return BudgetingModel.class;
+    }
+
+    @Override
+    public ImportParams getExcelImportParams() {
+        ImportParams params = new ImportParams();
+        params.setTitleRows(0);
+        params.setHeadRows(1);
+        return params;
     }
 }

@@ -1,8 +1,5 @@
-package com.myapp.controller.ec.budget;
+package com.myapp.controller.ec.enquiry;
 
-import cn.afterturn.easypoi.excel.ExcelImportUtil;
-import cn.afterturn.easypoi.excel.entity.ImportParams;
-import cn.afterturn.easypoi.util.PoiPublicUtil;
 import com.alibaba.fastjson.JSONObject;
 import com.myapp.core.annotation.PermissionAnn;
 import com.myapp.core.base.service.impl.AbstractBaseService;
@@ -14,50 +11,44 @@ import com.myapp.core.enums.DataTypeEnum;
 import com.myapp.core.model.ColumnModel;
 import com.myapp.core.util.BaseUtil;
 import com.myapp.core.util.WebUtil;
-import com.myapp.entity.ec.basedata.ProStructureInfo;
 import com.myapp.entity.ec.basedata.ProjectInfo;
-import com.myapp.model.BudgetingModel;
-import com.myapp.service.ec.budget.BudgetingService;
-import com.myapp.service.ec.drawing.DiscussionDrawingService;
-import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
+import com.myapp.service.ec.budget.EnquiryPriceService;
 import org.hibernate.Criteria;
 import org.hibernate.criterion.Restrictions;
-import org.hibernate.criterion.SimpleExpression;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import javax.annotation.Resource;
-import java.io.File;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 /**
- * 包路径：com.myapp.controller.ec.budget
- * 功能说明：预算编制列表信息
- * 创建人： ly
- * 创建时间: 2017-07-30 14:49
+ * @path：com.myapp.controller.ec.purchase.plan
+ * @descripition：预算询价
+ * @author ： ly
+ * @date: 2017-08-28 21:02
  */
-@PermissionAnn(name="系统管理.现场管理.预算.预算编制",number="app.ec.budget.budgeting")
+@PermissionAnn(name="系统管理.现场管理.预算.预算询价",number="app.ec.purchase.procurementplan")
 @Controller
-@RequestMapping("ec/budget/budgetings")
-public class BudgetingListController extends BaseListController {
+@RequestMapping("ec/budget/enquiryprices")
+public class EnquiryPriceListController extends BaseListController {
     @Resource
-    private BudgetingService budgetingService;
+    private EnquiryPriceService enquiryPriceService;
 
     @Override
     public String getEditUrl() {
-        return "ec/budget/budgeting/budgetingEdit";
+        return "ec/budget/enquiry/enquiryPriceEdit";
     }
 
     @Override
     public String getListUrl() {
-        return "ec/budget/budgeting/budgetingList";
+        return "ec/budget/enquiry/enquiryPriceList";
     }
 
     @Override
     public AbstractBaseService getService() {
-        return this.budgetingService;
+        return this.enquiryPriceService;
     }
 
     @Override
@@ -66,10 +57,11 @@ public class BudgetingListController extends BaseListController {
         if(BaseMethodEnum.ADDNEW.equals(baseMethod)){
             if(params!=null&&params.get("uiCtx")!=null){
                 String uiCtx = (String) params.get("uiCtx");
-                params.put("uiCtx",WebUtil.UUID_ReplaceID(uiCtx));
+                params.put("uiCtx", WebUtil.UUID_ReplaceID(uiCtx));
             }
         }
     }
+    @Override
     public void executeQueryParams(Criteria query) {
         super.executeQueryParams(query);
         String serach = request.getParameter("search");
@@ -95,7 +87,7 @@ public class BudgetingListController extends BaseListController {
         List<ColumnModel> cols = super.getDataBinding();
         cols.add(new ColumnModel("name"));
         cols.add(new ColumnModel("number"));
-        cols.add(new ColumnModel("billState",DataTypeEnum.ENUM,BillState.class));
+        cols.add(new ColumnModel("billState", DataTypeEnum.ENUM,BillState.class));
         cols.add(new ColumnModel("remark"));
         ColumnModel project = new ColumnModel("project",DataTypeEnum.F7,"id,name");
         project.setClaz(ProjectInfo.class);
@@ -107,16 +99,5 @@ public class BudgetingListController extends BaseListController {
         ColumnModel auditor = new ColumnModel("auditor",DataTypeEnum.F7,"id,name");
         auditor.setClaz(UserInfo.class);
         return cols;
-    }
-
-    public static void main(String[] args) {
-        ImportParams params = new ImportParams();
-        params.setTitleRows(0);
-        params.setHeadRows(1);
-        List<BudgetingModel> list = ExcelImportUtil.importExcel(
-                new File("D:/材料清单导入测试.xls"),
-                BudgetingModel.class, params);
-        System.out.println(list.size());
-        System.out.println(ReflectionToStringBuilder.toString(list.get(0)));
     }
 }

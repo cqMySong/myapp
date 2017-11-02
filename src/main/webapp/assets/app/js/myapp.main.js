@@ -977,7 +977,7 @@ MyDataTable.prototype = {
 		var newVal = val;
 		var thisColumn = null;
 		var colIdx = -1;
-		var _cols = this.getVisibleColumns();
+		var _cols = this.getColumns();
 		$.each(_cols, function (i, column) {
             if (column.field === field) {
             	thisColumn = column;

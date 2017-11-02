@@ -32,15 +32,15 @@ public enum UnitClass implements MyEnum<UnitClass> {
 		this.name = name;
 		this.value = value;
 	}
-	
+	@Override
 	public String getName() {
 		return this.name;
 	}
-
+	@Override
 	public String getValue() {
 		return this.value;
 	}
-
+	@Override
 	public UnitClass getEnum(String value) {
 		return map.get(value);
 	}

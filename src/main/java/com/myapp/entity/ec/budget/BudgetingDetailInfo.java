@@ -1,33 +1,61 @@
 package com.myapp.entity.ec.budget;
 
 import com.myapp.core.annotation.MyEntityAnn;
-import com.myapp.core.base.entity.CoreBaseBillInfo;
-import com.myapp.core.base.entity.CoreBaseDataInfo;
 import com.myapp.core.base.entity.CoreBaseEntryInfo;
-import com.myapp.entity.ec.basedata.DataDictionaryInfo;
-import com.myapp.entity.ec.plan.ProjectPlanReportInfo;
-import com.myapp.enums.DataDicType;
-import org.hibernate.mapping.ToOne;
+import com.myapp.core.entity.MaterialInfo;
+import com.myapp.core.entity.MeasureUnitInfo;
+import com.myapp.core.enums.MaterialType;
+import org.hibernate.annotations.Type;
 
 import javax.persistence.*;
 import java.math.BigDecimal;
 
 /**
- * 包路径：com.myapp.entity.ec.budget
- * 功能说明：预算编制
- * 创建人： ly
- * 创建时间: 2017-08-25 15:21
+ * @path：com.myapp.entity.ec.budget
+ * @description：预算编制
+ * @author ： ly
+ * @date: 2017-08-25 15:21
  */
 @Entity
 @MyEntityAnn(name="预算编制明细")
 @Table(name="t_ec_budgeting_detail")
 public class BudgetingDetailInfo extends CoreBaseEntryInfo<BudgetingInfo> {
-    private BigDecimal quantity;//数量
-    private BigDecimal unitPrice;//单价
-    private DataDictionaryInfo dataDic;//物料信息
-    private DataDicType dataDicType;//物料类型
-    private BigDecimal totalPrice;//总价
-    private String remark;//备注
+    /**
+     * 预算数量
+     */
+    private BigDecimal quantity;
+    /**
+     * 预算单价
+     */
+    private BigDecimal budgetaryPrice;
+    /**
+     * 预算物料信息
+     */
+    private MaterialInfo material;
+    /**
+     * 预算物料类型
+     */
+    private MaterialType materialType;
+    /**
+     * 规格
+     */
+    private String specification;
+    /**
+     * 计量单位
+     */
+    private MeasureUnitInfo measureUnitInfo;
+    /**
+     * 物料总价
+     */
+    private BigDecimal totalPrice;
+    /**
+     * 备注
+     */
+    private String remark;
+    /**
+     * 物料名称
+     */
+    private String materialName;
 
     @Column(name="fQuantity",precision = 10,scale = 2)
     public BigDecimal getQuantity() {
@@ -37,23 +65,24 @@ public class BudgetingDetailInfo extends CoreBaseEntryInfo<BudgetingInfo> {
     public void setQuantity(BigDecimal quantity) {
         this.quantity = quantity;
     }
-    @Column(name="fUnitPrice",precision = 10,scale = 4)
-    public BigDecimal getUnitPrice() {
-        return unitPrice;
+
+    @Column(name="fBudgetaryPrice",precision = 10,scale = 4)
+    public BigDecimal getBudgetaryPrice() {
+        return budgetaryPrice;
     }
 
-    public void setUnitPrice(BigDecimal unitPrice) {
-        this.unitPrice = unitPrice;
+    public void setBudgetaryPrice(BigDecimal budgetaryPrice) {
+        this.budgetaryPrice = budgetaryPrice;
     }
 
     @ManyToOne
-    @JoinColumn(name = "fDataDicId")
-    public DataDictionaryInfo getDataDic() {
-        return dataDic;
+    @JoinColumn(name = "fMaterialId")
+    public MaterialInfo getMaterial() {
+        return material;
     }
 
-    public void setDataDic(DataDictionaryInfo dataDic) {
-        this.dataDic = dataDic;
+    public void setMaterial(MaterialInfo material) {
+        this.material = material;
     }
     @Column(name="fRemark")
     public String getRemark() {
@@ -63,14 +92,26 @@ public class BudgetingDetailInfo extends CoreBaseEntryInfo<BudgetingInfo> {
     public void setRemark(String remark) {
         this.remark = remark;
     }
-    @Column(name="fDataDicType",length = 20)
-    public DataDicType getDataDicType() {
-        return dataDicType;
+
+    @Column(name="fMaterialType",length = 20)
+    @Type(type="myEnum",parameters={@org.hibernate.annotations.Parameter(name="enumClass",value="com.myapp.core.enums.MaterialType")})
+    public MaterialType getMaterialType() {
+        return materialType;
     }
 
-    public void setDataDicType(DataDicType dataDicType) {
-        this.dataDicType = dataDicType;
+    public void setMaterialType(MaterialType materialType) {
+        this.materialType = materialType;
     }
+
+    @Column(name="fSpecification",length = 50)
+    public String getSpecification() {
+        return specification;
+    }
+
+    public void setSpecification(String specification) {
+        this.specification = specification;
+    }
+
     @Column(name="fTotalPrice",precision = 12,scale = 4)
     public BigDecimal getTotalPrice() {
         return totalPrice;
@@ -78,5 +119,24 @@ public class BudgetingDetailInfo extends CoreBaseEntryInfo<BudgetingInfo> {
 
     public void setTotalPrice(BigDecimal totalPrice) {
         this.totalPrice = totalPrice;
+    }
+
+    @ManyToOne
+    @JoinColumn(name = "fMeasureUnitId")
+    public MeasureUnitInfo getMeasureUnitInfo() {
+        return measureUnitInfo;
+    }
+
+    public void setMeasureUnitInfo(MeasureUnitInfo measureUnitInfo) {
+        this.measureUnitInfo = measureUnitInfo;
+    }
+
+    @Column(name="fMaterialName",length = 50)
+    public String getMaterialName() {
+        return materialName;
+    }
+
+    public void setMaterialName(String materialName) {
+        this.materialName = materialName;
     }
 }

@@ -8,27 +8,27 @@ import javax.persistence.*;
 import java.util.Set;
 
 /**
- * @path：com.myapp.entity.ec.budget
- * @description：预算编制
+ * @path：com.myapp.entity.ec.purchase
+ * @description：采购计划
  * @author ： ly
- * @date: 2017-08-25 15:21
+ * @date: 2017-08-28 21:08
  */
 @Entity
-@MyEntityAnn(name="预算编制")
-@Table(name="t_ec_budgeting")
-public class BudgetingInfo extends CoreBaseBillInfo {
+@MyEntityAnn(name="预算询价")
+@Table(name="t_ec_enquiry_price")
+public class EnquiryPriceInfo extends CoreBaseBillInfo{
     /**
-     * 预算所属工程
+     * 项目工程
      */
     private ProjectInfo project;
     /**
-     * 预算备注信息
+     * 备注信息
      */
     private String remark;
     /**
-     * 预算明细信息
+     * 询价明细信息
      */
-    private Set<BudgetingDetailInfo> budgetingDetailInfos;
+    private Set<EnquiryPriceDetailInfo> enquiryPriceDetailInfos;
 
     @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "fProjectId")
@@ -39,6 +39,7 @@ public class BudgetingInfo extends CoreBaseBillInfo {
     public void setProject(ProjectInfo project) {
         this.project = project;
     }
+
     @Column(name="fRemark")
     public String getRemark() {
         return remark;
@@ -50,12 +51,11 @@ public class BudgetingInfo extends CoreBaseBillInfo {
 
     @OneToMany(cascade={CascadeType.ALL},mappedBy="parent")
     @OrderBy("seq ASC")
-    public Set<BudgetingDetailInfo> getBudgetingDetailInfos() {
-        return budgetingDetailInfos;
+    public Set<EnquiryPriceDetailInfo> getEnquiryPriceDetailInfos() {
+        return enquiryPriceDetailInfos;
     }
 
-    public void setBudgetingDetailInfos(Set<BudgetingDetailInfo> budgetingDetailInfos) {
-        this.budgetingDetailInfos = budgetingDetailInfos;
+    public void setEnquiryPriceDetailInfos(Set<EnquiryPriceDetailInfo> enquiryPriceDetailInfos) {
+        this.enquiryPriceDetailInfos = enquiryPriceDetailInfos;
     }
 }
-

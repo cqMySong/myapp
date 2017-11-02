@@ -72,7 +72,7 @@
 							<div class="btn-group">
 								<button type="button" class="btn btn-logged" data-toggle="dropdown">
 									<img src="<%=appRoot%>/assets/images/photos/loggeduser.png" alt="" />
-									<span class="userName"><%=webCtx.getUserName()%></span> 
+									<span class="userName"><%=webCtx.getUserName()%></span>
 									<span class="caret"></span>
 								</button>
 								<ul class="dropdown-menu pull-right">
@@ -99,8 +99,8 @@
 						</a>
 					</div>
 					<div class="media-body">
-						<h4 class="media-heading" style="cursor:pointer;overflow: hidden;" data-toggle="collapse" 
-							data-target="#loguserinfo" ><span class="userName"><%=webCtx.getUserName()%></span> 
+						<h4 class="media-heading" style="cursor:pointer;overflow: hidden;" data-toggle="collapse"
+							data-target="#loguserinfo" ><span class="userName"><%=webCtx.getUserName()%></span>
 							<a class="pull-right"> <i class="fa fa-angle-down"></i></a>
 						</h4>
 						<h5 class="media-heading"><%=webCtx.getMainPosition()%>
@@ -287,9 +287,9 @@
 			</div>
 		</div>
 	</body>
-	
+
 <script type="text/javascript">
-	
+
 function openUserSetUI(){
 	var win = {title:'<i class="fa fa-user"></i>&nbsp;用户信息设置',maxmin:false,height:500,width:350,btns:null,url:app.root+'/main/toUserSet'};
 	webUtil.openWin(win);
@@ -305,9 +305,8 @@ $(document).ready(function() {
 	var userMenus = {menus:[
 							{title:'项目管理首页',icon:'fa fa-home'},
 							{title:'基础资料',icon:'fa fa-cogs',child:[
-                                {title:'单位',icon:'fa fa-cogs',url:'ec/basedata/ecunitList/list'}     
+                                {title:'单位',icon:'fa fa-cogs',url:'ec/basedata/ecunitList/list'}
                                ,{title:'施工方案类别',icon:'fa fa-cogs',url:'ec/basedata/schemeTypeList/list'}
-                               ,{title:'数据字典',icon:'fa fa-cogs',url:'ec/basedata/datadics/list'}
                                ,{title:'技术分类',icon:'fa fa-cogs',url:'ec/basedata/skillclasss/list'}
                                ,{title:'施工技术交底',icon:'fa fa-cogs',url:'ec/basedata/qmskillitems/list'}
                                ,{title:'安全技术交底',icon:'fa fa-cogs',url:'ec/basedata/smskillitems/list'}
@@ -343,15 +342,20 @@ $(document).ready(function() {
 							{title:'图纸会审',icon:'fa fa-home',child:[
 								{title:'图纸会审',icon:'fa fa-building-o',url:'ec/discussiondrawings/list'}]},
 							{title:'预算编制',icon:'fa fa-home',child:[
-								{title:'预算编制',icon:'fa fa-building-o',url:'ec/budget/budgetings/list'}]},
+								{title:'预算编制',icon:'fa fa-building-o',url:'ec/budget/budgetings/list'},
+								{title:'预算询价',icon:'fa fa-building-o',url:'ec/budget/enquiryprices/list'},
+							]},
 							{title:'采购管理',icon:'fa fa-home',child:[
-								{title:'采购计划',icon:'fa fa-building-o',url:'ec/purchase/plan/procurementplans/list'}]},
+								{title:'材料申购',icon:'fa fa-building-o',url:'ec/purchase/applymaterials/list'},
+								{title:'采购合同',icon:'fa fa-building-o',url:'ec/purchase/purchasecontracts/list'},
+								{title:'采购入库',icon:'fa fa-building-o',url:'ec/purchase/inbound/procurementinbounds/list'}]},
 							]};
-	
+
 	$('#userMenus').myPillTreeMenu('init',userMenus);
 	var sysMenusOpt = {menus:[{title:'首页',icon:'fa fa-home'}
 	                          ,{title:'基础数据',icon:'fa fa-cogs',child:[
 	                              {title:'计量单位',icon:'fa fa-cogs',url:'base/measureunits/list'}
+            					  ,{title:'物料信息',icon:'fa fa-cogs',url:'base/materials/list'}
 	                          ]}
 	                         ,{title:'系统管理',icon:'fa fa-cogs',child:[
 								{title:'组织管理',icon:'fa fa-cogs',url:'base/orgs/list'}
@@ -376,7 +380,7 @@ $(document).ready(function() {
 	mainTab = $('#mainTab').myTab('init',initTabs);
 	$('#mainTab').find('ul.nav-tabs').css({"position":'fixed',"width":'100%'});
 	$('#mainTab').find('div.tab-content').css({"padding-top":'45px'});
-	
+
 	$('#userSet').click(function(){
 		openUserSetUI();
 	});

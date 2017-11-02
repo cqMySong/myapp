@@ -27,8 +27,6 @@ var KisBpmAssignmentCtrl = [ '$scope', '$modal', function($scope, $modal) {
         template:  'editor-app/configuration/properties/assignment-popup.html?version=' + Date.now(),
         scope: $scope
     };
-
-    // Open the dialog
     $modal(opts);
 }];
 

@@ -1,4 +1,4 @@
-package com.myapp.entity.ec.budget;
+package com.myapp.entity.ec.purchase;
 
 import com.myapp.core.annotation.MyEntityAnn;
 import com.myapp.core.base.entity.CoreBaseBillInfo;
@@ -8,27 +8,27 @@ import javax.persistence.*;
 import java.util.Set;
 
 /**
- * @path：com.myapp.entity.ec.budget
- * @description：预算编制
- * @author ： ly
- * @date: 2017-08-25 15:21
+ * @path：com.myapp.entity.ec.purchase
+ * @description：申购信息
+ * @author： ly
+ * @date: 2017-10-29 20:59
  */
 @Entity
-@MyEntityAnn(name="预算编制")
-@Table(name="t_ec_budgeting")
-public class BudgetingInfo extends CoreBaseBillInfo {
+@MyEntityAnn(name="材料申购")
+@Table(name="t_ec_apply_material")
+public class ApplyMaterialInfo extends CoreBaseBillInfo {
     /**
-     * 预算所属工程
+     * 申购单所属项目
      */
     private ProjectInfo project;
     /**
-     * 预算备注信息
+     * 备注信息
      */
     private String remark;
     /**
-     * 预算明细信息
+     * 材料申购明细信息
      */
-    private Set<BudgetingDetailInfo> budgetingDetailInfos;
+    private Set<ApplyMaterialDetailInfo> applyMaterialDetailInfos;
 
     @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "fProjectId")
@@ -39,7 +39,7 @@ public class BudgetingInfo extends CoreBaseBillInfo {
     public void setProject(ProjectInfo project) {
         this.project = project;
     }
-    @Column(name="fRemark")
+
     public String getRemark() {
         return remark;
     }
@@ -50,12 +50,11 @@ public class BudgetingInfo extends CoreBaseBillInfo {
 
     @OneToMany(cascade={CascadeType.ALL},mappedBy="parent")
     @OrderBy("seq ASC")
-    public Set<BudgetingDetailInfo> getBudgetingDetailInfos() {
-        return budgetingDetailInfos;
+    public Set<ApplyMaterialDetailInfo> getApplyMaterialDetailInfos() {
+        return applyMaterialDetailInfos;
     }
 
-    public void setBudgetingDetailInfos(Set<BudgetingDetailInfo> budgetingDetailInfos) {
-        this.budgetingDetailInfos = budgetingDetailInfos;
+    public void setApplyMaterialDetailInfos(Set<ApplyMaterialDetailInfo> applyMaterialDetailInfos) {
+        this.applyMaterialDetailInfos = applyMaterialDetailInfos;
     }
 }
-

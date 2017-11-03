@@ -328,6 +328,7 @@ $(document).ready(function() {
 								,{title:'到访车辆登记',icon:'fa fa-cogs',url:'ec/basedata/carvisitrecords/list'}
 								,{title:'安保监督检查',icon:'fa fa-cogs',url:'ec/basedata/safecheckrecords/list'}
 								,{title:'安保巡查记录',icon:'fa fa-cogs',url:'ec/basedata/safepatrolrecords/list'}
+								,{title:'设计变更(洽商)',icon:'fa fa-cogs',url:'ec/other/designchanges/list'}
 							  ]},
 							{title:'计划管理',icon:'fa fa-star',child:[
 								{title:'项目总计划',icon:'fa fa-user',url:'ec/plan/projecttotalplans/list'},
@@ -339,6 +340,8 @@ $(document).ready(function() {
 								]},
 							{title:'质量管理',icon:'fa fa-home',child:[
 								{title:'质量交底',icon:'fa fa-building-o',url:'ec/quality/standard/qualityStandardList/list'}]},
+							{title:'安全管理',icon:'fa fa-home',child:[
+								{title:'三级安全教育花名册',icon:'fa fa-building-o',url:'ec/safty/saftyedubooks/list'}]},
 							{title:'图纸会审',icon:'fa fa-home',child:[
 								{title:'图纸会审',icon:'fa fa-building-o',url:'ec/discussiondrawings/list'}]},
 							{title:'预算编制',icon:'fa fa-home',child:[

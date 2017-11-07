@@ -3,7 +3,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-	<title>采购入库</title>
+	<title>领料出库</title>
 </head>
 <style type="text/css">
 </style>
@@ -17,13 +17,13 @@
 		<div class="row">
 			<div class="col-sm-3">
 				<div class="input-group">
-					<span class="input-group-addon lable">入库单号</span>
+					<span class="input-group-addon lable">出库单号</span>
 					<input class="require input-item" name="number">
 				</div>
 			</div>
 			<div class="col-sm-3">
 				<div class="input-group">
-					<span class="input-group-addon lable">入库名称</span>
+					<span class="input-group-addon lable">领料说明</span>
 					<input name="name" class="input-item form-control require"/>
 				</div>
 			</div>
@@ -36,23 +36,17 @@
 			</div>
 			<div class="col-sm-3">
 				<div class="input-group">
-					<span class="input-group-addon lable">总金额</span>
-					<input name="totalPrice"  type="number" class="form-control input-item require"/>
+					<span class="input-group-addon lable">领料人</span>
+					<input name="picker" class="require input-item form-control require"
+						   data-opt="{type:'f7',uiWin:{title:'人员选择',height:600,width:800,url:'base/userf7'}}" />
 				</div>
 			</div>
 		</div>
 		<div class="row mt10">
 			<div class="col-sm-3">
 				<div class="input-group">
-					<span class="input-group-addon lable">收货人</span>
-					<input name="consignee" class="require input-item form-control require"
-				   data-opt="{type:'f7',uiWin:{title:'人员选择',height:600,width:800,url:'base/userf7'}}" />
-				</div>
-			</div>
-			<div class="col-sm-3">
-				<div class="input-group">
-					<span class="input-group-addon lable">收货日期</span>
-					<input type="text" name="inStockDate" class="form-control input-item require" data-opt="{type:'date'}">
+					<span class="input-group-addon lable">出库日期</span>
+					<input type="text" name="outStockDate" class="form-control input-item require" data-opt="{type:'date'}">
 				</div>
 			</div>
 			<div class="col-sm-3">
@@ -63,7 +57,7 @@
 					</select>
 				</div>
 			</div>
-			<div class="col-sm-3">
+			<div class="col-sm-6">
 				<div class="input-group">
 					<span class="input-group-addon lable">备注</span>
 					<textarea name="remark" style="height:40px;" class="input-item form-control"></textarea>
@@ -72,21 +66,17 @@
 		</div>
 		<div class="row mt10">
 			<div class="col-sm-12 " style="border: 1px solid #ddd;">
-				<table name="purchaseStockDetailInfos" class="input-entry" >
+				<table name="stockOutDetailInfos" class="input-entry" >
 					<thead>
-					<tr>
-						<th data-field="purchaseContractInfo" data-width="100" data-type="f7" data-locked="true">合同名称</th>
-						<th data-field="materialType" data-width="100" data-type="select" data-locked="true">材料类型</th>
-						<th data-field="purchaseContractDetailInfo" data-type="f7" data-visible="false">合同明细</th>
-						<th data-field="material" data-type="f7"  data-width="150"
-							data-editor="{uiWin:{title:'合同明细',height:580,width:880,url:'ec/purchase/purchaseContractDetailF7',uiParams:getParams}}">物料名称</th>
-						<th data-field="specification" data-type="text" data-locked="true" data-width="100">规格</th>
-						<th data-field="measureUnitName" data-type="text" data-locked="true" data-width="100">计量单位</th>
-						<th data-field="purchasePrice" data-width="100"  data-type="number">采购单价</th>
-						<th data-field="quantity" data-type="number" data-width="100">采购数量</th>
-						<th data-field="count" data-type="number" data-width="100">入库数量</th>
-						<th data-field="remark" data-type="text" data-width="100">备注</th>
-					</tr>
+						<tr>
+							<th data-field="materialType" data-width="100" data-type="select" data-locked="true">材料类型</th>
+							<th data-field="material" data-type="f7"  data-width="150"
+								data-editor="{uiWin:{title:'库存信息',height:580,width:880,url:'ec/stock/stockF7',uiParams:getParams}}">物料名称</th>
+							<th data-field="specification" data-type="text" data-locked="true" data-width="100">规格</th>
+							<th data-field="measureUnit" data-type="text" data-locked="true" data-width="100">计量单位</th>
+							<th data-field="count" data-type="number" data-width="100">领取数量</th>
+							<th data-field="remark" data-type="text" data-width="100">备注</th>
+						</tr>
 					</thead>
 				</table>
 			</div>
@@ -137,32 +127,25 @@
 <%@include file="../../../base/base_edit.jsp"%>
 <script type="text/javascript">
     var editUI;
-    var purchaseStockDetailInfosEntry;
-    var purchaseStockDetailInfosEntryObj;
+    var stockOutDetailInfosEntry;
+    var stockOutDetailInfosEntryObj;
     function proSubItem_dataChange(oldData,newData){
 
     }
-    function purchaseStockDetailInfos_dataChanged($cell,obj){
-        if(webUtil.isEmpty(purchaseStockDetailInfosEntry)) return;
+    function stockOutDetailInfos_dataChanged($cell,obj){
+        if(webUtil.isEmpty(stockOutDetailInfosEntry)) return;
         if(obj.field=='material'){
-            if(!webUtil.isEmpty(purchaseStockDetailInfosEntry)){
+            if(!webUtil.isEmpty(stockOutDetailInfosEntry)){
                 var selectPlanRow = obj.rowData[obj.field];
                 if(!selectPlanRow){
                     return false;
 				}
 				console.log(obj);
-                var purchaseContractInfo = {id:selectPlanRow.parent_id,
-                    name:selectPlanRow.parent_name};
-                purchaseStockDetailInfosEntry.setTableCellValue(obj.rowIndex,'purchaseContractInfo',purchaseContractInfo);
-                purchaseStockDetailInfosEntry.setTableCellValue(obj.rowIndex,'purchaseContractDetailInfo',{id:selectPlanRow.id});
-                purchaseStockDetailInfosEntry.setTableCellValue(obj.rowIndex,'specification',
-                    selectPlanRow.specification);
-                purchaseStockDetailInfosEntry.setTableCellValue(obj.rowIndex,'materialType',
-                    selectPlanRow.materialType);
-                purchaseStockDetailInfosEntry.setTableCellValue(obj.rowIndex,'measureUnitName',
-                    selectPlanRow.measureUnitName);
-                purchaseStockDetailInfosEntry.setTableCellValue(obj.rowIndex,'purchasePrice',selectPlanRow.purchasePrice);
-                purchaseStockDetailInfosEntry.setTableCellValue(obj.rowIndex,'quantity',selectPlanRow.quantity);
+                var materialType = {key:selectPlanRow.materialInfo_materialType_id,val:selectPlanRow.materialInfo_materialType};
+                stockOutDetailInfosEntry.setTableCellValue(obj.rowIndex,'specification',selectPlanRow.specification);
+                stockOutDetailInfosEntry.setTableCellValue(obj.rowIndex,'materialType',materialType);
+                stockOutDetailInfosEntry.setTableCellValue(obj.rowIndex,'measureUnit',selectPlanRow.measureUnit);
+                stockOutDetailInfosEntry.setTableCellValue(obj.rowIndex,'stockCount',selectPlanRow.count);
 
             }
 		}
@@ -207,12 +190,12 @@
     }
     $(document).ready(function() {
         var height = window.outerHeight-460;
-        var entryOption = "{type:'entry',height:"+height+",tableOpt:{editDataChanged:purchaseStockDetailInfos_dataChanged}"+
-            ",toolbar:{title:'采购入库清单'}}";
+        var entryOption = "{type:'entry',height:"+height+",tableOpt:{editDataChanged:stockOutDetailInfos_dataChanged}"+
+            ",toolbar:{title:'领料出库清单'}}";
 		$("table.input-entry").attr("data-opt",entryOption);
         editUI = $('#editPanel').editUI({
-            title : "采购入库",billModel:2,
-            baseUrl : "ec/purchase/purchasestock",
+            title : "领料出库",billModel:2,
+            baseUrl : "ec/stock/stockout",
             toolbar : "#table-toolbar",
             form : {
                 el : "#editForm"
@@ -220,12 +203,12 @@
         });
         editUI.onLoad();
 
-        purchaseStockDetailInfosEntryObj = editUI.getEntryObj('purchaseStockDetailInfos');
-        if(!webUtil.isEmpty(purchaseStockDetailInfosEntryObj)){
-            purchaseStockDetailInfosEntry = purchaseStockDetailInfosEntryObj.entry;
-            var rightBtnGroup = purchaseStockDetailInfosEntryObj.toolbar.find('.pull-right>.btn-group').myBtnGroup();
-            rightBtnGroup.addBtn({entry:purchaseStockDetailInfosEntry,css:'btn-sm',text:'复制插入',icon:"fa fa-edit",clickFun:btnCopyInsertRow});
-            purchaseStockDetailInfosEntry.resetView();
+        stockOutDetailInfosEntryObj = editUI.getEntryObj('stockOutDetailInfos');
+        if(!webUtil.isEmpty(stockOutDetailInfosEntryObj)){
+            stockOutDetailInfosEntry = stockOutDetailInfosEntryObj.entry;
+            var rightBtnGroup = stockOutDetailInfosEntryObj.toolbar.find('.pull-right>.btn-group').myBtnGroup();
+            rightBtnGroup.addBtn({entry:stockOutDetailInfosEntry,css:'btn-sm',text:'复制插入',icon:"fa fa-edit",clickFun:btnCopyInsertRow});
+            stockOutDetailInfosEntry.resetView();
         }
         webUtil.initMainPanel('#editPanel');
     })

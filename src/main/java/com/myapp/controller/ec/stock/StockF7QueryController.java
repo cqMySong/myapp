@@ -39,9 +39,9 @@ public class StockF7QueryController extends BaseF7QueryController {
 	@Override
 	public List<ColumnModel> getDataBinding() {
 		List<ColumnModel> cols = super.getDataBinding();
-		ColumnModel col =  new ColumnModel("material",DataTypeEnum.F7,MaterialInfo.class);
-		col.setFormat("id,name");
-		col.setAlias_zh("id,物料名称");
+		ColumnModel col =  new ColumnModel("materialInfo",DataTypeEnum.F7,MaterialInfo.class);
+		col.setFormat("id,materialType,name");
+		col.setAlias_zh("id,物料类型,物料名称");
 		cols.add(col);
 
 		col = new ColumnModel("specification",DataTypeEnum.STRING);
@@ -60,10 +60,27 @@ public class StockF7QueryController extends BaseF7QueryController {
 	}
 	@Override
 	public Order getOrder() {
-		return Order.asc("material");
+		return Order.asc("materialInfo");
 	}
 	@Override
 	public String getUIWinTitle() {
 		return "库存信息";
+	}
+
+	@Override
+	public void afterQuery(PageModel pm) throws QueryException {
+		super.afterQuery(pm);
+		List<HashMap> datas = pm.getDatas();
+		if(datas!=null&&datas.size()>0){
+			for(HashMap hashMap : datas){
+				hashMap.put("materialInfo_materialType_id",
+						((MaterialType)hashMap.get("materialInfo_materialType")).getValue());
+				hashMap.put("materialInfo_materialType",
+						((MaterialType)hashMap.get("materialInfo_materialType")).getName());
+				hashMap.put("name",hashMap.get("materialInfo_name"));
+				hashMap.put("id",hashMap.get("materialInfo_id"));
+			}
+		}
+		this.data = pm;
 	}
 }

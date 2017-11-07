@@ -351,7 +351,7 @@ $(document).ready(function() {
 							{title:'采购管理',icon:'fa fa-home',child:[
 								{title:'材料申购',icon:'fa fa-building-o',url:'ec/purchase/applymaterials/list'},
 								{title:'采购合同',icon:'fa fa-building-o',url:'ec/purchase/purchasecontracts/list'},
-								{title:'采购入库',icon:'fa fa-building-o',url:'ec/purchase/inbound/procurementinbounds/list'}]},
+                                {title:'采购入库',icon:'fa fa-building-o',url:'ec/purchase/purchasestocks/list'}]},
 							]};
 
 	$('#userMenus').myPillTreeMenu('init',userMenus);

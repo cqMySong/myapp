@@ -80,8 +80,9 @@ public class PurchaseStockService extends BaseInterfaceService<PurchaseStockInfo
             if(!isExist){
                 diffCount = purchaseStockDetailOld.getCount().negate();
             }
-            stockService.saveStockByMaterialId(purchaseStockDetailOld.getPurchaseContractInfo().getProject(),
-                    diffCount,purchaseStockDetailOld.getPurchaseContractDetailInfo());
+            stockService.saveStockByMaterialId(purchaseStockNew.getProject(),diffCount,
+                    purchaseStockDetailOld.getPurchaseContractDetailInfo().getMaterial(),
+                    purchaseStockDetailOld.getPurchaseContractDetailInfo());
         }
         for(PurchaseStockDetailInfo purchaseStockDetailNew:purchaseStockNew.getPurchaseStockDetailInfos()){
             isExist = false;
@@ -93,8 +94,9 @@ public class PurchaseStockService extends BaseInterfaceService<PurchaseStockInfo
             }
 
             if(!isExist){
-                stockService.saveStockByMaterialId(purchaseStockDetailNew.getPurchaseContractInfo().getProject(),
-                        purchaseStockDetailNew.getCount(),purchaseStockDetailNew.getPurchaseContractDetailInfo());
+                stockService.saveStockByMaterialId(purchaseStockNew.getProject(),purchaseStockDetailNew.getCount(),
+                        purchaseStockDetailNew.getPurchaseContractDetailInfo().getMaterial(),
+                        purchaseStockDetailNew.getPurchaseContractDetailInfo());
             }
         }
         return purchaseStockNew;

@@ -36,13 +36,13 @@ public class StockService  extends BaseInterfaceService<StockInfo> {
      * @return
      * @throws SaveException
      */
-    public StockInfo saveStockByMaterialId(ProjectInfo projectInfo, BigDecimal count,
+    public StockInfo saveStockByMaterialId(ProjectInfo projectInfo, BigDecimal count,MaterialInfo materialInfo,
                                               PurchaseContractDetailInfo purchaseContractDetailInfo)
             throws SaveException {
-        StockInfo stockInfo = getStockInfoByMaterialId(purchaseContractDetailInfo.getMaterial());
+        StockInfo stockInfo = getStockInfoByMaterialId(materialInfo);
         if(stockInfo==null){
             stockInfo = new StockInfo();
-            stockInfo.setMaterialInfo(purchaseContractDetailInfo.getMaterial());
+            stockInfo.setMaterialInfo(materialInfo);
             stockInfo.setCount(count);
             stockInfo.setMeasureUnit(purchaseContractDetailInfo.getMeasureUnitName());
             stockInfo.setProjectInfo(projectInfo);

@@ -168,6 +168,16 @@ MyF7.prototype = {
 		}else{
 			this.$element.removeClass('require');
 		}
+	},
+	setFocus:function(focus){
+		if(!webUtil.isEmpty(focus)
+				&&$.type(focus) === "boolean"){
+			if(focus){
+				this.$element.focus();
+			}else{
+				this.$element.blur();
+			}
+		}
 	}
 }
 $.fn.myF7 = function(options) {

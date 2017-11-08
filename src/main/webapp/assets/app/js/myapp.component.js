@@ -53,6 +53,9 @@
 				f7dom.init(_opt);
 				thisObj.initViewr(_opt);
 				thisObj.initEnvent();
+			}else if(_type == DataType.number){
+				var mynumberbox = $thisDom.myNumberBox();
+				mynumberbox.init(_opt);
 			}
 		},
 		initEnvent:function(_opt){
@@ -283,6 +286,8 @@
                 }
 			}else if(_type==DataType.F7){
 				$thisDom.myF7().setData(data);
+			}else if(_type==DataType.number){
+				$thisDom.myNumberBox().setData(data);
 			}else{
 				$thisDom.val(_data);
 			}
@@ -311,6 +316,8 @@
 			    _data = $thisDom.prop("checked");
 			}else if(_type==DataType.F7){
 				_data = $thisDom.myF7().getValue();
+			}else if(_type==DataType.number){
+				_data = $thisDom.myNumberBox().getData();
 			}else{
 				_data = $thisDom.val();
 			}
@@ -337,6 +344,8 @@
 				}
 			}else if(_type==DataType.F7){
 				$thisDom.myF7().setEnabled(enable);
+			}else if(_type==DataType.number){
+				$thisDom.myNumberBox().setEnabled(enable);
 			}
 		},
 		isEnabled:function(){
@@ -356,6 +365,8 @@
 				enabled = _toDom.hasClass('disabled');
 			}else if(_type==DataType.F7){
 				enabled = $thisDom.myF7().isEnabled();
+			}else if(_type==DataType.number){
+				enabled = $thisDom.myNumberBox().isEnabled();
 			}
 			return enabled;
 		},
@@ -363,17 +374,23 @@
 			var _type = this.type;
 			if(webUtil.isEmpty(_type)) return;
 			var $thisDom = this.$element;
-			var _toDom = $thisDom;
-			if(_type ==DataType.select){
-				var _select = ($thisDom.next('span.select2').children('span').children('span'));
-				if(!webUtil.isEmpty(_select)&&_select.length>0){
-					_toDom = _select;
-				}
-			}
-			if(_opt){
-				_toDom.addClass('require');
+			if(_type==DataType.number){
+				$thisDom.myNumberBox().setRequire(_opt);
+			}else if(_type==DataType.F7){
+				$thisDom.myF7().setRequire(_opt);
 			}else{
-				_toDom.removeClass('require');
+				var _toDom = $thisDom;
+				if(_type ==DataType.select){
+					var _select = ($thisDom.next('span.select2').children('span').children('span'));
+					if(!webUtil.isEmpty(_select)&&_select.length>0){
+						_toDom = _select;
+					}
+				}
+				if(_opt){
+					_toDom.addClass('require');
+				}else{
+					_toDom.removeClass('require');
+				}
 			}
 		},
 		setFocus:function(data){
@@ -381,6 +398,16 @@
 			if(webUtil.isEmpty(_type)) return;
 			var $thisDom = this.$element;
 			if(_type ==DataType.text||_type == DataType.textarea){
+				if(data){
+					$thisDom.focus();
+				}else{
+					$thisDom.blur();
+				}
+			}else if(_type==DataType.number){
+				$thisDom.myNumberBox().setFocus(data);
+			}else if(_type==DataType.F7){
+				$thisDom.myF7().setFocus(data);
+			}else{
 				if(data){
 					$thisDom.focus();
 				}else{

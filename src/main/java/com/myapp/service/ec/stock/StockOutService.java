@@ -75,7 +75,7 @@ public class StockOutService extends BaseInterfaceService<StockOutInfo> {
         for(StockOutDetailInfo stockOutDetailNew:stockOutInfoNew.getStockOutDetailInfos()){
             isExist = false;
             for(StockOutDetailInfo stockOutDetailInfo:stockOutDetailInfos){
-                if(stockOutDetailNew.getId().equals(stockOutDetailNew.getId())){
+                if(stockOutDetailNew.getId().equals(stockOutDetailInfo.getId())){
                     isExist = true;
                     break;
                 }

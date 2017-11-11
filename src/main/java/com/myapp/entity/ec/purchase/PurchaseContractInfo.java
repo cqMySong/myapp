@@ -42,6 +42,11 @@ public class PurchaseContractInfo extends CoreBaseBillInfo{
      * 合同金额
      */
     private BigDecimal amount;
+
+    /**
+     * 剩余结算金额
+     */
+    private BigDecimal balanceSettleAmount;
     /**
      * 经办人
      */
@@ -111,6 +116,15 @@ public class PurchaseContractInfo extends CoreBaseBillInfo{
 
     public void setAmount(BigDecimal amount) {
         this.amount = amount;
+    }
+
+    @Column(name="fBalanceSettleAmount",precision = 10,scale = 2)
+    public BigDecimal getBalanceSettleAmount() {
+        return balanceSettleAmount;
+    }
+
+    public void setBalanceSettleAmount(BigDecimal balanceSettleAmount) {
+        this.balanceSettleAmount = balanceSettleAmount;
     }
 
     @Column(name="fPaymentMethod",length = 20)

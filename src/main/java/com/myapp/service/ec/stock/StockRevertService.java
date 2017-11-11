@@ -29,14 +29,14 @@ public class StockRevertService extends BaseInterfaceService<StockRevertInfo> {
             Set<StockRevertDetailInfo> stockRevertDetails = new HashSet<>();
             Iterator iterator = stockRevertInfo.getStockRevertDetailInfos().iterator();
             StockRevertDetailInfo stockRevertDetail = null;
-            StockRevertDetailInfo StockRevertDetailInfoOld = null;
+            StockRevertDetailInfo stockRevertDetailInfoOld = null;
             while (iterator.hasNext()){
-                StockRevertDetailInfoOld = (StockRevertDetailInfo) iterator.next();
+                stockRevertDetailInfoOld = (StockRevertDetailInfo) iterator.next();
                 stockRevertDetail = new StockRevertDetailInfo();
-                stockRevertDetail.setCount(StockRevertDetailInfoOld.getCount());
-                stockRevertDetail.setMaterial(StockRevertDetailInfoOld.getMaterial());
-                stockRevertDetail.setMeasureUnit(StockRevertDetailInfoOld.getMeasureUnit());
-                stockRevertDetail.setId(StockRevertDetailInfoOld.getId());
+                stockRevertDetail.setCount(stockRevertDetailInfoOld.getCount());
+                stockRevertDetail.setMaterial(stockRevertDetailInfoOld.getMaterial());
+                stockRevertDetail.setMeasureUnit(stockRevertDetailInfoOld.getMeasureUnit());
+                stockRevertDetail.setId(stockRevertDetailInfoOld.getId());
                 stockRevertDetails.add(stockRevertDetail);
             }
             stockRevertInfo.setOldStockRevertDetails(stockRevertDetails);

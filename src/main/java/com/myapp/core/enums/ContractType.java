@@ -20,7 +20,7 @@ public enum ContractType implements MyEnum<ContractType> {
 	private String name;
 	private String value;
 
-	private static final Map<String, ContractType> map = new HashMap<String, ContractType>();
+	public static final Map<String, ContractType> map = new HashMap<String, ContractType>();
 	static {
         map.put(MATERIAL.getValue(), MATERIAL);
         map.put(ARTIFICIAL.getValue(), ARTIFICIAL);

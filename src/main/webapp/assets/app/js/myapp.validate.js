@@ -82,7 +82,7 @@ var dataRules = {
 			return this.number(ranges[0])&&value>=len[0]&&this.number(ranges[1])&&value<=len[1];
 		}
 		return false;
-	});
+	},'输入的数字范围为{0}-{1}');
 	dataRules.addRule('equals',function(value1,value2){
 		return value1===value2;
 	},'{0}与{1}值必须相等!');

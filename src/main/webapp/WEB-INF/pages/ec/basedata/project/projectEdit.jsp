@@ -50,13 +50,13 @@
 				<div class="col-sm-6">
 					<div class="input-group">
 						<span class="input-group-addon lable">建筑高度(m)</span> 
-						<input name="eavesHeight" class="require input-item">
+						<input name="eavesHeight" data-rule="number" class="require input-item">
 					</div>
 				</div>
 				<div class="col-sm-6 mb15">
 					<div class="input-group">
 						<span class="input-group-addon lable">层高(m)</span> 
-						<input name="floorHeight" class="input-item require">
+						<input name="floorHeight" data-rule="number" class="input-item require">
 					</div>
 				</div>
 			</div>

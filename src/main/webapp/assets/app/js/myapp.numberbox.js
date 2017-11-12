@@ -135,7 +135,7 @@
 		setEnabled : function(enabled) {
 			var $thisfel = this.getformaterEl();
 			if($thisfel&&$.type(enabled) === "boolean"){
-				if(enable){
+				if(enabled){
 					$thisfel.removeAttr("disabled");
 				}else{
 					$thisfel.attr("disabled","disabled");

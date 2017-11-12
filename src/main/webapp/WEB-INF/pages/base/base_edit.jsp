@@ -1,6 +1,7 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@include file="../inc/webBase.inc"%>
-<script src="<%=appRoot%>/assets/app/js/myapp.form.js?v=25" type="text/javascript"></script>
+<script src="<%=appRoot%>/assets/app/js/myapp.validate.js" type="text/javascript"></script>
+<script src="<%=appRoot%>/assets/app/js/myapp.form.js?v=2" type="text/javascript"></script>
 <style type="text/css">
 </style>
 <% 
@@ -396,7 +397,7 @@ EditUI.prototype = {
 	},
 	save:function(btn){
 		var thisEditUI = btn.owerObj;
-		if(thisEditUI.editForm.verifyInputRequire()
+		if(thisEditUI.editForm.verifyInput()
 				&&thisEditUI.actionBefore(OperateType.save)){
 			var this_editData = thisEditUI.storeData();
 			var _toData = {};
@@ -417,7 +418,7 @@ EditUI.prototype = {
 	},
 	submit:function(btn){
 		var thisEditUI = btn.owerObj;
-		if(thisEditUI.editForm.verifyInputRequire()
+		if(thisEditUI.editForm.verifyInput()
 				&&thisEditUI.actionBefore(OperateType.submit)){
 			var this_editData = thisEditUI.storeData();
 			var _toData = {};

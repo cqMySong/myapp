@@ -144,17 +144,37 @@ myForm.prototype = {
 			$itemel.myComponet(_type,{method:'enable',opt:val});
 		}
 	},
-	verifyInputRequire:function(){
-		var thisObj = this;
+	verifyInputItem:function($el){
+		var ret = {code:1,mesg:''};
+		if(!webUtil.isEmpty($el)){
+			var _type = $el.data('dataType');
+			if(!webUtil.isEmpty(_type)){
+				var thisObj = this;
+				if($el.hasClass('require')){
+					var _data = thisObj.getItemData($el);
+					ret = $el.myValidate(_type).toValid(_data,'notEmpty');
+				}
+				var _rules = $el.data('rule');
+				var data_rules = webUtil.str2Json(_rules);
+				if(!webUtil.isEmpty(data_rules)){
+					ret = $el.myValidate(_type).toValids(data_rules);
+				}
+			}
+		}
+		return ret;
+	},
+	verifyInput:function(){
 		var isOk = true;
+		var thisObj = this;
 		this.$element.find('.input-item').each(function(){
-			if($(this).hasClass('require')){
-				var _textLable = thisObj.getItemLable($(this));
-				var _data = thisObj.getItemData($(this));
-				if(webUtil.isEmpty(_data)){
-					webUtil.mesg(_textLable+'为空,不允许保存');
+			var ret = thisObj.verifyInputItem($(this));
+			if(!webUtil.isEmpty(ret)&&!webUtil.isEmpty(ret.code)){
+				if(ret.code == 0){
+					var _textLable = thisObj.getItemLable($(this))||'输入项:';
+					var mesg = ret.mesg||'输入数据规则有误!';
+					webUtil.mesg(_textLable+' '+mesg);
 					isOk = false;
-					return false;
+					return isOk;
 				}
 			}
 		});

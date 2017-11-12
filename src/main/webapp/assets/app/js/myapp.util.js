@@ -572,7 +572,11 @@ var webUtil = {
 	str2Json:function(str){
 		var _jsonObj = {};
 		if(!webUtil.isEmpty(str)){
-			_jsonObj = eval('('+str+')');
+			try{
+				_jsonObj = eval('('+str+')');
+			}catch (e) {
+				_jsonObj = str;
+			}
 		}
 		return _jsonObj;
 	},

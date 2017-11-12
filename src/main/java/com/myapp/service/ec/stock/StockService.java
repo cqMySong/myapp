@@ -9,6 +9,8 @@ import com.myapp.entity.ec.stock.StockInfo;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
+import java.util.List;
+import java.util.Map;
 
 /**
  * @path：com.myapp.service.ec.stock
@@ -52,5 +54,17 @@ public class StockService  extends BaseInterfaceService<StockInfo> {
             stockInfo.setCount(stockInfo.getCount().add(count));
         }
         return (StockInfo) saveEntity(stockInfo);
+    }
+
+    /**
+     * 功能：根据单位工程id查询库存信息
+     * @param projectId
+     * @return
+     */
+    public List<Map> queryStockByProjectId(String projectId){
+        String hql = "select stock.id as id,stock.count as count," +
+                "stock.specification as specification,stock.measureUnit as measureUnit," +
+                "stock.materialInfo as materialInfo from StockInfo stock where stock.projectInfo.id=?";
+        return findByHQL(hql,new String[]{projectId});
     }
 }

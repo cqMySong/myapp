@@ -354,7 +354,8 @@ $(document).ready(function() {
                                 {title:'采购入库',icon:'fa fa-building-o',url:'ec/purchase/purchasestocks/list'}]},
 							{title:'库存管理',icon:'fa fa-home',child:[
 								{title:'领料出库',icon:'fa fa-building-o',url:'ec/stock/stockouts/list'},
-                                {title:'物料归还',icon:'fa fa-building-o',url:'ec/stock/stockreverts/list'}]},
+                                {title:'物料归还',icon:'fa fa-building-o',url:'ec/stock/stockreverts/list'},
+                                {title:'盘存',icon:'fa fa-building-o',url:'ec/stock/inventories/list'}]},
 							{title:'结算管理',icon:'fa fa-home',child:[
 								{title:'物料结算',icon:'fa fa-building-o',url:'ec/settle/materialsettles/list'}]},
 							]};

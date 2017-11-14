@@ -358,6 +358,9 @@ $(document).ready(function() {
                                 {title:'盘存',icon:'fa fa-building-o',url:'ec/stock/inventories/list'}]},
 							{title:'结算管理',icon:'fa fa-home',child:[
 								{title:'物料结算',icon:'fa fa-building-o',url:'ec/settle/materialsettles/list'}]},
+							{title:'工程管理',icon:'fa fa-home',child:[
+								{title:'工程合同',icon:'fa fa-building-o',url:'ec/engineering/contracts/list'},
+                                {title:'工程进度款',icon:'fa fa-building-o',url:'ec/engineering/progressfunds/list'}]},
 							]};
 
 	$('#userMenus').myPillTreeMenu('init',userMenus);

@@ -1,5 +1,6 @@
 package com.myapp.core.model;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -27,6 +28,8 @@ public class MyWebContext {
 	private Map<String,Map<String,String>> permission;//用户权限范围 :<url,<其他属性值>>
 	private Boolean admin = Boolean.FALSE;
 	private Boolean sysUser = Boolean.FALSE;
+	private List<Map<String,Object>> mainMenu;//主功能模块 一级菜单
+	
 	public String getUserName() {
 		return userName;
 	}
@@ -110,6 +113,13 @@ public class MyWebContext {
 	}
 	public void setSysUser(Boolean sysUser) {
 		if(sysUser!=null) this.sysUser = sysUser;
+	}
+	public List<Map<String, Object>> getMainMenu() {
+		if(mainMenu==null) mainMenu = new ArrayList<Map<String, Object>>();
+		return mainMenu;
+	}
+	public void setMainMenu(List<Map<String, Object>> mainMenu) {
+		this.mainMenu = mainMenu;
 	}
 	
 }

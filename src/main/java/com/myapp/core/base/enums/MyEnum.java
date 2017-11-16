@@ -14,5 +14,4 @@ public interface MyEnum <E extends Enum<?>> {
     E getEnum(String value);
     public String getName();
     public Object getValue();
-
 }

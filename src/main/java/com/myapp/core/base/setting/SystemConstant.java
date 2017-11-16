@@ -1,6 +1,5 @@
 package com.myapp.core.base.setting;
 
-import java.sql.Types;
 
 public abstract class SystemConstant {
 	/**
@@ -12,5 +11,7 @@ public abstract class SystemConstant {
 	
 	public static final String DEF_USERPWD_INIT = "123456";// 用户初始密码
 
+	//request中的Session保存的上下文内容 的key值
+	public static String WEBCONTEXT_NAME = "webCtx"; 
 	
 }

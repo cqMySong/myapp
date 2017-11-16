@@ -72,8 +72,26 @@ MyPillTreeMenu.prototype = {
 			_li.addClass('active');
 		}
 		var _li_a = $('<a href="#" class="_menuItems"></a>');
-		if(!webUtil.isEmpty(_menuItem.icon)){
-			_li_a.append('<i class="'+_menuItem.icon+'"></i>');
+		var icon = _menuItem.icon;
+		if(!webUtil.isEmpty(icon)){
+			if($.type(icon) === "string" ){
+				_li_a.append('<i class="'+_menuItem.icon+'"></i>');
+			}else if($.isPlainObject(icon)){
+				if(!webUtil.isEmpty(icon.name)){
+					var iconHtml = $('<i></i>');
+					if(!webUtil.isEmpty(icon.type)){
+						iconHtml.addClass(icon.type);
+					}
+					if('UNICODE'==icon.codeType){
+						iconHtml.append('&#x'+icon.name+';');
+					}else if('CLASS'==icon.codeType){
+						iconHtml.addClass(icon.name);
+					}else{
+						iconHtml.append('&nbsp;&nbsp;');
+					}
+					_li_a.append(iconHtml);
+				}
+			}
 		}
 		if(!webUtil.isEmpty(_menuItem.title)){
 			var $title = $('<span>'+_menuItem.title+'</span>');

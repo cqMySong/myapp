@@ -92,6 +92,29 @@ public class WebUtil {
 		}
 		return fn;
 	}
+	/**
+	 * 将id中的特殊字符置空
+	 * @param fn
+	 * @return
+	 */
+	public static String UUID2String2(String fn){
+		if(!BaseUtil.isEmpty(fn)){
+			boolean go = true;
+			while(go){
+				if(fn.indexOf("+")>=0){
+					fn = fn.replaceAll("\\+", "");
+				}
+				if(fn.indexOf("=")>=0){
+					fn = fn.replaceAll("=", "");
+				}
+				if(fn.indexOf("/")>=0){
+					fn = fn.replaceAll("/", "");
+				}
+				go = fn.indexOf("+")>=0||fn.indexOf("=")>=0||fn.indexOf("/")>=0;
+			}
+		}
+		return fn;
+	}
 	
 	public static void inputStreamWrite2Web(InputStream in,ServletOutputStream out) throws IOException {
 		if(in==null||out==null) return;

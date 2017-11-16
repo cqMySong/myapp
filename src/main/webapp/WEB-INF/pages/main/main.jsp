@@ -1,5 +1,7 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ page import="com.myapp.core.model.MyWebContext" %>
+<%@ page import="java.util.List,java.util.ArrayList" %>
+<%@ page import="java.util.Map,java.util.HashMap" %>
 <html lang="en">
 	<head>
 		<title>${appName }</title>
@@ -123,7 +125,25 @@
 				</div>
 				<!-- leftpanel-userinfo -->
 				<ul class="nav nav-tabs nav-justified nav-sidebar">
-					<li class="tooltips active" data-toggle="tooltip" title="主菜单">
+					
+					<% 
+						if(webCtx!=null){
+							List<Map<String, Object>> menus = webCtx.getMainMenu();
+							for(int i=0;i<menus.size();i++){
+								Map<String, Object> menu = menus.get(i);
+					%>
+								<li class="tooltips <%if(i==0){ %> active <%} %>" data-toggle="tooltip" title="<%=(String)menu.get("name")%>">
+									<a data-toggle="tab" class="_menus" data-fln="<%=(String)menu.get("fln")%>" data-target="#_menu_<%=(i+1)%>">
+										<i class="<%=(String)menu.get("iconType")%> <%if("CLASS".equals(menu.get("iconCodeType"))){ %> <%=(String)menu.get("icon") %> <%} %>">
+											<%if("UNICODE".equals(menu.get("iconCodeType"))){ %> &#x<%=(String)menu.get("icon") %>; <%}%>
+										</i>
+									</a>
+								</li>
+					<%		
+							}
+						}
+					%>
+					<li class="tooltips" data-toggle="tooltip" title="主菜单">
 						<a data-toggle="tab" data-target="#mainmenu">
 							<i class=" fa fa-home"></i>
 						</a>
@@ -144,16 +164,25 @@
 							<i class="fa fa-cog"></i>
 						</a>
 					</li>
-					<li class="tooltips" data-toggle="tooltip" title="更多">
-						<a data-toggle="tab" data-target="#more">
-							<i class="fa fa-ellipsis-h"></i>
-						</a>
-					</li>
 				</ul>
 
 				<div class="tab-content">
+				<% 
+						if(webCtx!=null){
+							List<Map<String, Object>> menus = webCtx.getMainMenu();
+							for(int i=0;i<menus.size();i++){
+								Map<String, Object> menu = menus.get(i);
+					%>
+								<div class="tab-pane <%if(i==0){ %> active <%} %>" id="_menu_<%=(i+1)%>">
+								   <%=(String)menu.get("name")%> 数据加载中...
+								</div>
+					<%		
+							}
+						}
+					%>
+					
 					<!-- ################# MAIN MENU ################### -->
-					<div class="tab-pane active" id="mainmenu">
+					<div class="tab-pane" id="mainmenu">
 						<div class="input-group" style="padding: 0px 5px 5px 5px;">
 							<input type="text" class="form-control" placeholder="菜单搜索...">
 							<span class="input-group-btn">
@@ -271,9 +300,6 @@
 						<div id="sysMenus">
             			</div>
 					</div>
-					<div class="tab-pane" id="more">
-						<h5 class="sidebar-title">其他...</h5>
-					</div>
 					<!-- tab-pane -->
 				</div>
 				<!-- tab-content -->
@@ -365,12 +391,15 @@ $(document).ready(function() {
 	                          ,{title:'基础数据',icon:'fa fa-cogs',child:[
 	                              {title:'计量单位',icon:'fa fa-cogs',url:'base/measureunits/list'}
             					  ,{title:'物料信息',icon:'fa fa-cogs',url:'base/materials/list'}
+            					  ,{title:'Icon图标',icon:'fa fa-cogs',url:'/base/web/font'}
 	                          ]}
 	                         ,{title:'系统管理',icon:'fa fa-cogs',child:[
 								{title:'组织管理',icon:'fa fa-cogs',url:'base/orgs/list'}
 						   		,{title:'附件管理',icon:'fa fa-server',url:'base/ftps/list'}
 							 ]}
-	                        ,{title:'门户管理',icon:'fa fa-home',child:[{title:'菜单管理'}]}
+	                        ,{title:'门户管理',icon:'fa fa-home',child:[
+	                            {title:'菜单管理',icon:'fa fa-cogs',url:'base/home/menus/list'}
+	                         ]}
 							,{title:'安全管理',icon:'fa fa-star',child:[
 								{title:'工作职责',icon:'fa fa-users',url:'base/jobdutys/list'},
 								{title:'岗位管理',icon:'fa fa-users',url:'base/positions/list'},
@@ -392,6 +421,21 @@ $(document).ready(function() {
 
 	$('#userSet').click(function(){
 		openUserSetUI();
+	});
+	var menuUrl = "/main/menu";
+	$('._menus').each(function(){
+		var _fln = $(this).data('fln');
+		var target = $(this).data('target');
+		if(!webUtil.isEmpty(_fln)&&!webUtil.isEmpty(target)){
+			var params ={fln:_fln};
+			webUtil.ajaxData({url:menuUrl,data:params,success:function(data){
+				var menusData = data.data;
+				if(!webUtil.isEmpty(menusData)){
+					$(target).html('');
+					$(target).myPillTreeMenu('init',menusData);
+				}
+			}});
+		}
 	});
 })
 </script>

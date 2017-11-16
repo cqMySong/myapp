@@ -9,6 +9,34 @@
 %>
 <link rel="stylesheet" href="<%=appRoot%>/assets/lib/fontawesome/css/font-awesome.css"/>
 <link rel="stylesheet" href="<%=appRoot%>/assets/css/quirk.css"/>
+<style type="text/css">
+.fm-sidebar .tag-list li a {
+	width: 40px;padding: 5px 5px;
+	font-size: 14px;text-align: center;
+	height:25px;vertical-align: middle;
+	background-color: #259dab;color: #fff;
+}
+.fm-sidebar .tag-list li a.fa.sel::after {
+  content: "\f00c";
+  position: relative;
+  top: -8px;
+  right: -5px;
+  border-radius: 6px;
+  background-color: #d9534f;
+  font-size:10px;
+  opacity: .9;
+}
+.fm-sidebar .tag-list li a.glyphicon.sel::after {
+  content: "\e013";
+  position: relative;
+  top: -21px;
+  right: -13px;
+  border-radius: 4px;
+  background-color: #d9534f;
+  font-size:10px;
+  opacity: .9;
+}
+</style>
 <script type="text/javascript">
     var app = {};
     app.root = '<%=appRoot%>';
@@ -22,7 +50,7 @@
 <script src="<%=appRoot%>/assets/lib/jquery-toggles/toggles.js"></script>
 <script src="<%=appRoot%>/assets/js/quirk.js"></script>
 </head>
-<body style="padding: 5px;">
+<body style="padding: 5px;" class="panel">
 	<div class="panel">
 		<ul class="nav nav-tabs nav-line" >
 			<li class="active" style="padding-top: 10px;">
@@ -38,7 +66,8 @@
 		</ul>
 		<div class="tab-content">
 			<div class="tab-pane active" id="fa">
-				<div class="row">
+			<div class="fm-sidebar">
+				<ul class="tag-list">
 					<% 
 					{
 						String f1 = "f";
@@ -55,33 +84,35 @@
 							if("f2e1".equals(fa_icon)) isGo = false;
 							if(!isGo) break;
 					%>
-					<div class="fa-hover col-md-1 col-sm-3">
-						<i class="fa" style="color: #259dab;font-size: 14px;">
-							&nbsp;&#x<%=fa_icon%>;
-						</i>
-						&nbsp;' \<%=fa_icon%>'	
-					</div>
+					<li>
+						<a class="fa" type="fa" codeType="UNICODE" code="<%=fa_icon%>"  href="#">
+							&#x<%=fa_icon%>;
+						</a>
+							
+					</li>
 					<%
 								}
 							}
 						}
 					}
 					%>
+				</ul>
 				</div>
 				<div style="height: 20px;"> </div>
 			</div>
 			<div class="tab-pane" id="glyphicon">
-				<div class="row">
+				<div class="fm-sidebar">
+				<ul class="tag-list">
 					<%
 						String[] other = "2a,2b,20ac,2601,2709,270f,26fa,f8ff,231b,00a5,20bd".split(",");
 						for(String gy_icon:other){
 					%>
-						<div class="fa-hover col-md-1 col-sm-3">
-							<i class="glyphicon" style="color: #259dab;font-size: 14px;">
-								&nbsp;&#x<%=gy_icon%>;
-							</i>
-							&nbsp;'\<%=gy_icon%>'	
-						</div>
+						<li>
+							<a class="glyphicon" type="glyphicon" codeType="UNICODE" code="<%=gy_icon%>" href="#">
+								&#x<%=gy_icon%>;
+							</a>
+								
+						</li>
 					<%} %>
 					
 					<% 
@@ -96,15 +127,16 @@
 								gy_icon = f1+i;
 							}
 					%>
-					<div class="fa-hover col-md-1 col-sm-3">
-						<i class="glyphicon" style="color: #259dab;font-size: 14px;">
-							&nbsp;&#x<%=gy_icon%>;
-						</i>
-						&nbsp;'\<%=gy_icon%>'	
-					</div>
+					<li >
+						<a class="glyphicon" type="glyphicon" codeType="UNICODE" code="<%=gy_icon%>" href="#">
+							&#x<%=gy_icon%>;
+						</a>
+							
+					</li>
 					<%
 						}
 					%>
+				</ul>
 				</div>
 			</div>
 		</div>
@@ -112,9 +144,22 @@
 	
 </body>
 <script type="text/javascript">
-	
+function getIconData(){
+	var selIcon = $('a.sel').eq(0);
+	if(selIcon){
+		var iconObj = {};
+		iconObj.icon = selIcon.attr('code');
+		iconObj.iconCodeType = selIcon.attr('codeType');
+		iconObj.iconType = selIcon.attr('type');
+		return iconObj;
+	}
+	return null;
+}
 $(document).ready(function() {
-	
+	$('ul.tag-list>li>a').on('click',function(){
+		$('a.sel').removeClass('sel');
+		$(this).addClass('sel');
+	});
 })
 </script>
 </html>

@@ -71,7 +71,7 @@ function setCurPeriod(val,query){
 		curPeriod = val;
 		var newYmd = val.format('yyyyMMdd');
 		if(newYmd!=begData_ymd){
-			endData_ymd = val.addDays(7).format('yyyyMMdd');
+			endData_ymd = val.addDays(6).format('yyyyMMdd');
 			$('#endDate').val(endData_ymd);
 			begData_ymd = newYmd;
 			if(query){

@@ -13,6 +13,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.myapp.core.base.service.impl.AbstractBaseService;
+import com.myapp.core.base.setting.SystemConstant;
 import com.myapp.core.entity.BaseOrgInfo;
 import com.myapp.core.entity.JobDutyInfo;
 import com.myapp.core.entity.PermissionInfo;
@@ -20,9 +21,10 @@ import com.myapp.core.entity.PositionInfo;
 import com.myapp.core.entity.PositionJobDutyInfo;
 import com.myapp.core.entity.UserInfo;
 import com.myapp.core.entity.UserPositionInfo;
+import com.myapp.core.exception.db.QueryException;
 import com.myapp.core.model.MyWebContext;
+import com.myapp.core.service.MainMenuService;
 import com.myapp.core.service.PermissionAssignService;
-import com.myapp.core.service.PermissionService;
 import com.myapp.core.util.BaseUtil;
 
 
@@ -37,11 +39,12 @@ import com.myapp.core.util.BaseUtil;
 @Transactional
 @Service("webContextService")
 public class WebContextService extends AbstractBaseService{
-	protected static String WEBCONTEXT_NAME = "webCtx"; 
 	@Resource
 	public PermissionAssignService permissionAssignService;
+	@Resource
+	public MainMenuService mainMenuService;
 	
-	public void initWebContext(HttpServletRequest request,UserInfo uInfo){
+	public void initWebContext(HttpServletRequest request,UserInfo uInfo) throws QueryException{
 		clearWebContext(request);
 		if(uInfo!=null){
 			MyWebContext myWebCtx = new MyWebContext();
@@ -104,11 +107,12 @@ public class WebContextService extends AbstractBaseService{
 					
 					//设置权限范围
 					myWebCtx.setPermission(getUserPermissions(uInfo.getId()));
-					
 					System.out.println(upInfo.getPosition().getName());
 				}
 			}
-			request.getSession().setAttribute(WEBCONTEXT_NAME, myWebCtx);
+			List menus = mainMenuService.getTopMainMenu(uInfo);
+			myWebCtx.setMainMenu(menus);
+			request.getSession().setAttribute(SystemConstant.WEBCONTEXT_NAME, myWebCtx);
 		}
 	}
 	
@@ -162,7 +166,7 @@ public class WebContextService extends AbstractBaseService{
 	}
 	
 	public void clearWebContext(HttpServletRequest request){
-		request.getSession().removeAttribute(WEBCONTEXT_NAME);
+		request.getSession().removeAttribute(SystemConstant.WEBCONTEXT_NAME);
 	}
 	
 	public static void main(String[] args){

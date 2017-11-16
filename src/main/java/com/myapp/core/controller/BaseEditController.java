@@ -577,8 +577,6 @@ public abstract class BaseEditController extends CoreBaseController {
 						editMap.put(entryKey, entryCrteria.list());
 				}
 				//
-				
-				
 			}
 			//然后再把f7的集合处理成对象
 			 for (Map.Entry<String,Object> entry : F7Col.entrySet()) {

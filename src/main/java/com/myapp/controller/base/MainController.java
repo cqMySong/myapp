@@ -1,10 +1,8 @@
 package com.myapp.controller.base;
 
 import java.security.NoSuchAlgorithmException;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Set;
 
 import javax.annotation.Resource;
 
@@ -16,19 +14,15 @@ import org.springframework.web.servlet.ModelAndView;
 import com.alibaba.fastjson.JSONObject;
 import com.myapp.core.annotation.AuthorAnn;
 import com.myapp.core.base.controller.BaseController;
-import com.myapp.core.base.service.impl.AbstractBaseService;
-import com.myapp.core.entity.BaseOrgInfo;
 import com.myapp.core.entity.UserInfo;
 import com.myapp.core.enums.UserState;
+import com.myapp.core.exception.db.QueryException;
 import com.myapp.core.exception.db.SaveException;
-import com.myapp.core.model.MyWebContext;
 import com.myapp.core.model.WebDataModel;
+import com.myapp.core.service.MainMenuService;
 import com.myapp.core.service.UserService;
 import com.myapp.core.service.base.WebContextService;
 import com.myapp.core.util.BaseUtil;
-import com.myapp.entity.ec.plan.ProjectTotalPlanInfo;
-import com.myapp.entity.ec.plan.ProjectTotalPlanItemInfo;
-import com.myapp.service.ec.plan.ProjectTotalPlanService;
 
 /**
  *-----------MySong---------------
@@ -46,6 +40,9 @@ public class MainController extends BaseController {
 	
 	@Resource
 	public WebContextService webContextService;
+	
+	@Resource
+	public MainMenuService mainMenuService;
 	
 	@RequestMapping("/index")
 	@AuthorAnn(doLongin=true,doPermission=false)
@@ -147,4 +144,23 @@ public class MainController extends BaseController {
 		}
 		return ajaxModel();
 	}
+	@AuthorAnn(doLongin=true,doPermission=false)
+	@ResponseBody
+	@RequestMapping("/menu")
+	public WebDataModel getMainMenu(){
+		init();
+		String fln = request.getParameter("fln");
+		if(BaseUtil.isEmpty(fln)){
+			setErrorMesg("系统功能菜单编码为空!");
+		}else{
+			try {
+				data = mainMenuService.getUserMenuJson(fln, getCurUser());
+			} catch (QueryException e) {
+				e.printStackTrace();
+				setExceptionMesg("获取用户菜单异常!"+e.getMessage());
+			}
+		}
+		return ajaxModel();
+	}
+	
 }

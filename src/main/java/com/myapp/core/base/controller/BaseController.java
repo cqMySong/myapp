@@ -11,6 +11,7 @@ import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.servlet.ModelAndView;
 
+import com.myapp.core.base.setting.SystemConstant;
 import com.myapp.core.entity.UserInfo;
 import com.myapp.core.enums.BaseMethodEnum;
 import com.myapp.core.model.MyWebContext;
@@ -146,7 +147,7 @@ public class BaseController {
     }
     
     public MyWebContext getCurWebContext(){
-    	Object objCtx = request.getSession().getAttribute("webCtx");
+    	Object objCtx = request.getSession().getAttribute(SystemConstant.WEBCONTEXT_NAME);
     	if(objCtx!=null&&objCtx instanceof MyWebContext){
     		return (MyWebContext)objCtx;
     	}

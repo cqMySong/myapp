@@ -373,11 +373,14 @@ $(document).ready(function() {
 							{title:'预算编制',icon:'fa fa-home',child:[
 								{title:'预算编制',icon:'fa fa-building-o',url:'ec/budget/budgetings/list'},
 								{title:'预算询价',icon:'fa fa-building-o',url:'ec/budget/enquiryprices/list'},
+                                {title:'材设准备一览表',icon:'fa fa-building-o',url:'ec/budget/enquirypricedetail/list'},
 							]},
 							{title:'采购管理',icon:'fa fa-home',child:[
 								{title:'材料申购',icon:'fa fa-building-o',url:'ec/purchase/applymaterials/list'},
 								{title:'采购合同',icon:'fa fa-building-o',url:'ec/purchase/purchasecontracts/list'},
-                                {title:'采购入库',icon:'fa fa-building-o',url:'ec/purchase/purchasestocks/list'}]},
+                                {title:'采购入库',icon:'fa fa-building-o',url:'ec/purchase/purchasestocks/list'},
+                                {title:'材料申购、供应台账',icon:'fa fa-building-o',url:'ec/purchase/supplyledger/list'},
+							]},
 							{title:'库存管理',icon:'fa fa-home',child:[
 								{title:'领料出库',icon:'fa fa-building-o',url:'ec/stock/stockouts/list'},
                                 {title:'物料归还',icon:'fa fa-building-o',url:'ec/stock/stockreverts/list'},

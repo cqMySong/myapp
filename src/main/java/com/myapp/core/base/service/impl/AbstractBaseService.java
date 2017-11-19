@@ -266,6 +266,7 @@ public abstract class AbstractBaseService implements IAbstractBaseService {
 	public Criteria initQueryCriteria() throws QueryException {
 		return getBaseDao().initQueryCriteria(getEntityClass());
 	}
+
 	
 	public Criteria initQueryCriteria(String entityName) throws QueryException {
 		return getBaseDao().initQueryCriteria(entityName);

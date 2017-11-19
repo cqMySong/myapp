@@ -1,9 +1,12 @@
 package com.myapp.service.ec.purchase;
 
+import com.myapp.core.exception.db.QueryException;
 import com.myapp.core.service.base.BaseInterfaceService;
 import com.myapp.entity.ec.purchase.PurchaseStockDetailInfo;
 import org.activiti.engine.delegate.DelegateExecution;
 import org.activiti.engine.delegate.ExecutionListener;
+import org.hibernate.Criteria;
+import org.hibernate.sql.JoinType;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
@@ -28,5 +31,19 @@ public class PurchaseStockDetailService extends BaseInterfaceService<PurchaseSto
 
     }
 
-
+    @Override
+    public Criteria initQueryCriteria() throws QueryException {
+        Criteria criteria = super.initQueryCriteria();
+        criteria.createAlias("parent","pr", JoinType.INNER_JOIN);
+        criteria.createAlias("purchaseContractDetailInfo","pcd", JoinType.INNER_JOIN);
+        criteria.createAlias("purchaseContractDetailInfo.applyMaterialDetailInfo","amd",
+                JoinType.INNER_JOIN);
+        criteria.createAlias("purchaseContractDetailInfo.applyMaterialDetailInfo.parent","amdpr",
+                JoinType.INNER_JOIN);
+        criteria.createAlias("purchaseContractDetailInfo.applyMaterialDetailInfo.budgetingDetailInfo",
+                "bdi",JoinType.INNER_JOIN);
+        criteria.createAlias("purchaseContractDetailInfo.applyMaterialDetailInfo.budgetingDetailInfo.material",
+                "mater",JoinType.INNER_JOIN);
+        return criteria;
+    }
 }

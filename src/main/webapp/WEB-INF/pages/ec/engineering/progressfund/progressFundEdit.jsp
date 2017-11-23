@@ -17,7 +17,7 @@
 		<div class="row">
 			<div class="col-sm-4">
 				<div class="input-group">
-					<span class="input-group-addon lable">进度款单号</span>
+					<span class="input-group-addon lable">付款单号</span>
 					<input class="input-item form-control require" name="number"/>
 					<input class="input-item form-control" type="hidden" name="name"/>
 				</div>
@@ -39,19 +39,45 @@
 		<div class="row mt10">
 			<div class="col-sm-4">
 				<div class="input-group">
+					<span class="input-group-addon lable">合同类型</span>
+					<select name="contractType" data-opt="{type:'select',selected:'PROPRIETOR',url:'base/common/combox?enum=com.myapp.core.enums.ContractType'}"
+							class="form-control input-item require read">
+					</select>
+				</div>
+			</div>
+			<div class="col-sm-4">
+				<div class="input-group">
+					<span class="input-group-addon lable">费用类型</span>
+					<select name="expenseType" data-opt="{type:'select',selected:'MATERIAL',url:'base/common/combox?enum=com.myapp.core.enums.ExpenseType'}"
+							class="form-control input-item require read">
+					</select>
+				</div>
+			</div>
+			<div class="col-sm-4">
+				<div class="input-group">
+					<span class="input-group-addon lable">付款类型</span>
+					<select name="paymentType" data-opt="{type:'select',selected:'INTERIM',url:'base/common/combox?enum=com.myapp.core.enums.PaymentType'}"
+							class="form-control input-item require">
+					</select>
+				</div>
+			</div>
+		</div>
+		<div class="row mt10">
+			<div class="col-sm-4">
+				<div class="input-group">
 					<span class="input-group-addon lable">合同金额</span>
 					<input type="number" name="contractAmount" class="form-control input-item require read"/>
 				</div>
 			</div>
 			<div class="col-sm-4">
 				<div class="input-group">
-					<span class="input-group-addon lable">结算金额</span>
+					<span class="input-group-addon lable">付款金额</span>
 					<input type="number" name="settleAmount" class="form-control input-item require"/>
 				</div>
 			</div>
 			<div class="col-sm-4">
 				<div class="input-group">
-					<span class="input-group-addon lable">结算日期</span>
+					<span class="input-group-addon lable">付款日期</span>
 					<input type="text" name="settleDate" class="form-control input-item require" data-opt="{type:'date'}">
 				</div>
 			</div>
@@ -83,7 +109,7 @@
 		<div class="row mt10">
 			<div class="col-sm-12">
 				<div class="input-group">
-					<span class="input-group-addon lable">进度款说明</span>
+					<span class="input-group-addon lable">付款说明</span>
 					<textarea name="remark" style="height:40px;" class="input-item form-control"></textarea>
 				</div>
 			</div>
@@ -144,6 +170,8 @@
 		if(newData){
 			$("input[name='contractAmount']").val(newData.amount);
             $("input[name='ecUnitInfo']").myF7().setData({id:newData.ecUnitInfo_id,name:newData.ecUnitInfo_name});
+            $("select[name='contractType']").select2().val(newData.contractType.key).trigger("change");
+            $("select[name='expenseType']").select2().val(newData.expenseType.key).trigger("change");
 		}
     }
     /**

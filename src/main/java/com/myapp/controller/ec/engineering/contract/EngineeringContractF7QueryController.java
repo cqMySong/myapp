@@ -5,6 +5,7 @@ import com.myapp.core.controller.BaseF7QueryController;
 import com.myapp.core.entity.MaterialInfo;
 import com.myapp.core.enums.ContractType;
 import com.myapp.core.enums.DataTypeEnum;
+import com.myapp.core.enums.ExpenseType;
 import com.myapp.core.enums.MaterialType;
 import com.myapp.core.exception.db.QueryException;
 import com.myapp.core.model.ColumnModel;
@@ -42,6 +43,10 @@ public class EngineeringContractF7QueryController extends BaseF7QueryController 
 		List<ColumnModel> cols = super.getDataBinding();
 		ColumnModel col =  new ColumnModel("contractType",DataTypeEnum.ENUM,ContractType.class);
 		col.setAlias_zh("合同类型");
+		cols.add(col);
+
+		col = new ColumnModel("expenseType",DataTypeEnum.ENUM,ExpenseType.class);
+		col.setAlias_zh("费用类型");
 		cols.add(col);
 
 		col = new ColumnModel("number",DataTypeEnum.STRING);

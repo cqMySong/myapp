@@ -55,7 +55,7 @@
 
 	$(document).ready(function() {
 			var treeNode2QueryProp = ["id","name","number","longNumber","type"];
-			var editWin ={title:'工程进度款',width:900,height:(window.outerHeight-260)};
+			var editWin ={title:'工程付款',width:900,height:(window.outerHeight-260)};
 			var treeOpt = {
 					setting:{
 						data: {

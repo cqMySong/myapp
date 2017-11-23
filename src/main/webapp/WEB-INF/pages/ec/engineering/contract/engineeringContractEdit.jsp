@@ -50,20 +50,29 @@
 			</div>
 			<div class="col-sm-4">
 				<div class="input-group">
-					<span class="input-group-addon lable">负责人</span>
-					<input name="director" class="input-item form-control require"
-						   data-opt="{type:'f7',uiWin:{title:'人员选择',height:600,width:800,url:'base/userf7'}}" />
-					<input name="directorName" type="hidden" class="input-item form-control"/>
+					<span class="input-group-addon lable">合同类别</span>
+					<select name="contractType" data-opt="{type:'select',selected:'PROPRIETOR',url:'base/common/combox?enum=com.myapp.core.enums.ContractType'}"
+							class="form-control input-item require">
+					</select>
 				</div>
 			</div>
+
 		</div>
 		<div class="row mt10">
 			<div class="col-sm-4">
 				<div class="input-group">
-					<span class="input-group-addon lable">合同类别</span>
-					<select name="contractType" data-opt="{type:'select',selected:'MATERIAL',url:'base/common/combox?enum=com.myapp.core.enums.ContractType'}"
+					<span class="input-group-addon lable">费用类型</span>
+					<select name="expenseType" data-opt="{type:'select',selected:'MATERIAL',url:'base/common/combox?enum=com.myapp.core.enums.ExpenseType'}"
 							class="form-control input-item require">
 					</select>
+				</div>
+			</div>
+			<div class="col-sm-4">
+				<div class="input-group">
+					<span class="input-group-addon lable">负责人</span>
+					<input name="director" class="input-item form-control require"
+						   data-opt="{type:'f7',uiWin:{title:'人员选择',height:600,width:800,url:'base/userf7'}}" />
+					<input name="directorName" type="hidden" class="input-item form-control"/>
 				</div>
 			</div>
 			<div class="col-sm-4">
@@ -73,6 +82,9 @@
 						   data-opt="{type:'f7',uiWin:{title:'工程项目',height:600,width:300,url:'ec/basedata/project'}}" />
 				</div>
 			</div>
+
+		</div>
+		<div class="row mt10">
 			<div class="col-sm-4">
 				<div class="input-group">
 					<span class="input-group-addon lable">业务状态</span>

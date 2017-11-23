@@ -5,9 +5,7 @@ import com.myapp.core.annotation.PermissionAnn;
 import com.myapp.core.base.service.impl.AbstractBaseService;
 import com.myapp.core.controller.BaseListController;
 import com.myapp.core.entity.UserInfo;
-import com.myapp.core.enums.BaseMethodEnum;
-import com.myapp.core.enums.BillState;
-import com.myapp.core.enums.DataTypeEnum;
+import com.myapp.core.enums.*;
 import com.myapp.core.model.ColumnModel;
 import com.myapp.core.util.BaseUtil;
 import com.myapp.core.util.WebUtil;
@@ -93,6 +91,8 @@ public class EngineeringContractListController extends BaseListController {
         cols.add(new ColumnModel("directorName"));
         cols.add(new ColumnModel("contractDate",DataTypeEnum.DATE));
         cols.add(new ColumnModel("amount",DataTypeEnum.NUMBER));
+        cols.add(new ColumnModel("contractType", DataTypeEnum.ENUM,ContractType.class));
+        cols.add(new ColumnModel("expenseType", DataTypeEnum.ENUM,ExpenseType.class));
 
         ColumnModel project = new ColumnModel("project",DataTypeEnum.F7,"id,name");
         project.setClaz(ProjectInfo.class);

@@ -70,7 +70,8 @@ public class EngineeringContractEditController extends BaseBillEditController {
         cols.add(new ColumnModel("amount",DataTypeEnum.NUMBER));
         cols.add(new ColumnModel("director",DataTypeEnum.F7,UserInfo.class));
         cols.add(new ColumnModel("contractDate",DataTypeEnum.DATE));
-        cols.add(new ColumnModel("contractType",DataTypeEnum.ENUM, ContractType.class));
+        cols.add(new ColumnModel("contractType", DataTypeEnum.ENUM,ContractType.class));
+        cols.add(new ColumnModel("expenseType", DataTypeEnum.ENUM,ExpenseType.class));
         cols.add(new ColumnModel("billState",DataTypeEnum.ENUM, BillState.class));
         cols.add(new ColumnModel("createUser",DataTypeEnum.F7,UserInfo.class));
         cols.add(new ColumnModel("lastUpdateUser",DataTypeEnum.F7,UserInfo.class));

@@ -69,6 +69,7 @@
 				<table name="stockOutDetailInfos" class="input-entry" >
 					<thead>
 						<tr>
+							<th data-field="stockInfo" data-width="100" data-type="f7" data-locked="true">入库单号</th>
 							<th data-field="materialType" data-width="100" data-type="select" data-locked="true">材料类型</th>
 							<th data-field="material" data-type="f7"  data-width="150"
 								data-editor="{uiWin:{title:'库存信息',height:580,width:880,url:'ec/stock/stockF7',uiParams:getParams}}">物料名称</th>
@@ -136,17 +137,16 @@
         if(webUtil.isEmpty(stockOutDetailInfosEntry)) return;
         if(obj.field=='material'){
             if(!webUtil.isEmpty(stockOutDetailInfosEntry)){
-                var selectPlanRow = obj.rowData[obj.field];
-                if(!selectPlanRow){
+                var stockRow = obj.rowData[obj.field];
+                if(!stockRow){
                     return false;
 				}
-				console.log(obj);
-                var materialType = {key:selectPlanRow.materialInfo_materialType_id,val:selectPlanRow.materialInfo_materialType};
-                stockOutDetailInfosEntry.setTableCellValue(obj.rowIndex,'specification',selectPlanRow.specification);
+                var materialType = {key:stockRow.materialInfo_materialType_id,val:stockRow.materialInfo_materialType};
+                stockOutDetailInfosEntry.setTableCellValue(obj.rowIndex,'specification',stockRow.specification);
                 stockOutDetailInfosEntry.setTableCellValue(obj.rowIndex,'materialType',materialType);
-                stockOutDetailInfosEntry.setTableCellValue(obj.rowIndex,'measureUnit',selectPlanRow.measureUnit);
-                stockOutDetailInfosEntry.setTableCellValue(obj.rowIndex,'stockCount',selectPlanRow.count);
-
+                stockOutDetailInfosEntry.setTableCellValue(obj.rowIndex,'measureUnit',stockRow.measureUnit);
+                stockOutDetailInfosEntry.setTableCellValue(obj.rowIndex,'stockCount',stockRow.count);
+                stockOutDetailInfosEntry.setTableCellValue(obj.rowIndex,'stockInfo',{id:stockRow.stock_id,name:stockRow.inStockNumber});
             }
 		}
     }

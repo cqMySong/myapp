@@ -37,6 +37,10 @@ public class StockOutDetailInfo extends CoreBaseEntryInfo<StockOutInfo> {
      * 备注
      */
     private String remark;
+    /**
+     * 库存信息
+     */
+    private StockInfo stockInfo;
 
     @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "fMaterialId")
@@ -82,5 +86,15 @@ public class StockOutDetailInfo extends CoreBaseEntryInfo<StockOutInfo> {
 
     public void setRemark(String remark) {
         this.remark = remark;
+    }
+
+    @OneToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "fStockId")
+    public StockInfo getStockInfo() {
+        return stockInfo;
+    }
+
+    public void setStockInfo(StockInfo stockInfo) {
+        this.stockInfo = stockInfo;
     }
 }

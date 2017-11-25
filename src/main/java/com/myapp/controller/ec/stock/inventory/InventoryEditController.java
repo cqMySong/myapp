@@ -63,6 +63,7 @@ public class InventoryEditController extends BaseBillEditController {
                     stockInfo.setId((String) stockMap.get("id"));
                     stockInfo.setSpecification((String) stockMap.get("specification"));
                     stockInfo.setMeasureUnit((String) stockMap.get("measureUnit"));
+                    stockInfo.setInStockNumber((String) stockMap.get("inStockNumber"));
                     materialInfo = new MaterialInfo();
                     MaterialInfo materialMap = (MaterialInfo) stockMap.get("materialInfo");
                     materialInfo.setId(materialMap.getId());
@@ -101,6 +102,8 @@ public class InventoryEditController extends BaseBillEditController {
             for(int i=0;i<stockInventoryDetailInfos.size();i++){
                 stockInventoryDetail = stockInventoryDetailInfos.getJSONObject(i);
                 stockInfo = stockInventoryDetail.getJSONObject("stockInfo");
+                stockInfo.put("name",stockInfo.getString("inStockNumber"));
+                stockInventoryDetail.put("stockInfo",stockInfo);
                 stockInventoryDetail.put("specification",stockInfo.getString("specification"));
                 stockInventoryDetail.put("measureUnit",stockInfo.getString("measureUnit"));
                 materialInfo = stockInventoryDetail.getJSONObject("material");
@@ -137,7 +140,7 @@ public class InventoryEditController extends BaseBillEditController {
         ColumnModel stockInventoryDetailInfos = new ColumnModel("stockInventoryDetailInfos",DataTypeEnum.ENTRY,
                 StockInventoryDetailInfo.class);
 
-        ColumnModel stockInfo = new ColumnModel("stockInfo",DataTypeEnum.F7,"id,specification,measureUnit");
+        ColumnModel stockInfo = new ColumnModel("stockInfo",DataTypeEnum.F7,"id,specification,measureUnit,inStockNumber");
         stockInfo.setClaz(StockInfo.class);
         stockInventoryDetailInfos.getCols().add(stockInfo);
 

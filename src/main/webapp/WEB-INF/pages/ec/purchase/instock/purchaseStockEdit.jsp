@@ -150,7 +150,6 @@
                 if(!selectPlanRow){
                     return false;
 				}
-				console.log(obj);
                 var purchaseContractInfo = {id:selectPlanRow.parent_id,
                     name:selectPlanRow.parent_name};
                 purchaseStockDetailInfosEntry.setTableCellValue(obj.rowIndex,'purchaseContractInfo',purchaseContractInfo);

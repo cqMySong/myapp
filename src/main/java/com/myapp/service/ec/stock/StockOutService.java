@@ -39,6 +39,7 @@ public class StockOutService extends BaseInterfaceService<StockOutInfo> {
                 stockOutDetailInfo.setMaterial(stockOutDetailInfoOld.getMaterial());
                 stockOutDetailInfo.setMeasureUnit(stockOutDetailInfoOld.getMeasureUnit());
                 stockOutDetailInfo.setId(stockOutDetailInfoOld.getId());
+                stockOutDetailInfo.setStockInfo(stockOutDetailInfoOld.getStockInfo());
                 stockOutDetailInfos.add(stockOutDetailInfo);
             }
             stockOutInfo.setOldStockOutDetails(stockOutDetailInfos);
@@ -69,8 +70,7 @@ public class StockOutService extends BaseInterfaceService<StockOutInfo> {
             if(!isExist){
                 diffCount = stockOutDetailInfo.getCount();
             }
-            stockService.saveStockByMaterialId(stockOutInfoNew.getProject(),diffCount,
-                    stockOutDetailInfo.getMaterial(),null);
+            stockService.subByStock(diffCount,stockOutDetailInfo.getStockInfo());
         }
         for(StockOutDetailInfo stockOutDetailNew:stockOutInfoNew.getStockOutDetailInfos()){
             isExist = false;
@@ -82,8 +82,7 @@ public class StockOutService extends BaseInterfaceService<StockOutInfo> {
             }
 
             if(!isExist){
-                stockService.saveStockByMaterialId(stockOutInfoNew.getProject(),stockOutDetailNew.getCount().negate(),
-                        stockOutDetailNew.getMaterial(),null);
+                stockService.subByStock(stockOutDetailNew.getCount(),stockOutDetailNew.getStockInfo());
             }
         }
         return super.saveEntity(entity);

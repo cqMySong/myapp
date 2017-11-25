@@ -37,6 +37,7 @@ public class StockRevertService extends BaseInterfaceService<StockRevertInfo> {
                 stockRevertDetail.setMaterial(stockRevertDetailInfoOld.getMaterial());
                 stockRevertDetail.setMeasureUnit(stockRevertDetailInfoOld.getMeasureUnit());
                 stockRevertDetail.setId(stockRevertDetailInfoOld.getId());
+                stockRevertDetail.setStockOutDetailInfo(stockRevertDetailInfoOld.getStockOutDetailInfo());
                 stockRevertDetails.add(stockRevertDetail);
             }
             stockRevertInfo.setOldStockRevertDetails(stockRevertDetails);
@@ -67,8 +68,7 @@ public class StockRevertService extends BaseInterfaceService<StockRevertInfo> {
             if(!isExist){
                 diffCount = stockRevertDetailInfo.getCount();
             }
-            stockService.saveStockByMaterialId(stockRevertInfoNew.getProject(),diffCount,
-                    stockRevertDetailInfo.getMaterial(),null);
+            stockService.subByStock(diffCount,stockRevertDetailInfo.getStockOutDetailInfo().getStockInfo());
         }
         for(StockRevertDetailInfo stockRevertDetailNew:stockRevertInfoNew.getStockRevertDetailInfos()){
             isExist = false;
@@ -80,10 +80,10 @@ public class StockRevertService extends BaseInterfaceService<StockRevertInfo> {
             }
 
             if(!isExist){
-                stockService.saveStockByMaterialId(stockRevertInfoNew.getProject(),stockRevertDetailNew.getCount(),
-                        stockRevertDetailNew.getMaterial(),null);
+                stockService.subByStock(stockRevertDetailNew.getCount().negate(),stockRevertDetailNew.getStockOutDetailInfo().getStockInfo());
             }
         }
         return super.saveEntity(entity);
     }
+
 }

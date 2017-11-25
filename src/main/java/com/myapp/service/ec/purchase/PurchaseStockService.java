@@ -50,6 +50,7 @@ public class PurchaseStockService extends BaseInterfaceService<PurchaseStockInfo
                 purchaseStockDetailInfo.setCount(purchaseStockDetailInfoOld.getCount());
                 purchaseStockDetailInfo.setPurchaseContractDetailInfo(purchaseStockDetailInfoOld.getPurchaseContractDetailInfo());
                 purchaseStockDetailInfo.setPurchaseContractInfo(purchaseStockDetailInfoOld.getPurchaseContractInfo());
+                purchaseStockDetailInfo.setParent(purchaseStockDetailInfoOld.getParent());
                 purchaseStockDetailInfoSet.add(purchaseStockDetailInfo);
             }
         }
@@ -73,16 +74,17 @@ public class PurchaseStockService extends BaseInterfaceService<PurchaseStockInfo
                 if(purchaseStockDetailOld.getId().equals(purchaseStockDetailNew.getId())){
                     isExist = true;
                     diffCount = purchaseStockDetailNew.getCount().subtract(purchaseStockDetailOld.getCount());
+                    stockService.saveByMaterialIdAndInStock(purchaseStockNew.getProject(),diffCount,
+                            purchaseStockDetailOld.getPurchaseContractDetailInfo().getMaterial(),
+                            purchaseStockDetailOld.getPurchaseContractDetailInfo(),purchaseStockDetailOld);
                     break;
                 }
             }
 
             if(!isExist){
-                diffCount = purchaseStockDetailOld.getCount().negate();
+                stockService.deleteByInStock(purchaseStockDetailOld);
             }
-            stockService.saveStockByMaterialId(purchaseStockNew.getProject(),diffCount,
-                    purchaseStockDetailOld.getPurchaseContractDetailInfo().getMaterial(),
-                    purchaseStockDetailOld.getPurchaseContractDetailInfo());
+
         }
         for(PurchaseStockDetailInfo purchaseStockDetailNew:purchaseStockNew.getPurchaseStockDetailInfos()){
             isExist = false;
@@ -94,9 +96,9 @@ public class PurchaseStockService extends BaseInterfaceService<PurchaseStockInfo
             }
 
             if(!isExist){
-                stockService.saveStockByMaterialId(purchaseStockNew.getProject(),purchaseStockDetailNew.getCount(),
+                stockService.saveByMaterialIdAndInStock(purchaseStockNew.getProject(),purchaseStockDetailNew.getCount(),
                         purchaseStockDetailNew.getPurchaseContractDetailInfo().getMaterial(),
-                        purchaseStockDetailNew.getPurchaseContractDetailInfo());
+                        purchaseStockDetailNew.getPurchaseContractDetailInfo(),purchaseStockDetailNew);
             }
         }
         return purchaseStockNew;

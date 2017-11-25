@@ -4,6 +4,8 @@ import com.myapp.core.annotation.MyEntityAnn;
 import com.myapp.core.base.entity.CoreInfo;
 import com.myapp.core.entity.MaterialInfo;
 import com.myapp.entity.ec.basedata.ProjectInfo;
+import com.myapp.entity.ec.purchase.PurchaseStockDetailInfo;
+import com.myapp.entity.ec.purchase.PurchaseStockInfo;
 
 import javax.persistence.*;
 import java.math.BigDecimal;
@@ -38,6 +40,18 @@ public class StockInfo extends CoreInfo {
      * 库存数量
      */
     private BigDecimal count;
+    /**
+     * 采购入库明细
+     */
+    private PurchaseStockDetailInfo purchaseStockDetailInfo;
+    /**
+     * 采购入库主表
+     */
+    private PurchaseStockInfo purchaseStockInfo;
+    /**
+     * 入库单号
+     */
+    private String inStockNumber;
     /**
      * 备注
      */
@@ -97,5 +111,34 @@ public class StockInfo extends CoreInfo {
 
     public void setRemark(String remark) {
         this.remark = remark;
+    }
+
+    @OneToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "fPurchaseStockDetailId")
+    public PurchaseStockDetailInfo getPurchaseStockDetailInfo() {
+        return purchaseStockDetailInfo;
+    }
+
+    public void setPurchaseStockDetailInfo(PurchaseStockDetailInfo purchaseStockDetailInfo) {
+        this.purchaseStockDetailInfo = purchaseStockDetailInfo;
+    }
+
+    @OneToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "fPurchaseStockId")
+    public PurchaseStockInfo getPurchaseStockInfo() {
+        return purchaseStockInfo;
+    }
+
+    public void setPurchaseStockInfo(PurchaseStockInfo purchaseStockInfo) {
+        this.purchaseStockInfo = purchaseStockInfo;
+    }
+
+    @Column(name="fInStockNumber",length = 100)
+    public String getInStockNumber() {
+        return inStockNumber;
+    }
+
+    public void setInStockNumber(String inStockNumber) {
+        this.inStockNumber = inStockNumber;
     }
 }

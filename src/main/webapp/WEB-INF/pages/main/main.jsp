@@ -143,11 +143,6 @@
 							}
 						}
 					%>
-					<li class="tooltips" data-toggle="tooltip" title="主菜单">
-						<a data-toggle="tab" data-target="#mainmenu">
-							<i class=" fa fa-home"></i>
-						</a>
-					</li>
 					<li class="tooltips" data-toggle="tooltip" title="个人邮箱">
 						<a data-toggle="tab" data-target="#emailmenu">
 							<i class="fa fa-envelope"></i>
@@ -157,11 +152,6 @@
 					<li class="tooltips" data-toggle="tooltip" title="通讯录">
 						<a data-toggle="tab" data-target="#contactmenu">
 							<i class="fa fa-user"></i>
-						</a>
-					</li>
-					<li class="tooltips" data-toggle="tooltip" title="系统管理">
-						<a data-toggle="tab" data-target="#settings">
-							<i class="fa fa-cog"></i>
 						</a>
 					</li>
 				</ul>
@@ -181,17 +171,6 @@
 						}
 					%>
 					
-					<!-- ################# MAIN MENU ################### -->
-					<div class="tab-pane" id="mainmenu">
-						<div class="input-group" style="padding: 0px 5px 5px 5px;">
-							<input type="text" class="form-control" placeholder="菜单搜索...">
-							<span class="input-group-btn">
-	            				<button class="btn btn-default" type="button"><i class="fa fa-search"></i></button>
-	          				</span>
-						</div>
-						<div id="userMenus"></div>
-					</div>
-					<!-- tab-pane -->
 
 					<!-- ######################## EMAIL MENU ##################### -->
 
@@ -295,12 +274,6 @@
 							</div>
 						</div>
 					</div>
-					<!-- tab-pane -->
-					<div class="tab-pane" id="settings">
-						<div id="sysMenus">
-            			</div>
-					</div>
-					<!-- tab-pane -->
 				</div>
 				<!-- tab-content -->
 			</div>
@@ -328,106 +301,10 @@ function getTopMainHeight(){
 	return $(top.document).height()-($('#headPanel').innerHeight()+$('#mainTab>ul.nav-tabs').height())-10;
 }
 $(document).ready(function() {
-	var userMenus = {menus:[
-							{title:'项目管理首页',icon:'fa fa-home'},
-							{title:'基础资料',icon:'fa fa-cogs',child:[
-                                {title:'单位',icon:'fa fa-cogs',url:'ec/basedata/ecunitList/list'}
-                               ,{title:'施工方案类别',icon:'fa fa-cogs',url:'ec/basedata/schemeTypeList/list'}
-                               ,{title:'技术分类',icon:'fa fa-cogs',url:'ec/basedata/skillclasss/list'}
-                               ,{title:'施工技术交底',icon:'fa fa-cogs',url:'ec/basedata/qmskillitems/list'}
-                               ,{title:'安全技术交底',icon:'fa fa-cogs',url:'ec/basedata/smskillitems/list'}
-                               ,{title:'检验批划分',icon:'fa fa-cogs',url:'ec/basedata/batchtests/list'}
-                               ,{title:'施工现场检查项目',icon:'fa fa-cogs',url:'ec/basedata/workcheckitems/list'}
-                               ,{title:'施工安全用电标准',icon:'fa fa-cogs',url:'ec/basedata/safeusepowers/list'}
-                               ,{title:'安全资料分类',icon:'fa fa-cogs',url:'base/datagroups/list?code=safedata'}
-							    ]},
-							{title:'项目基础数据',icon:'fa fa-home',child:[
-								{title:'工程项目',icon:'fa fa-building-o',url:'ec/basedata/projects/list'}
-								,{title:'项目结构类型',icon:'fa fa-cogs',url:'ec/basedata/structTypes/list'}
-								,{title:'施工方案',icon:'fa fa-cogs',url:'ec/basedata/schemelist/list'}
-								,{title:'项目单位工程',icon:'fa fa-cogs',url:'ec/basedata/prostructures/list'}
-								,{title:'项目分部工程',icon:'fa fa-cogs',url:'ec/basedata/prosubs/list'}
-								,{title:'项目分项工程',icon:'fa fa-cogs',url:'ec/basedata/prosubitems/list'}
-								,{title:'安保人员值班记录',icon:'fa fa-cogs',url:'ec/basedata/ondutyrecords/list'}
-								,{title:'项目安保预案',icon:'fa fa-cogs',url:'ec/basedata/prosecuritycases/list'}
-								,{title:'到访人员登记',icon:'fa fa-cogs',url:'ec/basedata/personvisitrecords/list'}
-								,{title:'到访车辆登记',icon:'fa fa-cogs',url:'ec/basedata/carvisitrecords/list'}
-								,{title:'安保监督检查',icon:'fa fa-cogs',url:'ec/basedata/safecheckrecords/list'}
-								,{title:'安保巡查记录',icon:'fa fa-cogs',url:'ec/basedata/safepatrolrecords/list'}
-								,{title:'设计变更(洽商)',icon:'fa fa-cogs',url:'ec/other/designchanges/list'}
-                                ,{title:'会议纪要',icon:'fa fa-cogs',url:'ec/basedata/meetingsummaries/list'}
-							  ]},
-							{title:'计划管理',icon:'fa fa-star',child:[
-								{title:'项目总计划',icon:'fa fa-user',url:'ec/plan/projecttotalplans/list'},
-								{title:'项目月计划',icon:'fa fa-user',url:'ec/plan/projectplans/monthlist'},
-								{title:'项目周计划',icon:'fa fa-user',url:'ec/plan/projectplans/weeklist'},
-								{title:'项目施工日志',icon:'fa fa-user',url:'ec/plan/worklogs/list'},
-								{title:'项目计划汇报',icon:'fa fa-user',url:'ec/plan/projectplanreports/list'},
-								{title:'项目总计划监控',icon:'fa fa-user',url:'ec/plan/projectplans/list'}
-								]},
-							{title:'质量管理',icon:'fa fa-home',child:[
-								{title:'质量交底',icon:'fa fa-building-o',url:'ec/quality/standard/qualityStandardList/list'}]},
-							{title:'安全管理',icon:'fa fa-home',child:[
-								{title:'三级安全教育花名册',icon:'fa fa-building-o',url:'ec/safty/saftyedubooks/list'}]},
-							{title:'图纸会审',icon:'fa fa-home',child:[
-								{title:'图纸会审',icon:'fa fa-building-o',url:'ec/discussiondrawings/list'}]},
-							{title:'预算编制',icon:'fa fa-home',child:[
-								{title:'预算编制',icon:'fa fa-building-o',url:'ec/budget/budgetings/list'},
-								{title:'预算询价',icon:'fa fa-building-o',url:'ec/budget/enquiryprices/list'},
-                                {title:'材设准备一览表',icon:'fa fa-building-o',url:'ec/budget/enquirypricedetail/list'},
-							]},
-							{title:'采购管理',icon:'fa fa-home',child:[
-								{title:'材料申购',icon:'fa fa-building-o',url:'ec/purchase/applymaterials/list'},
-								{title:'采购合同',icon:'fa fa-building-o',url:'ec/purchase/purchasecontracts/list'},
-                                {title:'采购入库',icon:'fa fa-building-o',url:'ec/purchase/purchasestocks/list'},
-                                {title:'材料申购、供应台账',icon:'fa fa-building-o',url:'ec/purchase/supplyledger/list'},
-							]},
-							{title:'库存管理',icon:'fa fa-home',child:[
-								{title:'领料出库',icon:'fa fa-building-o',url:'ec/stock/stockouts/list'},
-                                {title:'物料归还',icon:'fa fa-building-o',url:'ec/stock/stockreverts/list'},
-                                {title:'盘存',icon:'fa fa-building-o',url:'ec/stock/inventories/list'}]},
-							{title:'结算管理',icon:'fa fa-home',child:[
-								{title:'物料结算',icon:'fa fa-building-o',url:'ec/settle/materialsettles/list'}]},
-							{title:'工程管理',icon:'fa fa-home',child:[
-								{title:'工程合同',icon:'fa fa-building-o',url:'ec/engineering/contracts/list'},
-                                {title:'工程付款',icon:'fa fa-building-o',url:'ec/engineering/progressfunds/list'},
-                                {title:'现场签证(支出)',icon:'fa fa-building-o',url:'ec/engineering/sitevisaouts/list'},
-                                {title:'现场签证(收入)',icon:'fa fa-building-o',url:'ec/engineering/sitevisains/list'}]},
-							]};
-
-	$('#userMenus').myPillTreeMenu('init',userMenus);
-	var sysMenusOpt = {menus:[{title:'首页',icon:'fa fa-home'}
-	                          ,{title:'基础数据',icon:'fa fa-cogs',child:[
-	                              {title:'计量单位',icon:'fa fa-cogs',url:'base/measureunits/list'}
-            					  ,{title:'物料信息',icon:'fa fa-cogs',url:'base/materials/list'}
-            					  ,{title:'Icon图标',icon:'fa fa-cogs',url:'/base/web/font'}
-	                          ]}
-	                         ,{title:'系统管理',icon:'fa fa-cogs',child:[
-								{title:'组织管理',icon:'fa fa-cogs',url:'base/orgs/list'}
-						   		,{title:'附件管理',icon:'fa fa-server',url:'base/ftps/list'}
-							 ]}
-	                        ,{title:'门户管理',icon:'fa fa-home',child:[
-	                            {title:'菜单管理',icon:'fa fa-cogs',url:'base/home/menus/list'}
-	                         ]}
-							,{title:'安全管理',icon:'fa fa-star',child:[
-								{title:'工作职责',icon:'fa fa-users',url:'base/jobdutys/list'},
-								{title:'岗位管理',icon:'fa fa-users',url:'base/positions/list'},
-								{title:'用户管理',icon:'fa fa-user',active:true,url:'base/users/list'},
-								{title:'角色管理',icon:'fa fa-users',url:'base/roles/list'},
-								{title:'权限管理',icon:'fa fa-tags',url:'base/permissions/list'}
-							]}
-							,{title:'流程管理',icon:'fa fa-star',child:[
-								{title:'模型管理',icon:'fa fa-user',url:'base/actmodels/list'},
-								{title:'流程管理',icon:'fa fa-tags',url:'base/actprocesses/list'},
-								{title:'待办事项',icon:'fa fa-tags',url:'base/backlogs/list'}
-							]}
-						]};
-	$('#sysMenus').myPillTreeMenu('init',sysMenusOpt);
 	var initTabs = {items:[{id:'homeIdex',title:'主页',icon:'fa fa-home',enColse:false,url:'main/home'}]};
 	mainTab = $('#mainTab').myTab('init',initTabs);
 	$('#mainTab').find('ul.nav-tabs').css({"position":'fixed',"width":'100%'});
 	$('#mainTab').find('div.tab-content').css({"padding-top":'45px'});
-
 	$('#userSet').click(function(){
 		openUserSetUI();
 	});

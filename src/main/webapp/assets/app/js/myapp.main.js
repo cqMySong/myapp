@@ -74,23 +74,9 @@ MyPillTreeMenu.prototype = {
 		var _li_a = $('<a href="#" class="_menuItems"></a>');
 		var icon = _menuItem.icon;
 		if(!webUtil.isEmpty(icon)){
-			if($.type(icon) === "string" ){
-				_li_a.append('<i class="'+_menuItem.icon+'"></i>');
-			}else if($.isPlainObject(icon)){
-				if(!webUtil.isEmpty(icon.name)){
-					var iconHtml = $('<i></i>');
-					if(!webUtil.isEmpty(icon.type)){
-						iconHtml.addClass(icon.type);
-					}
-					if('UNICODE'==icon.codeType){
-						iconHtml.append('&#x'+icon.name+';');
-					}else if('CLASS'==icon.codeType){
-						iconHtml.addClass(icon.name);
-					}else{
-						iconHtml.append('&nbsp;&nbsp;');
-					}
-					_li_a.append(iconHtml);
-				}
+			var iconDom = webUtil.createIconDom(icon);
+			if(!webUtil.isEmpty(icon)){
+				_li_a.append(iconDom);
 			}
 		}
 		if(!webUtil.isEmpty(_menuItem.title)){
@@ -324,13 +310,12 @@ var def_tab_item = {id:"",title:"主页",icon:"",enColse:true,url:"",content:"",
 			var _tab_li = $('<li>');
 			var _tab_li_a = $('<a href="#'+_tabItem.id+'" data-toggle="tab"></a>');
 			_tab_li_a.attr("id",_tabItem.id+"_head_a");
-			var _this_icon = _tabItem.icon;
-			if(!webUtil.isEmpty(_this_icon)){
-				_tab_li_a.append('<i class="'+_this_icon+'" style="font-size: 14px;"></i>');
+			var _tabIconDom = webUtil.createIconDom(_tabItem.icon);
+			if(!webUtil.isEmpty(_tabIconDom)){
+				_tab_li_a.append(_tabIconDom);
 			}
-			
 			var _tab_li_a_text = $('<strong>'+_tabItem.title+'</strong>');
-			if(!webUtil.isEmpty(_this_icon)){
+			if(!webUtil.isEmpty(_tabIconDom)){
 				_tab_li_a_text.css({"margin-left":"2px"});
 			}
 			

@@ -587,5 +587,27 @@ var webUtil = {
 		}
 		return _str;
 	}
+	,createIconDom:function(icon){
+		var iconHtml = $('<i></i>');
+		if(!webUtil.isEmpty(icon)){
+			if($.type(icon) === "string" ){
+				iconHtml.addClass(icon);
+			}else if($.isPlainObject(icon)){
+				if(!webUtil.isEmpty(icon.name)){
+					if(!webUtil.isEmpty(icon.type)){
+						iconHtml.addClass(icon.type);
+					}
+					if('UNICODE'==icon.codeType){
+						iconHtml.append('&#x'+icon.name+';');
+					}else if('CLASS'==icon.codeType){
+						iconHtml.addClass(icon.name);
+					}else{
+						iconHtml.append('&nbsp;&nbsp;');
+					}
+				}
+			}
+		}
+		return iconHtml;
+	}
 };
 

@@ -69,6 +69,7 @@
     color: #484A4D;
     white-space: nowrap;
     text-overflow: ellipsis;
+    overflow: hidden;
 }
 
 .fn-gantt .leftPanel .row:first-child {
@@ -201,7 +202,7 @@
     padding: 10px;
     position: absolute;
     display: none;
-    z-index: 11;
+    z-index: 1000;
         -webkit-border-radius: 4px;
         -moz-border-radius: 4px;
         border-radius: 4px;

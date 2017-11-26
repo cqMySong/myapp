@@ -252,8 +252,8 @@
 			rightBtnGroup.addBtn({entry:planItemsEntry,css:'btn-sm',text:'复制插入',icon:"fa fa-edit",clickFun:btnCopyInsertRow});
 			planItemsEntry.resetView();
 		}
-		var height = $(top.window).height()-120;
-		$('#editPanel').height(height);
+		var height = top.getTopMainHeight();
+		$('#editPanel').height(height+15);
 	})
 </script>
 </html>

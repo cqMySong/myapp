@@ -32,6 +32,7 @@
         var scales = ["hours", "days", "weeks", "months"];
         //Default settings
         var settings = {
+        	leftPanelWidth:400,
             source: [],
             itemsPerPage: 7,
             months:["一月","二月","三月","四月","五月","六月","七月","八月","九月","十月","十一月","十二月"],
@@ -260,12 +261,64 @@
             render: function (element) {
                 var content = $('<div class="fn-content"/>');
                 var $leftPanel = core.leftPanel(element);
-               content.append($leftPanel);
+                //add by songjun 增加自定义高度
+                var leftHeight = $(element).height()-45;
+                $leftPanel.height(leftHeight);
+                $leftPanel.width(settings.leftPanelWidth);
+                var leftPanelItem = $leftPanel.children();
+                if(leftPanelItem){
+                	 var headerHeight = parseInt(leftPanelItem.first().height());
+                     var leftPanel_lastRow = leftPanelItem.last();
+                     var curOffset = parseInt(leftPanel_lastRow.attr("offset"))||0;
+                     var hasUsedHeight = headerHeight+curOffset;
+                     var lw = leftPanel_lastRow.width();
+                     var curIdx = $leftPanel.find('.leftBodyRow').length;
+                     while(hasUsedHeight+24<leftHeight){
+                    	 curOffset +=24;
+                    	 //<div class="row leftBodyRow" style="width:457px;" offset="120">
+                    	 	//<div class="col" id="rowheader5" offset="120" data-id="undefined" style="width:30px;text-align:center;"><span class="colIdx">6</span></div><div class="col" style="text-align:left"><span class="fn-label" style="width:100px;"> </span></div><div class="col" style="text-align:left"><span class="fn-label" style="width:100px;">Showcasing</span></div><div class="col" style="text-align:center"><span class="fn-label" style="width:45px;">✘</span></div><div class="col" style="text-align:center"><span class="fn-label" style="width:80px;"></span></div><div class="col" style="text-align:center"><span class="fn-label" style="width:80px;"></span></div></div>
+                    	 
+                    	 var thisRow = leftPanel_lastRow.clone();
+                    	 if(!thisRow.hasClass('leftBodyRow')){
+                    		 thisRow.addClass('leftBodyRow');
+                    		 if(thisRow.hasClass('spacer')) thisRow.removeClass('spacer');
+                    		 
+                    		 thisRow.removeAttr("style");
+                    		 var rowW = lw+'px';
+                    		 if(lw<settings.leftPanelWidth){
+                    			 rowW = '100%';
+                    		 }
+                    		 thisRow.css({"width":rowW});
+                    		 var rowCols = thisRow.find('.col');
+                    		 thisRow.empty();
+                    		 rowCols.each(function(i){
+                    			 var colW = $(this).width();
+                    			 $(this).removeAttr("style");
+                    			 $(this).css({"width":colW+"px","text-align":"center"});
+                    			 thisRow.append($(this));
+                    		 });
+                    	 }
+                    	 
+                    	 $leftPanel.append(thisRow);
+                    	 thisRow.find('span').html('&nbsp;');
+                    	 thisRow.find('span').eq(0).html(++curIdx);
+                    	 thisRow.attr("offset",curOffset);
+                    	 hasUsedHeight = headerHeight+curOffset;
+                     }
+                     $leftPanel.find('.leftBodyRow').click(function(){
+                      	 $(this).siblings('.selected').removeClass('selected');
+           				 $(this).addClass('selected');
+                     });
+                }
+               //end
+                content.append($leftPanel);
                 var $rightPanel = core.rightPanel(element, $leftPanel);
                 var mLeft, hPos;
 
                 content.append($rightPanel);
-                content.append(core.navigation(element));
+//                content.append(core.navigation(element));
+                //TODO songjun 改的
+                $rightPanel.append(core.navigation(element));
 
                 var $dataPanel = $rightPanel.find(".dataPanel");
 
@@ -315,6 +368,7 @@
                 $dataPanel.css({ height: $leftPanel.height() });
                 core.waitToggle(element, false);
                 settings.onRender();
+                $leftPanel.height(leftHeight+40);
             },
             //@author:songjun 做了大量都修改
             // Create and return the left panel with labels
@@ -324,10 +378,10 @@
             	var rowHeader = $('<div class="row spacer"/>').css("height", headerHight + "px");
             	var leftHeadColumns = element.leftCols;
             	var headers = [];
-            	var totalWidth = 32;
+            	var totalWidth = 31.5;
             	headers.push('<div class="leftHeader" style="height:'+headerHight+'px;line-height:'+headerHight+'px;">');
             	headers.push('<div class="col" style="height:'+headerHight+'px;width:30px;">');
-            		headers.push('<span style="height:96px;">序号</span>');
+            		headers.push('<span>序号</span>');
             	headers.push('</div>');
             	$.each(leftHeadColumns,function(i,col){
             		var thisWidth = col.width;
@@ -337,7 +391,7 @@
             		totalWidth +=thisWidth+3;
             	});
             	headers.push('</div>');
-            	if(totalWidth<400){
+            	if(totalWidth<settings.leftPanelWidth){
             		totalWidth = '100%';
             	}else{
             		totalWidth =(totalWidth+5)+"px";
@@ -353,8 +407,11 @@
                     if (i >= element.pageNum * settings.itemsPerPage && i < (element.pageNum * settings.itemsPerPage + settings.itemsPerPage)) {
                     	var offset = i % settings.itemsPerPage * tools.getCellSize();
                     	var thisRow = $('<div class="row leftBodyRow" style="width:'+totalWidth+';" offset="' + i % settings.itemsPerPage * tools.getCellSize() + '"></div>');
-                        var seqCol = $('<div class="col" id="rowheader' + i + '" offset="' + offset + '" data-id="'+entry.id+'" style="width:30px;text-align:center;"><span>' + (i+1) + '</span></div>');
+                        var seqCol = $('<div class="col" id="rowheader' + i + '" offset="' + offset + '" data-id="'+entry.id+'" style="width:30px;text-align:center;"><span class="colIdx">' + (i+1) + '</span></div>');
+                        
                         thisRow.append(seqCol);
+                        var tipHtml = '';
+                        tipHtml+='序号:'+(i+1);
                         $.each(leftHeadColumns,function(colIdx,col){
                         	var thisCol = $.extend(true,{},{name:'',type:'text',algin:'center'},col);
                         	var key = thisCol.name;
@@ -365,20 +422,38 @@
                     		}
                 			if('boolean'==thisCol.type){
                 				text = !text?'✘':'√';
-                			}
+                			} 
                 			$thisCol.append('<span class="fn-label' + (entry.cssClass ? ' ' + entry.cssClass : '') + '" style="width:'+col.width+'px;">' +text+ '</span>');
             				$thisCol.click({rowIdx:i,colIdx:colIdx,col:col,row:entry},function(e){
                 				var evData = e.data;
-                				$(this).parent('.leftBodyRow').parent().find('.selected').removeClass('selected');
-                				$(this).parent('.leftBodyRow').addClass('selected');
                 				if(toClickEvt){
                 					toClickEvt(evData)
                 				}
                 			});
                 			thisRow.append($thisCol);
+                			if('textarea'==thisCol.type&&text.trim().length>0){
+                				text = '<pre class="tablepre">'+text+'</pre>';
+                			}
+                			tipHtml+='<br/>'+thisCol.text+':'+text;
                     	});
                         
-                    	
+                        //dd
+                        if(!webUtil.isEmpty(tipHtml)){
+                        	thisRow.mouseover(function (e) {
+                                var hint = $('<div class="fn-gantt-hint" />').html(tipHtml);
+                                $("body").append(hint);
+                                hint.css("left", e.pageX);
+                                hint.css("top", e.pageY);
+                                hint.show();
+                            })
+                            .mouseout(function () {
+                                $(".fn-gantt-hint").remove();
+                            })
+                            .mousemove(function (e) {
+                                $(".fn-gantt-hint").css("left", e.pageX);
+                                $(".fn-gantt-hint").css("top", e.pageY + 15);
+                            });
+                        }
                         ganttLeftPanel.append(thisRow);
                     }
                 });
@@ -807,8 +882,9 @@
                 var ganttNavigate = null;
                 // Scrolling navigation is provided by setting
                 // `settings.navigate='scroll'`
+                var leftWidth = 10;
                 if (settings.navigate === "scroll") {
-                    ganttNavigate = $('<div class="navigate" />')
+                    ganttNavigate = $('<div class="navigate" style="padding-left:'+leftWidth+'px;"/>')
                         .append($('<div class="nav-slider" />')
                             .append($('<div class="nav-slider-left" />')
                                 .append($('<button type="button" class="nav-link nav-page-back"/>')
@@ -915,7 +991,7 @@
                     });
                 // Button navigation is provided by setting `settings.navigation='buttons'`
                 } else {
-                    ganttNavigate = $('<div class="navigate" />')
+                    ganttNavigate = $('<div class="navigate" style="padding-left:'+leftWidth+'px;"/>')
                         .append($('<button type="button" class="nav-link nav-page-back"/>')
                             .html('&lt;')
                             .click(function () {
@@ -992,8 +1068,7 @@
                  
                 var cellWidth = tools.getCellSize();
                 var barMarg = tools.getProgressBarMargin() || 0;
-                
-                var bar = $('<div class="bar progress"><div class="progress-bar progress-bar-warning" role="progressbar" aria-valuenow="60" aria-valuemin="0" aria-valuemax="100" style="width:'+percent+'%;background-color:#e4a24d;">&nbsp;<span class="fn-label">('+percent+'%)' + label + '</span></div></div>')
+                var bar = $('<div class="bar progress"><div class="progress-bar progress-bar-warning" role="progressbar" aria-valuenow="60" aria-valuemin="0" aria-valuemax="100" style="width:'+percent+'%;background-color:#e4a24d;">&nbsp;<span class="fn-label">'+(percent>0?'('+percent+'%)':'') + label + '</span></div></div>')
                         .addClass(cls)
                         .css({width: ((cellWidth * days) - barMarg) + 2})
                         .data("dataObj", day);
@@ -1805,8 +1880,6 @@
             	this.leftColClick = settings.leftColClick;
             }
             core.create(this);
-
         });
-
     };
 })(jQuery);

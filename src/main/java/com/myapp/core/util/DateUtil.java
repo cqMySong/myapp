@@ -199,7 +199,7 @@ public class DateUtil {
 	 * 两日期相差天数
 	 * @return
 	 */
-    public static long betweenDays(Date edate, Date bdate) {
+    public static int betweenDays(Date edate, Date bdate) {
     	if(BaseUtil.isEmpty(bdate)||BaseUtil.isEmpty(edate)) return 0;
     	Calendar c1 = Calendar.getInstance();
 		Calendar c2 = Calendar.getInstance();

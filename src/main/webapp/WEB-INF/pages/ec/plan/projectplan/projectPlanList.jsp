@@ -2,141 +2,139 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<title>项目进度计划</title>
+<title>项目进度计划监控</title>
 </head>
 <style type="text/css">
+.mainContrainer {
+  width: 100%;
+  height: 100%;
+  overflow:hidden;
+  padding: 0px 2px 2px 2px;
+}
+.leftContainer {
+  width: 260px;
+  height: 100%;
+  float: left;
+}
+.rightContainer {
+  height: 100%;
+  overflow:hidden;
+  padding-left: 5px;
+}
+.panel {
+  width: 100%;
+  height: 100%;
+  padding: 0px 2px 2px 2px;
+}
 </style>
 <script type="text/javascript">
 </script>
-		<!-- <div class="ui-layout-center"></div>
-		<div class="ui-layout-north">North</div>  
-		<div class="ui-layout-south">South</div>  
-		<div class="ui-layout-east">East</div>  
-		<div class="ui-layout-west">West</div>  -->
-<body style="padding: 5px;" >
-	<div class="ui-layout-north">North</div>  
-	<div class="ui-layout-center">
-		<div id="listPanel" style="padding:2px;">
-			<div class="gantt" style="height: 400px;overflow: auto;"></div>
+<body style="padding: 2px 0px 0px 5px;">
+	<div class="panel">
+		<div id="table-toolbar" style="height:40px;">
+			<div class="btn-group">
+				<button class="btn btn-success" type="button">
+					<span class="fa fa-file-o"></span>&nbsp;新增</button>
+				<button class="btn btn-success" type="button">
+					<span class="fa fa-file-text-o"></span>&nbsp;查看</button>
+				<button class="btn btn-success" type="button">
+					<span class="fa fa-edit"></span>&nbsp;修改</button>
+			</div>
 		</div>
-	</div>  
+		<hr style="margin: 2px 0px;">
+		<div class="mainContrainer">
+			<div class="leftContainer" id="left_container">
+			</div>
+			<div class="rightContainer" id="main_container">
+				<div class="gantt"></div>
+			</div>
+		</div>
+	</div>
 </body>
-
-<%@include file="../../../base/base_list.jsp"%>
-<link rel="stylesheet" href="<%=appRoot%>/assets/lib/gantt/css/style.css"/>
-<script src="<%=appRoot%>/assets/lib/gantt/js/jquery.fn.gantt.js?v=1" charset ="GB2312"></script>
+<%@include file="../../../inc/webBase.inc"%>
+<link rel="stylesheet" href="<%=appRoot%>/assets/lib/gantt/css/style.css?v=121"/>
+<script src="<%=appRoot%>/assets/lib/gantt/js/jquery.fn.gantt.js?v=1254" charset ="GB2312"></script>
 
 <script type="text/javascript">
-/**
- * 一切操作前的接口函数
- */
-var listUI;
-function beforeAction(opt){
-	return true;
+var orgTree ;
+var curSelOrg = {};
+function initOrgTree(){
+	var treeOpt = {view: {dblClickExpand: true,selectedMulti: false}
+		,data: {simpleData: {enable:true,idKey: "id", pIdKey: "parentId",rootPId: ''}}
+		,callback:{onClick:treeClick}
+		};
+	var treeViewer = $('#left_container').myTreeViewer(null);
+	treeViewer.init({theme:"panel-success",title:'<i class="fa fa-building-o" style="font-size: 12px;"></i>&nbsp;工程项目',search:true});
+	treeViewer.addTree(treeOpt,[]);
+	orgTree = treeViewer.getTree();
+	treeViewer.addRefreshBtn({clickFun:function(btn){
+		loadTreeData();
+	}});
 }
-
-function enableClick(btn){
-	alert(btn.text);
+function loadTreeData(){
+	webUtil.ajaxData({url:'ec/basedata/projects/projectTree',async:false,success:function(data){
+		var treeDatas = data.data;
+		if (treeDatas.length>0&&!webUtil.isEmpty(orgTree)) {
+			orgTree.reLoadTree(treeDatas)
+			orgTree.selectNodeByIndex(0);
+		}
+	}});
 }
-$(document).ready(function() {
-	$('body').layout({ applyDefaultStyles: true,north_resizable:true});  
-	
+function treeClick(event, treeId, treeNode){
+	if(webUtil.isEmpty(curSelOrg)) curSelOrg = {id:'xyz'};
+	if(webUtil.isEmpty(curSelOrg.id)) curSelOrg.id = 'xyz';
+	if(curSelOrg.id!=treeNode.id){
+		curSelOrg = treeNode;
+		loadPlanItemData();
+	}
+}
+function initHeadStyle(){
+	var height = top.getTopMainHeight()-40;
+	$(".mainContrainer").height(height);
+	$(".gantt").height(height-5);
+	initOrgTree();
+	initGantView();
+}
+function initGantView(){
 	$(".gantt").gantt({
-		source: [{
-			name: "现场施工",
-			desc: "dsat",
-			begData:"开始",
-			values: [{
-				id: "t01",
-				from: "2017-05-05",
-				to: "2017-05-26",
-				percent:50,
-				desc:"sdfasdfasdf",
-				customClass: "ganttRed",
-				label: "Requirement Gathering"
-			}]
-		},{
-			name: "",
-			desc: "Scoping",
-			values: [{
-				id: "t02",
-				from: "2017-06-15",percent:50,
-				to: "2017-06-25",
-				label: "Scoping"
-			}]
-		},{
-			name: "Sprint 1",
-			desc: "Development",
-			values: [{
-				from: "2017-05-25",
-				to: "2017-06-05",percent:50,
-				label: "Development"
-			}]
-		},{
-			name: " ",
-			desc: "Showcasing",
-			values: [{
-				from: "2017-06-05",
-				to: "2017-07-05",percent:50,
-				label: "Showcasing"
-			}]
-		},{
-			name: "Sprint 2",
-			desc: "Development",
-			values: [{
-				from: "2017-06-20",
-				to: "2017-06-30",percent:50,
-				label: "Development"
-			}]
-		},{
-			name: " ",
-			desc: "Showcasing",
-			values: [{
-				from: "2017-06-01",
-				to: "2017-07-15",percent:50,
-				label: "Showcasing"
-			}]
-		},{
-			name: "Release Stage",
-			desc: "Training",
-			values: [{
-				from: "2017-07-08",
-				to: "2017-07-12",percent:50,
-				label: "Training"
-			}]
-		},{
-			name: " ",
-			desc: "Deployment",
-			values: [{
-				from: "2017-07-15",
-				to: "2017-07-30",
-				label: "Deployment"
-			}]
-		},{
-			name: " ",
-			desc: "Warranty Period",
-			values: [{
-				from: "2017-08-05",
-				to: "2017-08-15",percent:50,
-				label: "Warranty Period"
-			}]
-		}],
 		navigate: "scroll",
-		itemsPerPage: 20,
+		leftPanelWidth:600,
 		onItemClick: function(data) {
-			alert("data = "+data.label);
+			//alert("data = "+data.label);
 		},
 		leftCols:[
-		          {text:'工序',name:'name',algin:'left',width:100},
-		          {text:'工作项',algin:'left',name:'desc',width:100},
-		          {text:'里程碑',name:'isKey',type:'boolean',width:45},
-		          {text:'开始时间',name:'begDate',width:80},
-		          {text:'截止时间',name:'endDate',width:80}
+		          {text:'单位工程',name:'dwgc',algin:'left',width:100},
+		          {text:'分部工程',name:'fbgc',algin:'left',width:100},
+		          {text:'分项工程',name:'fxgc',algin:'left',width:120},
+		          {text:'具体工作内容',name:'content',type:'textarea',algin:'center',width:150},
+		          {text:'生产情况',name:'item',algin:'center',width:60},
+		          {text:'开始时间',name:'bd',width:70},
+		          {text:'截止时间',name:'ed',width:70},
+		          {text:'工程量',name:'proqty',width:50},
+		          {text:'施工人员',name:'sgry',width:80},
+		          {text:'持续天数',name:'days',width:60}
 		  ],
 		leftColClick:function(data){
-			alert('你点击了第:'+data.rowIdx+'行');
+			//alert('你点击了第:'+data.rowIdx+'行');
 		}
 	});
+}
+var itemUrl = "ec/plan/projectplans/planRpt";
+function loadPlanItemData(){
+	var dataPrams = {projectId:curSelOrg.id};
+	webUtil.ajaxData({url:itemUrl,data:dataPrams,success:function(data){
+		var items = data.data;
+		$(".gantt").gantt({
+			navigate: "scroll"
+			,leftPanelWidth:600
+			,itemsPerPage:20
+			,source:items});
+	}});
+}
+
+$(document).ready(function() {
+	initHeadStyle();
+	loadTreeData();
 })
 </script>
 </html>

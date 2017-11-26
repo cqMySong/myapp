@@ -19,6 +19,7 @@ import com.myapp.core.base.service.impl.AbstractBaseService;
 import com.myapp.core.controller.BasePageListController;
 import com.myapp.core.entity.UserInfo;
 import com.myapp.core.enums.DataTypeEnum;
+import com.myapp.core.exception.db.QueryException;
 import com.myapp.core.model.ColumnModel;
 import com.myapp.core.model.PageModel;
 import com.myapp.core.model.WebDataModel;
@@ -174,5 +175,24 @@ public class ProjectPlanListController extends BasePageListController {
 	public String getListUrl() {
 		return "ec/plan/projectplan/projectPlanList";
 	}
+	@RequestMapping(value="/planRpt")
+	@ResponseBody
+	public WebDataModel getPlanCompareRpt(){
+		String projectId = request.getParameter("projectId");
+		init();
+		if(BaseUtil.isEmpty(projectId)){
+			setErrorMesg("工程项目id为空，不能执行此查询功能!");
+		}else{
+			try {
+				data = projectTotalPlanService.getPlanFinishCompareRpt(projectId);
+			} catch (QueryException e) {
+				e.printStackTrace();
+				setExceptionMesg(e.getMessage());
+			}
+		}
+		return ajaxModel();
+	}
+	
+	
 
 }

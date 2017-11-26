@@ -1,18 +1,18 @@
-package com.myapp.controller.ec.engineering.contract;
+package com.myapp.controller.ec.engineering.sitevisaout;
 
 import com.alibaba.fastjson.JSONObject;
 import com.myapp.core.annotation.PermissionAnn;
 import com.myapp.core.base.service.impl.AbstractBaseService;
 import com.myapp.core.controller.BaseListController;
-import com.myapp.core.entity.UserInfo;
-import com.myapp.core.enums.*;
+import com.myapp.core.enums.BaseMethodEnum;
+import com.myapp.core.enums.BillState;
+import com.myapp.core.enums.ChargingBasis;
+import com.myapp.core.enums.DataTypeEnum;
 import com.myapp.core.model.ColumnModel;
 import com.myapp.core.util.BaseUtil;
 import com.myapp.core.util.WebUtil;
-import com.myapp.entity.ec.basedata.ECUnitInfo;
 import com.myapp.entity.ec.basedata.ProjectInfo;
-import com.myapp.service.ec.engineering.EngineeringContractService;
-import com.myapp.service.ec.stock.StockInventoryService;
+import com.myapp.service.ec.engineering.SiteVisaOutService;
 import org.hibernate.Criteria;
 import org.hibernate.criterion.Restrictions;
 import org.springframework.stereotype.Controller;
@@ -24,31 +24,31 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * @path：com.myapp.controller.ec.engineering.contract
- * @description：工程合同管理
+ * @path：com.myapp.controller.ec.engineering.sitevisaout
+ * @description：现场签证(支出)
  * @author ： ly
  * @date: 2017-08-28 21:02
  */
-@PermissionAnn(name="系统管理.现场管理.工程合同.合同管理",number="app.ec.engineering.contract")
+@PermissionAnn(name="系统管理.现场管理.工程合同.现场签证(支出)",number="app.ec.engineering.sitevisaout")
 @Controller
-@RequestMapping("ec/engineering/contracts")
-public class EngineeringContractListController extends BaseListController {
+@RequestMapping("ec/engineering/sitevisaouts")
+public class SiteVisaOutListController extends BaseListController {
     @Resource
-    private EngineeringContractService engineeringContractService;
+    private SiteVisaOutService siteVisaOutService;
 
     @Override
     public String getEditUrl() {
-        return "ec/engineering/contract/engineeringContractEdit";
+        return "ec/engineering/sitevisaout/siteVisaOutEdit";
     }
 
     @Override
     public String getListUrl() {
-        return "ec/engineering/contract/engineeringContractList";
+        return "ec/engineering/sitevisaout/siteVisaOutList";
     }
 
     @Override
     public AbstractBaseService getService() {
-        return this.engineeringContractService;
+        return this.siteVisaOutService;
     }
 
     @Override
@@ -87,20 +87,19 @@ public class EngineeringContractListController extends BaseListController {
         List<ColumnModel> cols = super.getDataBinding();
         cols.add(new ColumnModel("name"));
         cols.add(new ColumnModel("number"));
+        cols.add(new ColumnModel("workPart"));
+        cols.add(new ColumnModel("jobContent"));
+        cols.add(new ColumnModel("chargingContent"));
+        cols.add(new ColumnModel("chargingBasis", DataTypeEnum.ENUM,ChargingBasis.class));
         cols.add(new ColumnModel("billState", DataTypeEnum.ENUM,BillState.class));
-        cols.add(new ColumnModel("directorName"));
-        cols.add(new ColumnModel("contractDate",DataTypeEnum.DATE));
+        cols.add(new ColumnModel("visaUnit",DataTypeEnum.STRING));
         cols.add(new ColumnModel("amount",DataTypeEnum.NUMBER));
-        cols.add(new ColumnModel("contractType", DataTypeEnum.ENUM,ContractType.class));
-        cols.add(new ColumnModel("expenseType", DataTypeEnum.ENUM,ExpenseType.class));
+        cols.add(new ColumnModel("visaDate",DataTypeEnum.DATE));
 
         ColumnModel project = new ColumnModel("project",DataTypeEnum.F7,"id,name");
         project.setClaz(ProjectInfo.class);
         cols.add(project);
 
-        ColumnModel ecUnitInfo = new ColumnModel("ecUnitInfo",DataTypeEnum.F7,"id,name");
-        ecUnitInfo.setClaz(ECUnitInfo.class);
-        cols.add(ecUnitInfo);
         return cols;
     }
 }

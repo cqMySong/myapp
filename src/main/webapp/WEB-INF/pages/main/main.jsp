@@ -390,7 +390,9 @@ $(document).ready(function() {
 								{title:'物料结算',icon:'fa fa-building-o',url:'ec/settle/materialsettles/list'}]},
 							{title:'工程管理',icon:'fa fa-home',child:[
 								{title:'工程合同',icon:'fa fa-building-o',url:'ec/engineering/contracts/list'},
-                                {title:'工程进度款',icon:'fa fa-building-o',url:'ec/engineering/progressfunds/list'}]},
+                                {title:'工程付款',icon:'fa fa-building-o',url:'ec/engineering/progressfunds/list'},
+                                {title:'现场签证(支出)',icon:'fa fa-building-o',url:'ec/engineering/sitevisaouts/list'},
+                                {title:'现场签证(收入)',icon:'fa fa-building-o',url:'ec/engineering/sitevisains/list'}]},
 							]};
 
 	$('#userMenus').myPillTreeMenu('init',userMenus);

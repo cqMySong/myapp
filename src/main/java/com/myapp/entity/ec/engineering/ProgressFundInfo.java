@@ -3,8 +3,11 @@ package com.myapp.entity.ec.engineering;
 import com.myapp.core.annotation.MyEntityAnn;
 import com.myapp.core.base.entity.CoreBaseBillInfo;
 import com.myapp.core.entity.UserInfo;
+import com.myapp.core.enums.ExpenseType;
+import com.myapp.core.enums.PaymentType;
 import com.myapp.entity.ec.basedata.ECUnitInfo;
 import com.myapp.entity.ec.basedata.ProjectInfo;
+import org.hibernate.annotations.Type;
 
 import javax.persistence.*;
 import java.math.BigDecimal;
@@ -50,6 +53,10 @@ public class ProgressFundInfo extends CoreBaseBillInfo {
      * 备注
      */
     private String remark;
+    /**
+     * 付款类型
+     */
+    private PaymentType paymentType;
     /**
      * 修改前数据
      */
@@ -129,5 +136,15 @@ public class ProgressFundInfo extends CoreBaseBillInfo {
 
     public void setEcUnitInfo(ECUnitInfo ecUnitInfo) {
         this.ecUnitInfo = ecUnitInfo;
+    }
+
+    @Column(name="fPaymentType",length = 20)
+    @Type(type="myEnum",parameters={@org.hibernate.annotations.Parameter(name="enumClass",value="com.myapp.core.enums.PaymentType")})
+    public PaymentType getPaymentType() {
+        return paymentType;
+    }
+
+    public void setPaymentType(PaymentType paymentType) {
+        this.paymentType = paymentType;
     }
 }

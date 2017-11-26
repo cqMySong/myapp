@@ -4,6 +4,7 @@ import com.myapp.core.annotation.MyEntityAnn;
 import com.myapp.core.base.entity.CoreBaseBillInfo;
 import com.myapp.core.entity.UserInfo;
 import com.myapp.core.enums.ContractType;
+import com.myapp.core.enums.ExpenseType;
 import com.myapp.entity.ec.basedata.ECUnitInfo;
 import com.myapp.entity.ec.basedata.ProjectInfo;
 import org.hibernate.annotations.Type;
@@ -28,9 +29,13 @@ public class EngineeringContractInfo extends CoreBaseBillInfo {
     private ProjectInfo project;
 
     /**
-     * 合同那个类型
+     * 合同类型
      */
     private ContractType contractType;
+    /**
+     * 费用类型
+     */
+    private ExpenseType expenseType;
 
     /**
      * 合同单位
@@ -158,5 +163,15 @@ public class EngineeringContractInfo extends CoreBaseBillInfo {
 
     public void setContractType(ContractType contractType) {
         this.contractType = contractType;
+    }
+
+    @Column(name="fExpenseType",length = 20)
+    @Type(type="myEnum",parameters={@org.hibernate.annotations.Parameter(name="enumClass",value="com.myapp.core.enums.ExpenseType")})
+    public ExpenseType getExpenseType() {
+        return expenseType;
+    }
+
+    public void setExpenseType(ExpenseType expenseType) {
+        this.expenseType = expenseType;
     }
 }

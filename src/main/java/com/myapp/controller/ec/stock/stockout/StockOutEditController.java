@@ -15,6 +15,7 @@ import com.myapp.core.enums.MaterialType;
 import com.myapp.core.exception.db.QueryException;
 import com.myapp.core.model.ColumnModel;
 import com.myapp.entity.ec.basedata.ProjectInfo;
+import com.myapp.entity.ec.stock.StockInfo;
 import com.myapp.entity.ec.stock.StockOutDetailInfo;
 import com.myapp.entity.ec.stock.StockOutInfo;
 import com.myapp.service.ec.stock.StockOutService;
@@ -62,6 +63,7 @@ public class StockOutEditController extends BaseBillEditController {
                 JSONObject materialInfo = null;
                 JSONObject stockOutDetail = null;
                 JSONObject materialType = null;
+                JSONObject stockInfo = null;
                 for(int i=0;i<stockOutDetailInfos.size();i++){
                     stockOutDetail = stockOutDetailInfos.getJSONObject(i);
                     materialInfo = stockOutDetail.getJSONObject("material");
@@ -69,6 +71,9 @@ public class StockOutEditController extends BaseBillEditController {
                     materialType.put("key",materialInfo.get("materialType"));
                     materialType.put("val", MaterialType.map.get(materialInfo.getString("materialType")).getName());
                     stockOutDetail.put("materialType",materialType);
+                    stockInfo = stockOutDetail.getJSONObject("stockInfo");
+                    stockInfo.put("name",stockInfo.get("inStockNumber"));
+                    stockOutDetail.put("stockInfo",stockInfo);
                     stockOutDetailNew.add(stockOutDetail);
                 }
                 jsonObject.put("stockOutDetailInfos",stockOutDetailNew);
@@ -102,6 +107,10 @@ public class StockOutEditController extends BaseBillEditController {
         ColumnModel material = new ColumnModel("material",DataTypeEnum.F7,"id,name,materialType");
         material.setClaz(MaterialInfo.class);
         stockOutDetailInfos.getCols().add(material);
+
+        ColumnModel stockInfo = new ColumnModel("stockInfo",DataTypeEnum.F7,"id,inStockNumber");
+        stockInfo.setClaz(StockInfo.class);
+        stockOutDetailInfos.getCols().add(stockInfo);
 
         stockOutDetailInfos.getCols().add(new ColumnModel("id",DataTypeEnum.PK));
         stockOutDetailInfos.getCols().add(new ColumnModel("count",DataTypeEnum.NUMBER));

@@ -3,7 +3,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-	<title>工程合同</title>
+	<title>现场签证(支出)</title>
 </head>
 <style type="text/css">
 </style>
@@ -17,64 +17,68 @@
 		<div class="row">
 			<div class="col-sm-4">
 				<div class="input-group">
-					<span class="input-group-addon lable">合同单号</span>
-					<input class="require input-item" name="number">
+					<span class="input-group-addon lable">签证名称</span>
+					<input class="input-item form-control require" name="name"/>
 				</div>
 			</div>
 			<div class="col-sm-4">
 				<div class="input-group">
-					<span class="input-group-addon lable">合同名称</span>
-					<input name="name" class="input-item form-control require"/>
+					<span class="input-group-addon lable">签证单号</span>
+					<input class="input-item form-control require" name="number"/>
 				</div>
 			</div>
 			<div class="col-sm-4">
 				<div class="input-group">
-					<span class="input-group-addon lable">合同单位</span>
-					<input type="text" name="ecUnitInfo" class="form-control input-item require"
-						   data-opt="{type:'f7',uiWin:{title:'单位',height:600,width:800,url:'ec/basedata/ecunitF7'}}">
+					<span class="input-group-addon lable">签证时间</span>
+					<input type="text" name="visaDate" class="form-control input-item require" data-opt="{type:'date'}">
 				</div>
 			</div>
 		</div>
 		<div class="row mt10">
 			<div class="col-sm-4">
 				<div class="input-group">
-					<span class="input-group-addon lable">合同金额</span>
-					<input name="amount" class="require input-item form-control require" type="number" />
+					<span class="input-group-addon lable">签证单位</span>
+					<input class="input-item form-control require" name="visaUnit"/>
 				</div>
 			</div>
 			<div class="col-sm-4">
 				<div class="input-group">
-					<span class="input-group-addon lable">合同日期</span>
-					<input type="text" name="contractDate" class="form-control input-item require" data-opt="{type:'date'}">
-				</div>
-			</div>
-			<div class="col-sm-4">
-				<div class="input-group">
-					<span class="input-group-addon lable">合同类别</span>
-					<select name="contractType" data-opt="{type:'select',selected:'PROPRIETOR',url:'base/common/combox?enum=com.myapp.core.enums.ContractType'}"
+					<span class="input-group-addon lable">计费依据</span>
+					<select name="chargingBasis" data-opt="{type:'select',selected:'INCREASE_CONTRACT',url:'base/common/combox?enum=com.myapp.core.enums.ChargingBasis'}"
 							class="form-control input-item require">
 					</select>
 				</div>
 			</div>
-
+			<div class="col-sm-4">
+				<div class="input-group">
+					<span class="input-group-addon lable">依据说明</span>
+					<input class="input-item form-control require" name="chargingContent"/>
+				</div>
+			</div>
 		</div>
 		<div class="row mt10">
 			<div class="col-sm-4">
 				<div class="input-group">
-					<span class="input-group-addon lable">费用类型</span>
-					<select name="expenseType" data-opt="{type:'select',selected:'MATERIAL',url:'base/common/combox?enum=com.myapp.core.enums.ExpenseType'}"
-							class="form-control input-item require">
-					</select>
+					<span class="input-group-addon lable">签证金额</span>
+					<input type="number" name="amount" class="form-control input-item require"/>
 				</div>
 			</div>
-			<div class="col-sm-4">
+			<div class="col-sm-8">
 				<div class="input-group">
-					<span class="input-group-addon lable">负责人</span>
-					<input name="director" class="input-item form-control require"
-						   data-opt="{type:'f7',uiWin:{title:'人员选择',height:600,width:800,url:'base/userf7'}}" />
-					<input name="directorName" type="hidden" class="input-item form-control"/>
+					<span class="input-group-addon lable">工作部位</span>
+					<input  name="workPart" class="form-control input-item require"/>
 				</div>
 			</div>
+		</div>
+		<div class="row mt10">
+			<div class="col-sm-12">
+				<div class="input-group">
+					<span class="input-group-addon lable">工作内容</span>
+					<textarea name="jobContent" style="height:40px;" class="input-item form-control"></textarea>
+				</div>
+			</div>
+		</div>
+		<div class="row mt10">
 			<div class="col-sm-4">
 				<div class="input-group">
 					<span class="input-group-addon lable">所属工程</span>
@@ -82,23 +86,12 @@
 						   data-opt="{type:'f7',uiWin:{title:'工程项目',height:600,width:300,url:'ec/basedata/project'}}" />
 				</div>
 			</div>
-
-		</div>
-		<div class="row mt10">
 			<div class="col-sm-4">
 				<div class="input-group">
 					<span class="input-group-addon lable">业务状态</span>
 					<select name="billState" data-opt="{type:'select',selected:'ADDNEW',url:'base/common/combox?enum=com.myapp.core.enums.BillState'}"
 							class="form-control input-item require read">
 					</select>
-				</div>
-			</div>
-		</div>
-		<div class="row mt10">
-			<div class="col-sm-12">
-				<div class="input-group">
-					<span class="input-group-addon lable">合同内容</span>
-					<textarea name="treatyContents" style="height:40px;" class="input-item form-control"></textarea>
 				</div>
 			</div>
 		</div>
@@ -153,14 +146,11 @@
         pro.projectId = $('input[name="project"]').myF7().getValue();
         return pro;
     }
+
     /**
      * 一切操作前的接口函数
      */
     function beforeAction(opt) {
-        var director = $('input[name="director"]').myF7().getData();
-        if(director){
-            $('input[name="directorName"]').val(director.name);
-		}
         return true;
     }
 
@@ -176,8 +166,8 @@
     }
     $(document).ready(function() {
         editUI = $('#editPanel').editUI({
-            title : "工程合同",billModel:2,
-            baseUrl : "ec/engineering/contract",
+            title : "现场签证(支出)",billModel:2,
+            baseUrl : "ec/engineering/sitevisaout",
             toolbar : "#table-toolbar",
             form : {
                 el : "#editForm"

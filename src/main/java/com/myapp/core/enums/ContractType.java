@@ -12,20 +12,16 @@ import java.util.Map;
  * @date : 2017-10-18
  */
 public enum ContractType implements MyEnum<ContractType> {
-	MATERIAL("MATERIAL","材料费"),
-	ARTIFICIAL("ARTIFICIAL","人工费"),
-	EQUIPMENT("EQUIPMENT","机械费"),
-	OTHER("OTHER","其他");
+	PROPRIETOR("PROPRIETOR","业主合同"),
+	SUBCONTRACT("SUBCONTRACT","分包合同");
 
 	private String name;
 	private String value;
 
 	public static final Map<String, ContractType> map = new HashMap<String, ContractType>();
 	static {
-        map.put(MATERIAL.getValue(), MATERIAL);
-        map.put(ARTIFICIAL.getValue(), ARTIFICIAL);
-        map.put(EQUIPMENT.getValue(), EQUIPMENT);
-		map.put(OTHER.getValue(), OTHER);
+        map.put(PROPRIETOR.getValue(), PROPRIETOR);
+        map.put(SUBCONTRACT.getValue(), SUBCONTRACT);
     }
 
 	ContractType(String value, String name){

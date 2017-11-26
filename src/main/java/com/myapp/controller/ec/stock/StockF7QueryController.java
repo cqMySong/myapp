@@ -11,6 +11,8 @@ import com.myapp.core.model.PageModel;
 import com.myapp.core.service.base.BaseService;
 import com.myapp.entity.ec.purchase.PurchaseContractDetailInfo;
 import com.myapp.entity.ec.purchase.PurchaseContractInfo;
+import com.myapp.entity.ec.purchase.PurchaseStockDetailInfo;
+import com.myapp.entity.ec.purchase.PurchaseStockInfo;
 import com.myapp.entity.ec.stock.StockInfo;
 import org.hibernate.criterion.Order;
 import org.springframework.stereotype.Controller;
@@ -39,7 +41,11 @@ public class StockF7QueryController extends BaseF7QueryController {
 	@Override
 	public List<ColumnModel> getDataBinding() {
 		List<ColumnModel> cols = super.getDataBinding();
-		ColumnModel col =  new ColumnModel("materialInfo",DataTypeEnum.F7,MaterialInfo.class);
+		ColumnModel col =  new ColumnModel("inStockNumber",DataTypeEnum.STRING);
+		col.setAlias_zh("入库单号");
+		cols.add(col);
+
+		col =  new ColumnModel("materialInfo",DataTypeEnum.F7,MaterialInfo.class);
 		col.setFormat("id,materialType,name");
 		col.setAlias_zh("id,物料类型,物料名称");
 		cols.add(col);
@@ -78,6 +84,7 @@ public class StockF7QueryController extends BaseF7QueryController {
 				hashMap.put("materialInfo_materialType",
 						((MaterialType)hashMap.get("materialInfo_materialType")).getName());
 				hashMap.put("name",hashMap.get("materialInfo_name"));
+				hashMap.put("stock_id",hashMap.get("id"));
 				hashMap.put("id",hashMap.get("materialInfo_id"));
 			}
 		}

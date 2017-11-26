@@ -60,6 +60,8 @@ public class ProgressFundEditController extends BaseBillEditController {
                 JSONObject jsonObject = (JSONObject) this.data;
                 JSONObject engineeringContractInfo = jsonObject.getJSONObject("engineeringContractInfo");
                 jsonObject.put("contractAmount",engineeringContractInfo.get("amount"));
+                jsonObject.put("contractType",engineeringContractInfo.get("contractType"));
+                jsonObject.put("expenseType",engineeringContractInfo.get("expenseType"));
                 this.data = jsonObject;
             }
         }
@@ -74,6 +76,7 @@ public class ProgressFundEditController extends BaseBillEditController {
         cols.add(new ColumnModel("operator",DataTypeEnum.F7,UserInfo.class));
         cols.add(new ColumnModel("settleDate",DataTypeEnum.DATE));
         cols.add(new ColumnModel("billState",DataTypeEnum.ENUM, BillState.class));
+        cols.add(new ColumnModel("paymentType",DataTypeEnum.ENUM, PaymentType.class));
         cols.add(new ColumnModel("createUser",DataTypeEnum.F7,UserInfo.class));
         cols.add(new ColumnModel("lastUpdateUser",DataTypeEnum.F7,UserInfo.class));
         cols.add(new ColumnModel("auditor",DataTypeEnum.F7,UserInfo.class));
@@ -85,7 +88,7 @@ public class ProgressFundEditController extends BaseBillEditController {
         cols.add(project);
 
         ColumnModel engineeringContractInfo = new ColumnModel("engineeringContractInfo",
-                DataTypeEnum.F7,"id,name,amount");
+                DataTypeEnum.F7,"id,name,amount,contractType,expenseType");
         engineeringContractInfo.setClaz(EngineeringContractInfo.class);
         cols.add(engineeringContractInfo);
 

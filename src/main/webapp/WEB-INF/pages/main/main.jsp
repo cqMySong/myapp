@@ -363,7 +363,7 @@ $(document).ready(function() {
 								{title:'项目周计划',icon:'fa fa-user',url:'ec/plan/projectplans/weeklist'},
 								{title:'项目施工日志',icon:'fa fa-user',url:'ec/plan/worklogs/list'},
 								{title:'项目计划汇报',icon:'fa fa-user',url:'ec/plan/projectplanreports/list'},
-								{title:'项目总计划-old',icon:'fa fa-user',url:'ec/plan/projectplans/list'}
+								{title:'项目总计划监控',icon:'fa fa-user',url:'ec/plan/projectplans/list'}
 								]},
 							{title:'质量管理',icon:'fa fa-home',child:[
 								{title:'质量交底',icon:'fa fa-building-o',url:'ec/quality/standard/qualityStandardList/list'}]},

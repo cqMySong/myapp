@@ -7,7 +7,7 @@ import java.util.Map;
 
 /**
  * @path：com.myapp.core.enums
- * @description：费用烈性
+ * @description：费用类型
  * @author： ly
  * @date: 2017-11-23 23:54
  */

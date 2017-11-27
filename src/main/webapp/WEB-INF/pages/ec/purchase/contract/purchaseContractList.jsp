@@ -25,7 +25,7 @@
 								<th data-field="supplyCompany">供货单位</th>
 								<th data-field="operator_name">负责人</th>
 								<th data-field="contactTel">联系电话</th>
-								<th data-field="contractType" data-type="select">类别</th>
+								<th data-field="expenseType" data-type="select">费用类型</th>
 								<th data-field="project_name">工程项目</th>
 								<th data-field="billState" data-type="select">业务状态</th>
 								<th data-field="remark">备注</th>

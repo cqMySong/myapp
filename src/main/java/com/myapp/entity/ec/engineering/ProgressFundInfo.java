@@ -3,7 +3,6 @@ package com.myapp.entity.ec.engineering;
 import com.myapp.core.annotation.MyEntityAnn;
 import com.myapp.core.base.entity.CoreBaseBillInfo;
 import com.myapp.core.entity.UserInfo;
-import com.myapp.core.enums.ExpenseType;
 import com.myapp.core.enums.PaymentType;
 import com.myapp.entity.ec.basedata.ECUnitInfo;
 import com.myapp.entity.ec.basedata.ProjectInfo;
@@ -49,6 +48,10 @@ public class ProgressFundInfo extends CoreBaseBillInfo {
      * 结算时间
      */
     private Date settleDate;
+    /**
+     * 工作内容
+     */
+    private String jobContent;
     /**
      * 备注
      */
@@ -146,5 +149,14 @@ public class ProgressFundInfo extends CoreBaseBillInfo {
 
     public void setPaymentType(PaymentType paymentType) {
         this.paymentType = paymentType;
+    }
+
+    @Column(name="fJobContent",length = 500)
+    public String getJobContent() {
+        return jobContent;
+    }
+
+    public void setJobContent(String jobContent) {
+        this.jobContent = jobContent;
     }
 }

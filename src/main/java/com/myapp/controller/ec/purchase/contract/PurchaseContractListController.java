@@ -89,23 +89,23 @@ public class PurchaseContractListController extends BaseListController {
         cols.add(new ColumnModel("amount"));
         cols.add(new ColumnModel("supplyCompany"));
         cols.add(new ColumnModel("contactTel"));
-        cols.add(new ColumnModel("contractType", DataTypeEnum.ENUM,ContractType.class));
+        cols.add(new ColumnModel("expenseType", DataTypeEnum.ENUM,ExpenseType.class));
         cols.add(new ColumnModel("billState", DataTypeEnum.ENUM,BillState.class));
         cols.add(new ColumnModel("remark"));
 
-        ColumnModel project = new ColumnModel("project",DataTypeEnum.F7,"id,name");
+        ColumnModel project = new ColumnModel("project", DataTypeEnum.F7,"id,name");
         project.setClaz(ProjectInfo.class);
         cols.add(project);
 
-        ColumnModel createUser = new ColumnModel("createUser",DataTypeEnum.F7,"id,name");
+        ColumnModel createUser = new ColumnModel("createUser", DataTypeEnum.F7,"id,name");
         createUser.setClaz(UserInfo.class);
         cols.add(createUser);
 
-        ColumnModel auditor = new ColumnModel("auditor",DataTypeEnum.F7,"id,name");
+        ColumnModel auditor = new ColumnModel("auditor", DataTypeEnum.F7,"id,name");
         auditor.setClaz(UserInfo.class);
         cols.add(auditor);
 
-        ColumnModel operator = new ColumnModel("operator",DataTypeEnum.F7,"id,name");
+        ColumnModel operator = new ColumnModel("operator", DataTypeEnum.F7,"id,name");
         operator.setClaz(UserInfo.class);
         cols.add(operator);
         return cols;

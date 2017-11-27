@@ -75,7 +75,7 @@
 				<table name="materialSettleDetailInfos" class="input-entry" >
 					<thead>
 						<tr>
-							<th data-field="contractType" data-width="100" data-type="select" data-locked="true">合同类型</th>
+							<th data-field="expenseType" data-width="100" data-type="select" data-locked="true">费用类型</th>
 							<th data-field="purchaseContractInfo" data-type="f7"  data-width="150"
 								data-editor="{uiWin:{title:'合同信息',height:580,width:880,url:'ec/purchase/purchaseContractF7',uiParams:getParams}}">合同编号</th>
 							<th data-field="contractName" data-type="text" data-locked="true" data-width="100">合同名称</th>
@@ -147,8 +147,7 @@
                 if(!selectContractRow){
                     return false;
 				}
-				console.log(obj);
-                materialSettleDetailInfosEntry.setTableCellValue(obj.rowIndex,'contractType',selectContractRow.contractType);
+                materialSettleDetailInfosEntry.setTableCellValue(obj.rowIndex,'expenseType',selectContractRow.expenseType);
                 materialSettleDetailInfosEntry.setTableCellValue(obj.rowIndex,'amount',selectContractRow.amount);
                 materialSettleDetailInfosEntry.setTableCellValue(obj.rowIndex,'contractName',selectContractRow.name);
                 materialSettleDetailInfosEntry.setTableCellValue(obj.rowIndex,'supplyCompany',selectContractRow.supplyCompany);

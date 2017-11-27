@@ -1,55 +1,54 @@
-package com.myapp.controller.ec.engineering.progressfund;
+package com.myapp.controller.ec.settle;
 
 import com.alibaba.fastjson.JSONObject;
 import com.myapp.core.annotation.PermissionAnn;
 import com.myapp.core.base.service.impl.AbstractBaseService;
 import com.myapp.core.controller.BaseListController;
-import com.myapp.core.entity.UserInfo;
 import com.myapp.core.enums.BaseMethodEnum;
-import com.myapp.core.enums.BillState;
 import com.myapp.core.enums.DataTypeEnum;
+import com.myapp.core.enums.ExpenseType;
 import com.myapp.core.model.ColumnModel;
 import com.myapp.core.util.BaseUtil;
 import com.myapp.core.util.WebUtil;
-import com.myapp.entity.ec.basedata.ProjectInfo;
-import com.myapp.entity.ec.engineering.EngineeringContractInfo;
-import com.myapp.service.ec.engineering.ProgressFundService;
+import com.myapp.service.ec.settle.MaterialSettleDetailService;
 import org.hibernate.Criteria;
+import org.hibernate.criterion.Order;
 import org.hibernate.criterion.Restrictions;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import javax.annotation.Resource;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 /**
- * @path：com.myapp.controller.ec.engineering.progressfund
- * @description：进度款结算
+ * @path：com.myapp.controller.ec.settle
+ * @description：材设结算一览表
  * @author ： ly
  * @date: 2017-08-28 21:02
  */
-@PermissionAnn(name="系统管理.现场管理.工程合同.进度款结算",number="app.ec.engineering.progressfund")
+@PermissionAnn(name="系统管理.现场管理.结算管理.材设结算一览表",number="app.ec.settle.materialsettleledger")
 @Controller
-@RequestMapping("ec/engineering/progressfunds")
-public class ProgressFundListController extends BaseListController {
+@RequestMapping("ec/settle/materialsettleledgers")
+public class MaterialSettleLedgerListController extends BaseListController {
     @Resource
-    private ProgressFundService progressFundService;
+    private MaterialSettleDetailService materialSettleDetailService;
 
     @Override
     public String getEditUrl() {
-        return "ec/engineering/progressfund/progressFundEdit";
+        return "";
     }
 
     @Override
     public String getListUrl() {
-        return "ec/engineering/progressfund/progressFundList";
+        return "ec/settle/material/materialSettleLedgerList";
     }
 
     @Override
     public AbstractBaseService getService() {
-        return this.progressFundService;
+        return this.materialSettleDetailService;
     }
 
     @Override
@@ -81,26 +80,28 @@ public class ProgressFundListController extends BaseListController {
                 }
             }
         }
-        query.add(Restrictions.eq("project.id",projectId));
+        query.add(Restrictions.eq("pr.project.id",projectId));
     }
     @Override
     public List<ColumnModel> getDataBinding() {
         List<ColumnModel> cols = super.getDataBinding();
-        cols.add(new ColumnModel("name"));
-        cols.add(new ColumnModel("number"));
-        cols.add(new ColumnModel("billState", DataTypeEnum.ENUM,BillState.class));
-        cols.add(new ColumnModel("operator", DataTypeEnum.F7, UserInfo.class));
-        cols.add(new ColumnModel("settleDate", DataTypeEnum.DATE));
+        cols.add(new ColumnModel("contract.expenseType", DataTypeEnum.ENUM,ExpenseType.class));
+        cols.add(new ColumnModel("contract.number", DataTypeEnum.STRING));
+        cols.add(new ColumnModel("contract.name", DataTypeEnum.STRING));
+        cols.add(new ColumnModel("contract.supplyCompany", DataTypeEnum.STRING));
+        cols.add(new ColumnModel("contract.amount", DataTypeEnum.NUMBER));
         cols.add(new ColumnModel("settleAmount", DataTypeEnum.NUMBER));
-
-        ColumnModel project = new ColumnModel("project", DataTypeEnum.F7,"id,name");
-        project.setClaz(ProjectInfo.class);
-        cols.add(project);
-
-        ColumnModel engineeringContractInfo = new ColumnModel("engineeringContractInfo",
-                DataTypeEnum.F7,"id,name,number,amount");
-        engineeringContractInfo.setClaz(EngineeringContractInfo.class);
-        cols.add(engineeringContractInfo);
+        cols.add(new ColumnModel("op.name", DataTypeEnum.STRING));
+        cols.add(new ColumnModel("pr.settleDate", DataTypeEnum.DATE));
         return cols;
+    }
+
+    @Override
+    public List<Order> getOrders() {
+        List<Order> orderList = new ArrayList<>();
+        orderList.add(Order.asc("contract.expenseType"));
+        orderList.add(Order.asc("contract.supplyCompany"));
+        orderList.add(Order.asc("pr.settleDate"));
+        return orderList;
     }
 }

@@ -35,8 +35,8 @@
 			</div>
 			<div class="col-sm-3">
 				<div class="input-group">
-					<span class="input-group-addon lable">合同类别</span>
-					<select name="contractType" data-opt="{type:'select',selected:'MATERIAL',url:'base/common/combox?enum=com.myapp.core.enums.ContractType'}"
+					<span class="input-group-addon lable">费用类型</span>
+					<select name="expenseType" data-opt="{type:'select',selected:'MATERIAL',url:'base/common/combox?enum=com.myapp.core.enums.ExpenseType'}"
 							class="form-control input-item require">
 					</select>
 				</div>

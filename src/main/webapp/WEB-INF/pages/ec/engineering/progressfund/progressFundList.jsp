@@ -19,8 +19,9 @@
 						 <thead >
 							<tr>
 								<th data-field="project_name">工程项目</th>
-								<th data-field="name">合同名称</th>
-								<th data-field="number">合同单号</th>
+								<th data-field="engineeringContractInfo_name">合同名称</th>
+								<th data-field="engineeringContractInfo_number">合同单号</th>
+								<th data-field="number">结算单号</th>
 								<th data-field="settleDate" data-type="date">结算时间</th>
 								<th data-field="settleAmount">结算金额</th>
 								<th data-field="billState" data-type="select">业务状态</th>

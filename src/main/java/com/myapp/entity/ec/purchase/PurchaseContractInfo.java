@@ -3,7 +3,7 @@ package com.myapp.entity.ec.purchase;
 import com.myapp.core.annotation.MyEntityAnn;
 import com.myapp.core.base.entity.CoreBaseBillInfo;
 import com.myapp.core.entity.UserInfo;
-import com.myapp.core.enums.ContractType;
+import com.myapp.core.enums.ExpenseType;
 import com.myapp.core.enums.PaymentMethod;
 import com.myapp.entity.ec.basedata.ProjectInfo;
 import org.hibernate.annotations.Type;
@@ -21,15 +21,15 @@ import java.util.Set;
 @Entity
 @MyEntityAnn(name="采购合同")
 @Table(name="t_ec_purchase_contract")
-public class PurchaseContractInfo extends CoreBaseBillInfo{
+public class PurchaseContractInfo extends CoreBaseBillInfo {
     /**
      * 项目单位
      */
     private ProjectInfo project;
     /**
-     * 合同类型
+     * 费用类型
      */
-    private ContractType contractType;
+    private ExpenseType expenseType;
     /**
      * 采购公司
      */
@@ -137,14 +137,14 @@ public class PurchaseContractInfo extends CoreBaseBillInfo{
         this.paymentMethod = paymentMethod;
     }
 
-    @Column(name="fContractType",length = 20)
-    @Type(type="myEnum",parameters={@org.hibernate.annotations.Parameter(name="enumClass",value="com.myapp.core.enums.ContractType")})
-    public ContractType getContractType() {
-        return contractType;
+    @Column(name="fExpenseType",length = 20)
+    @Type(type="myEnum",parameters={@org.hibernate.annotations.Parameter(name="enumClass",value="com.myapp.core.enums.ExpenseType")})
+    public ExpenseType getExpenseType() {
+        return expenseType;
     }
 
-    public void setContractType(ContractType contractType) {
-        this.contractType = contractType;
+    public void setExpenseType(ExpenseType expenseType) {
+        this.expenseType = expenseType;
     }
 
     @Column(name="fContactTel",length = 20)

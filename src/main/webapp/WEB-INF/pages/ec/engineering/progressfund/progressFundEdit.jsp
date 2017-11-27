@@ -109,7 +109,15 @@
 		<div class="row mt10">
 			<div class="col-sm-12">
 				<div class="input-group">
-					<span class="input-group-addon lable">付款说明</span>
+					<span class="input-group-addon lable">工作内容</span>
+					<textarea name="jobContent" style="height:40px;" class="input-item form-control"></textarea>
+				</div>
+			</div>
+		</div>
+		<div class="row mt10">
+			<div class="col-sm-12">
+				<div class="input-group">
+					<span class="input-group-addon lable">备注</span>
 					<textarea name="remark" style="height:40px;" class="input-item form-control"></textarea>
 				</div>
 			</div>

@@ -29,6 +29,10 @@ public class ApplyMaterialInfo extends CoreBaseBillInfo {
      * 材料申购明细信息
      */
     private Set<ApplyMaterialDetailInfo> applyMaterialDetailInfos;
+    /**
+     * 材料申购历史数据
+     */
+    private Set<ApplyMaterialDetailInfo> oldApplyMaterialDetail;
 
     @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "fProjectId")
@@ -56,5 +60,14 @@ public class ApplyMaterialInfo extends CoreBaseBillInfo {
 
     public void setApplyMaterialDetailInfos(Set<ApplyMaterialDetailInfo> applyMaterialDetailInfos) {
         this.applyMaterialDetailInfos = applyMaterialDetailInfos;
+    }
+
+    @Transient
+    public Set<ApplyMaterialDetailInfo> getOldApplyMaterialDetail() {
+        return oldApplyMaterialDetail;
+    }
+
+    public void setOldApplyMaterialDetail(Set<ApplyMaterialDetailInfo> oldApplyMaterialDetail) {
+        this.oldApplyMaterialDetail = oldApplyMaterialDetail;
     }
 }

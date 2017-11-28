@@ -1,15 +1,22 @@
 package com.myapp.service.ec.purchase;
 
 import com.myapp.core.exception.db.QueryException;
+import com.myapp.core.exception.db.SaveException;
 import com.myapp.core.service.base.BaseInterfaceService;
+import com.myapp.entity.ec.budget.BudgetingDetailInfo;
+import com.myapp.entity.ec.purchase.PurchaseStockDetailInfo;
+import com.myapp.entity.ec.purchase.PurchaseContractDetailInfo;
 import com.myapp.entity.ec.purchase.PurchaseStockDetailInfo;
 import org.activiti.engine.delegate.DelegateExecution;
 import org.activiti.engine.delegate.ExecutionListener;
 import org.hibernate.Criteria;
+import org.hibernate.criterion.Order;
+import org.hibernate.criterion.Restrictions;
 import org.hibernate.sql.JoinType;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
+import java.math.BigDecimal;
 import java.util.List;
 
 /**
@@ -31,19 +38,57 @@ public class PurchaseStockDetailService extends BaseInterfaceService<PurchaseSto
 
     }
 
-    @Override
-    public Criteria initQueryCriteria() throws QueryException {
-        Criteria criteria = super.initQueryCriteria();
-        criteria.createAlias("parent","pr", JoinType.INNER_JOIN);
-        criteria.createAlias("purchaseContractDetailInfo","pcd", JoinType.INNER_JOIN);
-        criteria.createAlias("purchaseContractDetailInfo.applyMaterialDetailInfo","amd",
-                JoinType.INNER_JOIN);
-        criteria.createAlias("purchaseContractDetailInfo.applyMaterialDetailInfo.parent","amdpr",
-                JoinType.INNER_JOIN);
-        criteria.createAlias("purchaseContractDetailInfo.applyMaterialDetailInfo.budgetingDetailInfo",
-                "bdi",JoinType.INNER_JOIN);
-        criteria.createAlias("purchaseContractDetailInfo.applyMaterialDetailInfo.budgetingDetailInfo.material",
-                "mater",JoinType.INNER_JOIN);
-        return criteria;
+    /**
+     * 查找最近一次的采购入库信息
+     * @param purchaseContractDetailInfo
+     * @return
+     */
+    public PurchaseStockDetailInfo queryLastPurchaseStock(PurchaseContractDetailInfo purchaseContractDetailInfo)
+            throws QueryException {
+        Criteria query = initQueryCriteria(PurchaseStockDetailInfo.class);
+        query.add(Restrictions.eq("purchaseContractDetailInfo",purchaseContractDetailInfo));
+        query.addOrder(Order.desc("sno"));
+        List purchaseStockDetails = query.list();
+        if(purchaseStockDetails!=null){
+            return (PurchaseStockDetailInfo) purchaseStockDetails.get(0);
+        }
+        return null;
     }
+
+    /**
+     * 查找指定序号后的采购入库
+     * @param purchaseContractDetailInfo
+     * @param sno
+     * @return
+     */
+    public List<PurchaseStockDetailInfo> queryAfterPurchaseStock(
+            PurchaseContractDetailInfo purchaseContractDetailInfo, Long sno) throws QueryException {
+        Criteria query = initQueryCriteria(PurchaseStockDetailInfo.class);
+        query.add(Restrictions.eq("purchaseContractDetailInfo",purchaseContractDetailInfo));
+        query.add(Restrictions.gt("sno",sno));
+        List purchaseStocks = query.list();
+        if(purchaseStocks!=null){
+            return purchaseStocks;
+        }
+        return null;
+    }
+
+    /**
+     * 功能：更新累计供应数量
+     * @param diffCount
+     * @param purchaseContractDetailInfo
+     * @param sno
+     */
+    public void updateCumulativeCount(BigDecimal diffCount, PurchaseContractDetailInfo purchaseContractDetailInfo,
+                                            Long sno) throws SaveException, QueryException {
+        List<PurchaseStockDetailInfo>purchaseStockDetailList = queryAfterPurchaseStock(purchaseContractDetailInfo,sno);
+        if(purchaseStockDetailList!=null){
+            for(PurchaseStockDetailInfo purchaseStockDetailInfo:purchaseStockDetailList){
+                purchaseStockDetailInfo.setCumulativeCount(purchaseStockDetailInfo.getCumulativeCount()
+                        .subtract(diffCount));
+                saveEntity(purchaseStockDetailInfo);
+            }
+        }
+    }
+
 }

@@ -19,21 +19,21 @@
 						 <thead >
 							<tr>
 								<th data-field="mater.number"  rowspan="2" width="120">物料编码</th>
-								<th data-field="pcd.materialName"  rowspan="2" width="120">物料名称</th>
-								<th data-field="pcd.specification"  rowspan="2" width="120">规格</th>
-								<th data-field="pcd.measureUnitName"  rowspan="2" width="60">计量单位</th>
+								<th data-field="bdi.materialName"  rowspan="2" width="120">物料名称</th>
+								<th data-field="bdi.specification"  rowspan="2" width="120">规格</th>
+								<th data-field="mui.name"  rowspan="2" width="60">计量单位</th>
 								<th data-field="bdi.quantity"  rowspan="2" width="100">预算数量</th>
 								<th colspan="4"  width="400">材料申购计划</th>
 								<th colspan="3"  width="300">材料实际供应</th>
 							</tr>
 							<tr>
-								<th data-field="amdpr.number" class="_myMerge" width="100">申购单号</th>
-								<th data-field="amd.purchaseNum" width="100">申购数量</th>
-								<th data-field="amd.arrivalTime" width="100" data-type="date">计划到场时间</th>
-								<th data-field="amd.total" width="100">累计申购数量</th>
-								<th data-field="count" class="_myMerge" width="100">供应数量</th>
-								<th data-field="pr.inStockDate" width="100" data-type="date">到场时间</th>
-								<th data-field="contactTel" width="100">累计供应数量</th>
+								<th data-field="pr.number" class="_myMerge" width="100">申购单号</th>
+								<th data-field="purchaseNum" width="100">申购数量</th>
+								<th data-field="arrivalTime" width="100" data-type="date">计划到场时间</th>
+								<th data-field="cumulativePurchaseNum" width="100">累计申购数量</th>
+								<th data-field="psdi.count" class="_myMerge" width="100">供应数量</th>
+								<th data-field="psdipr.inStockDate" width="100" data-type="date">到场时间</th>
+								<th data-field="psdi.cumulativeCount" width="100">累计供应数量</th>
 							</tr>
 						</thead>
 					</table>

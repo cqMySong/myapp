@@ -30,10 +30,17 @@ public class PurchaseStockDetailInfo extends CoreBaseEntryInfo<PurchaseStockInfo
      */
     private BigDecimal count;
     /**
+     * 累计入库数量
+     */
+    private BigDecimal cumulativeCount;
+    /**
      * 备注
      */
     private String remark;
-
+    /**
+     * 序号
+     */
+    private Long sno;
     @OneToOne
     @JoinColumn(name = "fPurchaseContractId")
     public PurchaseContractInfo getPurchaseContractInfo() {
@@ -70,5 +77,22 @@ public class PurchaseStockDetailInfo extends CoreBaseEntryInfo<PurchaseStockInfo
 
     public void setRemark(String remark) {
         this.remark = remark;
+    }
+
+    @Column(name="fCumulativeCount",precision = 10,scale = 2)
+    public BigDecimal getCumulativeCount() {
+        return cumulativeCount;
+    }
+
+    public void setCumulativeCount(BigDecimal cumulativeCount) {
+        this.cumulativeCount = cumulativeCount;
+    }
+    @Column(name="fSno")
+    public Long getSno() {
+        return sno;
+    }
+
+    public void setSno(Long sno) {
+        this.sno = sno;
     }
 }

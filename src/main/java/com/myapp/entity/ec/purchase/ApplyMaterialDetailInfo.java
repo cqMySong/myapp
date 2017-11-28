@@ -7,6 +7,7 @@ import com.myapp.entity.ec.budget.BudgetingDetailInfo;
 import javax.persistence.*;
 import java.math.BigDecimal;
 import java.util.Date;
+import java.util.Set;
 
 /**
  * @path：com.myapp.entity.ec.purchase
@@ -30,6 +31,18 @@ public class ApplyMaterialDetailInfo extends CoreBaseEntryInfo<ApplyMaterialInfo
      * 到场时间
      */
     private Date arrivalTime;
+    /**
+     * 累计申购数量
+     */
+    private BigDecimal cumulativePurchaseNum;
+    /**
+     * 序号
+     */
+    private Long sno;
+    /**
+     * 采购合同详细
+     */
+    private Set<PurchaseContractDetailInfo> purchaseContractDetailInfoSet;
 
     @OneToOne
     @JoinColumn(name = "fBudgetingDetailId")
@@ -57,5 +70,32 @@ public class ApplyMaterialDetailInfo extends CoreBaseEntryInfo<ApplyMaterialInfo
 
     public void setArrivalTime(Date arrivalTime) {
         this.arrivalTime = arrivalTime;
+    }
+
+    @Column(name="fCumulativePurchaseNum",precision = 10,scale = 2)
+    public BigDecimal getCumulativePurchaseNum() {
+        return cumulativePurchaseNum;
+    }
+
+    public void setCumulativePurchaseNum(BigDecimal cumulativePurchaseNum) {
+        this.cumulativePurchaseNum = cumulativePurchaseNum;
+    }
+
+    @Column(name="fSno")
+    public Long getSno() {
+        return sno;
+    }
+
+    public void setSno(Long sno) {
+        this.sno = sno;
+    }
+
+    @OneToMany(cascade={CascadeType.ALL},mappedBy="applyMaterialDetailInfo")
+    public Set<PurchaseContractDetailInfo> getPurchaseContractDetailInfoSet() {
+        return purchaseContractDetailInfoSet;
+    }
+
+    public void setPurchaseContractDetailInfoSet(Set<PurchaseContractDetailInfo> purchaseContractDetailInfoSet) {
+        this.purchaseContractDetailInfoSet = purchaseContractDetailInfoSet;
     }
 }

@@ -12,6 +12,7 @@ import org.hibernate.annotations.Type;
 import javax.persistence.*;
 import java.math.BigDecimal;
 import java.util.Date;
+import java.util.Set;
 
 /**
  * @path：com.myapp.entity.ec.purchase
@@ -63,6 +64,15 @@ public class PurchaseContractDetailInfo extends CoreBaseEntryInfo<PurchaseContra
      *
      */
     private BigDecimal totalPrice;
+    /**
+     * 合同入库信息
+     */
+    private Set<PurchaseStockDetailInfo> purchaseStockDetailInfoSet;
+
+    /**
+     * 序号
+     */
+    private Long sno;
 
     @OneToOne
     @JoinColumn(name = "fApplyMaterialDetailId")
@@ -154,5 +164,14 @@ public class PurchaseContractDetailInfo extends CoreBaseEntryInfo<PurchaseContra
 
     public void setTotalPrice(BigDecimal totalPrice) {
         this.totalPrice = totalPrice;
+    }
+
+    @OneToMany(cascade={CascadeType.ALL},mappedBy="purchaseContractDetailInfo")
+    public Set<PurchaseStockDetailInfo> getPurchaseStockDetailInfoSet() {
+        return purchaseStockDetailInfoSet;
+    }
+
+    public void setPurchaseStockDetailInfoSet(Set<PurchaseStockDetailInfo> purchaseStockDetailInfoSet) {
+        this.purchaseStockDetailInfoSet = purchaseStockDetailInfoSet;
     }
 }

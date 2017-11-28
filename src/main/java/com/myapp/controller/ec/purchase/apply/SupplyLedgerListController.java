@@ -14,6 +14,7 @@ import com.myapp.entity.ec.basedata.ProjectInfo;
 import com.myapp.service.ec.purchase.ApplyMaterialDetailService;
 import org.hibernate.Criteria;
 import org.hibernate.criterion.Order;
+import org.hibernate.criterion.Restrictions;
 import org.hibernate.sql.JoinType;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -68,6 +69,7 @@ public class SupplyLedgerListController extends BaseListController {
         query.createAlias("budgetingDetailInfo.material","mater",JoinType.INNER_JOIN);
         query.createAlias("budgetingDetailInfo.measureUnitInfo","mui",JoinType.INNER_JOIN);
         query.createAlias("parent","pr",JoinType.INNER_JOIN);
+        query.createAlias("parent.project","pro",JoinType.INNER_JOIN);
         query.createAlias("purchaseContractDetailInfoSet","pcdi",JoinType.LEFT_OUTER_JOIN);
         query.createAlias("purchaseContractDetailInfoSet.purchaseStockDetailInfoSet","psdi",JoinType.LEFT_OUTER_JOIN);
         query.createAlias("purchaseContractDetailInfoSet.purchaseStockDetailInfoSet.parent","psdipr",JoinType.LEFT_OUTER_JOIN);
@@ -89,7 +91,7 @@ public class SupplyLedgerListController extends BaseListController {
                 }
             }
         }
-        //query.add(Restrictions.eq("pro.id",projectId));
+        query.add(Restrictions.eq("pro.id",projectId));
     }
     @Override
     public List<ColumnModel> getDataBinding() {

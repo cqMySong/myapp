@@ -27,6 +27,10 @@ public abstract class BaseUtil {
 		return (obj == null) ||(obj.toString()==null)|| (obj.toString().matches("\\s*"));
 	}
 	
+	public static boolean isNotEmpty(Object obj){
+		return !isEmpty(obj);
+	}
+	
 	 /**
 	  * 获取map对象里面的所有key
 	  */

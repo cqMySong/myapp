@@ -81,7 +81,7 @@
 				<div class="col-sm-6">
 					<div class="input-group">
 						<span class="input-group-addon lable">占地面积</span> 
-						<input name="area" data-opt="{type:'number',precision:2}" class="require input-item">
+						<input name="area" data-opt="{type:'number',precision:2}" data-rule="number" class="require input-item">
 					</div>
 				</div>
 				<div class="col-sm-6 mb15">

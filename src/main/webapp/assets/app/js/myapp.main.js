@@ -836,8 +836,10 @@ MyDataTable.prototype = {
 						}
 					}else if(_type == DataType.select){
                         var selectObj = rowData[field];
-                        if(selectObj){
+                        if($.isPlainObject(selectObj)){
                             val = selectObj.key;
+						}else{
+							val = selectObj;
 						}
 					}else{
 						val = rowData[field];
@@ -1159,6 +1161,7 @@ MyDataTable.prototype = {
 					thisMyTable.$element.data('curEditorColumn',null);
 					$td.data('hasInit','no');
 				};
+				
 				_editorOpt.initData = thisMyTable.getTableCellValue(obj.rowIndex,obj.field);
 				var editOpt = $.extend(true,{}, _editorOpt)
 				var thisEditor = thisColumn.editor;
@@ -1262,6 +1265,11 @@ MyDataTableCellEditor.prototype = {
 				this.initEditorEvent(opt.endEdit);
 				//3:初始化值
 				thisMyComponet.myComponet(type,{method:'setData',opt:opt.initData});
+				
+				//4：处理下拉选择对象存储,用于选择后的对象查询
+				if(DataType.select == type){
+					this.$element.data('datas',thisMyComponet.data('datas'));
+				}
 			}
 		}
 	},
@@ -1276,6 +1284,12 @@ MyDataTableCellEditor.prototype = {
 					val = thisMyComponet.myF7().getData();
 				}else{
 					val = thisMyComponet.myComponet(type,{method:'getdata'});
+				}
+				if(DataType.select==type&&!webUtil.isEmpty(val)){
+					var dataMap = this.$element.data('datas');
+					if(!webUtil.isEmpty(dataMap)){
+						val = dataMap[val];
+					}
 				}
 			}
 		}
@@ -1302,13 +1316,18 @@ MyDataTableCellEditor.prototype = {
 			}else if(DataType.select == type){
 				_editor.on('select2:select', function (evt) {
 					if(!webUtil.isEmpty(endEdit)&&$.isFunction(endEdit)){
-						endEdit(thisMyComponet.myComponet(type,{method:'getData'}));
+						var val = thisMyComponet.myComponet(type,{method:'getdata'});
+						var dataMap = thisMyComponet.data('datas');
+						if(!webUtil.isEmpty(dataMap)&&!webUtil.isEmpty(val)){
+							val = dataMap[val];
+						}
+						endEdit(val);
 					}
 				});
 			}else{
-				_editor.focus();
+				thisMyComponet.focus();
 				if(!webUtil.isEmpty(thisMyComponet)){
-					_editor.blur(function(e) {
+					thisMyComponet.blur(function(e) {
 						if(!webUtil.isEmpty(endEdit)&&$.isFunction(endEdit)){
 							endEdit(thisMyComponet.myComponet(type,{method:'getdata'}));
 						}

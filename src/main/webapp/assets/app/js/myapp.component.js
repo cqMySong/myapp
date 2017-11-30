@@ -134,17 +134,25 @@
 				var _defSelOpt = {data:undefined,key:'key',val:'val',selected:undefined};
 				var _selOpt = $.extend(true,{},_defSelOpt, _opt);
 				var _items = _selOpt.data;
+				var _datas = {};
 				if(!webUtil.isEmpty(_items)&&$.isArray(_items)&&_items.length>0){
 					for(var i=0;i<_items.length;i++){
 						var item = _items[i];
-						var _optionDom = $('<option value="'+item[_selOpt.key]+'">'+item[_selOpt.val]+"</option>");
+						var _key = item[_selOpt.key];
+						var _val = item[_selOpt.val];
+						if(" " == _val){
+							_val = '&nbsp;&nbsp;';
+						}
+						var _optionDom = $('<option value="'+_key+'">'+_val+"</option>");
 						if(!webUtil.isEmpty(_selOpt.selected)
-								&&_selOpt.selected==item[_selOpt.key]){
+								&&_selOpt.selected==item[_key]){
 							_optionDom.attr("selected","selected");
 						}
 						$thisDom.append(_optionDom);
+						_datas[_key] = item;
 					}
 				}
+				$thisDom.data("datas",_datas);
 			}else if(_type ==DataType.checkbox||_type ==DataType.radio){
 				var _ckrad_opt = $.extend(true,{},{theme:'green',checked:false}, _opt);
 				var $parentContainer = $thisDom.parent('.mycheckradiobox_container');
@@ -236,6 +244,9 @@
 				$thisDom.val(_data);
 			}else if(_type ==DataType.select){//下拉选择
 				var comObj = $thisDom.select2();
+				if($.isPlainObject(_data)){
+					_data = _data.key;
+				}
 				comObj.val(_data).trigger("change");
 			}else if(_type ==DataType.date||_type ==DataType.datetime){
 				var $parentContainer = $thisDom.parent('.date');

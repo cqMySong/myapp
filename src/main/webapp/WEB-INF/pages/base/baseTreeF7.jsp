@@ -43,7 +43,7 @@ $(document).ready(function() {
 	webUtil.ajaxData({url:tree_url,data:data,async:false,success:function(data){
 		var treeDatas = data.data;
 		if (treeDatas.length>0) {
-			treeMain.reLoadTree(treeDatas)
+			treeMain.reLoadTree(treeDatas);
 			treeMain.selectNodeByIndex(0);
 		}
 	}});

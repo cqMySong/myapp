@@ -1,17 +1,17 @@
-package com.myapp.controller.ec.purchase.apply;
+package com.myapp.controller.ec.purchase.stockin;
 
 import com.alibaba.fastjson.JSONObject;
 import com.myapp.core.annotation.PermissionAnn;
 import com.myapp.core.base.service.impl.AbstractBaseService;
 import com.myapp.core.controller.BaseListController;
-import com.myapp.core.entity.MeasureUnitInfo;
+import com.myapp.core.entity.UserInfo;
 import com.myapp.core.enums.BaseMethodEnum;
 import com.myapp.core.enums.DataTypeEnum;
 import com.myapp.core.model.ColumnModel;
 import com.myapp.core.util.BaseUtil;
 import com.myapp.core.util.WebUtil;
-import com.myapp.entity.ec.basedata.ProjectInfo;
 import com.myapp.service.ec.purchase.ApplyMaterialDetailService;
+import com.myapp.service.ec.purchase.PurchaseStockDetailService;
 import org.hibernate.Criteria;
 import org.hibernate.criterion.Order;
 import org.hibernate.criterion.Restrictions;
@@ -27,16 +27,16 @@ import java.util.Map;
 
 /**
  * @path：com.myapp.controller.ec.purchase.stockin
- * @description：材料申购、供应台账
+ * @description：材料、设备出入库台账
  * @author： ly
  * @date: 2017-11-19 14:58
  */
-@PermissionAnn(name="系统管理.现场管理.采购管理.供应台账",number="app.ec.purchase.supplyledger")
+@PermissionAnn(name="系统管理.现场管理.采购管理.材料、设备出入库台账",number="app.ec.purchase.stockledger")
 @Controller
-@RequestMapping("ec/purchase/supplyledger")
-public class SupplyLedgerListController extends BaseListController {
+@RequestMapping("ec/purchase/stockledger")
+public class StockLedgerListController extends BaseListController {
     @Resource
-    private ApplyMaterialDetailService applyMaterialDetailService;
+    private PurchaseStockDetailService purchaseStockDetailService;
 
     @Override
     public String getEditUrl() {
@@ -45,12 +45,12 @@ public class SupplyLedgerListController extends BaseListController {
 
     @Override
     public String getListUrl() {
-        return "ec/purchase/apply/supplyLedgerList";
+        return "ec/purchase/instock/stockLedgerList";
     }
 
     @Override
     public AbstractBaseService getService() {
-        return this.applyMaterialDetailService;
+        return this.purchaseStockDetailService;
     }
 
     @Override
@@ -65,15 +65,17 @@ public class SupplyLedgerListController extends BaseListController {
     }
     @Override
     public void executeQueryParams(Criteria query) {
-        query.createAlias("budgetingDetailInfo","bdi", JoinType.INNER_JOIN);
-        query.createAlias("budgetingDetailInfo.material","mater",JoinType.INNER_JOIN);
-        query.createAlias("budgetingDetailInfo.measureUnitInfo","mui",JoinType.INNER_JOIN);
+        query.createAlias("purchaseContractDetailInfo","pcdi",JoinType.INNER_JOIN);
+        query.createAlias("purchaseContractDetailInfo.applyMaterialDetailInfo","amdi",JoinType.INNER_JOIN);
+        query.createAlias("purchaseContractDetailInfo.applyMaterialDetailInfo.budgetingDetailInfo",
+                "bdi",JoinType.INNER_JOIN);
+        query.createAlias("purchaseContractDetailInfo.applyMaterialDetailInfo.budgetingDetailInfo.material",
+                "mater",JoinType.INNER_JOIN);
         query.createAlias("parent","pr",JoinType.INNER_JOIN);
-        query.createAlias("parent.project","pro",JoinType.INNER_JOIN);
-        query.createAlias("purchaseContractDetailInfoSet","pcdi",JoinType.LEFT_OUTER_JOIN);
-        query.createAlias("purchaseContractDetailInfoSet.purchaseStockDetailInfoSet","psdi",JoinType.LEFT_OUTER_JOIN);
-        query.createAlias("purchaseContractDetailInfoSet.purchaseStockDetailInfoSet.parent","psdipr",JoinType.LEFT_OUTER_JOIN);
-        //query.createAlias("");
+        query.createAlias("stockInfo","stock",JoinType.INNER_JOIN);
+        query.createAlias("stockInfo.stockOutDetailInfo","stockOut",JoinType.LEFT_OUTER_JOIN);
+        query.createAlias("stockInfo.stockOutDetailInfo.parent","stockOutPr",JoinType.LEFT_OUTER_JOIN);
+        query.createAlias("stockInfo.stockOutDetailInfo.parent.picker","pick",JoinType.LEFT_OUTER_JOIN);
         super.executeQueryParams(query);
         String serach = request.getParameter("search");
         String projectId = "xyz";
@@ -91,7 +93,7 @@ public class SupplyLedgerListController extends BaseListController {
                 }
             }
         }
-        query.add(Restrictions.eq("pro.id",projectId));
+        //query.add(Restrictions.eq("pro.id",projectId));
     }
     @Override
     public List<ColumnModel> getDataBinding() {
@@ -100,29 +102,25 @@ public class SupplyLedgerListController extends BaseListController {
         cols.add(new ColumnModel("bdi.materialName",DataTypeEnum.STRING));
         cols.add(new ColumnModel("bdi.specification",DataTypeEnum.STRING));
         cols.add(new ColumnModel("bdi.quantity",DataTypeEnum.NUMBER));
-        cols.add(new ColumnModel("mui.name",DataTypeEnum.STRING));
+        cols.add(new ColumnModel("pr.inStockDate",DataTypeEnum.DATE));
+        cols.add(new ColumnModel("count",DataTypeEnum.NUMBER));
         cols.add(new ColumnModel("pr.number",DataTypeEnum.STRING));
-        cols.add(new ColumnModel("purchaseNum",DataTypeEnum.NUMBER));
-        cols.add(new ColumnModel("arrivalTime",DataTypeEnum.DATE));
-        cols.add(new ColumnModel("cumulativePurchaseNum",DataTypeEnum.NUMBER));
-        cols.add(new ColumnModel("psdi.count",DataTypeEnum.NUMBER));
-        cols.add(new ColumnModel("psdipr.inStockDate",DataTypeEnum.DATE));
-        cols.add(new ColumnModel("psdi.cumulativeCount",DataTypeEnum.NUMBER));
+        cols.add(new ColumnModel("stockOut.count",DataTypeEnum.NUMBER));
+        cols.add(new ColumnModel("stockOutPr.number",DataTypeEnum.STRING));
+        cols.add(new ColumnModel("stockOutPr.outStockDate",DataTypeEnum.DATE));
+        cols.add(new ColumnModel("pick.name",DataTypeEnum.STRING));
         return cols;
     }
 
     @Override
     public Order getOrder() {
-        return Order.asc("mater.number");
+        return Order.asc("id");
     }
 
     @Override
     public List<Order> getOrders() {
         List<Order> orderList = new ArrayList<>();
-        orderList.add(Order.asc("mater.number"));
-        orderList.add(Order.asc("pr.number"));
-        orderList.add(Order.asc("sno"));
-        orderList.add(Order.asc("psdi.sno"));
+
         return orderList;
     }
 }

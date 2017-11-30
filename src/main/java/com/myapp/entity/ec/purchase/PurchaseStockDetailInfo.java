@@ -2,9 +2,12 @@ package com.myapp.entity.ec.purchase;
 
 import com.myapp.core.annotation.MyEntityAnn;
 import com.myapp.core.base.entity.CoreBaseEntryInfo;
+import com.myapp.entity.ec.stock.StockInfo;
+import com.myapp.entity.ec.stock.StockOutDetailInfo;
 
 import javax.persistence.*;
 import java.math.BigDecimal;
+import java.util.Set;
 
 /**
  * @path：com.myapp.entity.ec.purchase
@@ -41,6 +44,10 @@ public class PurchaseStockDetailInfo extends CoreBaseEntryInfo<PurchaseStockInfo
      * 序号
      */
     private Long sno;
+    /**
+     * 出库信息
+     */
+    private StockInfo stockInfo;
     @OneToOne
     @JoinColumn(name = "fPurchaseContractId")
     public PurchaseContractInfo getPurchaseContractInfo() {
@@ -94,5 +101,14 @@ public class PurchaseStockDetailInfo extends CoreBaseEntryInfo<PurchaseStockInfo
 
     public void setSno(Long sno) {
         this.sno = sno;
+    }
+
+    @OneToOne(cascade={CascadeType.ALL},mappedBy="purchaseStockDetailInfo")
+    public StockInfo getStockInfo() {
+        return stockInfo;
+    }
+
+    public void setStockInfo(StockInfo stockInfo) {
+        this.stockInfo = stockInfo;
     }
 }

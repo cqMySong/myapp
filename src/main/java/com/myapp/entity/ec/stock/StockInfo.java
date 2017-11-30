@@ -9,6 +9,7 @@ import com.myapp.entity.ec.purchase.PurchaseStockInfo;
 
 import javax.persistence.*;
 import java.math.BigDecimal;
+import java.util.Set;
 
 /**
  * @path：com.myapp.entity.ec.stock
@@ -56,6 +57,10 @@ public class StockInfo extends CoreInfo {
      * 备注
      */
     private String remark;
+    /**
+     * 出库信息
+     */
+    private StockOutDetailInfo stockOutDetailInfo;
 
     @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "fProjectId")
@@ -140,5 +145,14 @@ public class StockInfo extends CoreInfo {
 
     public void setInStockNumber(String inStockNumber) {
         this.inStockNumber = inStockNumber;
+    }
+
+    @OneToOne(cascade={CascadeType.ALL},mappedBy="stockInfo")
+    public StockOutDetailInfo getStockOutDetailInfo() {
+        return stockOutDetailInfo;
+    }
+
+    public void setStockOutDetailInfo(StockOutDetailInfo stockOutDetailInfo) {
+        this.stockOutDetailInfo = stockOutDetailInfo;
     }
 }

@@ -59,12 +59,11 @@
 						<th data-field="materialType" data-width="150" data-type="select" data-locked="true"
 						data-editor="{type:'select',url:'base/common/combox?enum=com.myapp.enums.MaterialType}">类型</th>
 						<th data-field="material" data-type="f7"
-							data-editor="{uiWin:{title:'物料信息',height:550,width:680,url:'base/materialF7',uiParams:getParams}}">物料名称</th>
+							data-editor="{mutil:true,uiWin:{title:'物料信息',height:550,width:680,url:'base/materialF7'}}">物料名称</th>
 						<th data-field="specification" data-type="text" data-width="140" data-locked="true">规格</th>
 						<th data-field="measureUnitInfo" data-width="80"  data-type="f7" data-locked="true">单位</th>
 						<th data-field="quantity" data-type="number" data-width="120">数量</th>
 						<th data-field="budgetaryPrice" data-width="120"  data-type="number">预算价格</th>
-						<th data-field="totalPrice"  data-width="120"  data-locked="true" >总价</th>
 						<th data-field="remark"  data-width="150" data-type="textarea">备注</th>
 						<th data-field="materialName" data-type="text" data-visible="false">物料名称</th>
 					</tr>
@@ -128,30 +127,34 @@
         if(webUtil.isEmpty(budgetingDetailInfosEntry)) return;
         if(obj.field=='material'){
             if(!webUtil.isEmpty(budgetingDetailInfosEntry)){
-                var materialObj = obj.rowData[obj.field];
-                var materialTypeVal = materialObj.materialType;
-                if(materialTypeVal){
-                    budgetingDetailInfosEntry.setTableCellValue(obj.rowIndex,'materialType',materialTypeVal);
-                    budgetingDetailInfosEntry.setTableCellValue(obj.rowIndex,'specification',materialObj.specification);
-                    var measureUnitInfo = {id:materialObj.unit_id,name:materialObj.unit_name};
-                    budgetingDetailInfosEntry.setTableCellValue(obj.rowIndex,'measureUnitInfo',measureUnitInfo);
-                    budgetingDetailInfosEntry.setTableCellValue(obj.rowIndex,'materialName',materialObj.name);
+                var materialArr = obj.rowData[obj.field];
+                var materialObjFirst = null;
+                if(materialArr&&materialArr.length>0){
+					$.each(materialArr,function(i,materialObj){
+					    if(i==0){
+                            var materialTypeVal = materialObj.materialType;
+                            if(materialTypeVal){
+                                budgetingDetailInfosEntry.setTableCellValue(obj.rowIndex,'materialType',materialTypeVal);
+                                budgetingDetailInfosEntry.setTableCellValue(obj.rowIndex,'specification',materialObj.specification);
+                                var measureUnitInfo = {id:materialObj.unit_id,name:materialObj.unit_name};
+                                budgetingDetailInfosEntry.setTableCellValue(obj.rowIndex,'measureUnitInfo',measureUnitInfo);
+                                budgetingDetailInfosEntry.setTableCellValue(obj.rowIndex,'materialName',materialObj.name);
+                                materialObjFirst = materialObj;
+                            }
+						}else{
+							var rowData = {materialType:materialObj.materialType,id:'',materialName:materialObj.name,
+                                specification:materialObj.specification,measureUnitInfo:{id:materialObj.unit_id,name:materialObj.unit_name},
+								material:{id:materialObj.id,name:materialObj.name}};
+                            budgetingDetailInfosEntry.insertRow(obj.rowIndex+i,rowData);
+						}
+					});
+                    budgetingDetailInfosEntry.setTableCellValue(obj.rowIndex,'material',{id:materialObjFirst.id,name:materialObjFirst.name});
 				}
-            }
-		}
-		if(obj.rowData["quantity"]&&obj.rowData["budgetaryPrice"]){
-            if(!webUtil.isEmpty(budgetingDetailInfosEntry)){
-                budgetingDetailInfosEntry.setTableCellValue(obj.rowIndex,'totalPrice',
-					Number(obj.rowData["quantity"]*obj.rowData["budgetaryPrice"]).toFixed(2));
+
             }
 		}
     }
 
-    function getParams(){
-        var pro = {};
-        pro.projectId = $('input[name="project"]').myF7().getValue();
-        return pro;
-    }
     /**
      * 一切操作前的接口函数
      */

@@ -9,6 +9,7 @@ import org.hibernate.annotations.Type;
 
 import javax.persistence.*;
 import java.math.BigDecimal;
+import java.util.Set;
 
 /**
  * @path：com.myapp.entity.ec.budget
@@ -45,10 +46,6 @@ public class BudgetingDetailInfo extends CoreBaseEntryInfo<BudgetingInfo> {
      */
     private MeasureUnitInfo measureUnitInfo;
     /**
-     * 物料总价
-     */
-    private BigDecimal totalPrice;
-    /**
      * 备注
      */
     private String remark;
@@ -56,6 +53,10 @@ public class BudgetingDetailInfo extends CoreBaseEntryInfo<BudgetingInfo> {
      * 物料名称
      */
     private String materialName;
+    /**
+     * 预算询价信息
+     */
+    private Set<EnquiryPriceDetailInfo> enquiryPriceDetailInfos;
 
     @Column(name="fQuantity",precision = 10,scale = 2)
     public BigDecimal getQuantity() {
@@ -112,15 +113,6 @@ public class BudgetingDetailInfo extends CoreBaseEntryInfo<BudgetingInfo> {
         this.specification = specification;
     }
 
-    @Column(name="fTotalPrice",precision = 12,scale = 4)
-    public BigDecimal getTotalPrice() {
-        return totalPrice;
-    }
-
-    public void setTotalPrice(BigDecimal totalPrice) {
-        this.totalPrice = totalPrice;
-    }
-
     @ManyToOne
     @JoinColumn(name = "fMeasureUnitId")
     public MeasureUnitInfo getMeasureUnitInfo() {
@@ -138,5 +130,14 @@ public class BudgetingDetailInfo extends CoreBaseEntryInfo<BudgetingInfo> {
 
     public void setMaterialName(String materialName) {
         this.materialName = materialName;
+    }
+
+    @OneToMany(cascade={CascadeType.ALL},mappedBy="budgetingDetailInfo")
+    public Set<EnquiryPriceDetailInfo> getEnquiryPriceDetailInfos() {
+        return enquiryPriceDetailInfos;
+    }
+
+    public void setEnquiryPriceDetailInfos(Set<EnquiryPriceDetailInfo> enquiryPriceDetailInfos) {
+        this.enquiryPriceDetailInfos = enquiryPriceDetailInfos;
     }
 }

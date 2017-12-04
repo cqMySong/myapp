@@ -58,7 +58,7 @@
 					<tr>
 						<th data-field="materialType" data-width="80" data-type="select" data-locked="true">物料类型</th>
 						<th data-field="budgetingDetailInfo" data-type="f7"  data-width="150"
-							data-editor="{uiWin:{title:'预算详细',height:580,width:880,url:'ec/budget/budgetingDetailF7',uiParams:getParams}}">物料名称</th>
+							data-editor="{mutil:true,uiWin:{title:'预算详细',height:580,width:880,url:'ec/budget/budgetingDetailF7',uiParams:getParams}}">物料名称</th>
 						<th data-field="specification" data-type="text" data-locked="true" data-width="100">规格</th>
 						<th data-field="measureUnit" data-type="f7" data-locked="true" data-width="80">计量单位</th>
 						<th data-field="quantity" data-type="text" data-locked="true" data-width="80">数量</th>
@@ -132,15 +132,40 @@
         if(webUtil.isEmpty(enquiryPriceDetailInfosEntry)) return;
         if(obj.field=='budgetingDetailInfo'){
             if(!webUtil.isEmpty(enquiryPriceDetailInfosEntry)){
-                var budgetDetailInfo = obj.rowData[obj.field];
-				enquiryPriceDetailInfosEntry.setTableCellValue(obj.rowIndex,'materialType',budgetDetailInfo.materialType);
-                enquiryPriceDetailInfosEntry.setTableCellValue(obj.rowIndex,'specification',budgetDetailInfo.specification);
-                enquiryPriceDetailInfosEntry.setTableCellValue(obj.rowIndex,'quantity',budgetDetailInfo.quantity);
-                enquiryPriceDetailInfosEntry.setTableCellValue(obj.rowIndex,'budgetaryPrice',budgetDetailInfo.budgetaryPrice);
-                var budgetingDetailInfo = {id:budgetDetailInfo.id,name:budgetDetailInfo.material_name};
-                enquiryPriceDetailInfosEntry.setTableCellValue(obj.rowIndex,'budgetingDetailInfo',budgetingDetailInfo);
-                var measureInfo = {id:budgetDetailInfo.measureUnitInfo_id,name:budgetDetailInfo.measureUnitInfo_name};
-                enquiryPriceDetailInfosEntry.setTableCellValue(obj.rowIndex,'measureUnit',measureInfo);
+                var budgetDetailArr = obj.rowData[obj.field];
+				if(budgetDetailArr&&budgetDetailArr.length>0){
+                    var budgetDetailInfoFirst = null;
+				    $.each(budgetDetailArr,function(i,budgetDetailInfo){
+						if(i==0){
+                            enquiryPriceDetailInfosEntry.setTableCellValue(obj.rowIndex,'materialType',
+								budgetDetailInfo.materialType);
+                            enquiryPriceDetailInfosEntry.setTableCellValue(obj.rowIndex,'specification',
+								budgetDetailInfo.specification);
+                            enquiryPriceDetailInfosEntry.setTableCellValue(obj.rowIndex,'quantity',
+								budgetDetailInfo.quantity);
+                            enquiryPriceDetailInfosEntry.setTableCellValue(obj.rowIndex,'budgetaryPrice',
+								budgetDetailInfo.budgetaryPrice);
+                            var budgetingDetailInfo = {id:budgetDetailInfo.id,name:budgetDetailInfo.material_name};
+                            enquiryPriceDetailInfosEntry.setTableCellValue(obj.rowIndex,'budgetingDetailInfo',
+								budgetingDetailInfo);
+                            var measureInfo = {id:budgetDetailInfo.measureUnitInfo_id,name:budgetDetailInfo.measureUnitInfo_name};
+                            enquiryPriceDetailInfosEntry.setTableCellValue(obj.rowIndex,'measureUnit',measureInfo);
+                            budgetDetailInfoFirst = budgetDetailInfo;
+						}else{
+						    var rowData = {materialType:budgetDetailInfo.materialType,
+								specification:budgetDetailInfo.specification,
+                                quantity:budgetDetailInfo.quantity,
+                                budgetaryPrice:budgetDetailInfo.budgetaryPrice,
+                                budgetingDetailInfo:{id:budgetDetailInfo.id,name:budgetDetailInfo.material_name},
+                                measureUnit:{id:budgetDetailInfo.measureUnitInfo_id,
+									name:budgetDetailInfo.measureUnitInfo_name}};
+                            enquiryPriceDetailInfosEntry.insertRow(obj.rowIndex+i,rowData);
+						}
+					});
+                    enquiryPriceDetailInfosEntry.setTableCellValue(obj.rowIndex,'budgetingDetailInfo',
+                        {id:budgetDetailInfoFirst.id,name:budgetDetailInfoFirst.material_name});
+				}
+
             }
 		}
     }

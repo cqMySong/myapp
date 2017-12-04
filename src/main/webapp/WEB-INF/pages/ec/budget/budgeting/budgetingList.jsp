@@ -22,6 +22,8 @@
 								<th data-field="number">预算编号</th>
 								<th data-field="project_name">工程项目</th>
 								<th data-field="billState" data-type="select">业务状态</th>
+								<th data-field="createUser_name">创建人</th>
+								<th data-field="auditor_name">审核人</th>
 								<th data-field="remark">备注</th>
 							</tr>
 						</thead>

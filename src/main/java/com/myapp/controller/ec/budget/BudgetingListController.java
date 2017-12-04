@@ -70,6 +70,7 @@ public class BudgetingListController extends BaseListController {
             }
         }
     }
+    @Override
     public void executeQueryParams(Criteria query) {
         super.executeQueryParams(query);
         String serach = request.getParameter("search");
@@ -106,6 +107,7 @@ public class BudgetingListController extends BaseListController {
         cols.add(createUser);
         ColumnModel auditor = new ColumnModel("auditor",DataTypeEnum.F7,"id,name");
         auditor.setClaz(UserInfo.class);
+        cols.add(auditor);
         return cols;
     }
 

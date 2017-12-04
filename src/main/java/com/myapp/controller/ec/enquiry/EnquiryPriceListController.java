@@ -98,6 +98,7 @@ public class EnquiryPriceListController extends BaseListController {
         cols.add(createUser);
         ColumnModel auditor = new ColumnModel("auditor",DataTypeEnum.F7,"id,name");
         auditor.setClaz(UserInfo.class);
+        cols.add(auditor);
         return cols;
     }
 }

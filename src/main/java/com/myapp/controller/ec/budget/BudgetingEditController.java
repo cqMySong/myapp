@@ -96,7 +96,6 @@ public class BudgetingEditController extends BaseBillEditImportController {
         budgetingDetail.getCols().add(new ColumnModel("specification"));
         budgetingDetail.getCols().add(new ColumnModel("remark"));
         budgetingDetail.getCols().add(new ColumnModel("materialName"));
-        budgetingDetail.getCols().add(new ColumnModel("totalPrice",DataTypeEnum.NUMBER));
         budgetingDetail.getCols().add(new ColumnModel("materialType",DataTypeEnum.ENUM, MaterialType.class));
         cols.add(budgetingDetail);
 

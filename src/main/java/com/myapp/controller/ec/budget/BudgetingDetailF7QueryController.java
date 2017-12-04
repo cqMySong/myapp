@@ -1,5 +1,6 @@
 package com.myapp.controller.ec.budget;
 
+import com.alibaba.fastjson.JSONObject;
 import com.myapp.core.base.service.impl.AbstractBaseService;
 import com.myapp.core.controller.BaseF7QueryController;
 import com.myapp.core.entity.MaterialInfo;
@@ -8,13 +9,19 @@ import com.myapp.core.enums.DataTypeEnum;
 import com.myapp.core.enums.MaterialType;
 import com.myapp.core.model.ColumnModel;
 import com.myapp.core.service.base.BaseService;
+import com.myapp.core.util.BaseUtil;
 import com.myapp.entity.ec.budget.BudgetingDetailInfo;
+import org.hibernate.Criteria;
 import org.hibernate.criterion.Order;
+import org.hibernate.criterion.Restrictions;
+import org.hibernate.sql.JoinType;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import javax.annotation.Resource;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * @path:com.myapp.controller.ec.budget
@@ -35,7 +42,11 @@ public class BudgetingDetailF7QueryController extends BaseF7QueryController {
 	@Override
 	public List<ColumnModel> getDataBinding() {
 		List<ColumnModel> cols = super.getDataBinding();
-		ColumnModel col = new ColumnModel("materialType",DataTypeEnum.ENUM,MaterialType.class);
+		ColumnModel col = new ColumnModel("pr.number",DataTypeEnum.STRING);
+		col.setAlias_zh("预算编号");
+		cols.add(col);
+
+		col = new ColumnModel("materialType",DataTypeEnum.ENUM,MaterialType.class);
 		col.setAlias_zh("类型");
 		cols.add(col);
 
@@ -71,4 +82,21 @@ public class BudgetingDetailF7QueryController extends BaseF7QueryController {
 		return "预算详细信息";
 	}
 
+	@Override
+	public void executeQueryParams(Criteria query) {
+		super.executeQueryParams(query);
+		query.createAlias("parent","pr", JoinType.INNER_JOIN);
+		query.createAlias("parent.project","pro", JoinType.INNER_JOIN);
+		query.createAlias("enquiryPriceDetailInfos","epdi",JoinType.LEFT_OUTER_JOIN);
+		String search = request.getParameter("search");
+		String projectId = "-1";
+		if(!BaseUtil.isEmpty(search)) {
+			Map searchMap = JSONObject.parseObject(search, new HashMap().getClass());
+			if(searchMap!=null&&searchMap.get("uiCtx")!=null){
+				projectId = ((JSONObject)searchMap.get("uiCtx")).getString("projectId");
+			}
+		}
+		query.add(Restrictions.eq("pro.id",projectId));
+		query.add(Restrictions.isNull("epdi.id"));
+	}
 }

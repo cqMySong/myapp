@@ -10,6 +10,7 @@ import com.myapp.core.enums.MaterialType;
 import com.myapp.core.model.ColumnModel;
 import com.myapp.core.service.base.BaseService;
 import com.myapp.core.util.BaseUtil;
+import com.myapp.core.util.WebUtil;
 import com.myapp.entity.ec.budget.BudgetingDetailInfo;
 import org.hibernate.Criteria;
 import org.hibernate.criterion.Order;
@@ -87,16 +88,18 @@ public class BudgetingDetailF7QueryController extends BaseF7QueryController {
 		super.executeQueryParams(query);
 		query.createAlias("parent","pr", JoinType.INNER_JOIN);
 		query.createAlias("parent.project","pro", JoinType.INNER_JOIN);
-		query.createAlias("enquiryPriceDetailInfos","epdi",JoinType.LEFT_OUTER_JOIN);
 		String search = request.getParameter("search");
 		String projectId = "-1";
 		if(!BaseUtil.isEmpty(search)) {
 			Map searchMap = JSONObject.parseObject(search, new HashMap().getClass());
 			if(searchMap!=null&&searchMap.get("uiCtx")!=null){
 				projectId = ((JSONObject)searchMap.get("uiCtx")).getString("projectId");
+				if(!((JSONObject)searchMap.get("uiCtx")).getBooleanValue("enquiryPrice")){
+					query.createAlias("enquiryPriceDetailInfos","epdi",JoinType.LEFT_OUTER_JOIN);
+					query.add(Restrictions.isNull("epdi.id"));
+				}
 			}
 		}
-		query.add(Restrictions.eq("pro.id",projectId));
-		query.add(Restrictions.isNull("epdi.id"));
+		query.add(Restrictions.eq("pro.id", WebUtil.UUID_ReplaceID(projectId)));
 	}
 }

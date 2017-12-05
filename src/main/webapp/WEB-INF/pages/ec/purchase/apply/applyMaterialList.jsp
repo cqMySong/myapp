@@ -22,6 +22,8 @@
 								<th data-field="number">申购单号</th>
 								<th data-field="project_name">工程项目</th>
 								<th data-field="billState" data-type="select">业务状态</th>
+								<th data-field="createUser_name">申购人</th>
+								<th data-field="createDate" data-type="date">申购时间</th>
 								<th data-field="remark">备注</th>
 							</tr>
 						</thead>

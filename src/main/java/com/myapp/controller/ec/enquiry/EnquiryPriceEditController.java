@@ -53,7 +53,6 @@ public class EnquiryPriceEditController extends BaseBillEditController {
     public void afterOperate(BaseMethodEnum bme) throws HibernateException, QueryException {
         super.afterOperate(bme);
         if(this.data!=null){
-            System.out.println(bme.getValue());
             if(!bme.getValue().equals(BaseMethodEnum.ADDNEW.getValue())&&this.data instanceof JSONObject){
                 JSONObject jsonObject = (JSONObject) this.data;
                 JSONArray enquiryPriceDetails = jsonObject.getJSONArray("enquiryPriceDetailInfos");

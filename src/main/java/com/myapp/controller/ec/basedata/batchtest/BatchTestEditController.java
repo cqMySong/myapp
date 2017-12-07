@@ -14,6 +14,7 @@ import com.myapp.core.controller.BaseDataEditController;
 import com.myapp.core.enums.DataTypeEnum;
 import com.myapp.core.model.ColumnModel;
 import com.myapp.entity.ec.basedata.BatchTestInfo;
+import com.myapp.entity.ec.basedata.ProBaseWbsInfo;
 import com.myapp.enums.ec.TestGroup;
 import com.myapp.service.ec.basedata.BatchTestService;
 
@@ -31,7 +32,7 @@ public class BatchTestEditController extends BaseDataEditController {
 	
 	public List<ColumnModel> getDataBinding() {
 		List<ColumnModel> cols = super.getDataBinding();
-		cols.add(new ColumnModel("testGroup",DataTypeEnum.ENUM,TestGroup.class));
+		cols.add(new ColumnModel("proBaseWbs",DataTypeEnum.F7,ProBaseWbsInfo.class));
 		cols.add(new ColumnModel("content"));
 		return cols;
 	}

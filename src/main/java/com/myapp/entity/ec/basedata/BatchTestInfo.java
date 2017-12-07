@@ -2,6 +2,9 @@ package com.myapp.entity.ec.basedata;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
+import javax.persistence.JoinColumn;
+import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
 import org.hibernate.annotations.Parameter;
@@ -20,21 +23,23 @@ import com.myapp.enums.ec.TestGroup;
 @Entity
 @Table(name="t_ec_bathchtest")
 public class BatchTestInfo extends CoreBaseDataInfo {
-	private TestGroup testGroup;//检验批分组
-	private String content;//分项工程
+	private ProBaseWbsInfo proBaseWbs;//检验批分解结构
+	private String content;//检验批划分标准
 	
-	@Column(name="fskilltype",length=10)
-	@Type(type="myEnum",parameters={@Parameter(name="enumClass",value="com.myapp.enums.ec.TestGroup")})
-	public TestGroup getTestGroup() {
-		return testGroup;
+	@OneToOne(fetch=FetchType.LAZY)
+	@JoinColumn(name = "fprowbsId")
+	public ProBaseWbsInfo getProBaseWbs() {
+		return proBaseWbs;
 	}
-	public void setTestGroup(TestGroup testGroup) {
-		this.testGroup = testGroup;
+	public void setProBaseWbs(ProBaseWbsInfo proBaseWbs) {
+		this.proBaseWbs = proBaseWbs;
 	}
+	
 	@Column(name="fcontent",length=500)
 	public String getContent() {
 		return content;
 	}
+	
 	public void setContent(String content) {
 		this.content = content;
 	}

@@ -3,7 +3,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-<title>检验批划分</title>
+<title>资料项目录</title>
 </head>
 <style type="text/css">
 </style>
@@ -16,6 +16,7 @@
 		</div>
 		<form id="editForm">
 			<div style="display: none;">
+				<input class="input-item" name="skillType" value="SM">
 			</div>
 			<div class="row">
 				<div class="col-sm-6">
@@ -31,11 +32,13 @@
 					</div>
 				</div>
 			</div>
-			<div class="row mt10">
+			<div class="row mt20">
 				<div class="col-sm-6">
 					<div class="input-group">
-						<span class="input-group-addon lable">分项工程</span> 
-						<input name="proBaseWbs" class="input-item form-control read" data-opt="{type:'f7',uiWin:{title:'分项工程'}}" />
+						<span class="input-group-addon lable">类别</span> 
+						<select name="resourceType" id="rtype" data-opt="{type:'select',url:'base/common/combox?enum=com.myapp.enums.ec.ResourceType'}" 
+		                	class="form-control input-item require">
+		                </select>
 					</div>
 				</div>
 				<div class="col-sm-6">
@@ -45,19 +48,11 @@
 					</div>
 				</div>
 			</div>
-			<div class="row mt10">
-				<div class="col-sm-12">
-					<div class="input-group">
-						<span class="input-group-addon lable">划分标准</span>
-						<textarea name="content" class="input-item form-control" rows="2"></textarea>
-					</div>
-				</div>
-			</div>
-			<div class="row mt10">
+			<div class="row mt20">
 				<div class="col-sm-12">
 					<div class="input-group">
 						<span class="input-group-addon lable">备注</span>
-						<textarea name="remark" class="input-item form-control" rows="1"></textarea>
+						<textarea name="remark" class="input-item form-control" rows="2"></textarea>
 					</div>
 				</div>
 			</div>
@@ -78,15 +73,15 @@
 			var uiCtx = getUICtx();
 			if(!webUtil.isEmpty(uiCtx)&&$.isPlainObject(uiCtx)
 					&&!webUtil.isEmpty(uiCtx.tree)){
-				$('input[name="proBaseWbs"]').myF7().setData(uiCtx.tree);
+				$('select[name="resourceType"]').myComponet('select',{method:'setdata',opt:uiCtx.tree.id});
 			}
 		}
 	}
 
 	$(document).ready(function() {
 		var editUI = $('#editPanel').editUI({
-			title : "检验批划分",
-			baseUrl : "ec/basedata/batchtest",
+			title : "资料项目录",
+			baseUrl : "ec/basedata/resourceitem",
 			toolbar : "#table-toolbar",
 			form : {
 				el : "#editForm"

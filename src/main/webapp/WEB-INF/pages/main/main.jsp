@@ -298,12 +298,14 @@ function addMainTab(item){
 	mainTab.addTab(item);
 }
 function getTopMainHeight(){
+	$('#mainTab').find('div.tab-content').css({"padding-top":$('#mainTab>ul.nav-tabs').height()+'px'});
 	return $(top.document).height()-($('#headPanel').innerHeight()+$('#mainTab>ul.nav-tabs').height())-10;
 }
 $(document).ready(function() {
 	var initTabs = {items:[{id:'homeIdex',title:'主页',icon:'fa fa-home',enColse:false,url:'main/home'}]};
 	mainTab = $('#mainTab').myTab('init',initTabs);
-	$('#mainTab').find('ul.nav-tabs').css({"position":'fixed',"width":'100%'});
+	var mainTabW = $(document).width()-280;
+	$('#mainTab').find('ul.nav-tabs').css({"position":'fixed',"width":mainTabW+'px'});
 	$('#mainTab').find('div.tab-content').css({"padding-top":'45px'});
 	$('#userSet').click(function(){
 		openUserSetUI();

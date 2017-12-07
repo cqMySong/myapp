@@ -20,7 +20,7 @@ import java.util.Set;
 @Table(name="t_ec_apply_material_detail")
 public class ApplyMaterialDetailInfo extends CoreBaseEntryInfo<ApplyMaterialInfo> {
     /**
-     * 采购明细信息
+     * 预算明细信息
      */
     private BudgetingDetailInfo budgetingDetailInfo;
     /**
@@ -43,6 +43,10 @@ public class ApplyMaterialDetailInfo extends CoreBaseEntryInfo<ApplyMaterialInfo
      * 采购合同详细
      */
     private Set<PurchaseContractDetailInfo> purchaseContractDetailInfoSet;
+    /**
+     * 采购入库明细
+     */
+    private Set<PurchaseStockDetailInfo> purchaseStockDetailInfoSet;
 
     @OneToOne
     @JoinColumn(name = "fBudgetingDetailId")
@@ -97,5 +101,14 @@ public class ApplyMaterialDetailInfo extends CoreBaseEntryInfo<ApplyMaterialInfo
 
     public void setPurchaseContractDetailInfoSet(Set<PurchaseContractDetailInfo> purchaseContractDetailInfoSet) {
         this.purchaseContractDetailInfoSet = purchaseContractDetailInfoSet;
+    }
+
+    @OneToMany(cascade={CascadeType.ALL},mappedBy="applyMaterialDetailInfo")
+    public Set<PurchaseStockDetailInfo> getPurchaseStockDetailInfoSet() {
+        return purchaseStockDetailInfoSet;
+    }
+
+    public void setPurchaseStockDetailInfoSet(Set<PurchaseStockDetailInfo> purchaseStockDetailInfoSet) {
+        this.purchaseStockDetailInfoSet = purchaseStockDetailInfoSet;
     }
 }

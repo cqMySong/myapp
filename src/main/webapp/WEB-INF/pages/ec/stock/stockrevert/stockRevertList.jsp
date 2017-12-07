@@ -22,7 +22,7 @@
 								<th data-field="name">归还说明</th>
 								<th data-field="number">归还单号</th>
 								<th data-field="revertStockDate" data-type="date">归还时间</th>
-								<th data-field="returnPerson_name">归还人</th>
+								<th data-field="returnPerson">归还人</th>
 								<th data-field="billState" data-type="select">业务状态</th>
 								<th data-field="remark">备注</th>
 							</tr>

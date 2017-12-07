@@ -55,26 +55,23 @@ public class PurchaseStockEditController extends BaseBillEditController {
                 JSONObject jsonObject = (JSONObject) this.data;
                 JSONArray purchaseStockDetailInfos = jsonObject.getJSONArray("purchaseStockDetailInfos");
                 JSONArray purchaseStockDetailNew = new JSONArray();
+                JSONObject materialInfo = null;
                 JSONObject purchaseStockDetail = null;
-                JSONObject purchaseContractDetail = null;
                 JSONObject materialType = null;
+                JSONObject applyMaterialInfo = null;
                 for(int i=0;i<purchaseStockDetailInfos.size();i++){
                     purchaseStockDetail = purchaseStockDetailInfos.getJSONObject(i);
-                    purchaseContractDetail = purchaseStockDetail.getJSONObject("purchaseContractDetailInfo");
-                    purchaseStockDetail.put("specification",purchaseContractDetail.getString("specification"));
-                    purchaseStockDetail.put("measureUnitName",purchaseContractDetail.getString("measureUnitName"));
-                    purchaseStockDetail.put("purchasePrice",purchaseContractDetail.getBigDecimal("purchasePrice"));
-                    purchaseStockDetail.put("quantity",purchaseContractDetail.getBigDecimal("quantity"));
+                    materialInfo = purchaseStockDetail.getJSONObject("material");
                     materialType = new JSONObject();
-                    materialType.put("key",purchaseContractDetail.get("materialType"));
-                    materialType.put("val", MaterialType.map.get(purchaseContractDetail.getString("materialType")).getName());
+                    materialType.put("key",materialInfo.get("materialType"));
+                    materialType.put("val", MaterialType.map.get(materialInfo.getString("materialType")).getName());
                     purchaseStockDetail.put("materialType",materialType);
-                    JSONObject material = new JSONObject();
-                    material.put("name",purchaseContractDetail.getString("materialName"));
-                    purchaseStockDetail.put("material",material);
+                    applyMaterialInfo = purchaseStockDetail.getJSONObject("applyMaterialInfo");
+                    applyMaterialInfo.put("name",applyMaterialInfo.getString("number"));
+                    purchaseStockDetail.put("applyMaterialInfo",applyMaterialInfo);
                     purchaseStockDetailNew.add(purchaseStockDetail);
                 }
-                jsonObject.put("purchaseStockDetailInfos",purchaseStockDetailNew);
+                jsonObject.put("stockOutDetailInfos",purchaseStockDetailNew);
                 this.data = jsonObject;
             }
         }
@@ -88,7 +85,6 @@ public class PurchaseStockEditController extends BaseBillEditController {
         cols.add(new ColumnModel("remark"));
         cols.add(new ColumnModel("consignee",DataTypeEnum.F7,UserInfo.class));
         cols.add(new ColumnModel("inStockDate",DataTypeEnum.DATE));
-        cols.add(new ColumnModel("totalPrice",DataTypeEnum.NUMBER));
         cols.add(new ColumnModel("billState",DataTypeEnum.ENUM, BillState.class));
         cols.add(new ColumnModel("createUser",DataTypeEnum.F7,UserInfo.class));
         cols.add(new ColumnModel("lastUpdateUser",DataTypeEnum.F7,UserInfo.class));
@@ -103,17 +99,23 @@ public class PurchaseStockEditController extends BaseBillEditController {
         ColumnModel purchaseStockDetailInfos = new ColumnModel("purchaseStockDetailInfos",DataTypeEnum.ENTRY,
                 PurchaseStockDetailInfo.class);
 
-        ColumnModel purchaseContractInfo = new ColumnModel("purchaseContractInfo",DataTypeEnum.F7,"id,name");
-        purchaseContractInfo.setClaz(PurchaseContractInfo.class);
-        purchaseStockDetailInfos.getCols().add(purchaseContractInfo);
+        ColumnModel applyMaterialDetailInfo = new ColumnModel("applyMaterialDetailInfo",DataTypeEnum.F7,"id");
+        applyMaterialDetailInfo.setClaz(ApplyMaterialDetailInfo.class);
+        purchaseStockDetailInfos.getCols().add(applyMaterialDetailInfo);
 
-        ColumnModel purchaseContractDetailInfo = new ColumnModel("purchaseContractDetailInfo",DataTypeEnum.F7,
-                "id,materialName,materialType,specification,measureUnitName,quantity,purchasePrice");
-        purchaseContractDetailInfo.setClaz(PurchaseContractDetailInfo.class);
-        purchaseStockDetailInfos.getCols().add(purchaseContractDetailInfo);
+        ColumnModel applyMaterialInfo = new ColumnModel("applyMaterialInfo",DataTypeEnum.F7,"id,number");
+        applyMaterialInfo.setClaz(ApplyMaterialInfo.class);
+        purchaseStockDetailInfos.getCols().add(applyMaterialInfo);
+
+        ColumnModel materialInfo = new ColumnModel("material",DataTypeEnum.F7,"id,name,materialType");
+        materialInfo.setClaz(MaterialInfo.class);
+        purchaseStockDetailInfos.getCols().add(materialInfo);
 
         purchaseStockDetailInfos.getCols().add(new ColumnModel("id",DataTypeEnum.PK));
         purchaseStockDetailInfos.getCols().add(new ColumnModel("count",DataTypeEnum.NUMBER));
+        purchaseStockDetailInfos.getCols().add(new ColumnModel("measureUnitName",DataTypeEnum.STRING));
+        purchaseStockDetailInfos.getCols().add(new ColumnModel("specification",DataTypeEnum.STRING));
+        purchaseStockDetailInfos.getCols().add(new ColumnModel("origin",DataTypeEnum.STRING));
         purchaseStockDetailInfos.getCols().add(new ColumnModel("remark"));
         cols.add(purchaseStockDetailInfos);
 

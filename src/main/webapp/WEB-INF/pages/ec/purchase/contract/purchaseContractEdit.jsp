@@ -36,7 +36,7 @@
 			<div class="col-sm-3">
 				<div class="input-group">
 					<span class="input-group-addon lable">费用类型</span>
-					<select name="expenseType" data-opt="{type:'select',selected:'MATERIAL',url:'base/common/combox?enum=com.myapp.core.enums.ExpenseType'}"
+					<select name="expenseType" data-opt="{type:'select',selected:'MATERIAL',url:'base/common/combox?enum=com.myapp.core.enums.PurchaseExpenseType'}"
 							class="form-control input-item require">
 					</select>
 				</div>
@@ -60,8 +60,7 @@
 			<div class="col-sm-3">
 				<div class="input-group">
 					<span class="input-group-addon lable">负责人</span>
-					<input name="operator" class="require input-item form-control require"
-				   data-opt="{type:'f7',uiWin:{title:'人员选择',height:600,width:800,url:'base/userf7'}}" />
+					<input name="operator" class="input-item form-control require"/>
 				</div>
 			</div>
 			<div class="col-sm-3">
@@ -104,11 +103,11 @@
 						<th data-field="applyMaterialDetailInfo" data-type="f7" data-visible="false">申购单id</th>
 						<th data-field="materialName" data-type="text" data-visible="false">材料名称</th>
 						<th data-field="material" data-type="f7"  data-width="150"
-							data-editor="{uiWin:{title:'材料申购单',height:580,width:880,url:'ec/purchase/applyMaterialDetailF7',uiParams:getParams}}">物料名称</th>
+							data-editor="{mutil:true,uiWin:{title:'材料申购单',height:580,width:880,url:'ec/purchase/applyMaterialDetailF7',uiParams:getParams}}">物料名称</th>
 						<th data-field="specification" data-type="text" data-locked="true" data-width="100">规格</th>
 						<th data-field="measureUnitName" data-type="text" data-locked="true" data-width="100">计量单位</th>
 						<th data-field="origin"  data-width="100" data-type="text">产地</th>
-						<th data-field="quantity" data-type="number" data-width="100">数量</th>
+						<th data-field="quantity" data-type="number" data-width="100">采购数量</th>
 						<th data-field="purchasePrice" data-width="100"  data-type="number">采购单价</th>
 						<th data-field="totalPrice" data-width="100"  data-type="text" data-locked="true">总计</th>
 					</tr>
@@ -169,25 +168,38 @@
     }
     function purchaseContractDetailInfos_dataChanged($cell,obj){
         if(webUtil.isEmpty(purchaseContractDetailInfosEntry)) return;
-        if(obj.field=='material'){
-            if(!webUtil.isEmpty(purchaseContractDetailInfosEntry)){
-                var selectPlanRow = obj.rowData[obj.field];
-                if(!selectPlanRow){
-                    return false;
-				}
-                var materialTypeVal = {key:selectPlanRow.budgetingDetailInfo_materialType_id,
-					val:selectPlanRow.budgetingDetailInfo_materialType};
-				purchaseContractDetailInfosEntry.setTableCellValue(obj.rowIndex,'materialType',materialTypeVal);
-                purchaseContractDetailInfosEntry.setTableCellValue(obj.rowIndex,'specification',
-					selectPlanRow.budgetingDetailInfo_specification);
-                purchaseContractDetailInfosEntry.setTableCellValue(obj.rowIndex,'measureUnitName',
-                    selectPlanRow.budgetingDetailInfo_measureUnitInfo);
-                purchaseContractDetailInfosEntry.setTableCellValue(obj.rowIndex,'materialName',
-                    selectPlanRow.name);
-                purchaseContractDetailInfosEntry.setTableCellValue(obj.rowIndex,'applyMaterialDetailInfo',
-					{id:selectPlanRow.applyMaterialDetailInfo_id});
-                purchaseContractDetailInfosEntry.setTableCellValue(obj.rowIndex,'quantity',selectPlanRow.purchaseNum);
-
+        if(obj.field=='material'&&!webUtil.isEmpty(purchaseContractDetailInfosEntry)){
+			var applyMaterialArr = obj.rowData[obj.field];
+			if(applyMaterialArr&&applyMaterialArr.length>0) {
+				var  applyMaterialFirst = null;
+				$.each(applyMaterialArr, function (i, applyMaterialInfo) {
+					if (i == 0) {
+						purchaseContractDetailInfosEntry.setTableCellValue(obj.rowIndex, 'materialType',
+							applyMaterialInfo["bdi.materialType"]);
+						purchaseContractDetailInfosEntry.setTableCellValue(obj.rowIndex, 'specification',
+                            applyMaterialInfo["bdi.specification"]);
+						purchaseContractDetailInfosEntry.setTableCellValue(obj.rowIndex, 'measureUnitName',
+                            applyMaterialInfo["mui.name"]);
+						purchaseContractDetailInfosEntry.setTableCellValue(obj.rowIndex, 'materialName',
+                            applyMaterialInfo["bdi.materialName"]);
+						purchaseContractDetailInfosEntry.setTableCellValue(obj.rowIndex, 'applyMaterialDetailInfo',
+							{id: applyMaterialInfo.id});
+						purchaseContractDetailInfosEntry.setTableCellValue(obj.rowIndex, 'quantity',
+							applyMaterialInfo.purchaseNum);
+                        applyMaterialFirst = applyMaterialInfo;
+					}else{
+                        var rowData = {materialType:applyMaterialInfo["bdi.materialType"],
+                            specification:applyMaterialInfo["bdi.specification"],
+                            quantity:applyMaterialInfo.purchaseNum,
+                            materialName:applyMaterialInfo["bdi.materialName"],
+                            applyMaterialDetailInfo:{id: applyMaterialInfo.id},
+                            measureUnitName:applyMaterialInfo["mui.name"],
+                            material:{id:applyMaterialInfo["mater.id"],name:applyMaterialInfo["bdi.materialName"]}};
+                        purchaseContractDetailInfosEntry.insertRow(obj.rowIndex+i,rowData);
+					}
+				});
+                purchaseContractDetailInfosEntry.setTableCellValue(obj.rowIndex, 'material',
+                    {id:applyMaterialFirst["mater.id"],name:applyMaterialFirst["bdi.materialName"]});
             }
 		}
         if(obj.rowData["quantity"]&&obj.rowData["purchasePrice"]){

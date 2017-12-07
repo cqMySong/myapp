@@ -29,24 +29,23 @@
 			</div>
 			<div class="col-sm-3">
 				<div class="input-group">
-					<span class="input-group-addon lable">工程项目</span>
-					<input name="project" class="require input-item form-control"
-						   data-opt="{type:'f7',uiWin:{title:'工程项目',height:600,width:300,url:'ec/basedata/project'}}" />
+					<span class="input-group-addon lable">责任人</span>
+					<input name="picker" class="require input-item form-control"/>
 				</div>
 			</div>
 			<div class="col-sm-3">
 				<div class="input-group">
-					<span class="input-group-addon lable">领料人</span>
-					<input name="picker" class="require input-item form-control require"
-						   data-opt="{type:'f7',uiWin:{title:'人员选择',height:600,width:800,url:'base/userf7'}}" />
+					<span class="input-group-addon lable">出库日期</span>
+					<input type="text" name="outStockDate" class="form-control input-item require" data-opt="{type:'date'}">
 				</div>
 			</div>
 		</div>
 		<div class="row mt10">
 			<div class="col-sm-3">
 				<div class="input-group">
-					<span class="input-group-addon lable">出库日期</span>
-					<input type="text" name="outStockDate" class="form-control input-item require" data-opt="{type:'date'}">
+					<span class="input-group-addon lable">工程项目</span>
+					<input name="project" class="require input-item form-control"
+						   data-opt="{type:'f7',uiWin:{title:'工程项目',height:600,width:300,url:'ec/basedata/project'}}" />
 				</div>
 			</div>
 			<div class="col-sm-3">
@@ -69,10 +68,10 @@
 				<table name="stockOutDetailInfos" class="input-entry" >
 					<thead>
 						<tr>
-							<th data-field="stockInfo" data-width="100" data-type="f7" data-locked="true">入库单号</th>
+							<th data-field="stockInfo" data-width="100" data-type="f7" data-visible="false" data-locked="true">库存信息</th>
 							<th data-field="materialType" data-width="100" data-type="select" data-locked="true">材料类型</th>
 							<th data-field="material" data-type="f7"  data-width="150"
-								data-editor="{uiWin:{title:'库存信息',height:580,width:880,url:'ec/stock/stockF7',uiParams:getParams}}">物料名称</th>
+								data-editor="{mutil:true,uiWin:{title:'库存信息',height:580,width:880,url:'ec/stock/stockF7',uiParams:getParams}}">物料名称</th>
 							<th data-field="specification" data-type="text" data-locked="true" data-width="100">规格</th>
 							<th data-field="measureUnit" data-type="text" data-locked="true" data-width="100">计量单位</th>
 							<th data-field="count" data-type="number" data-width="100">领取数量</th>
@@ -137,16 +136,29 @@
         if(webUtil.isEmpty(stockOutDetailInfosEntry)) return;
         if(obj.field=='material'){
             if(!webUtil.isEmpty(stockOutDetailInfosEntry)){
-                var stockRow = obj.rowData[obj.field];
-                if(!stockRow){
-                    return false;
-				}
-                var materialType = {key:stockRow.materialInfo_materialType_id,val:stockRow.materialInfo_materialType};
-                stockOutDetailInfosEntry.setTableCellValue(obj.rowIndex,'specification',stockRow.specification);
-                stockOutDetailInfosEntry.setTableCellValue(obj.rowIndex,'materialType',materialType);
-                stockOutDetailInfosEntry.setTableCellValue(obj.rowIndex,'measureUnit',stockRow.measureUnit);
-                stockOutDetailInfosEntry.setTableCellValue(obj.rowIndex,'stockCount',stockRow.count);
-                stockOutDetailInfosEntry.setTableCellValue(obj.rowIndex,'stockInfo',{id:stockRow.stock_id,name:stockRow.inStockNumber});
+                var stockRowArr = obj.rowData[obj.field];
+                if(stockRowArr&&stockRowArr.length>0) {
+                    var stockRowFirst = null;
+                    $.each(stockRowArr, function (i, stockRow) {
+                        if (i == 0) {
+                            stockOutDetailInfosEntry.setTableCellValue(obj.rowIndex, 'specification', stockRow.specification);
+                            stockOutDetailInfosEntry.setTableCellValue(obj.rowIndex, 'materialType', stockRow.materialType);
+                            stockOutDetailInfosEntry.setTableCellValue(obj.rowIndex, 'measureUnit', stockRow.measureUnit);
+                            stockOutDetailInfosEntry.setTableCellValue(obj.rowIndex, 'stockCount', stockRow.count);
+                            stockOutDetailInfosEntry.setTableCellValue(obj.rowIndex, 'stockInfo', {id: stockRow.id});
+                            stockRowFirst = stockRow;
+                        } else {
+                            var rowData = {materialType:stockRow.materialType,
+                                specification:stockRow.specification,
+                                measureUnit:stockRow.measureUnit,
+                                material:{id:stockRow.materialInfo_id,name:stockRow.materialInfo_name},
+                                stockInfo:{id:stockRow.id}};
+                            stockOutDetailInfosEntry.insertRow(obj.rowIndex+i,rowData);
+                        }
+                        stockOutDetailInfosEntry.setTableCellValue(obj.rowIndex, 'material',
+							{id:stockRowFirst.materialInfo_id,name:stockRowFirst.materialInfo_name});
+                    });
+                }
             }
 		}
     }

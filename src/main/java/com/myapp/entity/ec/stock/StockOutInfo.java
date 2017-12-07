@@ -30,7 +30,7 @@ public class StockOutInfo extends CoreBaseBillInfo {
     /**
      * 领料人
      */
-    private UserInfo picker;
+    private String picker;
     /**
      * 领料时间
      */
@@ -56,13 +56,12 @@ public class StockOutInfo extends CoreBaseBillInfo {
         this.project = project;
     }
 
-    @OneToOne
-    @JoinColumn(name = "fPickerId")
-    public UserInfo getPicker() {
+    @Column(name = "fPicker")
+    public String getPicker() {
         return picker;
     }
 
-    public void setPicker(UserInfo picker) {
+    public void setPicker(String picker) {
         this.picker = picker;
     }
 

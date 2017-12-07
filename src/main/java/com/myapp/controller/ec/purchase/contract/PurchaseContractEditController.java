@@ -54,9 +54,9 @@ public class PurchaseContractEditController extends BaseBillEditController {
         cols.add(new ColumnModel("number"));
         cols.add(new ColumnModel("remark"));
         cols.add(new ColumnModel("paymentMethod", DataTypeEnum.ENUM, PaymentMethod.class));
-        cols.add(new ColumnModel("expenseType", DataTypeEnum.ENUM, ExpenseType.class));
+        cols.add(new ColumnModel("expenseType", DataTypeEnum.ENUM, PurchaseExpenseType.class));
         cols.add(new ColumnModel("supplyCompany"));
-        cols.add(new ColumnModel("operator", DataTypeEnum.F7,UserInfo.class));
+        cols.add(new ColumnModel("operator", DataTypeEnum.STRING));
         cols.add(new ColumnModel("contactTel"));
         cols.add(new ColumnModel("amount", DataTypeEnum.NUMBER));
         cols.add(new ColumnModel("billState", DataTypeEnum.ENUM, BillState.class));

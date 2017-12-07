@@ -22,8 +22,8 @@
 								<th data-field="number">合同编号</th>
 								<th data-field="amount">金额</th>
 								<th data-field="paymentMethod" data-type="select">付款方式</th>
-								<th data-field="supplyCompany">供货单位</th>
-								<th data-field="operator_name">负责人</th>
+								<th data-field="supplyCompany">合同单位</th>
+								<th data-field="operator">负责人</th>
 								<th data-field="contactTel">联系电话</th>
 								<th data-field="expenseType" data-type="select">费用类型</th>
 								<th data-field="project_name">工程项目</th>

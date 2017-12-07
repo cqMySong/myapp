@@ -6,6 +6,7 @@ import com.myapp.core.entity.MaterialInfo;
 
 import javax.persistence.*;
 import java.math.BigDecimal;
+import java.util.Set;
 
 /**
  * @path：com.myapp.entity.ec.stock.stockout
@@ -41,6 +42,10 @@ public class StockOutDetailInfo extends CoreBaseEntryInfo<StockOutInfo> {
      * 库存信息
      */
     private StockInfo stockInfo;
+    /**
+     * 退还信息
+     */
+    private Set<StockRevertDetailInfo> stockRevertDetailInfoSet;
 
     @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "fMaterialId")
@@ -96,5 +101,14 @@ public class StockOutDetailInfo extends CoreBaseEntryInfo<StockOutInfo> {
 
     public void setStockInfo(StockInfo stockInfo) {
         this.stockInfo = stockInfo;
+    }
+
+    @OneToMany(cascade={CascadeType.ALL},mappedBy="stockOutDetailInfo")
+    public Set<StockRevertDetailInfo> getStockRevertDetailInfoSet() {
+        return stockRevertDetailInfoSet;
+    }
+
+    public void setStockRevertDetailInfoSet(Set<StockRevertDetailInfo> stockRevertDetailInfoSet) {
+        this.stockRevertDetailInfoSet = stockRevertDetailInfoSet;
     }
 }

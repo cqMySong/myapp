@@ -90,14 +90,10 @@ public class StockOutListController extends BaseListController {
         cols.add(new ColumnModel("billState", DataTypeEnum.ENUM,BillState.class));
         cols.add(new ColumnModel("remark"));
         cols.add(new ColumnModel("outStockDate",DataTypeEnum.DATE));
-
+        cols.add(new ColumnModel("picker",DataTypeEnum.STRING));
         ColumnModel project = new ColumnModel("project",DataTypeEnum.F7,"id,name");
         project.setClaz(ProjectInfo.class);
         cols.add(project);
-
-        ColumnModel consignee = new ColumnModel("picker",DataTypeEnum.F7,"id,name");
-        consignee.setClaz(UserInfo.class);
-        cols.add(consignee);
         return cols;
     }
 }

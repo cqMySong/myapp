@@ -29,24 +29,23 @@
 			</div>
 			<div class="col-sm-3">
 				<div class="input-group">
-					<span class="input-group-addon lable">工程项目</span>
-					<input name="project" class="require input-item form-control"
-						   data-opt="{type:'f7',uiWin:{title:'工程项目',height:600,width:300,url:'ec/basedata/project'}}" />
+					<span class="input-group-addon lable">归还人</span>
+					<input name="returnPerson" class="require input-item form-control"/>
 				</div>
 			</div>
 			<div class="col-sm-3">
 				<div class="input-group">
-					<span class="input-group-addon lable">归还人</span>
-					<input name="returnPerson" class="require input-item form-control require"
-						   data-opt="{type:'f7',uiWin:{title:'人员选择',height:600,width:800,url:'base/userf7'}}" />
+					<span class="input-group-addon lable">归还日期</span>
+					<input type="text" name="revertStockDate" class="form-control input-item require" data-opt="{type:'date'}">
 				</div>
 			</div>
 		</div>
 		<div class="row mt10">
 			<div class="col-sm-3">
 				<div class="input-group">
-					<span class="input-group-addon lable">归还日期</span>
-					<input type="text" name="revertStockDate" class="form-control input-item require" data-opt="{type:'date'}">
+					<span class="input-group-addon lable">工程项目</span>
+					<input name="project" class="require input-item form-control"
+						   data-opt="{type:'f7',uiWin:{title:'工程项目',height:600,width:300,url:'ec/basedata/project'}}" />
 				</div>
 			</div>
 			<div class="col-sm-3">
@@ -73,7 +72,7 @@
 							<th data-field="stockOutNumber" data-type="text" data-locked="true" data-width="150">出库单号</th>
 							<th data-field="materialType" data-width="100" data-type="select" data-locked="true">材料类型</th>
 							<th data-field="material" data-type="f7"  data-width="150"
-								data-editor="{uiWin:{title:'库存信息',height:580,width:880,url:'ec/stock/stockOutDetailF7',uiParams:getParams}}">物料名称</th>
+								data-editor="{mutil:true,uiWin:{title:'出库信息',height:580,width:880,url:'ec/stock/stockOutDetailF7',uiParams:getParams}}">物料名称</th>
 							<th data-field="specification" data-type="text" data-locked="true" data-width="100">规格</th>
 							<th data-field="measureUnit" data-type="text" data-locked="true" data-width="100">计量单位</th>
 							<th data-field="count" data-type="number" data-width="100">归还数量</th>
@@ -138,17 +137,32 @@
         if(webUtil.isEmpty(stockRevertDetailInfosEntry)) return;
         if(obj.field=='material'){
             if(!webUtil.isEmpty(stockRevertDetailInfosEntry)){
-                var selectPlanRow = obj.rowData[obj.field];
-                if(!selectPlanRow){
-                    return false;
+                var stockOutRowArr = obj.rowData[obj.field];
+                console.log(stockOutRowArr);
+                if(stockOutRowArr&&stockOutRowArr.length>0) {
+                    var stockOutRowFirst = null;
+                    $.each(stockOutRowArr, function (i, stockOutRow) {
+                        if (i == 0) {
+                            stockRevertDetailInfosEntry.setTableCellValue(obj.rowIndex, 'specification', stockOutRow.specification);
+                            stockRevertDetailInfosEntry.setTableCellValue(obj.rowIndex, 'materialType', stockOutRow["mater.materialType"]);
+                            stockRevertDetailInfosEntry.setTableCellValue(obj.rowIndex, 'measureUnit', stockOutRow.measureUnit);
+                            stockRevertDetailInfosEntry.setTableCellValue(obj.rowIndex, 'stockOutDetailInfo',
+                                {id: stockOutRow.id});
+                            stockRevertDetailInfosEntry.setTableCellValue(obj.rowIndex, 'stockOutNumber', stockOutRow["pr.number"]);
+                            stockOutRowFirst = stockOutRow;
+                        } else {
+                            var rowData = {materialType:stockOutRow["mater.materialType"],
+                                specification:stockOutRow.specification,
+                                measureUnit:stockOutRow.measureUnit,
+                                stockOutDetailInfo:{id:stockOutRow.id},
+                                stockOutNumber:stockOutRow["pr.number"],
+                                material:{id:stockOutRow["mater.id"],name:stockOutRow["mater.name"]}};
+                            stockRevertDetailInfosEntry.insertRow(obj.rowIndex+i,rowData);
+                        }
+                    });
+                    stockRevertDetailInfosEntry.setTableCellValue(obj.rowIndex, 'material',
+						{id:stockOutRowFirst["mater.id"],name:stockOutRowFirst["mater.name"]});
 				}
-                var materialType = {key:selectPlanRow.material_materialType_id,val:selectPlanRow.material_materialType};
-                stockRevertDetailInfosEntry.setTableCellValue(obj.rowIndex,'specification',selectPlanRow.specification);
-                stockRevertDetailInfosEntry.setTableCellValue(obj.rowIndex,'materialType',materialType);
-                stockRevertDetailInfosEntry.setTableCellValue(obj.rowIndex,'measureUnit',selectPlanRow.measureUnit);
-                stockRevertDetailInfosEntry.setTableCellValue(obj.rowIndex,'stockOutDetailInfo',
-					{id:selectPlanRow.stockOutDetailInfo_id});
-                stockRevertDetailInfosEntry.setTableCellValue(obj.rowIndex,'stockOutNumber',selectPlanRow.parent_number);
             }
 		}
     }

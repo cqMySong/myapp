@@ -28,43 +28,34 @@ public class StockService  extends BaseInterfaceService<StockInfo> {
     /**
      * 功能：根据物料信息查询库存
      * @param materialInfo
-     * @param purchaseStockDetailInfo 库存明细
      * @return
      */
-    public StockInfo getByMaterialIdAndInStockId(MaterialInfo materialInfo,
-                                                 PurchaseStockDetailInfo purchaseStockDetailInfo){
-        String hql = "select stockInfo from StockInfo stockInfo where stockInfo.materialInfo.id=? and " +
-                "stockInfo.purchaseStockDetailInfo.id=?";
-        return queryEntity(StockInfo.class,hql,new Object[]{materialInfo.getId(),purchaseStockDetailInfo.getId()});
+    public StockInfo getByMaterialId(MaterialInfo materialInfo){
+        String hql = "select stockInfo from StockInfo stockInfo where stockInfo.materialInfo.id=?";
+        return queryEntity(StockInfo.class,hql,new Object[]{materialInfo.getId()});
     }
 
     /**
      * 入库时，保存和修改库存信息
      * @param projectInfo
      * @param count
-     * @param purchaseContractDetailInfo
-     * @param purchaseStockDetailInfo 入库明细信息
+     * @param materialInfo
      * @return
      * @throws SaveException
      */
-    public StockInfo saveByMaterialIdAndInStock(ProjectInfo projectInfo, BigDecimal count, MaterialInfo materialInfo,
-                                           PurchaseContractDetailInfo purchaseContractDetailInfo,
-                                           PurchaseStockDetailInfo purchaseStockDetailInfo)
+    public StockInfo saveByMaterialInfo(ProjectInfo projectInfo, BigDecimal count, MaterialInfo materialInfo)
             throws SaveException {
-        StockInfo stockInfo = getByMaterialIdAndInStockId(materialInfo,purchaseStockDetailInfo);
+        StockInfo stockInfo = getByMaterialId(materialInfo);
         if(stockInfo==null){
             stockInfo = new StockInfo();
             stockInfo.setMaterialInfo(materialInfo);
             stockInfo.setCount(count);
-            stockInfo.setMeasureUnit(purchaseContractDetailInfo.getMeasureUnitName());
+            stockInfo.setMeasureUnit(materialInfo.getUnit().getName());
             stockInfo.setProjectInfo(projectInfo);
-            stockInfo.setSpecification(purchaseContractDetailInfo.getSpecification());
-            stockInfo.setPurchaseStockDetailInfo(purchaseStockDetailInfo);
-            stockInfo.setPurchaseStockInfo(purchaseStockDetailInfo.getParent());
-            stockInfo.setInStockNumber(purchaseStockDetailInfo.getParent().getNumber());
+            stockInfo.setSpecification(materialInfo.getSpecification());
+            stockInfo.setMaterialType(materialInfo.getMaterialType());
             stockInfo.setRemark("");
         }else{
-            stockInfo.setInStockNumber(purchaseStockDetailInfo.getParent().getNumber());
             stockInfo.setCount(stockInfo.getCount().add(count));
         }
         return (StockInfo) saveEntity(stockInfo);
@@ -90,8 +81,7 @@ public class StockService  extends BaseInterfaceService<StockInfo> {
         String hql = "select stockInfo from StockInfo stockInfo where stockInfo.purchaseStockDetailInfo.id=?";
         StockInfo stockInfo = queryEntity(StockInfo.class,hql,new String[]{purchaseStockDetailInfo.getId()});
         if(stockOutDetailService.isStockOutByStockId(stockInfo)){
-            throw new RuntimeException(purchaseStockDetailInfo
-                    .getPurchaseContractDetailInfo().getMaterialName()+"已出库,不能删除");
+            throw new RuntimeException("已出库,不能删除");
         }
         deleteEntity(stockInfo);
     }

@@ -86,7 +86,7 @@ public class StockRevertEditController extends BaseBillEditController {
         cols.add(new ColumnModel("name"));
         cols.add(new ColumnModel("number"));
         cols.add(new ColumnModel("remark"));
-        cols.add(new ColumnModel("returnPerson",DataTypeEnum.F7,UserInfo.class));
+        cols.add(new ColumnModel("returnPerson",DataTypeEnum.STRING));
         cols.add(new ColumnModel("revertStockDate",DataTypeEnum.DATE));
         cols.add(new ColumnModel("billState",DataTypeEnum.ENUM, BillState.class));
         cols.add(new ColumnModel("createUser",DataTypeEnum.F7,UserInfo.class));

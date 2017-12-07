@@ -63,7 +63,6 @@ public class InventoryEditController extends BaseBillEditController {
                     stockInfo.setId((String) stockMap.get("id"));
                     stockInfo.setSpecification((String) stockMap.get("specification"));
                     stockInfo.setMeasureUnit((String) stockMap.get("measureUnit"));
-                    stockInfo.setInStockNumber((String) stockMap.get("inStockNumber"));
                     materialInfo = new MaterialInfo();
                     MaterialInfo materialMap = (MaterialInfo) stockMap.get("materialInfo");
                     materialInfo.setId(materialMap.getId());

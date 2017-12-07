@@ -1,24 +1,31 @@
 package com.myapp.controller.ec.purchase.apply;
 
+import com.alibaba.fastjson.JSONObject;
 import com.myapp.core.base.service.impl.AbstractBaseService;
 import com.myapp.core.controller.BaseF7QueryController;
 import com.myapp.core.entity.MaterialInfo;
 import com.myapp.core.entity.MeasureUnitInfo;
+import com.myapp.core.entity.UserInfo;
 import com.myapp.core.enums.DataTypeEnum;
 import com.myapp.core.enums.MaterialType;
 import com.myapp.core.exception.db.QueryException;
 import com.myapp.core.model.ColumnModel;
 import com.myapp.core.model.PageModel;
 import com.myapp.core.service.base.BaseService;
+import com.myapp.core.util.BaseUtil;
 import com.myapp.entity.ec.budget.BudgetingDetailInfo;
 import com.myapp.entity.ec.purchase.ApplyMaterialDetailInfo;
+import org.hibernate.Criteria;
 import org.hibernate.criterion.Order;
+import org.hibernate.criterion.Restrictions;
+import org.hibernate.sql.JoinType;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import javax.annotation.Resource;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * @path:com.myapp.controller.ec.budget
@@ -39,9 +46,41 @@ public class ApplyMaterialDetailF7QueryController extends BaseF7QueryController 
 	@Override
 	public List<ColumnModel> getDataBinding() {
 		List<ColumnModel> cols = super.getDataBinding();
-		ColumnModel col = new ColumnModel("budgetingDetailInfo",DataTypeEnum.F7,BudgetingDetailInfo.class);
-		col.setFormat("materialType,material,specification,measureUnitInfo");
-		col.setAlias_zh("材料类型,材料名称,规格,计量单位,物料");
+		ColumnModel col = new ColumnModel("pr.number",DataTypeEnum.STRING);
+		col.setAlias_zh("申购单号");
+		cols.add(col);
+
+		col = new ColumnModel("createUser.name",DataTypeEnum.STRING);
+		col.setAlias_zh("申购人");
+		cols.add(col);
+
+		col = new ColumnModel("bdi.materialType",DataTypeEnum.ENUM,MaterialType.class);
+		col.setFormat("materialType");
+		col.setAlias_zh("材料类型");
+		cols.add(col);
+
+		col = new ColumnModel("pr.id",DataTypeEnum.STRING);
+		col.setAlias_zh("申购id");
+		col.setQueryDisplay(false);
+		col.setQueryFilter(false);
+		cols.add(col);
+
+		col = new ColumnModel("ma.id",DataTypeEnum.STRING);
+		col.setAlias_zh("材料id");
+		col.setQueryDisplay(false);
+		col.setQueryFilter(false);
+		cols.add(col);
+
+		col = new ColumnModel("bdi.materialName",DataTypeEnum.STRING);
+		col.setAlias_zh("材料名称");
+		cols.add(col);
+
+		col = new ColumnModel("bdi.specification",DataTypeEnum.STRING);
+		col.setAlias_zh("规格");
+		cols.add(col);
+
+		col = new ColumnModel("mui.name",DataTypeEnum.STRING);
+		col.setAlias_zh("计量单位");
 		cols.add(col);
 
 		col = new ColumnModel("purchaseNum",DataTypeEnum.NUMBER);
@@ -63,27 +102,32 @@ public class ApplyMaterialDetailF7QueryController extends BaseF7QueryController 
 	}
 
 	@Override
-	public void afterQuery(PageModel pm) throws QueryException {
-		super.afterQuery(pm);
-		List<HashMap> datas = pm.getDatas();
-		if(datas!=null&&datas.size()>0){
-			for(HashMap hashMap : datas){
-				hashMap.put("budgetingDetailInfo_materialType_id",
-						((MaterialType)hashMap.get("budgetingDetailInfo_materialType")).getValue());
-				hashMap.put("budgetingDetailInfo_materialType",
-						((MaterialType)hashMap.get("budgetingDetailInfo_materialType")).getName());
-				hashMap.put("budgetingDetailInfo_measureUnitInfo_id",
-						((MeasureUnitInfo)hashMap.get("budgetingDetailInfo_measureUnitInfo")).getId());
-				hashMap.put("budgetingDetailInfo_measureUnitInfo",
-						((MeasureUnitInfo)hashMap.get("budgetingDetailInfo_measureUnitInfo")).getName());
-				hashMap.put("applyMaterialDetailInfo_id",hashMap.get("id"));
-				hashMap.put("id",((MaterialInfo)hashMap.get("budgetingDetailInfo_material")).getId());
-				hashMap.put("budgetingDetailInfo_material",
-						((MaterialInfo)hashMap.get("budgetingDetailInfo_material")).getName());
-				hashMap.put("name",hashMap.get("budgetingDetailInfo_material"));
+	public void executeQueryParams(Criteria query) {
+		super.executeQueryParams(query);
+		query.createAlias("budgetingDetailInfo","bdi", JoinType.INNER_JOIN);
+		query.createAlias("budgetingDetailInfo.measureUnitInfo","mui", JoinType.INNER_JOIN);
+		query.createAlias("budgetingDetailInfo.material","ma", JoinType.INNER_JOIN);
+		query.createAlias("parent","pr",JoinType.INNER_JOIN);
+		query.createAlias("parent.createUser","createUser",JoinType.INNER_JOIN);
+		query.createAlias("parent.project","pro",JoinType.INNER_JOIN);
 
+		String search = request.getParameter("search");
+		String projectId = "-1";
+		if(!BaseUtil.isEmpty(search)) {
+			Map searchMap = JSONObject.parseObject(search, new HashMap().getClass());
+			if(searchMap!=null&&searchMap.get("uiCtx")!=null){
+				projectId = ((JSONObject)searchMap.get("uiCtx")).getString("projectId");
+				if(!((JSONObject)searchMap.get("uiCtx")).getBooleanValue("purchaseContract")){
+					query.createAlias("purchaseContractDetailInfoSet","pcdi",JoinType.LEFT_OUTER_JOIN);
+					query.add(Restrictions.isNull("pcdi.id"));
+				}else{
+					query.createAlias("purchaseStockDetailInfoSet","psdi",JoinType.LEFT_OUTER_JOIN);
+					query.add(Restrictions.or(Restrictions.isNull("psdi.id"),
+							Restrictions.gtProperty("purchaseNum","psdi.count")));
+				}
 			}
 		}
-		this.data = pm;
+		query.add(Restrictions.eq("pro.id",projectId));
+
 	}
 }

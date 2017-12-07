@@ -91,14 +91,10 @@ public class StockRevertListController extends BaseListController {
         cols.add(new ColumnModel("billState", DataTypeEnum.ENUM,BillState.class));
         cols.add(new ColumnModel("remark"));
         cols.add(new ColumnModel("revertStockDate",DataTypeEnum.DATE));
-
+        cols.add(new ColumnModel("returnPerson",DataTypeEnum.STRING));
         ColumnModel project = new ColumnModel("project",DataTypeEnum.F7,"id,name");
         project.setClaz(ProjectInfo.class);
         cols.add(project);
-
-        ColumnModel consignee = new ColumnModel("returnPerson",DataTypeEnum.F7,"id,name");
-        consignee.setClaz(UserInfo.class);
-        cols.add(consignee);
         return cols;
     }
 }

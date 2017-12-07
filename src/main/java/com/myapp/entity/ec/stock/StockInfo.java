@@ -3,9 +3,11 @@ package com.myapp.entity.ec.stock;
 import com.myapp.core.annotation.MyEntityAnn;
 import com.myapp.core.base.entity.CoreInfo;
 import com.myapp.core.entity.MaterialInfo;
+import com.myapp.core.enums.MaterialType;
 import com.myapp.entity.ec.basedata.ProjectInfo;
 import com.myapp.entity.ec.purchase.PurchaseStockDetailInfo;
 import com.myapp.entity.ec.purchase.PurchaseStockInfo;
+import org.hibernate.annotations.Type;
 
 import javax.persistence.*;
 import java.math.BigDecimal;
@@ -30,6 +32,10 @@ public class StockInfo extends CoreInfo {
      */
     private MaterialInfo materialInfo;
     /**
+     * 物料类型
+     */
+    private MaterialType materialType;
+    /**
      * 规格
      */
     private String specification;
@@ -41,18 +47,6 @@ public class StockInfo extends CoreInfo {
      * 库存数量
      */
     private BigDecimal count;
-    /**
-     * 采购入库明细
-     */
-    private PurchaseStockDetailInfo purchaseStockDetailInfo;
-    /**
-     * 采购入库主表
-     */
-    private PurchaseStockInfo purchaseStockInfo;
-    /**
-     * 入库单号
-     */
-    private String inStockNumber;
     /**
      * 备注
      */
@@ -118,34 +112,6 @@ public class StockInfo extends CoreInfo {
         this.remark = remark;
     }
 
-    @OneToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "fPurchaseStockDetailId")
-    public PurchaseStockDetailInfo getPurchaseStockDetailInfo() {
-        return purchaseStockDetailInfo;
-    }
-
-    public void setPurchaseStockDetailInfo(PurchaseStockDetailInfo purchaseStockDetailInfo) {
-        this.purchaseStockDetailInfo = purchaseStockDetailInfo;
-    }
-
-    @OneToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "fPurchaseStockId")
-    public PurchaseStockInfo getPurchaseStockInfo() {
-        return purchaseStockInfo;
-    }
-
-    public void setPurchaseStockInfo(PurchaseStockInfo purchaseStockInfo) {
-        this.purchaseStockInfo = purchaseStockInfo;
-    }
-
-    @Column(name="fInStockNumber",length = 100)
-    public String getInStockNumber() {
-        return inStockNumber;
-    }
-
-    public void setInStockNumber(String inStockNumber) {
-        this.inStockNumber = inStockNumber;
-    }
 
     @OneToOne(cascade={CascadeType.ALL},mappedBy="stockInfo")
     public StockOutDetailInfo getStockOutDetailInfo() {
@@ -154,5 +120,14 @@ public class StockInfo extends CoreInfo {
 
     public void setStockOutDetailInfo(StockOutDetailInfo stockOutDetailInfo) {
         this.stockOutDetailInfo = stockOutDetailInfo;
+    }
+    @Column(name="fMaterialType",length = 20)
+    @Type(type="myEnum",parameters={@org.hibernate.annotations.Parameter(name="enumClass",value="com.myapp.core.enums.MaterialType")})
+    public MaterialType getMaterialType() {
+        return materialType;
+    }
+
+    public void setMaterialType(MaterialType materialType) {
+        this.materialType = materialType;
     }
 }

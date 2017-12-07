@@ -5,6 +5,7 @@ import com.myapp.core.base.entity.CoreBaseBillInfo;
 import com.myapp.core.entity.UserInfo;
 import com.myapp.core.enums.ExpenseType;
 import com.myapp.core.enums.PaymentMethod;
+import com.myapp.core.enums.PurchaseExpenseType;
 import com.myapp.entity.ec.basedata.ProjectInfo;
 import org.hibernate.annotations.Type;
 
@@ -29,7 +30,7 @@ public class PurchaseContractInfo extends CoreBaseBillInfo {
     /**
      * 费用类型
      */
-    private ExpenseType expenseType;
+    private PurchaseExpenseType expenseType;
     /**
      * 采购公司
      */
@@ -50,7 +51,7 @@ public class PurchaseContractInfo extends CoreBaseBillInfo {
     /**
      * 经办人
      */
-    private UserInfo operator;
+    private String operator;
     /**
      * 联系电话
      */
@@ -99,13 +100,13 @@ public class PurchaseContractInfo extends CoreBaseBillInfo {
     public void setSupplyCompany(String supplyCompany) {
         this.supplyCompany = supplyCompany;
     }
-    @OneToOne
-    @JoinColumn(name = "fOperatorId")
-    public UserInfo getOperator() {
+
+    @Column(name = "fOperatorName",length=50)
+    public String getOperator() {
         return operator;
     }
 
-    public void setOperator(UserInfo operator) {
+    public void setOperator(String operator) {
         this.operator = operator;
     }
 
@@ -138,12 +139,12 @@ public class PurchaseContractInfo extends CoreBaseBillInfo {
     }
 
     @Column(name="fExpenseType",length = 20)
-    @Type(type="myEnum",parameters={@org.hibernate.annotations.Parameter(name="enumClass",value="com.myapp.core.enums.ExpenseType")})
-    public ExpenseType getExpenseType() {
+    @Type(type="myEnum",parameters={@org.hibernate.annotations.Parameter(name="enumClass",value="com.myapp.core.enums.PurchaseExpenseType")})
+    public PurchaseExpenseType getExpenseType() {
         return expenseType;
     }
 
-    public void setExpenseType(ExpenseType expenseType) {
+    public void setExpenseType(PurchaseExpenseType expenseType) {
         this.expenseType = expenseType;
     }
 

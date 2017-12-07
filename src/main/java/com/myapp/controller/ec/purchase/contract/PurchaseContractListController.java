@@ -88,8 +88,9 @@ public class PurchaseContractListController extends BaseListController {
         cols.add(new ColumnModel("paymentMethod", DataTypeEnum.ENUM,PaymentMethod.class));
         cols.add(new ColumnModel("amount"));
         cols.add(new ColumnModel("supplyCompany"));
+        cols.add(new ColumnModel("operator",DataTypeEnum.STRING));
         cols.add(new ColumnModel("contactTel"));
-        cols.add(new ColumnModel("expenseType", DataTypeEnum.ENUM,ExpenseType.class));
+        cols.add(new ColumnModel("expenseType", DataTypeEnum.ENUM,PurchaseExpenseType.class));
         cols.add(new ColumnModel("billState", DataTypeEnum.ENUM,BillState.class));
         cols.add(new ColumnModel("remark"));
 
@@ -105,9 +106,6 @@ public class PurchaseContractListController extends BaseListController {
         auditor.setClaz(UserInfo.class);
         cols.add(auditor);
 
-        ColumnModel operator = new ColumnModel("operator", DataTypeEnum.F7,"id,name");
-        operator.setClaz(UserInfo.class);
-        cols.add(operator);
         return cols;
     }
 }

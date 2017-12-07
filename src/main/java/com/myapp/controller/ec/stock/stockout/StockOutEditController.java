@@ -71,9 +71,6 @@ public class StockOutEditController extends BaseBillEditController {
                     materialType.put("key",materialInfo.get("materialType"));
                     materialType.put("val", MaterialType.map.get(materialInfo.getString("materialType")).getName());
                     stockOutDetail.put("materialType",materialType);
-                    stockInfo = stockOutDetail.getJSONObject("stockInfo");
-                    stockInfo.put("name",stockInfo.get("inStockNumber"));
-                    stockOutDetail.put("stockInfo",stockInfo);
                     stockOutDetailNew.add(stockOutDetail);
                 }
                 jsonObject.put("stockOutDetailInfos",stockOutDetailNew);
@@ -88,7 +85,7 @@ public class StockOutEditController extends BaseBillEditController {
         cols.add(new ColumnModel("name"));
         cols.add(new ColumnModel("number"));
         cols.add(new ColumnModel("remark"));
-        cols.add(new ColumnModel("picker",DataTypeEnum.F7,UserInfo.class));
+        cols.add(new ColumnModel("picker",DataTypeEnum.STRING));
         cols.add(new ColumnModel("outStockDate",DataTypeEnum.DATE));
         cols.add(new ColumnModel("billState",DataTypeEnum.ENUM, BillState.class));
         cols.add(new ColumnModel("createUser",DataTypeEnum.F7,UserInfo.class));
@@ -108,7 +105,7 @@ public class StockOutEditController extends BaseBillEditController {
         material.setClaz(MaterialInfo.class);
         stockOutDetailInfos.getCols().add(material);
 
-        ColumnModel stockInfo = new ColumnModel("stockInfo",DataTypeEnum.F7,"id,inStockNumber");
+        ColumnModel stockInfo = new ColumnModel("stockInfo",DataTypeEnum.F7,"id");
         stockInfo.setClaz(StockInfo.class);
         stockOutDetailInfos.getCols().add(stockInfo);
 

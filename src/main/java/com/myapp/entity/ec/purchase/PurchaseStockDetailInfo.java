@@ -2,6 +2,8 @@ package com.myapp.entity.ec.purchase;
 
 import com.myapp.core.annotation.MyEntityAnn;
 import com.myapp.core.base.entity.CoreBaseEntryInfo;
+import com.myapp.core.entity.MaterialInfo;
+import com.myapp.core.entity.MeasureUnitInfo;
 import com.myapp.entity.ec.stock.StockInfo;
 import com.myapp.entity.ec.stock.StockOutDetailInfo;
 
@@ -20,14 +22,29 @@ import java.util.Set;
 @Table(name="t_ec_purchase_stock_detail")
 public class PurchaseStockDetailInfo extends CoreBaseEntryInfo<PurchaseStockInfo> {
     /**
-     * 合同信息
+     * 申购信息
      */
-    private PurchaseContractInfo purchaseContractInfo;
+    private ApplyMaterialInfo applyMaterialInfo;
     /**
-     * 采购合同详细信息
+     * 申购明细信息
      */
-    private PurchaseContractDetailInfo purchaseContractDetailInfo;
-
+    private ApplyMaterialDetailInfo applyMaterialDetailInfo;
+    /**
+     * 物料信息
+     */
+    private MaterialInfo material;
+    /**
+     * 剂量单位
+     */
+    private String measureUnitName;
+    /**
+     * 规格
+     */
+    private String specification;
+    /**
+     * 产地
+     */
+    private String origin;
     /**
      * 入库数量
      */
@@ -44,29 +61,27 @@ public class PurchaseStockDetailInfo extends CoreBaseEntryInfo<PurchaseStockInfo
      * 序号
      */
     private Long sno;
-    /**
-     * 出库信息
-     */
-    private StockInfo stockInfo;
+
     @OneToOne
-    @JoinColumn(name = "fPurchaseContractId")
-    public PurchaseContractInfo getPurchaseContractInfo() {
-        return purchaseContractInfo;
+    @JoinColumn(name = "fApplyMaterialId")
+    public ApplyMaterialInfo getApplyMaterialInfo() {
+        return applyMaterialInfo;
     }
 
-    public void setPurchaseContractInfo(PurchaseContractInfo purchaseContractInfo) {
-        this.purchaseContractInfo = purchaseContractInfo;
+    public void setApplyMaterialInfo(ApplyMaterialInfo applyMaterialInfo) {
+        this.applyMaterialInfo = applyMaterialInfo;
     }
 
     @OneToOne
-    @JoinColumn(name = "fPurchaseContractDetailId")
-    public PurchaseContractDetailInfo getPurchaseContractDetailInfo() {
-        return purchaseContractDetailInfo;
+    @JoinColumn(name = "fApplyMaterialDetailId")
+    public ApplyMaterialDetailInfo getApplyMaterialDetailInfo() {
+        return applyMaterialDetailInfo;
     }
 
-    public void setPurchaseContractDetailInfo(PurchaseContractDetailInfo purchaseContractDetailInfo) {
-        this.purchaseContractDetailInfo = purchaseContractDetailInfo;
+    public void setApplyMaterialDetailInfo(ApplyMaterialDetailInfo applyMaterialDetailInfo) {
+        this.applyMaterialDetailInfo = applyMaterialDetailInfo;
     }
+
 
     @Column(name="fCount",precision = 10,scale = 2)
     public BigDecimal getCount() {
@@ -103,12 +118,40 @@ public class PurchaseStockDetailInfo extends CoreBaseEntryInfo<PurchaseStockInfo
         this.sno = sno;
     }
 
-    @OneToOne(cascade={CascadeType.ALL},mappedBy="purchaseStockDetailInfo")
-    public StockInfo getStockInfo() {
-        return stockInfo;
+    @OneToOne
+    @JoinColumn(name = "fMaterialId")
+    public MaterialInfo getMaterial() {
+        return material;
     }
 
-    public void setStockInfo(StockInfo stockInfo) {
-        this.stockInfo = stockInfo;
+    public void setMaterial(MaterialInfo material) {
+        this.material = material;
+    }
+
+    @Column(name="fMeasureUnitName",length = 150)
+    public String getMeasureUnitName() {
+        return measureUnitName;
+    }
+
+    public void setMeasureUnitName(String measureUnitName) {
+        this.measureUnitName = measureUnitName;
+    }
+
+    @Column(name="fSpecification",length = 150)
+    public String getSpecification() {
+        return specification;
+    }
+
+    public void setSpecification(String specification) {
+        this.specification = specification;
+    }
+
+    @Column(name="fOrigin",length = 250)
+    public String getOrigin() {
+        return origin;
+    }
+
+    public void setOrigin(String origin) {
+        this.origin = origin;
     }
 }

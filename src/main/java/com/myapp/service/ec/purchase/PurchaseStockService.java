@@ -49,11 +49,9 @@ public class PurchaseStockService extends BaseInterfaceService<PurchaseStockInfo
                 purchaseStockDetailInfo = new PurchaseStockDetailInfo();
                 purchaseStockDetailInfo.setId(purchaseStockDetailInfoOld.getId());
                 purchaseStockDetailInfo.setCount(purchaseStockDetailInfoOld.getCount());
-                purchaseStockDetailInfo.setPurchaseContractDetailInfo(purchaseStockDetailInfoOld.getPurchaseContractDetailInfo());
-                purchaseStockDetailInfo.setPurchaseContractInfo(purchaseStockDetailInfoOld.getPurchaseContractInfo());
+                purchaseStockDetailInfo.setMaterial(purchaseStockDetailInfoOld.getMaterial());
+                purchaseStockDetailInfo.setSpecification(purchaseStockDetailInfoOld.getSpecification());
                 purchaseStockDetailInfo.setParent(purchaseStockDetailInfoOld.getParent());
-                purchaseStockDetailInfo.setCumulativeCount(purchaseStockDetailInfoOld.getCumulativeCount());
-                purchaseStockDetailInfo.setPurchaseContractDetailInfo(purchaseStockDetailInfoOld.getPurchaseContractDetailInfo());
                 purchaseStockDetailInfoSet.add(purchaseStockDetailInfo);
             }
         }
@@ -77,23 +75,14 @@ public class PurchaseStockService extends BaseInterfaceService<PurchaseStockInfo
                 if(purchaseStockDetailOld.getId().equals(purchaseStockDetailNew.getId())){
                     isExist = true;
                     diffCount = purchaseStockDetailNew.getCount().subtract(purchaseStockDetailOld.getCount());
-                    stockService.saveByMaterialIdAndInStock(purchaseStockNew.getProject(),diffCount,
-                            purchaseStockDetailOld.getPurchaseContractDetailInfo().getMaterial(),
-                            purchaseStockDetailOld.getPurchaseContractDetailInfo(),purchaseStockDetailOld);
                     break;
                 }
             }
 
             if(!isExist){
-                diffCount = purchaseStockDetailOld.getCumulativeCount().negate();
-                stockService.deleteByInStock(purchaseStockDetailOld);
+                diffCount = purchaseStockDetailOld.getCount().negate();
             }
-            try {
-                purchaseStockDetailService.updateCumulativeCount(diffCount,
-                        purchaseStockDetailOld.getPurchaseContractDetailInfo(),purchaseStockDetailOld.getSno());
-            } catch (QueryException e) {
-                throw new SaveException(e);
-            }
+            stockService.saveByMaterialInfo(purchaseStockNew.getProject(),diffCount,purchaseStockDetailOld.getMaterial());
         }
         for(PurchaseStockDetailInfo purchaseStockDetailNew:purchaseStockNew.getPurchaseStockDetailInfos()){
             isExist = false;
@@ -105,19 +94,8 @@ public class PurchaseStockService extends BaseInterfaceService<PurchaseStockInfo
             }
 
             if(!isExist){
-                stockService.saveByMaterialIdAndInStock(purchaseStockNew.getProject(),purchaseStockDetailNew.getCount(),
-                        purchaseStockDetailNew.getPurchaseContractDetailInfo().getMaterial(),
-                        purchaseStockDetailNew.getPurchaseContractDetailInfo(),purchaseStockDetailNew);
-                try {
-                    PurchaseStockDetailInfo purchaseStockDetailInfo = purchaseStockDetailService
-                            .queryLastPurchaseStock(purchaseStockDetailNew.getPurchaseContractDetailInfo());
-                    purchaseStockDetailNew.setSno(System.currentTimeMillis());
-                    purchaseStockDetailNew.setCumulativeCount(purchaseStockDetailNew.getCount()
-                            .add(purchaseStockDetailInfo.getCumulativeCount()==null?
-                                    BigDecimal.ZERO:purchaseStockDetailInfo.getCumulativeCount()));
-                } catch (QueryException e) {
-                    throw new SaveException(e);
-                }
+                stockService.saveByMaterialInfo(purchaseStockNew.getProject(),purchaseStockDetailNew.getCount(),
+                        purchaseStockDetailNew.getMaterial());
             }
         }
         return purchaseStockNew;

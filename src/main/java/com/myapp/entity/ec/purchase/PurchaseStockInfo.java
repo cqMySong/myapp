@@ -34,10 +34,6 @@ public class PurchaseStockInfo extends CoreBaseBillInfo{
     private Date inStockDate;
 
     /**
-     * 总金额
-     */
-    private BigDecimal totalPrice;
-    /**
      * 备注
      */
     private String remark;
@@ -72,14 +68,6 @@ public class PurchaseStockInfo extends CoreBaseBillInfo{
 
     public void setInStockDate(Date inStockDate) {
         this.inStockDate = inStockDate;
-    }
-    @Column(name="fTotalPrice")
-    public BigDecimal getTotalPrice() {
-        return totalPrice;
-    }
-
-    public void setTotalPrice(BigDecimal totalPrice) {
-        this.totalPrice = totalPrice;
     }
 
     public void setProject(ProjectInfo project) {

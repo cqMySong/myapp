@@ -27,7 +27,7 @@ public class StockRevertInfo extends CoreBaseBillInfo {
     /**
      * 归还人
      */
-    private UserInfo returnPerson;
+    private String returnPerson;
     /**
      * 归还日期
      */
@@ -53,13 +53,12 @@ public class StockRevertInfo extends CoreBaseBillInfo {
         this.project = project;
     }
 
-    @OneToOne
-    @JoinColumn(name = "fReturnPersonId")
-    public UserInfo getReturnPerson() {
+    @Column(name = "fReturnPerson",length = 50)
+    public String getReturnPerson() {
         return returnPerson;
     }
 
-    public void setReturnPerson(UserInfo returnPerson) {
+    public void setReturnPerson(String returnPerson) {
         this.returnPerson = returnPerson;
     }
 

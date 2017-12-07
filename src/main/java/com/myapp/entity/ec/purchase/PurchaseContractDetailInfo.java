@@ -3,16 +3,11 @@ package com.myapp.entity.ec.purchase;
 import com.myapp.core.annotation.MyEntityAnn;
 import com.myapp.core.base.entity.CoreBaseEntryInfo;
 import com.myapp.core.entity.MaterialInfo;
-import com.myapp.core.entity.MeasureUnitInfo;
 import com.myapp.core.enums.MaterialType;
-import com.myapp.entity.ec.budget.EnquiryPriceDetailInfo;
-import com.myapp.entity.ec.budget.EnquiryPriceInfo;
 import org.hibernate.annotations.Type;
 
 import javax.persistence.*;
 import java.math.BigDecimal;
-import java.util.Date;
-import java.util.Set;
 
 /**
  * @path：com.myapp.entity.ec.purchase
@@ -64,10 +59,6 @@ public class PurchaseContractDetailInfo extends CoreBaseEntryInfo<PurchaseContra
      *
      */
     private BigDecimal totalPrice;
-    /**
-     * 合同入库信息
-     */
-    private Set<PurchaseStockDetailInfo> purchaseStockDetailInfoSet;
 
     /**
      * 序号
@@ -166,12 +157,4 @@ public class PurchaseContractDetailInfo extends CoreBaseEntryInfo<PurchaseContra
         this.totalPrice = totalPrice;
     }
 
-    @OneToMany(cascade={CascadeType.ALL},mappedBy="purchaseContractDetailInfo")
-    public Set<PurchaseStockDetailInfo> getPurchaseStockDetailInfoSet() {
-        return purchaseStockDetailInfoSet;
-    }
-
-    public void setPurchaseStockDetailInfoSet(Set<PurchaseStockDetailInfo> purchaseStockDetailInfoSet) {
-        this.purchaseStockDetailInfoSet = purchaseStockDetailInfoSet;
-    }
 }

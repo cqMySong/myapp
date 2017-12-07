@@ -236,9 +236,9 @@ var def_tab_item = {id:"",title:"主页",icon:"",enColse:true,url:"",content:"",
 					if(_tabItem.active&&!webUtil.isEmpty(_curTab)){
 						_tab_obj = _curTab;
 					}
-					var tabObj ={tab:this};
+					var tabObj ={tab:this,tabItem:_curTab};
 					_curTab.click(tabObj,function(e){
-						e.data.tab.setTabSelected(this);
+						e.data.tab.setTabSelected(e.data.tabItem);
 					});
 				}
 				this.setTabSelected(_tab_obj);
@@ -292,9 +292,15 @@ var def_tab_item = {id:"",title:"主页",icon:"",enColse:true,url:"",content:"",
 							_ifm_tabContent.attr("src",webUtil.toUrl(tabUrl));
 							_ifm_tabContent.load(function(){
 								webUtil.setMainTabHeight(elId);
+								try{
+									_ifm_tabContent[0].contentWindow.doLayout();
+								}catch (e) {}
 							});
 						}else{
 							webUtil.setMainTabHeight(elId);
+							try{
+								_ifm_tabContent[0].contentWindow.doLayout();
+							}catch (e) {}
 						}
 					}
 				}

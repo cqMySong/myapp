@@ -24,13 +24,14 @@ public class StockInventoryInfo extends CoreBaseBillInfo {
      */
     private ProjectInfo project;
     /**
-     * 盘存时间
+     * 开始时间
      */
-    private Date inventoryDate;
+    private Date startDate;
     /**
-     * 盘存操作人
+     * 结束时间
      */
-    private UserInfo operator;
+    private Date endDate;
+
     /**
      * 备注
      */
@@ -40,9 +41,9 @@ public class StockInventoryInfo extends CoreBaseBillInfo {
      */
     private Set<StockInventoryDetailInfo> stockInventoryDetailInfos;
     /**
-     * 临时数据
+     * 图算信息
      */
-    private Set<StockInventoryDetailInfo> oldStockInventoryDetailInfos;
+    private StockCalculationInfo stockCalculationInfo;
 
     @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "fProjectId")
@@ -54,23 +55,22 @@ public class StockInventoryInfo extends CoreBaseBillInfo {
         this.project = project;
     }
 
-    @Column(name="fInventoryDate")
-    public Date getInventoryDate() {
-        return inventoryDate;
+    @Column(name="fStartDate")
+    public Date getStartDate() {
+        return startDate;
     }
 
-    public void setInventoryDate(Date inventoryDate) {
-        this.inventoryDate = inventoryDate;
+    public void setStartDate(Date startDate) {
+        this.startDate = startDate;
     }
 
-    @OneToOne
-    @JoinColumn(name = "fOperatorId")
-    public UserInfo getOperator() {
-        return operator;
+    @Column(name="fEndDate")
+    public Date getEndDate() {
+        return endDate;
     }
 
-    public void setOperator(UserInfo operator) {
-        this.operator = operator;
+    public void setEndDate(Date endDate) {
+        this.endDate = endDate;
     }
 
     @Column(name="fRemark",length = 200)
@@ -92,12 +92,13 @@ public class StockInventoryInfo extends CoreBaseBillInfo {
         this.stockInventoryDetailInfos = stockInventoryDetailInfos;
     }
 
-    @Transient
-    public Set<StockInventoryDetailInfo> getOldStockInventoryDetailInfos() {
-        return oldStockInventoryDetailInfos;
+    @OneToOne(cascade={CascadeType.ALL},mappedBy="stockInventoryInfo")
+    @OrderBy("seq ASC")
+    public StockCalculationInfo getStockCalculationInfo() {
+        return stockCalculationInfo;
     }
 
-    public void setOldStockInventoryDetailInfos(Set<StockInventoryDetailInfo> oldStockInventoryDetailInfos) {
-        this.oldStockInventoryDetailInfos = oldStockInventoryDetailInfos;
+    public void setStockCalculationInfo(StockCalculationInfo stockCalculationInfo) {
+        this.stockCalculationInfo = stockCalculationInfo;
     }
 }

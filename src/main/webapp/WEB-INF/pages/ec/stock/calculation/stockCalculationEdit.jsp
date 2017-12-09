@@ -3,7 +3,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-	<title>库存盘存</title>
+	<title>当期图算用量</title>
 </head>
 <style type="text/css">
 </style>
@@ -17,31 +17,40 @@
 		<div class="row">
 			<div class="col-sm-3">
 				<div class="input-group">
-					<span class="input-group-addon lable">盘存单号</span>
+					<span class="input-group-addon lable">图算单号</span>
 					<input class="require form-control input-item" name="number">
 				</div>
 			</div>
 			<div class="col-sm-3">
 				<div class="input-group">
-					<span class="input-group-addon lable">盘存名称</span>
+					<span class="input-group-addon lable">图算名称</span>
 					<input name="name" class="input-item form-control require"/>
 				</div>
 			</div>
 			<div class="col-sm-3">
 				<div class="input-group">
-					<span class="input-group-addon lable">开始日期</span>
-					<input type="text" name="startDate" class="form-control input-item require" data-opt="{type:'date'}">
+					<span class="input-group-addon lable">盘存名称</span>
+					<input name="stockInventoryInfo" class="require input-item form-control"
+						   data-opt="{type:'f7',dataChange:selectInventory,uiWin:{title:'盘存信息',height:600,width:800,url:'ec/stock/inventoryF7',uiParams:getParams}}" />
 				</div>
 			</div>
 			<div class="col-sm-3">
 				<div class="input-group">
-					<span class="input-group-addon lable">结束日期</span>
-					<input type="text" name="endDate" class="form-control input-item require" data-opt="{type:'date'}">
+					<span class="input-group-addon lable">开始日期</span>
+					<input type="text" name="startDate" class="form-control input-item require read"
+						   data-opt="{type:'date'}">
 				</div>
 			</div>
+
 		</div>
 		<div class="row mt10">
-
+			<div class="col-sm-3">
+				<div class="input-group">
+					<span class="input-group-addon lable">结束日期</span>
+					<input type="text" name="endDate" class="form-control input-item require read"
+						   data-opt="{type:'date'}">
+				</div>
+			</div>
 			<div class="col-sm-3">
 				<div class="input-group">
 					<span class="input-group-addon lable">工程项目</span>
@@ -57,7 +66,7 @@
 					</select>
 				</div>
 			</div>
-			<div class="col-sm-6">
+			<div class="col-sm-3">
 				<div class="input-group">
 					<span class="input-group-addon lable">备注</span>
 					<textarea name="remark" style="height:40px;" class="input-item form-control"></textarea>
@@ -66,17 +75,18 @@
 		</div>
 		<div class="row mt10">
 			<div class="col-sm-12 " style="border: 1px solid #ddd;">
-				<table name="stockInventoryDetailInfos" class="input-entry" >
+				<table name="stockCalculationDetailInfos" class="input-entry" >
 					<thead>
 						<tr>
-							<th data-field="stockInfo" data-type="f7"  data-width="150" data-visible="false">库存id</th>
+							<th data-field="stockInventoryDetailInfo" data-type="f7" data-visible="false">盘存明细id</th>
 							<th data-field="materialType" data-width="100" data-type="select" data-locked="true">材料类型</th>
 							<th data-field="number"  data-width="150" data-locked="true">物料编码</th>
 							<th data-field="material" data-type="f7"  data-width="150" data-locked="true">物料名称</th>
 							<th data-field="specification" data-type="text" data-locked="true" data-width="100">规格</th>
 							<th data-field="measureUnit" data-type="text" data-locked="true" data-width="100">单位</th>
 							<th data-field="stockCount" data-type="number" data-locked="true" data-width="100">库存数量</th>
-							<th data-field="inventoryCount" data-type="number" data-width="100">盘存数量</th>
+							<th data-field="inventoryCount" data-type="number" data-locked="true" data-width="100">盘存数量</th>
+							<th data-field="calculationCount" data-type="number" data-width="100">图算用量</th>
 							<th data-field="remark" data-type="text" data-width="100">备注</th>
 						</tr>
 					</thead>
@@ -129,29 +139,20 @@
 <%@include file="../../../base/base_edit.jsp"%>
 <script type="text/javascript">
     var editUI;
-    var stockInventoryDetailInfosEntry;
-    var stockInventoryDetailInfosEntryObj;
-    function proSubItem_dataChange(oldData,newData){
+    var stockCalculationDetailInfosEntry;
+    var stockCalculationDetailInfosEntryObj;
+    function selectInventory(oldData,newData){
+        $("input[name='startDate']").myComponet(DataType.date,{method:'setdata',opt:newData.startDate});
+        $("input[name='endDate']").myComponet(DataType.date,{method:'setdata',opt:newData.endDate});
+        //获取物料清单信息
+        webUtil.ajaxData({url:"ec/stock/inventory/detail",data:{inventoryId:newData.id},async:false,success:function(data){
+          if(data.statusCode==0){
+               //清空表格
+              stockCalculationDetailInfosEntry.loadData(data.data);
+		  }
+        }});
+    }
 
-    }
-    function stockInventoryDetailInfos_dataChanged($cell,obj){
-        if(webUtil.isEmpty(stockInventoryDetailInfosEntry)) return;
-        if(obj.field=='material'){
-            if(!webUtil.isEmpty(stockInventoryDetailInfosEntry)){
-                var selectPlanRow = obj.rowData[obj.field];
-                if(!selectPlanRow){
-                    return false;
-				}
-                var materialType = {key:selectPlanRow.material_materialType_id,val:selectPlanRow.material_materialType};
-                stockInventoryDetailInfosEntry.setTableCellValue(obj.rowIndex,'specification',selectPlanRow.specification);
-                stockInventoryDetailInfosEntry.setTableCellValue(obj.rowIndex,'materialType',materialType);
-                stockInventoryDetailInfosEntry.setTableCellValue(obj.rowIndex,'measureUnit',selectPlanRow.measureUnit);
-                stockInventoryDetailInfosEntry.setTableCellValue(obj.rowIndex,'stockOutDetailInfo',
-					{id:selectPlanRow.stockOutDetailInfo_id});
-                stockInventoryDetailInfosEntry.setTableCellValue(obj.rowIndex,'stockOutNumber',selectPlanRow.parent_number);
-            }
-		}
-    }
 
     function getParams(){
         var pro = {};
@@ -194,12 +195,12 @@
     }
     $(document).ready(function() {
         var height = window.outerHeight-460;
-        var entryOption = "{type:'entry',height:"+height+",tableOpt:{editDataChanged:stockInventoryDetailInfos_dataChanged}"+
-            ",toolbar:{title:'盘存物料列表'}}";
+        var entryOption = "{type:'entry',height:"+height+",tableOpt:{}"+
+            ",toolbar:{title:'图算用量物料列表'}}";
 		$("table.input-entry").attr("data-opt",entryOption);
         editUI = $('#editPanel').editUI({
-            title : "库存盘存",billModel:2,
-            baseUrl : "ec/stock/inventory",
+            title : "图算用量",billModel:2,
+            baseUrl : "ec/stock/calculation",
             toolbar : "#table-toolbar",
             form : {
                 el : "#editForm"
@@ -207,12 +208,10 @@
         });
         editUI.onLoad();
 
-        stockInventoryDetailInfosEntryObj = editUI.getEntryObj('stockInventoryDetailInfos');
-        if(!webUtil.isEmpty(stockInventoryDetailInfosEntryObj)){
-            stockInventoryDetailInfosEntry = stockInventoryDetailInfosEntryObj.entry;
-            //var rightBtnGroup = stockInventoryDetailInfosEntryObj.toolbar.find('.pull-right>.btn-group').myBtnGroup();
-            //rightBtnGroup.addBtn({entry:stockInventoryDetailInfosEntry,css:'btn-sm',text:'复制插入',icon:"fa fa-edit",clickFun:btnCopyInsertRow});
-            stockInventoryDetailInfosEntry.resetView();
+        stockCalculationDetailInfosEntryObj = editUI.getEntryObj('stockCalculationDetailInfos');
+        if(!webUtil.isEmpty(stockCalculationDetailInfosEntryObj)){
+            stockCalculationDetailInfosEntry = stockCalculationDetailInfosEntryObj.entry;
+            stockCalculationDetailInfosEntry.resetView();
         }
         webUtil.initMainPanel('#editPanel');
     })

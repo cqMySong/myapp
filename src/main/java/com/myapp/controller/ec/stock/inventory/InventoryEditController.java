@@ -14,15 +14,19 @@ import com.myapp.core.enums.DataTypeEnum;
 import com.myapp.core.enums.MaterialType;
 import com.myapp.core.exception.db.QueryException;
 import com.myapp.core.model.ColumnModel;
+import com.myapp.core.model.WebDataModel;
 import com.myapp.entity.ec.basedata.ProjectInfo;
 import com.myapp.entity.ec.stock.*;
+import com.myapp.service.ec.stock.StockInventoryDetailService;
 import com.myapp.service.ec.stock.StockInventoryService;
 import com.myapp.service.ec.stock.StockOutService;
 import com.myapp.service.ec.stock.StockService;
 import org.apache.commons.lang3.StringUtils;
 import org.hibernate.HibernateException;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.annotation.Resource;
 import java.math.BigDecimal;
@@ -40,6 +44,8 @@ import java.util.*;
 public class InventoryEditController extends BaseBillEditController {
     @Resource
     private StockInventoryService stockInventoryService;
+    @Resource
+    private StockInventoryDetailService stockInventoryDetailService;
     @Resource
     private StockService stockService;
     @Override
@@ -67,6 +73,7 @@ public class InventoryEditController extends BaseBillEditController {
                     MaterialInfo materialMap = (MaterialInfo) stockMap.get("materialInfo");
                     materialInfo.setId(materialMap.getId());
                     materialInfo.setName(materialMap.getName());
+                    materialInfo.setNumber(materialMap.getNumber());
                     materialInfo.setMaterialType(materialMap.getMaterialType());
                     stockInventoryDetailInfo.setMaterial(materialInfo);
                     stockInventoryDetailInfo.setStockInfo(stockInfo);
@@ -101,7 +108,6 @@ public class InventoryEditController extends BaseBillEditController {
             for(int i=0;i<stockInventoryDetailInfos.size();i++){
                 stockInventoryDetail = stockInventoryDetailInfos.getJSONObject(i);
                 stockInfo = stockInventoryDetail.getJSONObject("stockInfo");
-                stockInfo.put("name",stockInfo.getString("inStockNumber"));
                 stockInventoryDetail.put("stockInfo",stockInfo);
                 stockInventoryDetail.put("specification",stockInfo.getString("specification"));
                 stockInventoryDetail.put("measureUnit",stockInfo.getString("measureUnit"));
@@ -110,6 +116,7 @@ public class InventoryEditController extends BaseBillEditController {
                 materialType.put("key",materialInfo.get("materialType"));
                 materialType.put("val", MaterialType.map.get(materialInfo.getString("materialType")).getName());
                 stockInventoryDetail.put("materialType",materialType);
+                stockInventoryDetail.put("number",materialInfo.getString("number"));
                 stockInventoryDetailNew.add(stockInventoryDetail);
             }
             jsonObject.put("stockInventoryDetailInfos",stockInventoryDetailNew);
@@ -123,8 +130,8 @@ public class InventoryEditController extends BaseBillEditController {
         cols.add(new ColumnModel("name"));
         cols.add(new ColumnModel("number"));
         cols.add(new ColumnModel("remark"));
-        cols.add(new ColumnModel("operator",DataTypeEnum.F7,UserInfo.class));
-        cols.add(new ColumnModel("inventoryDate",DataTypeEnum.DATE));
+        cols.add(new ColumnModel("startDate",DataTypeEnum.DATE));
+        cols.add(new ColumnModel("endDate",DataTypeEnum.DATE));
         cols.add(new ColumnModel("billState",DataTypeEnum.ENUM, BillState.class));
         cols.add(new ColumnModel("createUser",DataTypeEnum.F7,UserInfo.class));
         cols.add(new ColumnModel("lastUpdateUser",DataTypeEnum.F7,UserInfo.class));
@@ -139,11 +146,11 @@ public class InventoryEditController extends BaseBillEditController {
         ColumnModel stockInventoryDetailInfos = new ColumnModel("stockInventoryDetailInfos",DataTypeEnum.ENTRY,
                 StockInventoryDetailInfo.class);
 
-        ColumnModel stockInfo = new ColumnModel("stockInfo",DataTypeEnum.F7,"id,specification,measureUnit,inStockNumber");
+        ColumnModel stockInfo = new ColumnModel("stockInfo",DataTypeEnum.F7,"id,specification,measureUnit");
         stockInfo.setClaz(StockInfo.class);
         stockInventoryDetailInfos.getCols().add(stockInfo);
 
-        ColumnModel material = new ColumnModel("material",DataTypeEnum.F7,"id,name,materialType");
+        ColumnModel material = new ColumnModel("material",DataTypeEnum.F7,"id,name,materialType,number");
         material.setClaz(MaterialInfo.class);
         stockInventoryDetailInfos.getCols().add(material);
 
@@ -154,5 +161,14 @@ public class InventoryEditController extends BaseBillEditController {
         cols.add(stockInventoryDetailInfos);
 
         return cols;
+    }
+
+    @RequestMapping("/detail")
+    @ResponseBody
+    public WebDataModel getByStockInventoryId(String inventoryId) {
+        WebDataModel webDataModel = new WebDataModel();
+        webDataModel.setData(stockInventoryDetailService.queryByInventoryId(inventoryId));
+        webDataModel.setStatusCode(STATUSCODE_SUCCESS);
+        return webDataModel;
     }
 }

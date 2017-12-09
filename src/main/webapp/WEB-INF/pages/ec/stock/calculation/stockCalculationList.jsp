@@ -2,7 +2,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<title>库存盘存</title>
+<title>当期图算用量</title>
 </head>
 <script type="text/javascript">
 </script>
@@ -19,11 +19,11 @@
 						 <thead >
 							<tr>
 								<th data-field="project_name">工程项目</th>
-								<th data-field="number">盘存单号</th>
-								<th data-field="name">盘存名称</th>
-								<th data-field="startDate" data-type="date">开始时间</th>
-								<th data-field="endDate" data-type="date">结束时间</th>
-								<th data-field="createUser_name">盘存人</th>
+								<th data-field="number">图算单号</th>
+								<th data-field="name">图算名称</th>
+								<th data-field="stockInventoryInfo_startDate" data-type="date">开始时间</th>
+								<th data-field="stockInventoryInfo_endDate" data-type="date">结束时间</th>
+								<th data-field="createUser_name">图算人</th>
 								<th data-field="billState" data-type="select">业务状态</th>
 								<th data-field="remark">备注</th>
 							</tr>
@@ -57,7 +57,7 @@
 
 	$(document).ready(function() {
 			var treeNode2QueryProp = ["id","name","number","longNumber","type"];
-			var editWin ={title:'库存盘存',width:(window.outerWidth-50),height:(window.outerHeight-100)};
+			var editWin ={title:'图算用量单',width:(window.outerWidth-50),height:(window.outerHeight-100)};
 			var treeOpt = {
 					setting:{
 						data: {
@@ -65,7 +65,7 @@
 						}
 					}};
 			var height = window.outerHeight-325;
-			thisOrgList = $('body').treeListUI({tableEl:'#tblMain',treeUrl:'ec/basedata/projects/projectTree',baseUrl:'ec/stock/inventories',title:'项目工程',height:(height+42),
+			thisOrgList = $('body').treeListUI({tableEl:'#tblMain',treeUrl:'ec/basedata/projects/projectTree',baseUrl:'ec/stock/calculations',title:'项目工程',height:(height+42),
 							treeContainer:"#tree_container",editWin:editWin,toolbar:"#table-toolbar",searchParams:{includeChild:true},treeOpt:treeOpt
 							,treeNode2QueryProp:treeNode2QueryProp,extendTableOptions:{toolbar:'#tblMain_toolbar',height:height,sortStable:false}});
 			thisOrgList.onLoad();

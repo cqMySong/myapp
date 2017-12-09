@@ -5,6 +5,7 @@ import com.myapp.core.base.entity.CoreBaseEntryInfo;
 import com.myapp.core.entity.MaterialInfo;
 
 import javax.persistence.*;
+import java.io.Serializable;
 import java.math.BigDecimal;
 
 /**
@@ -16,7 +17,7 @@ import java.math.BigDecimal;
 @Entity
 @MyEntityAnn(name="盘存明细信息")
 @Table(name="t_ec_stock_inventory_detail")
-public class StockInventoryDetailInfo extends CoreBaseEntryInfo<StockInventoryInfo> {
+public class StockInventoryDetailInfo extends CoreBaseEntryInfo<StockInventoryInfo> implements Serializable {
     /**
      * 库存信息
      */

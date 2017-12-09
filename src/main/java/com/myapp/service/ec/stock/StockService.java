@@ -30,9 +30,10 @@ public class StockService  extends BaseInterfaceService<StockInfo> {
      * @param materialInfo
      * @return
      */
-    public StockInfo getByMaterialId(MaterialInfo materialInfo){
-        String hql = "select stockInfo from StockInfo stockInfo where stockInfo.materialInfo.id=?";
-        return queryEntity(StockInfo.class,hql,new Object[]{materialInfo.getId()});
+    public StockInfo getByMaterialId(MaterialInfo materialInfo,ProjectInfo projectInfo){
+        String hql = "select stockInfo from StockInfo stockInfo where stockInfo.materialInfo.id=? and " +
+                "stockInfo.project.id=?";
+        return queryEntity(StockInfo.class,hql,new Object[]{materialInfo.getId(),projectInfo.getId()});
     }
 
     /**
@@ -45,7 +46,7 @@ public class StockService  extends BaseInterfaceService<StockInfo> {
      */
     public StockInfo saveByMaterialInfo(ProjectInfo projectInfo, BigDecimal count, MaterialInfo materialInfo)
             throws SaveException {
-        StockInfo stockInfo = getByMaterialId(materialInfo);
+        StockInfo stockInfo = getByMaterialId(materialInfo,projectInfo);
         if(stockInfo==null){
             stockInfo = new StockInfo();
             stockInfo.setMaterialInfo(materialInfo);
@@ -67,7 +68,7 @@ public class StockService  extends BaseInterfaceService<StockInfo> {
      * @return
      */
     public List<Map> queryStockByProjectId(String projectId){
-        String hql = "select stock.id as id,stock.count as count,stock.inStockNumber as inStockNumber," +
+        String hql = "select stock.id as id,stock.count as count," +
                 "stock.specification as specification,stock.measureUnit as measureUnit," +
                 "stock.materialInfo as materialInfo from StockInfo stock where stock.projectInfo.id=?";
         return findByHQL(hql,new String[]{projectId});

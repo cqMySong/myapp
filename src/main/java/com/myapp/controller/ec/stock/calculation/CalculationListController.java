@@ -1,4 +1,4 @@
-package com.myapp.controller.ec.stock.inventory;
+package com.myapp.controller.ec.stock.calculation;
 
 import com.alibaba.fastjson.JSONObject;
 import com.myapp.core.annotation.PermissionAnn;
@@ -12,8 +12,9 @@ import com.myapp.core.model.ColumnModel;
 import com.myapp.core.util.BaseUtil;
 import com.myapp.core.util.WebUtil;
 import com.myapp.entity.ec.basedata.ProjectInfo;
+import com.myapp.entity.ec.stock.StockInventoryInfo;
+import com.myapp.service.ec.stock.StockCalculationService;
 import com.myapp.service.ec.stock.StockInventoryService;
-import com.myapp.service.ec.stock.StockOutService;
 import org.hibernate.Criteria;
 import org.hibernate.criterion.Restrictions;
 import org.springframework.stereotype.Controller;
@@ -25,31 +26,31 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * @path：com.myapp.controller.ec.stock.inventory
- * @description：盘存信息
+ * @path：com.myapp.controller.ec.stock.calculation
+ * @description：当期图算用量
  * @author ： ly
  * @date: 2017-08-28 21:02
  */
-@PermissionAnn(name="系统管理.现场管理.库存管理.库存盘存",number="app.ec.stock.inventory")
+@PermissionAnn(name="系统管理.现场管理.库存管理.当期图算用量",number="app.ec.stock.calculation")
 @Controller
-@RequestMapping("ec/stock/inventories")
-public class InventoryListController extends BaseListController {
+@RequestMapping("ec/stock/calculations")
+public class CalculationListController extends BaseListController {
     @Resource
-    private StockInventoryService stockInventoryService;
+    private StockCalculationService stockCalculationService;
 
     @Override
     public String getEditUrl() {
-        return "ec/stock/inventory/stockInventoryEdit";
+        return "ec/stock/calculation/stockCalculationEdit";
     }
 
     @Override
     public String getListUrl() {
-        return "ec/stock/inventory/stockInventoryList";
+        return "ec/stock/calculation/stockCalculationList";
     }
 
     @Override
     public AbstractBaseService getService() {
-        return this.stockInventoryService;
+        return this.stockCalculationService;
     }
 
     @Override
@@ -90,8 +91,6 @@ public class InventoryListController extends BaseListController {
         cols.add(new ColumnModel("number"));
         cols.add(new ColumnModel("billState", DataTypeEnum.ENUM,BillState.class));
         cols.add(new ColumnModel("remark"));
-        cols.add(new ColumnModel("startDate",DataTypeEnum.DATE));
-        cols.add(new ColumnModel("endDate",DataTypeEnum.DATE));
 
         ColumnModel project = new ColumnModel("project",DataTypeEnum.F7,"id,name");
         project.setClaz(ProjectInfo.class);
@@ -100,6 +99,11 @@ public class InventoryListController extends BaseListController {
         ColumnModel createUser = new ColumnModel("createUser",DataTypeEnum.F7,"id,name");
         createUser.setClaz(UserInfo.class);
         cols.add(createUser);
+
+        ColumnModel stockInventoryInfo = new ColumnModel("stockInventoryInfo",DataTypeEnum.F7,
+                "id,startDate,endDate");
+        stockInventoryInfo.setClaz(StockInventoryInfo.class);
+        cols.add(stockInventoryInfo);
         return cols;
     }
 }

@@ -2,8 +2,7 @@ package com.myapp.entity.ec.engineering;
 
 import com.myapp.core.annotation.MyEntityAnn;
 import com.myapp.core.base.entity.CoreBaseBillInfo;
-import com.myapp.core.entity.UserInfo;
-import com.myapp.core.enums.PaymentType;
+import com.myapp.core.enums.SettleType;
 import com.myapp.entity.ec.basedata.ECUnitInfo;
 import com.myapp.entity.ec.basedata.ProjectInfo;
 import org.hibernate.annotations.Type;
@@ -14,22 +13,22 @@ import java.util.Date;
 
 /**
  * @path：com.myapp.entity.ec.engineering
- * @description：工程进度款
+ * @description：分包付款
  * @author： ly
  * @date: 2017-11-13 22:09
  */
 @Entity
-@MyEntityAnn(name="进度款结算")
-@Table(name="t_ec_progress_fund")
-public class ProgressFundInfo extends CoreBaseBillInfo {
+@MyEntityAnn(name="分包付款")
+@Table(name="t_ec_subcontract_payment")
+public class SubContractPaymentInfo extends CoreBaseBillInfo {
     /**
      *所属项目
      */
     private ProjectInfo project;
     /**
-     * 工程合同
+     * 分包合同
      */
-    private EngineeringContractInfo engineeringContractInfo;
+    private SubcontractInfo subcontractInfo;
 
     /**
      * 合同单位
@@ -43,11 +42,15 @@ public class ProgressFundInfo extends CoreBaseBillInfo {
     /**
      * 经办人
      */
-    private UserInfo operator;
+    private String operator;
     /**
-     * 结算时间
+     * 开始时间
      */
-    private Date settleDate;
+    private Date startDate;
+    /**
+     * 结束时间
+     */
+    private Date endDate;
     /**
      * 工作内容
      */
@@ -57,13 +60,17 @@ public class ProgressFundInfo extends CoreBaseBillInfo {
      */
     private String remark;
     /**
-     * 付款类型
+     * 结算类型
      */
-    private PaymentType paymentType;
+    private SettleType settleType;
+    /**
+     * 是否最终结算
+     */
+    private Boolean endSettle;
     /**
      * 修改前数据
      */
-    private ProgressFundInfo oldProgressFundInfo;
+    private SubContractPaymentInfo oldSubContractPaymentInfo;
 
     @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "fProjectId")
@@ -77,12 +84,12 @@ public class ProgressFundInfo extends CoreBaseBillInfo {
 
     @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "fEngineeringContractId")
-    public EngineeringContractInfo getEngineeringContractInfo() {
-        return engineeringContractInfo;
+    public SubcontractInfo getSubcontractInfo() {
+        return subcontractInfo;
     }
 
-    public void setEngineeringContractInfo(EngineeringContractInfo engineeringContractInfo) {
-        this.engineeringContractInfo = engineeringContractInfo;
+    public void setSubcontractInfo(SubcontractInfo subcontractInfo) {
+        this.subcontractInfo = subcontractInfo;
     }
 
     @Column(name="fSettleAmount",precision = 10,scale = 2)
@@ -94,24 +101,15 @@ public class ProgressFundInfo extends CoreBaseBillInfo {
         this.settleAmount = settleAmount;
     }
 
-    @OneToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "fOperatorId")
-    public UserInfo getOperator() {
+    @Column(name = "fOperator")
+    public String getOperator() {
         return operator;
     }
 
-    public void setOperator(UserInfo operator) {
+    public void setOperator(String operator) {
         this.operator = operator;
     }
 
-    @Column(name="fSettleDate")
-    public Date getSettleDate() {
-        return settleDate;
-    }
-
-    public void setSettleDate(Date settleDate) {
-        this.settleDate = settleDate;
-    }
 
     @Column(name="fRemark")
     public String getRemark() {
@@ -123,12 +121,12 @@ public class ProgressFundInfo extends CoreBaseBillInfo {
     }
 
     @Transient
-    public ProgressFundInfo getOldProgressFundInfo() {
-        return oldProgressFundInfo;
+    public SubContractPaymentInfo getOldSubContractPaymentInfo() {
+        return oldSubContractPaymentInfo;
     }
 
-    public void setOldProgressFundInfo(ProgressFundInfo oldProgressFundInfo) {
-        this.oldProgressFundInfo = oldProgressFundInfo;
+    public void setOldSubContractPaymentInfo(SubContractPaymentInfo oldSubContractPaymentInfo) {
+        this.oldSubContractPaymentInfo = oldSubContractPaymentInfo;
     }
 
     @OneToOne(fetch = FetchType.LAZY)
@@ -142,13 +140,13 @@ public class ProgressFundInfo extends CoreBaseBillInfo {
     }
 
     @Column(name="fPaymentType",length = 20)
-    @Type(type="myEnum",parameters={@org.hibernate.annotations.Parameter(name="enumClass",value="com.myapp.core.enums.PaymentType")})
-    public PaymentType getPaymentType() {
-        return paymentType;
+    @Type(type="myEnum",parameters={@org.hibernate.annotations.Parameter(name="enumClass",value="com.myapp.core.enums.SettleType")})
+    public SettleType getSettleType() {
+        return settleType;
     }
 
-    public void setPaymentType(PaymentType paymentType) {
-        this.paymentType = paymentType;
+    public void setSettleType(SettleType settleType) {
+        this.settleType = settleType;
     }
 
     @Column(name="fJobContent",length = 500)
@@ -158,5 +156,32 @@ public class ProgressFundInfo extends CoreBaseBillInfo {
 
     public void setJobContent(String jobContent) {
         this.jobContent = jobContent;
+    }
+
+    @Column(name = "fStartDate")
+    public Date getStartDate() {
+        return startDate;
+    }
+
+    public void setStartDate(Date startDate) {
+        this.startDate = startDate;
+    }
+
+    @Column(name = "fEndDate")
+    public Date getEndDate() {
+        return endDate;
+    }
+
+    public void setEndDate(Date endDate) {
+        this.endDate = endDate;
+    }
+
+    @Column(name = "fEndSettle")
+    public Boolean getEndSettle() {
+        return endSettle;
+    }
+
+    public void setEndSettle(Boolean endSettle) {
+        this.endSettle = endSettle;
     }
 }

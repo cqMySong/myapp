@@ -2,7 +2,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<title>工程进度款</title>
+<title>业主付款</title>
 </head>
 <script type="text/javascript">
 </script>
@@ -19,11 +19,13 @@
 						 <thead >
 							<tr>
 								<th data-field="project_name">工程项目</th>
-								<th data-field="engineeringContractInfo_name">合同名称</th>
-								<th data-field="engineeringContractInfo_number">合同单号</th>
-								<th data-field="number">结算单号</th>
-								<th data-field="settleDate" data-type="date">结算时间</th>
-								<th data-field="settleAmount">结算金额</th>
+								<th data-field="number">单号</th>
+								<th data-field="name">名称</th>
+								<th data-field="deliveryDate" data-type="date">报送时间</th>
+								<th data-field="deliveryAmount">报送金额</th>
+								<th data-field="approvedAmount">核定金额</th>
+								<th data-field="paymentAmount">实际支付金额</th>
+								<th data-field="paymentRatio">约定支付比例</th>
 								<th data-field="billState" data-type="select">业务状态</th>
 							</tr>
 						</thead>
@@ -64,7 +66,7 @@
 						}
 					}};
 			var height = window.outerHeight-325;
-			thisOrgList = $('body').treeListUI({tableEl:'#tblMain',treeUrl:'ec/basedata/projects/projectTree',baseUrl:'ec/engineering/progressfunds',title:'项目工程',height:(height+42),
+			thisOrgList = $('body').treeListUI({tableEl:'#tblMain',treeUrl:'ec/basedata/projects/projectTree',baseUrl:'ec/engineering/proprietorpayments',title:'项目工程',height:(height+42),
 							treeContainer:"#tree_container",editWin:editWin,toolbar:"#table-toolbar",searchParams:{includeChild:true},treeOpt:treeOpt
 							,treeNode2QueryProp:treeNode2QueryProp,extendTableOptions:{toolbar:'#tblMain_toolbar',height:height,sortStable:false}});
 			thisOrgList.onLoad();

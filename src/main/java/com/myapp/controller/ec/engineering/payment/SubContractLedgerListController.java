@@ -1,4 +1,4 @@
-package com.myapp.controller.ec.engineering.progressfund;
+package com.myapp.controller.ec.engineering.payment;
 
 import com.alibaba.fastjson.JSONObject;
 import com.myapp.core.annotation.PermissionAnn;
@@ -10,7 +10,7 @@ import com.myapp.core.enums.ExpenseType;
 import com.myapp.core.model.ColumnModel;
 import com.myapp.core.util.BaseUtil;
 import com.myapp.core.util.WebUtil;
-import com.myapp.service.ec.engineering.ProgressFundService;
+import com.myapp.service.ec.engineering.SubContractPaymentService;
 import org.hibernate.Criteria;
 import org.hibernate.criterion.Order;
 import org.hibernate.sql.JoinType;
@@ -34,7 +34,7 @@ import java.util.Map;
 @RequestMapping("ec/engineering/subcontractledgers")
 public class SubContractLedgerListController extends BaseListController {
     @Resource
-    private ProgressFundService progressFundService;
+    private SubContractPaymentService subContractPaymentService;
 
     @Override
     public String getEditUrl() {
@@ -48,7 +48,7 @@ public class SubContractLedgerListController extends BaseListController {
 
     @Override
     public AbstractBaseService getService() {
-        return this.progressFundService;
+        return this.subContractPaymentService;
     }
 
     @Override

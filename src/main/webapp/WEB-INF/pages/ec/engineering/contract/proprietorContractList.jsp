@@ -2,7 +2,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<title>工程合同</title>
+<title>业主合同</title>
 </head>
 <script type="text/javascript">
 </script>
@@ -19,10 +19,10 @@
 						 <thead >
 							<tr>
 								<th data-field="project_name">工程项目</th>
-								<th data-field="name">合同名称</th>
-								<th data-field="number">合同单号</th>
-								<th data-field="contractDate" data-type="date">合同时间</th>
-								<th data-field="ecUnitInfo_name">合同单位</th>
+								<th data-field="name">名称</th>
+								<th data-field="number">单号</th>
+								<th data-field="rangeValuation" >计价范围</th>
+								<th data-field="basisValuation">计价依据</th>
 								<th data-field="amount">金额</th>
 								<th data-field="billState" data-type="select">业务状态</th>
 							</tr>
@@ -56,7 +56,7 @@
 
 	$(document).ready(function() {
 			var treeNode2QueryProp = ["id","name","number","longNumber","type"];
-			var editWin ={title:'工程合同',width:900,height:(window.outerHeight-260)};
+			var editWin ={title:'工程预结',width:900,height:(window.outerHeight-260)};
 			var treeOpt = {
 					setting:{
 						data: {
@@ -64,7 +64,7 @@
 						}
 					}};
 			var height = window.outerHeight-325;
-			thisOrgList = $('body').treeListUI({tableEl:'#tblMain',treeUrl:'ec/basedata/projects/projectTree',baseUrl:'ec/engineering/contracts',title:'项目工程',height:(height+42),
+			thisOrgList = $('body').treeListUI({tableEl:'#tblMain',treeUrl:'ec/basedata/projects/projectTree',baseUrl:'ec/engineering/proprietorcontracts',title:'项目工程',height:(height+42),
 							treeContainer:"#tree_container",editWin:editWin,toolbar:"#table-toolbar",searchParams:{includeChild:true},treeOpt:treeOpt
 							,treeNode2QueryProp:treeNode2QueryProp,extendTableOptions:{toolbar:'#tblMain_toolbar',height:height,sortStable:false}});
 			thisOrgList.onLoad();

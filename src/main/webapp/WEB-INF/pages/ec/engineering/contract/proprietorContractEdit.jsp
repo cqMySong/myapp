@@ -3,7 +3,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-	<title>工程进度款</title>
+	<title>业主合同</title>
 </head>
 <style type="text/css">
 </style>
@@ -17,77 +17,48 @@
 		<div class="row">
 			<div class="col-sm-4">
 				<div class="input-group">
-					<span class="input-group-addon lable">付款单号</span>
-					<input class="input-item form-control require" name="number"/>
-					<input class="input-item form-control" type="hidden" name="name"/>
+					<span class="input-group-addon lable">单号</span>
+					<input class="require input-item" name="number">
 				</div>
 			</div>
 			<div class="col-sm-4">
 				<div class="input-group">
-					<span class="input-group-addon lable">合同单号</span>
-					<input class="require input-item form-control" name="engineeringContractInfo"
-				    data-opt="{type:'f7',dataChange:parent_dataChange,uiWin:{title:'工程合同',height:600,width:800,url:'ec/engineering/contractF7'}}" />
+					<span class="input-group-addon lable">名称</span>
+					<input name="name" class="input-item form-control require"/>
 				</div>
 			</div>
 			<div class="col-sm-4">
 				<div class="input-group">
-					<span class="input-group-addon lable">合同单位</span>
-					<input name="ecUnitInfo" class="input-item form-control read" data-opt="{type:'f7'}"/>
+					<span class="input-group-addon lable">金额</span>
+					<input name="amount" class="require input-item form-control require" type="number" />
+				</div>
+			</div>
+		</div>
+		<div class="row mt10">
+			<div class="col-sm-12">
+				<div class="input-group">
+					<span class="input-group-addon lable">计价范围</span>
+					<textarea name="rangeValuation" style="height:40px;" class="input-item form-control"></textarea>
+				</div>
+			</div>
+		</div>
+		<div class="row mt10">
+			<div class="col-sm-12">
+				<div class="input-group">
+					<span class="input-group-addon lable">计价依据</span>
+					<textarea name="basisValuation" style="height:40px;" class="input-item form-control"></textarea>
 				</div>
 			</div>
 		</div>
 		<div class="row mt10">
 			<div class="col-sm-4">
 				<div class="input-group">
-					<span class="input-group-addon lable">合同类型</span>
-					<select name="contractType" data-opt="{type:'select',selected:'PROPRIETOR',url:'base/common/combox?enum=com.myapp.core.enums.ContractType'}"
-							class="form-control input-item require read">
-					</select>
-				</div>
-			</div>
-			<div class="col-sm-4">
-				<div class="input-group">
-					<span class="input-group-addon lable">费用类型</span>
-					<select name="expenseType" data-opt="{type:'select',selected:'MATERIAL',url:'base/common/combox?enum=com.myapp.core.enums.ExpenseType'}"
-							class="form-control input-item require read">
-					</select>
-				</div>
-			</div>
-			<div class="col-sm-4">
-				<div class="input-group">
-					<span class="input-group-addon lable">付款类型</span>
-					<select name="paymentType" data-opt="{type:'select',selected:'INTERIM',url:'base/common/combox?enum=com.myapp.core.enums.PaymentType'}"
+					<span class="input-group-addon lable">类型</span>
+					<select name="proprietorContractType" data-opt="{type:'select',selected:'BUDGET',
+					url:'base/common/combox?enum=com.myapp.core.enums.ProprietorContractType'}"
 							class="form-control input-item require">
 					</select>
-				</div>
-			</div>
-		</div>
-		<div class="row mt10">
-			<div class="col-sm-4">
-				<div class="input-group">
-					<span class="input-group-addon lable">合同金额</span>
-					<input type="number" name="contractAmount" class="form-control input-item require read"/>
-				</div>
-			</div>
-			<div class="col-sm-4">
-				<div class="input-group">
-					<span class="input-group-addon lable">付款金额</span>
-					<input type="number" name="settleAmount" class="form-control input-item require"/>
-				</div>
-			</div>
-			<div class="col-sm-4">
-				<div class="input-group">
-					<span class="input-group-addon lable">付款日期</span>
-					<input type="text" name="settleDate" class="form-control input-item require" data-opt="{type:'date'}">
-				</div>
-			</div>
-		</div>
-		<div class="row mt10">
-			<div class="col-sm-4">
-				<div class="input-group">
-					<span class="input-group-addon lable">经办人</span>
-					<input name="operator" class="input-item form-control require"
-						   data-opt="{type:'f7',uiWin:{title:'人员选择',height:600,width:800,url:'base/userf7'}}" />
+
 				</div>
 			</div>
 			<div class="col-sm-4">
@@ -103,22 +74,6 @@
 					<select name="billState" data-opt="{type:'select',selected:'ADDNEW',url:'base/common/combox?enum=com.myapp.core.enums.BillState'}"
 							class="form-control input-item require read">
 					</select>
-				</div>
-			</div>
-		</div>
-		<div class="row mt10">
-			<div class="col-sm-12">
-				<div class="input-group">
-					<span class="input-group-addon lable">工作内容</span>
-					<textarea name="jobContent" style="height:40px;" class="input-item form-control"></textarea>
-				</div>
-			</div>
-		</div>
-		<div class="row mt10">
-			<div class="col-sm-12">
-				<div class="input-group">
-					<span class="input-group-addon lable">备注</span>
-					<textarea name="remark" style="height:40px;" class="input-item form-control"></textarea>
 				</div>
 			</div>
 		</div>
@@ -173,19 +128,14 @@
         pro.projectId = $('input[name="project"]').myF7().getValue();
         return pro;
     }
-
-    function parent_dataChange(oldData,newData){
-		if(newData){
-			$("input[name='contractAmount']").val(newData.amount);
-            $("input[name='ecUnitInfo']").myF7().setData({id:newData.ecUnitInfo_id,name:newData.ecUnitInfo_name});
-            $("select[name='contractType']").select2().val(newData.contractType.key).trigger("change");
-            $("select[name='expenseType']").select2().val(newData.expenseType.key).trigger("change");
-		}
-    }
     /**
      * 一切操作前的接口函数
      */
     function beforeAction(opt) {
+        var director = $('input[name="director"]').myF7().getData();
+        if(director){
+            $('input[name="directorName"]').val(director.name);
+		}
         return true;
     }
 
@@ -201,8 +151,8 @@
     }
     $(document).ready(function() {
         editUI = $('#editPanel').editUI({
-            title : "工程进度款",billModel:2,
-            baseUrl : "ec/engineering/progressfund",
+            title : "工程预结",billModel:2,
+            baseUrl : "ec/engineering/proprietorcontract",
             toolbar : "#table-toolbar",
             form : {
                 el : "#editForm"

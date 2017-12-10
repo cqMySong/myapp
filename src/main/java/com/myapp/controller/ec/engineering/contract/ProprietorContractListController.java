@@ -1,19 +1,20 @@
-package com.myapp.controller.ec.engineering.progressfund;
+package com.myapp.controller.ec.engineering.contract;
 
 import com.alibaba.fastjson.JSONObject;
 import com.myapp.core.annotation.PermissionAnn;
 import com.myapp.core.base.service.impl.AbstractBaseService;
 import com.myapp.core.controller.BaseListController;
-import com.myapp.core.entity.UserInfo;
 import com.myapp.core.enums.BaseMethodEnum;
 import com.myapp.core.enums.BillState;
 import com.myapp.core.enums.DataTypeEnum;
+import com.myapp.core.enums.SubcontractExpenseType;
 import com.myapp.core.model.ColumnModel;
 import com.myapp.core.util.BaseUtil;
 import com.myapp.core.util.WebUtil;
+import com.myapp.entity.ec.basedata.ECUnitInfo;
 import com.myapp.entity.ec.basedata.ProjectInfo;
-import com.myapp.entity.ec.engineering.EngineeringContractInfo;
-import com.myapp.service.ec.engineering.ProgressFundService;
+import com.myapp.service.ec.engineering.ProprietorContractService;
+import com.myapp.service.ec.engineering.SubcontractService;
 import org.hibernate.Criteria;
 import org.hibernate.criterion.Restrictions;
 import org.springframework.stereotype.Controller;
@@ -25,31 +26,31 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * @path：com.myapp.controller.ec.engineering.progressfund
- * @description：进度款结算
+ * @path：com.myapp.controller.ec.engineering.contract
+ * @description：分包合同
  * @author ： ly
  * @date: 2017-08-28 21:02
  */
-@PermissionAnn(name="系统管理.现场管理.工程合同.进度款结算",number="app.ec.engineering.progressfund")
+@PermissionAnn(name="系统管理.现场管理.工程合同.分包合同",number="app.ec.engineering.proprietors")
 @Controller
-@RequestMapping("ec/engineering/progressfunds")
-public class ProgressFundListController extends BaseListController {
+@RequestMapping("ec/engineering/proprietorcontracts")
+public class ProprietorContractListController extends BaseListController {
     @Resource
-    private ProgressFundService progressFundService;
+    private ProprietorContractService proprietorContractService;
 
     @Override
     public String getEditUrl() {
-        return "ec/engineering/progressfund/progressFundEdit";
+        return "ec/engineering/contract/proprietorContractEdit";
     }
 
     @Override
     public String getListUrl() {
-        return "ec/engineering/progressfund/progressFundList";
+        return "ec/engineering/contract/proprietorContractList";
     }
 
     @Override
     public AbstractBaseService getService() {
-        return this.progressFundService;
+        return this.proprietorContractService;
     }
 
     @Override
@@ -89,18 +90,13 @@ public class ProgressFundListController extends BaseListController {
         cols.add(new ColumnModel("name"));
         cols.add(new ColumnModel("number"));
         cols.add(new ColumnModel("billState", DataTypeEnum.ENUM,BillState.class));
-        cols.add(new ColumnModel("operator", DataTypeEnum.F7, UserInfo.class));
-        cols.add(new ColumnModel("settleDate", DataTypeEnum.DATE));
-        cols.add(new ColumnModel("settleAmount", DataTypeEnum.NUMBER));
-
-        ColumnModel project = new ColumnModel("project", DataTypeEnum.F7,"id,name");
+        cols.add(new ColumnModel("amount",DataTypeEnum.NUMBER));
+        cols.add(new ColumnModel("rangeValuation"));
+        cols.add(new ColumnModel("basisValuation"));
+        ColumnModel project = new ColumnModel("project",DataTypeEnum.F7,"id,name");
         project.setClaz(ProjectInfo.class);
         cols.add(project);
 
-        ColumnModel engineeringContractInfo = new ColumnModel("engineeringContractInfo",
-                DataTypeEnum.F7,"id,name,number,amount");
-        engineeringContractInfo.setClaz(EngineeringContractInfo.class);
-        cols.add(engineeringContractInfo);
         return cols;
     }
 }

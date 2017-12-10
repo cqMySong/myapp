@@ -1,4 +1,4 @@
-package com.myapp.controller.ec.engineering.progressfund;
+package com.myapp.controller.ec.engineering.payment;
 
 import com.alibaba.fastjson.JSONObject;
 import com.myapp.core.annotation.PermissionAnn;
@@ -9,14 +9,16 @@ import com.myapp.core.entity.UserInfo;
 import com.myapp.core.enums.BaseMethodEnum;
 import com.myapp.core.enums.BillState;
 import com.myapp.core.enums.DataTypeEnum;
-import com.myapp.core.enums.PaymentType;
+import com.myapp.core.enums.SettleType;
 import com.myapp.core.exception.db.QueryException;
 import com.myapp.core.model.ColumnModel;
 import com.myapp.entity.ec.basedata.ECUnitInfo;
 import com.myapp.entity.ec.basedata.ProjectInfo;
-import com.myapp.entity.ec.engineering.EngineeringContractInfo;
-import com.myapp.entity.ec.engineering.ProgressFundInfo;
-import com.myapp.service.ec.engineering.ProgressFundService;
+import com.myapp.entity.ec.engineering.ProprietorPaymentInfo;
+import com.myapp.entity.ec.engineering.SubContractPaymentInfo;
+import com.myapp.entity.ec.engineering.SubcontractInfo;
+import com.myapp.service.ec.engineering.ProprietorPaymentService;
+import com.myapp.service.ec.engineering.SubContractPaymentService;
 import org.hibernate.HibernateException;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -26,31 +28,29 @@ import java.util.List;
 
 /**
  * @path：com.myapp.controller.ec.sengineering.progressfund
- * @description：进度款
+ * @description：业主付款
  * @author ： ly
  * @date: 2017-07-30 14:49
  */
-@PermissionAnn(name="系统管理.现场管理.工程合同.进度款结算",number="app.ec.engineering.progressfund")
+@PermissionAnn(name="系统管理.现场管理.工程合同.业主付款",number="app.ec.engineering.proprietorpayment")
 @Controller
-@RequestMapping("ec/engineering/progressfund")
-public class ProgressFundEditController extends BaseBillEditController {
+@RequestMapping("ec/engineering/proprietorpayment")
+public class ProprietorPaymentEditController extends BaseBillEditController {
     @Resource
-    private ProgressFundService progressFundService;
+    private ProprietorPaymentService proprietorPaymentService;
     @Override
     public Object createNewData() {
-        ProgressFundInfo progressFundInfo = new ProgressFundInfo();
-        progressFundInfo.setName("进度款单据");
-        return progressFundInfo;
+        return new ProprietorPaymentInfo();
     }
 
     @Override
     public CoreBaseInfo getEntityInfo() {
-        return new ProgressFundInfo();
+        return new ProprietorPaymentInfo();
     }
 
     @Override
     public AbstractBaseService getService() {
-        return this.progressFundService;
+        return this.proprietorPaymentService;
     }
 
     @Override
@@ -58,12 +58,7 @@ public class ProgressFundEditController extends BaseBillEditController {
         super.afterOperate(bme);
         if(this.data!=null){
             if(!bme.getValue().equals(BaseMethodEnum.ADDNEW.getValue())&&this.data instanceof JSONObject){
-                JSONObject jsonObject = (JSONObject) this.data;
-                JSONObject engineeringContractInfo = jsonObject.getJSONObject("engineeringContractInfo");
-                jsonObject.put("contractAmount",engineeringContractInfo.get("amount"));
-                jsonObject.put("contractType",engineeringContractInfo.get("contractType"));
-                jsonObject.put("expenseType",engineeringContractInfo.get("expenseType"));
-                this.data = jsonObject;
+
             }
         }
     }
@@ -73,12 +68,14 @@ public class ProgressFundEditController extends BaseBillEditController {
         cols.add(new ColumnModel("name"));
         cols.add(new ColumnModel("number"));
         cols.add(new ColumnModel("remark"));
-        cols.add(new ColumnModel("jobContent"));
-        cols.add(new ColumnModel("settleAmount", DataTypeEnum.NUMBER));
-        cols.add(new ColumnModel("operator", DataTypeEnum.F7,UserInfo.class));
-        cols.add(new ColumnModel("settleDate", DataTypeEnum.DATE));
+        cols.add(new ColumnModel("operator", DataTypeEnum.STRING));
+        cols.add(new ColumnModel("deliveryAmount", DataTypeEnum.NUMBER));
+        cols.add(new ColumnModel("deliveryDate", DataTypeEnum.DATE));
+        cols.add(new ColumnModel("approvedAmount", DataTypeEnum.NUMBER));
+        cols.add(new ColumnModel("paymentAmount", DataTypeEnum.NUMBER));
+        cols.add(new ColumnModel("paymentRatio", DataTypeEnum.NUMBER));
+        cols.add(new ColumnModel("actualRatio", DataTypeEnum.NUMBER));
         cols.add(new ColumnModel("billState", DataTypeEnum.ENUM, BillState.class));
-        cols.add(new ColumnModel("paymentType", DataTypeEnum.ENUM, PaymentType.class));
         cols.add(new ColumnModel("createUser", DataTypeEnum.F7,UserInfo.class));
         cols.add(new ColumnModel("lastUpdateUser", DataTypeEnum.F7,UserInfo.class));
         cols.add(new ColumnModel("auditor", DataTypeEnum.F7,UserInfo.class));
@@ -88,16 +85,6 @@ public class ProgressFundEditController extends BaseBillEditController {
         ColumnModel project = new ColumnModel("project", DataTypeEnum.F7,"id,name");
         project.setClaz(ProjectInfo.class);
         cols.add(project);
-
-        ColumnModel engineeringContractInfo = new ColumnModel("engineeringContractInfo",
-                DataTypeEnum.F7,"id,name,amount,contractType,expenseType");
-        engineeringContractInfo.setClaz(EngineeringContractInfo.class);
-        cols.add(engineeringContractInfo);
-
-        ColumnModel ecUnitInfo = new ColumnModel("ecUnitInfo",
-                DataTypeEnum.F7,"id,name");
-        ecUnitInfo.setClaz(ECUnitInfo.class);
-        cols.add(ecUnitInfo);
 
         return cols;
     }

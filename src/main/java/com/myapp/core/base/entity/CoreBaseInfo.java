@@ -1,17 +1,13 @@
 package com.myapp.core.base.entity;
 
-import java.lang.reflect.ParameterizedType;
 import java.util.Date;
-import java.util.HashMap;
-import java.util.Map;
 
 import javax.persistence.Column;
 import javax.persistence.MappedSuperclass;
 
-import org.springframework.beans.BeanWrapperImpl;
+import org.hibernate.annotations.Formula;
 
-import com.myapp.core.entity.BaseOrgInfo;
-import com.myapp.core.entity.UserInfo;
+import com.myapp.core.util.BaseUtil;
 
 /**
  *-----------MySong---------------
@@ -27,6 +23,9 @@ public class CoreBaseInfo extends CoreInfo {
 	private String number;
 	private Date createDate;
 	private Date lastUpdateDate;
+	
+	private Integer attachs;//附件数
+	
 	@Column(name="fcreateDate")
 	public Date getCreateDate() {
 		return createDate;
@@ -56,7 +55,21 @@ public class CoreBaseInfo extends CoreInfo {
 		this.number = number;
 	}
 	
-	public String toString() {
-		return getName();
+	@Formula("(select count(t.fid) from t_base_attachFile t where t.fsourceBillId = fid)")
+	public Integer getAttachs() {
+		return attachs;
 	}
+	public void setAttachs(Integer attachs) {
+		this.attachs = attachs;
+	}
+	
+	public String toString() {
+		String ret = getName();
+		if(BaseUtil.isEmpty(ret)) ret = getId();
+		return ret;
+	}
+	
+	
+	
+	
 }

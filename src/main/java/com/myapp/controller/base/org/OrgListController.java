@@ -51,6 +51,7 @@ public class OrgListController extends BaseTreeListController {
 		cols.add(new ColumnModel("number"));
 		cols.add(new ColumnModel("remark"));
 		cols.add(new ColumnModel("shortCode"));
+		cols.add(new ColumnModel("attachs"));
 		cols.add(new ColumnModel("orgType",DataTypeEnum.ENUM,OrgTypeEnum.class));
 		ColumnModel orgCol = new ColumnModel("parent",DataTypeEnum.F7,"name,number");
 		cols.add(orgCol);

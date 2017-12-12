@@ -10,6 +10,7 @@ import javax.persistence.Table;
 import org.hibernate.annotations.Parameter;
 import org.hibernate.annotations.Type;
 
+import com.myapp.core.annotation.MyEntityAnn;
 import com.myapp.core.base.entity.CoreBaseDataInfo;
 import com.myapp.enums.ec.SkillType;
 
@@ -21,6 +22,7 @@ import com.myapp.enums.ec.SkillType;
  * 技术分类明显 包括施工技术和安全技术
  *-----------MySong---------------
  */
+@MyEntityAnn(name="技术分类明细")
 @Entity
 @Table(name="t_ec_skillitem")
 public class SkillItemInfo extends CoreBaseDataInfo {

@@ -7,6 +7,7 @@ import javax.persistence.Table;
 import org.hibernate.annotations.Parameter;
 import org.hibernate.annotations.Type;
 
+import com.myapp.core.annotation.MyEntityAnn;
 import com.myapp.core.base.entity.CoreBaseDataInfo;
 import com.myapp.enums.ec.SkillType;
 
@@ -18,6 +19,7 @@ import com.myapp.enums.ec.SkillType;
  * 技术分类标准：安全技术交底分类和质量技术交底分类
  *-----------MySong---------------
  */
+@MyEntityAnn(name="技术分类标准")
 @Entity
 @Table(name="t_ec_skillClass")
 public class SkillClassInfo extends CoreBaseDataInfo {

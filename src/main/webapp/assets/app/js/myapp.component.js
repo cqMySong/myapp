@@ -204,8 +204,10 @@
 			var $thisDom = this.$element;
 			if(_type ==DataType.checkbox||_type ==DataType.radio){
 				return $thisDom.parent().prev('.lable').text();
+			}else if(_type ==DataType.date||_type ==DataType.datetime){
+				return $thisDom.parent().parent().find('.lable').text();
 			}else{
-				return $thisDom.prev('.lable').text();
+				return $thisDom.parent().find('.lable').text();
 			}
 		},
 		initRender:function(_opt){

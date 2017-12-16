@@ -35,7 +35,10 @@ public class StockInventoryDetailInfo extends CoreBaseEntryInfo<StockInventoryIn
      * 盘存数量
      */
     private BigDecimal inventoryCount;
-
+    /**
+     * 实际用量
+     */
+    private BigDecimal actualUseCount;
     /**
      * 备注
      */
@@ -86,5 +89,14 @@ public class StockInventoryDetailInfo extends CoreBaseEntryInfo<StockInventoryIn
 
     public void setMaterial(MaterialInfo material) {
         this.material = material;
+    }
+
+    @Column(name = "fActualUseCount")
+    public BigDecimal getActualUseCount() {
+        return actualUseCount;
+    }
+
+    public void setActualUseCount(BigDecimal actualUseCount) {
+        this.actualUseCount = actualUseCount;
     }
 }

@@ -195,7 +195,7 @@
     $(document).ready(function() {
         var height = window.outerHeight-460;
         var entryOption = "{type:'entry',height:"+height+",tableOpt:{editDataChanged:stockInventoryDetailInfos_dataChanged}"+
-            ",toolbar:{title:'盘存物料列表'}}";
+            ",toolbar:{title:'盘存物料列表',addBtn:null,removeBtn:null}}";
 		$("table.input-entry").attr("data-opt",entryOption);
         editUI = $('#editPanel').editUI({
             title : "库存盘存",billModel:2,

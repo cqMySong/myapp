@@ -227,7 +227,18 @@ public abstract class AbstractBaseService implements IAbstractBaseService {
 		}
 		return null;
 	}
-	
+
+
+	public PageModel toPageSqlQuery(Integer curPage, Integer pageSize, String hql,
+								 Object[] params) {
+		try {
+			return getBaseDao().toPageSqlQuery(curPage, pageSize, hql, params);
+		} catch (QueryException e) {
+			e.printStackTrace();
+		}
+		return null;
+	}
+
 	public <T> T queryEntity(String hql, Object[] params){
 		return (T) queryEntity(getEntityClass(),hql,params);
 	}

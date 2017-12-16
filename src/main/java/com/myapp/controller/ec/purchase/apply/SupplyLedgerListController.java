@@ -70,9 +70,8 @@ public class SupplyLedgerListController extends BaseListController {
         query.createAlias("budgetingDetailInfo.measureUnitInfo","mui",JoinType.INNER_JOIN);
         query.createAlias("parent","pr",JoinType.INNER_JOIN);
         query.createAlias("parent.project","pro",JoinType.INNER_JOIN);
-        query.createAlias("purchaseContractDetailInfoSet","pcdi",JoinType.LEFT_OUTER_JOIN);
-        query.createAlias("purchaseContractDetailInfoSet.purchaseStockDetailInfoSet","psdi",JoinType.LEFT_OUTER_JOIN);
-        query.createAlias("purchaseContractDetailInfoSet.purchaseStockDetailInfoSet.parent","psdipr",JoinType.LEFT_OUTER_JOIN);
+        query.createAlias("purchaseStockDetailInfoSet","psdi",JoinType.LEFT_OUTER_JOIN);
+        query.createAlias("purchaseStockDetailInfoSet.parent","psdipr",JoinType.LEFT_OUTER_JOIN);
         //query.createAlias("");
         super.executeQueryParams(query);
         String serach = request.getParameter("search");

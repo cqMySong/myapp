@@ -41,6 +41,10 @@ public class StockInventoryInfo extends CoreBaseBillInfo {
      */
     private Set<StockInventoryDetailInfo> stockInventoryDetailInfos;
     /**
+     * 盘存历史信息
+     */
+    private Set<StockInventoryDetailInfo> stockInventoryDetailInfoOld;
+    /**
      * 图算信息
      */
     private StockCalculationInfo stockCalculationInfo;
@@ -100,5 +104,14 @@ public class StockInventoryInfo extends CoreBaseBillInfo {
 
     public void setStockCalculationInfo(StockCalculationInfo stockCalculationInfo) {
         this.stockCalculationInfo = stockCalculationInfo;
+    }
+
+    @Transient
+    public Set<StockInventoryDetailInfo> getStockInventoryDetailInfoOld() {
+        return stockInventoryDetailInfoOld;
+    }
+
+    public void setStockInventoryDetailInfoOld(Set<StockInventoryDetailInfo> stockInventoryDetailInfoOld) {
+        this.stockInventoryDetailInfoOld = stockInventoryDetailInfoOld;
     }
 }

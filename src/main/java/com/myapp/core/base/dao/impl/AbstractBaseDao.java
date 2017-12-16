@@ -354,6 +354,13 @@ public abstract class AbstractBaseDao implements IAbstractBaseDao {
 		Query query = session.createSQLQuery(s);
 		return (long) ((Number)initHqlParams(query, params).uniqueResult()).longValue();
 	}
+
+	protected long getSqlCount(Session session, String sql, Object[] params)
+			throws QueryException {
+		String s = "select count(*) from (" + sql + ") t";
+		Query query = session.createSQLQuery(s);
+		return (long) ((Number)initHqlParams(query, params).uniqueResult()).longValue();
+	}
 	
 	public PageModel toPageQuery(Integer curPage, Integer pageSize, String hql,
 			Object[] params) {
@@ -373,6 +380,26 @@ public abstract class AbstractBaseDao implements IAbstractBaseDao {
 		}
 		return null;
 	}
+
+	public PageModel toPageSqlQuery(Integer curPage, Integer pageSize, String sql,
+								 Object[] params) {
+		if(curPage==null) curPage = SystemConstant.DEF_PAGE_BEG;
+		if(pageSize==null) pageSize = SystemConstant.DEF_PAGE_SIZE;
+		if(!BaseUtil.isEmpty(sql)){
+			Session session = getCurrentSession();
+			long rows = getSqlCount(session,sql,params);
+			System.out.println("rows := "+rows);
+			PageModel pm = new PageModel(curPage, pageSize, rows);
+			Query pageQuery = initHqlParams(session.createSQLQuery(sql),params);
+			pageQuery.setFirstResult(pm.getStartNum());
+			pageQuery.setMaxResults(pageSize);
+			pageQuery.setResultTransformer(CriteriaSpecification.ALIAS_TO_ENTITY_MAP);
+			pm.setDatas(pageQuery.list());
+			return pm;
+		}
+		return null;
+	}
+
 	public Object queryEntity(Class claz, String hql, Object[] params)
 			throws ReadException {
 		Session session = getCurrentSession();

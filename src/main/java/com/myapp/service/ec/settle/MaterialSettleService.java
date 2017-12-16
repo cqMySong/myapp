@@ -1,6 +1,8 @@
 package com.myapp.service.ec.settle;
 
+import com.myapp.core.exception.db.QueryException;
 import com.myapp.core.exception.db.SaveException;
+import com.myapp.core.model.PageModel;
 import com.myapp.core.service.base.BaseInterfaceService;
 import com.myapp.entity.ec.settle.MaterialSettleDetailInfo;
 import com.myapp.entity.ec.settle.MaterialSettleInfo;
@@ -9,9 +11,7 @@ import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
 import java.math.BigDecimal;
-import java.util.HashSet;
-import java.util.Iterator;
-import java.util.Set;
+import java.util.*;
 
 /**
  * @path：com.myapp.service.ec.settle
@@ -87,5 +87,18 @@ public class MaterialSettleService extends BaseInterfaceService<MaterialSettleIn
             }
         }
         return super.saveEntity(entity);
+    }
+
+    public PageModel queryMaterialAnalysis(Integer curPage,Integer pageSize,Map<String,Object> params)
+            throws QueryException {
+        String sql = "select b.fstartdate,b.fenddate,c.fMaterialId,c.fCalculationCount,d.fnumber,d.fname," +
+                "d.fSpecification,f.fname as unitName,a.fActualUseCount, " +
+                "(select sum(b1.fCount) from t_ec_purchase_stock a1,t_ec_purchase_stock_detail b1 " +
+                "where a1.fid = b1.fprentid and b1.fmaterialId = c.fMaterialId and a1.fInStockDate>=b.fstartdate and a1.fInStockDate<=b.fenddate " +
+                "group by b1.fmaterialId) as purchaseCount " +
+                "from t_ec_stock_inventory_detail a,t_ec_stock_inventory b,t_ec_stock_calculation_detail c,t_base_material d,t_base_measureunit f " +
+                "where a.fprentid = b.fid and a.fid = c.fStockInventoryDetailId and c.fMaterialId = d.fid and d.fUnit = f.fid " +
+                "order by b.fstartdate,d.fnumber,d.fname,d.fSpecification";
+        return  toPageSqlQuery(curPage,pageSize,sql,null);
     }
 }

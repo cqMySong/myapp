@@ -65,17 +65,12 @@ public class StockLedgerListController extends BaseListController {
     }
     @Override
     public void executeQueryParams(Criteria query) {
-        query.createAlias("purchaseContractDetailInfo","pcdi",JoinType.INNER_JOIN);
-        query.createAlias("purchaseContractDetailInfo.applyMaterialDetailInfo","amdi",JoinType.INNER_JOIN);
-        query.createAlias("purchaseContractDetailInfo.applyMaterialDetailInfo.budgetingDetailInfo",
-                "bdi",JoinType.INNER_JOIN);
-        query.createAlias("purchaseContractDetailInfo.applyMaterialDetailInfo.budgetingDetailInfo.material",
+        query.createAlias("applyMaterialDetailInfo","amdi",JoinType.INNER_JOIN);
+        query.createAlias("applyMaterialDetailInfo.budgetingDetailInfo","bdi",JoinType.INNER_JOIN);
+        query.createAlias("applyMaterialDetailInfo.budgetingDetailInfo.material",
                 "mater",JoinType.INNER_JOIN);
         query.createAlias("parent","pr",JoinType.INNER_JOIN);
-        query.createAlias("stockInfo","stock",JoinType.INNER_JOIN);
-        query.createAlias("stockInfo.stockOutDetailInfo","stockOut",JoinType.LEFT_OUTER_JOIN);
-        query.createAlias("stockInfo.stockOutDetailInfo.parent","stockOutPr",JoinType.LEFT_OUTER_JOIN);
-        query.createAlias("stockInfo.stockOutDetailInfo.parent.picker","pick",JoinType.LEFT_OUTER_JOIN);
+        query.createAlias("parent.project","pro",JoinType.INNER_JOIN);
         super.executeQueryParams(query);
         String serach = request.getParameter("search");
         String projectId = "xyz";
@@ -93,7 +88,7 @@ public class StockLedgerListController extends BaseListController {
                 }
             }
         }
-        //query.add(Restrictions.eq("pro.id",projectId));
+        query.add(Restrictions.eq("pro.id",projectId));
     }
     @Override
     public List<ColumnModel> getDataBinding() {
@@ -105,10 +100,6 @@ public class StockLedgerListController extends BaseListController {
         cols.add(new ColumnModel("pr.inStockDate",DataTypeEnum.DATE));
         cols.add(new ColumnModel("count",DataTypeEnum.NUMBER));
         cols.add(new ColumnModel("pr.number",DataTypeEnum.STRING));
-        cols.add(new ColumnModel("stockOut.count",DataTypeEnum.NUMBER));
-        cols.add(new ColumnModel("stockOutPr.number",DataTypeEnum.STRING));
-        cols.add(new ColumnModel("stockOutPr.outStockDate",DataTypeEnum.DATE));
-        cols.add(new ColumnModel("pick.name",DataTypeEnum.STRING));
         return cols;
     }
 

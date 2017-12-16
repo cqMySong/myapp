@@ -40,4 +40,5 @@ public interface IAbstractBaseDao {
 	public Criteria initQueryCriteria(String entityName)throws QueryException;
 	public void executeUpdata(String hql,Object[] params) throws UpdateException;
 	public List executeSQLQuery(String sql,Object[] params) throws QueryException;
+	public PageModel toPageSqlQuery(Integer curPage,Integer pageSize, String sql, Object[] params) throws QueryException;
 }

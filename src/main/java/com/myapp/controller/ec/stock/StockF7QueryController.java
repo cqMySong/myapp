@@ -89,6 +89,6 @@ public class StockF7QueryController extends BaseF7QueryController {
 				projectId = ((JSONObject)searchMap.get("uiCtx")).getString("projectId");
 			}
 		}
-		query.add(Restrictions.eq("project.id",projectId));
+		query.add(Restrictions.eq("projectInfo.id",projectId));
 	}
 }

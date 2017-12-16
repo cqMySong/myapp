@@ -18,10 +18,7 @@ import org.springframework.util.StringUtils;
 
 import javax.annotation.Resource;
 import java.math.BigDecimal;
-import java.util.HashSet;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 /**
  * @path：com.myapp.service.ec.purchase
@@ -106,5 +103,20 @@ public class PurchaseStockService extends BaseInterfaceService<PurchaseStockInfo
 
     }
 
+    /**
+     * 获取物料时间段的入库数量
+     * @param materialId
+     * @param projectId
+     * @param start
+     * @param end
+     * @return
+     */
+    public BigDecimal getMaterialInStockCount(String materialId, String projectId, Date start, Date end){
+        String hql = "select sum(inStockDetail.count) from PurchaseStockInfo inStock,PurchaseStockDetailInfo inStockDetail " +
+                "where inStock.id = inStockDetail.parent.id and inStock.project.id = ? and " +
+                "inStockDetail.material.id = ? and  inStock.inStockDate between ? and ?";
+        BigDecimal inStockCount = queryEntity(hql,new Object[]{projectId,materialId,start,end});
+        return inStockCount==null?BigDecimal.ZERO:inStockCount;
+    }
 
 }

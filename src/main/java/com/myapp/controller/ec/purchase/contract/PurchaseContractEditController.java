@@ -8,13 +8,16 @@ import com.myapp.core.entity.MaterialInfo;
 import com.myapp.core.entity.UserInfo;
 import com.myapp.core.enums.*;
 import com.myapp.core.model.ColumnModel;
+import com.myapp.core.model.WebDataModel;
 import com.myapp.entity.ec.basedata.ProjectInfo;
 import com.myapp.entity.ec.purchase.ApplyMaterialDetailInfo;
 import com.myapp.entity.ec.purchase.PurchaseContractDetailInfo;
 import com.myapp.entity.ec.purchase.PurchaseContractInfo;
+import com.myapp.service.ec.purchase.PurchaseContractDetailService;
 import com.myapp.service.ec.purchase.PurchaseContractService;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.annotation.Resource;
 import java.util.List;
@@ -31,6 +34,8 @@ import java.util.List;
 public class PurchaseContractEditController extends BaseBillEditController {
     @Resource
     private PurchaseContractService purchaseContractService;
+    @Resource
+    private PurchaseContractDetailService purchaseContractDetailService;
     @Override
     public Object createNewData() {
         return new PurchaseContractInfo();
@@ -93,5 +98,14 @@ public class PurchaseContractEditController extends BaseBillEditController {
         cols.add(purchaseContractDetailInfos);
 
         return cols;
+    }
+
+    @RequestMapping("/detail")
+    @ResponseBody
+    public WebDataModel getPurchaseContractDetail(String purchaseContractId) {
+        WebDataModel webDataModel = new WebDataModel();
+        webDataModel.setData(purchaseContractDetailService.getByPurchaseContractId(purchaseContractId));
+        webDataModel.setStatusCode(STATUSCODE_SUCCESS);
+        return webDataModel;
     }
 }

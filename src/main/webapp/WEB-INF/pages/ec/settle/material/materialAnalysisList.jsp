@@ -31,10 +31,28 @@
 </script>
 <body style="padding: 5px;">
 <div class="panel">
-	<div id="table-toolbar" style="height:40px;">
+	<div id="table-toolbar" style="height:40px;padding-top: 2px;">
+		<div class="col-sm-3">
+			<div class="input-group">
+				<span class="input-group-addon lable">开始时间</span>
+				<input name="startDate"  autocomplete="off" type="text" class="input-item form-control read" data-opt="{type:'date'}">
+			</div>
+		</div>
+		<div class="col-sm-3">
+			<div class="input-group">
+				<span class="input-group-addon lable">结束时间</span>
+				<input name="endDate"  autocomplete="off" type="text" class="input-item form-control read" data-opt="{type:'date'}">
+			</div>
+		</div>
+		<div class="col-sm-3">
+			<div class="input-group">
+				<span class="input-group-addon lable">材料名称</span>
+				<input type="text" class="input-item form-control" name="materialName">
+			</div>
+		</div>
 		<div class="btn-group">
-			<button class="btn btn-success" type="button">
-				<span class="fa fa-refresh"></span>&nbsp;刷新</button>
+			<button class="btn btn-success" type="button" id="queryAnalysis">
+				<span class="fa fa-search"></span>&nbsp;查询</button>
 		</div>
 	</div>
 	<hr style="margin: 2px 0px;">
@@ -49,11 +67,11 @@
 						<th data-field="fname" width="100">材料名称</th>
 						<th data-field="fSpecification" width="100">规格</th>
 						<th data-field="unitName" width="60">单位</th>
-						<th data-field="content"width="200" >当期预算数量</th>
-						<th data-field="purchaseCount"  width="60">当期入库数量</th>
-						<th data-field="dutyers"  width="120">当期结算数量</th>
-						<th data-field="fCalculationCount"  width="120">当期图算用量</th>
-						<th data-field="fActualUseCount"  width="120">当期实际用量</th>
+						<th data-field="quantity"width="100" >预算数量</th>
+						<th data-field="purchaseCount"  width="100">当期入库数量</th>
+						<th data-field="settleCount"  width="100">当期结算数量</th>
+						<th data-field="fCalculationCount"  width="100">当期图算用量</th>
+						<th data-field="fActualUseCount"  width="100">当期实际用量</th>
 						<th data-field="fstartdate"  data-type="date" width="120">开始时间</th>
 						<th data-field="fenddate" data-type="date" width="120">结束时间</th>
 						<th data-field="remark" width="200">预警</th>
@@ -103,13 +121,16 @@
     function initTable(){
         var height = top.getTopMainHeight()-105;
         var table_options = {height:height,striped:true,sortStable:false,showRefresh:false,selectModel:1
-            ,cache:false,showToggle:true,search:true,queryParams:searchPrams,toolbar:"#tblMain_toolbar"
-            ,showColumns:true,idField:"id",mypagination:true,url:'ec/settle/materianalysis/query'};
+            ,cache:false,showToggle:false,search:false,queryParams:searchPrams,toolbar:false
+            ,showColumns:false,idField:"id",mypagination:true,url:'ec/settle/materianalysis/query'};
         tblMain = $('#tblMain').myDataTable(table_options);
     }
     function searchPrams(){
         var params = {};
-        params.treeId = curSelOrg.id;
+        params.projectId = curSelOrg.id;
+        params.startDate = $("input[name='startDate']").val();
+        params.endDate = $("input[name='endDate']").val();
+        params.materialName = $("input[name='materialName']").val();
         return webUtil.json2Str(params);
     }
     $(function(){
@@ -117,11 +138,11 @@
         $(".mainContrainer").height(height);
         initOrgTree();
         initTable();
+        $("input[name='startDate']").myComponet(DataType.date,{method:"init",opt:{}});
+        $("input[name='endDate']").myComponet(DataType.date,{method:"init",opt:{}});
+        $("#queryAnalysis").on('click',function(){
+            tblMain.refreshData();
+		});
 	});
-    function queryData() {
-        webUtil.ajaxData({url:'ec/settle/materianalysis/query',data:{},success:function(data) {
-            tblMain.loadData(data.data);
-        }});
-    }
 </script>
 </html>

@@ -12,7 +12,7 @@
 </script>
 <body style="padding: 5px;">
 <div id="editPanel" class="myMainContent panel">
-	<div id="table-toolbar"></div>
+	<div id="table-toolbar" style="height: 20px;"></div>
 	<form id="editForm">
 		<div class="row">
 			<div class="col-sm-3">
@@ -29,9 +29,35 @@
 			</div>
 			<div class="col-sm-3">
 				<div class="input-group">
-					<span class="input-group-addon lable">工程项目</span>
-					<input name="project" class="require input-item form-control"
-						   data-opt="{type:'f7',uiWin:{title:'工程项目',height:600,width:300,url:'ec/basedata/project'}}" />
+					<span class="input-group-addon lable">合同名称</span>
+					<input class="require input-item form-control" name="purchaseContractInfo"
+						   data-opt="{type:'f7',dataChange:selectPurchaseContract,uiWin:{title:'采购合同',height:600,width:800,url:'ec/purchase/purchaseContractF7',uiParams:getParams}}" />
+				</div>
+			</div>
+			<div class="col-sm-3">
+				<div class="input-group">
+					<span class="input-group-addon lable">采购单位</span>
+					<input name="supplyCompany" class="require input-item form-control require"/>
+				</div>
+			</div>
+		</div>
+		<div class="row mt10">
+			<div class="col-sm-3">
+				<div class="input-group">
+					<span class="input-group-addon lable">开始时间</span>
+					<input type="text" name="startDate" class="form-control input-item require" data-opt="{type:'date'}">
+				</div>
+			</div>
+			<div class="col-sm-3">
+				<div class="input-group">
+					<span class="input-group-addon lable">结束时间</span>
+					<input type="text" name="endDate" class="form-control input-item require" data-opt="{type:'date'}">
+				</div>
+			</div>
+			<div class="col-sm-3">
+				<div class="input-group">
+					<span class="input-group-addon lable">结算金额</span>
+					<input name="settleAmount" class="input-item form-control require" type="number"/>
 				</div>
 			</div>
 			<div class="col-sm-3">
@@ -45,8 +71,9 @@
 		<div class="row mt10">
 			<div class="col-sm-3">
 				<div class="input-group">
-					<span class="input-group-addon lable">结算时间</span>
-					<input type="text" name="settleDate" class="form-control input-item require" data-opt="{type:'date'}">
+					<span class="input-group-addon lable">工程项目</span>
+					<input name="project" class="require input-item form-control"
+						   data-opt="{type:'f7',uiWin:{title:'工程项目',height:600,width:300,url:'ec/basedata/project'}}" />
 				</div>
 			</div>
 			<div class="col-sm-3">
@@ -57,13 +84,7 @@
 					</select>
 				</div>
 			</div>
-			<div class="col-sm-3">
-				<div class="input-group">
-					<span class="input-group-addon lable">结算总额</span>
-					<input name="settleTotalAmount" class="input-item form-control require" type="number"/>
-				</div>
-			</div>
-			<div class="col-sm-3">
+			<div class="col-sm-6">
 				<div class="input-group">
 					<span class="input-group-addon lable">备注</span>
 					<textarea name="remark" style="height:38px;" class="input-item form-control"></textarea>
@@ -75,13 +96,14 @@
 				<table name="materialSettleDetailInfos" class="input-entry" >
 					<thead>
 						<tr>
-							<th data-field="expenseType" data-width="100" data-type="select" data-locked="true">费用类型</th>
-							<th data-field="purchaseContractInfo" data-type="f7"  data-width="150"
-								data-editor="{uiWin:{title:'合同信息',height:580,width:880,url:'ec/purchase/purchaseContractF7',uiParams:getParams}}">合同编号</th>
-							<th data-field="contractName" data-type="text" data-locked="true" data-width="100">合同名称</th>
-							<th data-field="supplyCompany" data-type="text" data-locked="true" data-width="100">单位名称</th>
-							<th data-field="amount" data-type="text" data-locked="true" data-width="100">合同金额</th>
-							<th data-field="settleAmount" data-type="number"  data-width="100">结算金额</th>
+							<th data-field="materialType" data-width="100" data-type="select" data-locked="true">物料类型</th>
+							<th data-field="materialInfo" data-type="f7" data-visible="false">物料id</th>
+							<th data-field="purchaseContractDetailInfo" data-type="f7" data-visible="false">采购明细id</th>
+							<th data-field="materialName" data-locked="true" data-width="100">物料名称</th>
+							<th data-field="specification" data-type="text" data-locked="true" data-width="100">规格</th>
+							<th data-field="measureUnitName" data-type="text" data-locked="true" data-width="100">单位</th>
+							<th data-field="price" data-type="number" data-locked="true" data-width="100">采购单价</th>
+							<th data-field="settleCount" data-type="number" data-width="100">结算数量</th>
 							<th data-field="remark" data-type="text" data-width="100">备注</th>
 						</tr>
 					</thead>
@@ -136,24 +158,16 @@
     var editUI;
     var materialSettleDetailInfosEntry;
     var materialSettleDetailInfosEntryObj;
-    function proSubItem_dataChange(oldData,newData){
-
-    }
-    function materialSettleDetailInfos_dataChanged($cell,obj){
-        if(webUtil.isEmpty(materialSettleDetailInfosEntry)) return;
-        if(obj.field=='purchaseContractInfo'){
-            if(!webUtil.isEmpty(materialSettleDetailInfosEntry)){
-                var selectContractRow = obj.rowData[obj.field];
-                if(!selectContractRow){
-                    return false;
-				}
-                materialSettleDetailInfosEntry.setTableCellValue(obj.rowIndex,'expenseType',selectContractRow.expenseType);
-                materialSettleDetailInfosEntry.setTableCellValue(obj.rowIndex,'amount',selectContractRow.amount);
-                materialSettleDetailInfosEntry.setTableCellValue(obj.rowIndex,'contractName',selectContractRow.name);
-                materialSettleDetailInfosEntry.setTableCellValue(obj.rowIndex,'supplyCompany',selectContractRow.supplyCompany);
-
+    //采购合同信息
+    function selectPurchaseContract(oldData,newData){
+        $("input[name='supplyCompany']").val(newData.supplyCompany);
+		//获取采购物料清单
+        webUtil.ajaxData({url:"ec/purchase/purchasecontract/detail",data:{purchaseContractId:newData.id},async:false,success:function(data){
+            if(data.statusCode==0){
+                //清空表格
+                materialSettleDetailInfosEntry.loadData(data.data);
             }
-		}
+        }});
     }
 
     function getParams(){
@@ -165,6 +179,7 @@
      * 一切操作前的接口函数
      */
     function beforeAction(opt) {
+        //materialSettleDetailInfosEntry.endEdit();
         return true;
     }
 
@@ -177,6 +192,7 @@
                 $('input[name="project"]').myF7().setData(uiCtx.tree);
             }
         }
+
     }
     function btnCopyInsertRow(btn){
         var entry = btn.entry;
@@ -195,8 +211,8 @@
     }
     $(document).ready(function() {
         var height = window.outerHeight-460;
-        var entryOption = "{type:'entry',height:"+height+",tableOpt:{editDataChanged:materialSettleDetailInfos_dataChanged}"+
-            ",toolbar:{title:'结算清单列表'}}";
+        var entryOption = "{type:'entry',height:"+height+",tableOpt:{}"+
+            ",toolbar:{title:'结算物料清单',addBtn:null,removeBtn:null}}";
 		$("table.input-entry").attr("data-opt",entryOption);
         editUI = $('#editPanel').editUI({
             title : "物料结算",billModel:2,
@@ -211,9 +227,6 @@
         materialSettleDetailInfosEntryObj = editUI.getEntryObj('materialSettleDetailInfos');
         if(!webUtil.isEmpty(materialSettleDetailInfosEntryObj)){
             materialSettleDetailInfosEntry = materialSettleDetailInfosEntryObj.entry;
-            var rightBtnGroup = materialSettleDetailInfosEntryObj.toolbar.find('.pull-right>.btn-group').myBtnGroup();
-            rightBtnGroup.addBtn({entry:materialSettleDetailInfosEntry,css:'btn-sm',text:'复制插入',icon:"fa fa-edit",clickFun:btnCopyInsertRow});
-            materialSettleDetailInfosEntry.resetView();
         }
         webUtil.initMainPanel('#editPanel');
     })

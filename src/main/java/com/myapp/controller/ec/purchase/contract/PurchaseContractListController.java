@@ -108,4 +108,5 @@ public class PurchaseContractListController extends BaseListController {
 
         return cols;
     }
+
 }

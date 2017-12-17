@@ -4,6 +4,7 @@ import com.myapp.core.annotation.MyEntityAnn;
 import com.myapp.core.base.entity.CoreBaseBillInfo;
 import com.myapp.core.entity.UserInfo;
 import com.myapp.entity.ec.basedata.ProjectInfo;
+import com.myapp.entity.ec.purchase.PurchaseContractInfo;
 
 import javax.persistence.*;
 import java.math.BigDecimal;
@@ -27,7 +28,11 @@ public class MaterialSettleInfo extends CoreBaseBillInfo {
     /**
      * 结算时间
      */
-    private Date settleDate;
+    private Date startDate;
+    /**
+     * 结束时间
+     */
+    private Date endDate;
     /**
      * 经办人
      */
@@ -35,11 +40,15 @@ public class MaterialSettleInfo extends CoreBaseBillInfo {
     /**
      * 结算总金额
      */
-    private BigDecimal settleTotalAmount;
+    private BigDecimal settleAmount;
     /**
      * 备注
      */
     private String remark;
+    /**
+     * 采购合同信息
+     */
+    private PurchaseContractInfo purchaseContractInfo;
     /**
      * 结算明细信息
      */
@@ -56,14 +65,29 @@ public class MaterialSettleInfo extends CoreBaseBillInfo {
     public void setProject(ProjectInfo project) {
         this.project = project;
     }
-
-    @Column(name="fSettleDate")
-    public Date getSettleDate() {
-        return settleDate;
+    @Column(name="fStartDate")
+    public Date getStartDate() {
+        return startDate;
     }
 
-    public void setSettleDate(Date settleDate) {
-        this.settleDate = settleDate;
+    public void setStartDate(Date startDate) {
+        this.startDate = startDate;
+    }
+    @Column(name="fEndDate")
+    public Date getEndDate() {
+        return endDate;
+    }
+
+    public void setEndDate(Date endDate) {
+        this.endDate = endDate;
+    }
+    @Column(name="fSettleAmount",precision = 14,scale = 2)
+    public BigDecimal getSettleAmount() {
+        return settleAmount;
+    }
+
+    public void setSettleAmount(BigDecimal settleAmount) {
+        this.settleAmount = settleAmount;
     }
 
     @OneToOne
@@ -76,14 +100,6 @@ public class MaterialSettleInfo extends CoreBaseBillInfo {
         this.operator = operator;
     }
 
-    @Column(name="fSettleTotalAmount",precision = 14,scale = 2)
-    public BigDecimal getSettleTotalAmount() {
-        return settleTotalAmount;
-    }
-
-    public void setSettleTotalAmount(BigDecimal settleTotalAmount) {
-        this.settleTotalAmount = settleTotalAmount;
-    }
 
     @Column(name="fRemark",length = 200)
     public String getRemark() {
@@ -111,5 +127,15 @@ public class MaterialSettleInfo extends CoreBaseBillInfo {
 
     public void setOldMaterialSettleDetails(Set<MaterialSettleDetailInfo> oldMaterialSettleDetails) {
         this.oldMaterialSettleDetails = oldMaterialSettleDetails;
+    }
+
+    @OneToOne
+    @JoinColumn(name = "fPurchaseContractId")
+    public PurchaseContractInfo getPurchaseContractInfo() {
+        return purchaseContractInfo;
+    }
+
+    public void setPurchaseContractInfo(PurchaseContractInfo purchaseContractInfo) {
+        this.purchaseContractInfo = purchaseContractInfo;
     }
 }

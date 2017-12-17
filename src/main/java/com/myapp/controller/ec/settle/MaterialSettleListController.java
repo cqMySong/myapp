@@ -12,6 +12,7 @@ import com.myapp.core.model.ColumnModel;
 import com.myapp.core.util.BaseUtil;
 import com.myapp.core.util.WebUtil;
 import com.myapp.entity.ec.basedata.ProjectInfo;
+import com.myapp.entity.ec.purchase.PurchaseContractInfo;
 import com.myapp.service.ec.settle.MaterialSettleService;
 import com.myapp.service.ec.stock.StockOutService;
 import org.hibernate.Criteria;
@@ -90,8 +91,10 @@ public class MaterialSettleListController extends BaseListController {
         cols.add(new ColumnModel("number"));
         cols.add(new ColumnModel("billState", DataTypeEnum.ENUM,BillState.class));
         cols.add(new ColumnModel("remark"));
-        cols.add(new ColumnModel("settleDate",DataTypeEnum.DATE));
-        cols.add(new ColumnModel("settleTotalAmount"));
+        cols.add(new ColumnModel("startDate",DataTypeEnum.DATE));
+        cols.add(new ColumnModel("endDate",DataTypeEnum.DATE));
+        cols.add(new ColumnModel("createDate",DataTypeEnum.DATE));
+        cols.add(new ColumnModel("settleAmount",DataTypeEnum.NUMBER));
 
         ColumnModel project = new ColumnModel("project",DataTypeEnum.F7,"id,name");
         project.setClaz(ProjectInfo.class);
@@ -100,6 +103,11 @@ public class MaterialSettleListController extends BaseListController {
         ColumnModel operator = new ColumnModel("operator",DataTypeEnum.F7,"id,name");
         operator.setClaz(UserInfo.class);
         cols.add(operator);
+
+        ColumnModel purchaseContractInfo = new ColumnModel("purchaseContractInfo",
+                DataTypeEnum.F7,"id,name,supplyCompany");
+        purchaseContractInfo.setClaz(PurchaseContractInfo.class);
+        cols.add(purchaseContractInfo);
         return cols;
     }
 }

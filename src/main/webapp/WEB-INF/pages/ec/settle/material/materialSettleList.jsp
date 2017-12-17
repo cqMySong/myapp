@@ -7,7 +7,7 @@
 <script type="text/javascript">
 </script>
 <body style="padding: 5px;">
-	<div id="table-toolbar" class="panel" style="height:60px;margin-bottom:5px;"></div>
+	<div id="table-toolbar" class="panel" style="height:50px;margin-bottom:5px;padding-top: 5px;"></div>
 	<div class="mainContrainer">
 		<div class="leftContainer" id="tree_container"></div>
 		<div class="rightContainer" id="tblMain_container">
@@ -21,9 +21,13 @@
 								<th data-field="project_name">工程项目</th>
 								<th data-field="name">结算名称</th>
 								<th data-field="number">结算单号</th>
-								<th data-field="settleDate" data-type="date">结算时间</th>
-								<th data-field="settleTotalAmount">结算总额</th>
+								<th data-field="startDate" data-type="date">开始时间</th>
+								<th data-field="endDate" data-type="date">结束时间</th>
+								<th data-field="purchaseContractInfo_name">合同名称</th>
+								<th data-field="purchaseContractInfo_supplyCompany">合同单位</th>
+								<th data-field="settleAmount">结算金额</th>
 								<th data-field="operator_name">经办人</th>
+								<th data-field="createDate" data-type="date">操作时间</th>
 								<th data-field="billState" data-type="select">业务状态</th>
 								<th data-field="remark">备注</th>
 							</tr>

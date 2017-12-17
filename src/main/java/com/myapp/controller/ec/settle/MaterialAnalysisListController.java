@@ -55,8 +55,27 @@ public class MaterialAnalysisListController extends BasePageListController {
     @ResponseBody
     public WebDataModel materialAnalysis(){
         init();
+        String search = request.getParameter("search");
+        String projectId = "-1";
+        Map<String,Object> params = new HashMap<>();
+        if(!BaseUtil.isEmpty(search)) {
+            Map searchMap = JSONObject.parseObject(search, new HashMap().getClass());
+            if(searchMap!=null&&searchMap.get("projectId")!=null){
+                projectId = searchMap.get("projectId").toString();
+            }
+            if(searchMap!=null&&searchMap.get("startDate")!=null){
+                params.put("startDate",searchMap.get("startDate"));
+            }
+            if(searchMap!=null&&searchMap.get("endDate")!=null){
+                params.put("endDate",searchMap.get("endDate"));
+            }
+            if(searchMap!=null&&searchMap.get("materialName")!=null){
+                params.put("materialName",searchMap.get("materialName"));
+            }
+        }
+        params.put("projectId",projectId);
         try {
-           this.data = materialSettleService.queryMaterialAnalysis(getCurPage(),getPageSize(),null);
+           this.data = materialSettleService.queryMaterialAnalysis(getCurPage(),getPageSize(),params);
         } catch (QueryException e) {
             e.printStackTrace();
         }

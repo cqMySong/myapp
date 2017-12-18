@@ -2,6 +2,7 @@ package com.myapp.entity.ec.purchase;
 
 import com.myapp.core.annotation.MyEntityAnn;
 import com.myapp.core.base.entity.CoreBaseEntryInfo;
+import com.myapp.core.entity.MaterialInfo;
 import com.myapp.entity.ec.budget.BudgetingDetailInfo;
 
 import javax.persistence.*;
@@ -23,6 +24,10 @@ public class ApplyMaterialDetailInfo extends CoreBaseEntryInfo<ApplyMaterialInfo
      * 预算明细信息
      */
     private BudgetingDetailInfo budgetingDetailInfo;
+    /**
+     * 物料信息
+     */
+    private MaterialInfo materialInfo;
     /**
      * 申购数量
      */
@@ -110,5 +115,15 @@ public class ApplyMaterialDetailInfo extends CoreBaseEntryInfo<ApplyMaterialInfo
 
     public void setPurchaseStockDetailInfoSet(Set<PurchaseStockDetailInfo> purchaseStockDetailInfoSet) {
         this.purchaseStockDetailInfoSet = purchaseStockDetailInfoSet;
+    }
+
+    @OneToOne
+    @JoinColumn(name = "fMaterialId")
+    public MaterialInfo getMaterialInfo() {
+        return materialInfo;
+    }
+
+    public void setMaterialInfo(MaterialInfo materialInfo) {
+        this.materialInfo = materialInfo;
     }
 }

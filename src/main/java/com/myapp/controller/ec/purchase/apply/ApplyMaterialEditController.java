@@ -6,6 +6,7 @@ import com.myapp.core.annotation.PermissionAnn;
 import com.myapp.core.base.entity.CoreBaseInfo;
 import com.myapp.core.base.service.impl.AbstractBaseService;
 import com.myapp.core.controller.BaseBillEditController;
+import com.myapp.core.entity.MaterialInfo;
 import com.myapp.core.entity.UserInfo;
 import com.myapp.core.enums.*;
 import com.myapp.core.exception.db.QueryException;
@@ -106,6 +107,10 @@ public class ApplyMaterialEditController extends BaseBillEditController {
                 "id,materialName,specification,quantity,budgetaryPrice,measureUnitInfo,materialType");
         budgetingDetailInfo.setClaz(BudgetingDetailInfo.class);
         applyMaterialDetailInfos.getCols().add(budgetingDetailInfo);
+
+        ColumnModel materialInfo = new ColumnModel("materialInfo",DataTypeEnum.F7,"id,name");
+        materialInfo.setClaz(MaterialInfo.class);
+        applyMaterialDetailInfos.getCols().add(materialInfo);
 
         applyMaterialDetailInfos.getCols().add(new ColumnModel("id",DataTypeEnum.PK));
         applyMaterialDetailInfos.getCols().add(new ColumnModel("purchaseNum",DataTypeEnum.NUMBER));

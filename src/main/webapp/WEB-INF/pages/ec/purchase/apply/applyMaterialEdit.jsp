@@ -57,6 +57,7 @@
 					<thead>
 					<tr>
 						<th data-field="materialType" data-width="80" data-type="select" data-locked="true">物料类型</th>
+						<th data-field="materialInfo" data-type="f7"  data-visible="false">物料信息</th>
 						<th data-field="budgetingDetailInfo" data-type="f7"  data-width="150"
 							data-editor="{mutil:true,uiWin:{title:'预算详细',height:580,width:880,url:'ec/budget/budgetingDetailF7',uiParams:getParams}}">物料名称</th>
 						<th data-field="specification" data-type="text" data-locked="true" data-width="100">规格</th>
@@ -139,6 +140,11 @@
                                 name: budgetDetailInfo.measureUnitInfo_name
                             };
                             applyMaterialDetailInfosEntry.setTableCellValue(obj.rowIndex, 'measureUnit', measureInfo);
+                            var materialInfo = {
+                                id: budgetDetailInfo.material_id,
+                                name: budgetDetailInfo.mmaterial_name
+                            };
+                            applyMaterialDetailInfosEntry.setTableCellValue(obj.rowIndex, 'materialInfo', materialInfo);
                             budgetDetailInfoFirst = budgetDetailInfo;
                         } else {
                             var rowData = {materialType:budgetDetailInfo.materialType,
@@ -147,7 +153,10 @@
                                 budgetaryPrice:budgetDetailInfo.budgetaryPrice,
                                 budgetingDetailInfo:{id:budgetDetailInfo.id,name:budgetDetailInfo.material_name},
                                 measureUnit:{id:budgetDetailInfo.measureUnitInfo_id,
-                                    name:budgetDetailInfo.measureUnitInfo_name}};
+                                    name:budgetDetailInfo.measureUnitInfo_name},
+								materialInfo:{id: budgetDetailInfo.material_id,
+                                    name: budgetDetailInfo.mmaterial_name}
+								};
                             applyMaterialDetailInfosEntry.insertRow(obj.rowIndex+i,rowData);
                         }
                     });

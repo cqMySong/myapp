@@ -17,7 +17,14 @@ import java.util.*;
  */
 @Service("materialSettleService")
 public class MaterialSettleService extends BaseInterfaceService<MaterialSettleInfo> {
-
+    /**
+     * 功能获取材料设备对比分析表
+     * @param curPage
+     * @param pageSize
+     * @param params
+     * @return
+     * @throws QueryException
+     */
     public PageModel queryMaterialAnalysis(Integer curPage,Integer pageSize,Map<String,Object> params)
             throws QueryException {
         StringBuffer sql = new StringBuffer();
@@ -54,5 +61,49 @@ public class MaterialSettleService extends BaseInterfaceService<MaterialSettleIn
         }
         sql.append(" order by b.fstartdate,d.fnumber,d.fname,d.fSpecification");
         return  toPageSqlQuery(curPage,pageSize,sql.toString(),paramList.toArray());
+    }
+
+    /**
+     * 功能：获取材料设备结算台帐信息
+     * @param curPage
+     * @param pageSize
+     * @param params
+     * @return
+     * @throws QueryException
+     */
+    public PageModel queryMaterialSettleLedger(Integer curPage,Integer pageSize,Map<String,Object> params)
+            throws QueryException {
+        List<Object> paramList = new ArrayList<>();
+        StringBuffer sql = new StringBuffer();
+        sql.append("select b.fname,b.fnumber,case when b.fExpenseType='MATERIAL' then '材料费' ")
+           .append("when b.fExpenseType='EQUIPMENT' then '机械费' else '其他' end as fExpenseType,")
+           .append("b.fAmount,a.fSettleAmount,a.fOperatorId,")
+           .append("(select sum(d.fSettleAmount) from t_ec_material_settle d where ")
+           .append("d.fPurchaseContractId = a.fPurchaseContractId and d.fenddate<=a.fenddate ");
+        if(!BaseUtil.isEmpty(params.get("startDate"))){
+            sql.append(" and d.fStartDate>=? ) as totalSettleAmount,");
+            paramList.add(params.get("startDate"));
+        }else{
+            sql.append(") as totalSettleAmount,");
+        }
+       sql.append("a.fStartDate,a.fEndDate,b.fSupplyCompany,a.fid,c.fname as operatorName ")
+           .append("from t_ec_material_settle a,t_ec_purchase_contract b,t_pm_user c ")
+           .append("where a.fPurchaseContractId = b.fid and a.fOperatorId = c.fid and a.fProjectId=? ");
+
+        paramList.add(params.get("projectId"));
+        if(!BaseUtil.isEmpty(params.get("startDate"))){
+            sql.append("and a.fStartDate>=? ");
+            paramList.add(params.get("startDate"));
+        }
+        if(!BaseUtil.isEmpty(params.get("endDate"))){
+            sql.append("and a.fEndDate>=? ");
+            paramList.add(params.get("endDate"));
+        }
+        if(!BaseUtil.isEmpty(params.get("supplyCompany"))){
+            sql.append("and b.fSupplyCompany like ? ");
+            paramList.add("%"+params.get("supplyCompany")+"%");
+        }
+        sql.append(" order by b.fExpenseType,b.fname,c.fname,a.fcreateDate");
+        return toPageSqlQuery(curPage,pageSize,sql.toString(),paramList.toArray());
     }
 }

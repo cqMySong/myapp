@@ -4,18 +4,24 @@ import com.alibaba.fastjson.JSONObject;
 import com.myapp.core.annotation.PermissionAnn;
 import com.myapp.core.base.service.impl.AbstractBaseService;
 import com.myapp.core.controller.BaseListController;
+import com.myapp.core.controller.BasePageListController;
 import com.myapp.core.enums.BaseMethodEnum;
 import com.myapp.core.enums.DataTypeEnum;
 import com.myapp.core.enums.ExpenseType;
+import com.myapp.core.exception.db.QueryException;
 import com.myapp.core.model.ColumnModel;
+import com.myapp.core.model.WebDataModel;
 import com.myapp.core.util.BaseUtil;
 import com.myapp.core.util.WebUtil;
 import com.myapp.service.ec.settle.MaterialSettleDetailService;
+import com.myapp.service.ec.settle.MaterialSettleService;
 import org.hibernate.Criteria;
 import org.hibernate.criterion.Order;
 import org.hibernate.criterion.Restrictions;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.servlet.ModelAndView;
 
 import javax.annotation.Resource;
 import java.util.ArrayList;
@@ -32,76 +38,48 @@ import java.util.Map;
 @PermissionAnn(name="系统管理.现场管理.结算管理.材设结算一览表",number="app.ec.settle.materialsettleledger")
 @Controller
 @RequestMapping("ec/settle/materialsettleledgers")
-public class MaterialSettleLedgerListController extends BaseListController {
+public class MaterialSettleLedgerListController extends BasePageListController {
     @Resource
-    private MaterialSettleDetailService materialSettleDetailService;
+    private MaterialSettleService materialSettleService;
 
-    @Override
-    public String getEditUrl() {
-        return "";
+    @RequestMapping("/list")
+    public ModelAndView analysisList(){
+        Map params = new HashMap();
+        return toPage("ec/settle/material/materialSettleLedgerList", params);
     }
-
-    @Override
-    public String getListUrl() {
-        return "ec/settle/material/materialSettleLedgerList";
-    }
-
     @Override
     public AbstractBaseService getService() {
-        return this.materialSettleDetailService;
+        return this.materialSettleService;
     }
 
-    @Override
-    public void packageUIParams(Map params) {
-        super.packageUIParams(params);
-        if(BaseMethodEnum.ADDNEW.equals(baseMethod)){
-            if(params!=null&&params.get("uiCtx")!=null){
-                String uiCtx = (String) params.get("uiCtx");
-                params.put("uiCtx", WebUtil.UUID_ReplaceID(uiCtx));
+    @RequestMapping(value="/query")
+    @ResponseBody
+    public WebDataModel materialAnalysis(){
+        init();
+        String search = request.getParameter("search");
+        String projectId = "-1";
+        Map<String,Object> params = new HashMap<>();
+        if(!BaseUtil.isEmpty(search)) {
+            Map searchMap = JSONObject.parseObject(search, new HashMap().getClass());
+            if(searchMap!=null&&searchMap.get("projectId")!=null){
+                projectId = searchMap.get("projectId").toString();
+            }
+            if(searchMap!=null&&searchMap.get("startDate")!=null){
+                params.put("startDate",searchMap.get("startDate"));
+            }
+            if(searchMap!=null&&searchMap.get("endDate")!=null){
+                params.put("endDate",searchMap.get("endDate"));
+            }
+            if(searchMap!=null&&searchMap.get("supplyCompany")!=null){
+                params.put("supplyCompany",searchMap.get("supplyCompany"));
             }
         }
-    }
-    @Override
-    public void executeQueryParams(Criteria query) {
-        super.executeQueryParams(query);
-        String serach = request.getParameter("search");
-        String projectId = "xyz";
-        if(!BaseUtil.isEmpty(serach)){
-            Map searchMap = JSONObject.parseObject(serach, new HashMap().getClass());
-            Object objTree = searchMap.get("tree");
-            if(objTree!=null){
-                Map treeMap = JSONObject.parseObject(objTree.toString(), new HashMap().getClass());
-                Object idObj = treeMap.get("id");
-                Object type = treeMap.get("type");
-                if(type!=null&&idObj!=null){
-                    if("project".equals(type.toString())){
-                        projectId = idObj.toString();
-                    }
-                }
-            }
+        params.put("projectId",projectId);
+        try {
+            this.data = materialSettleService.queryMaterialSettleLedger(getCurPage(),getPageSize(),params);
+        } catch (QueryException e) {
+            e.printStackTrace();
         }
-        query.add(Restrictions.eq("pr.project.id",projectId));
-    }
-    @Override
-    public List<ColumnModel> getDataBinding() {
-        List<ColumnModel> cols = super.getDataBinding();
-        cols.add(new ColumnModel("contract.expenseType", DataTypeEnum.ENUM,ExpenseType.class));
-        cols.add(new ColumnModel("contract.number", DataTypeEnum.STRING));
-        cols.add(new ColumnModel("contract.name", DataTypeEnum.STRING));
-        cols.add(new ColumnModel("contract.supplyCompany", DataTypeEnum.STRING));
-        cols.add(new ColumnModel("contract.amount", DataTypeEnum.NUMBER));
-        cols.add(new ColumnModel("settleAmount", DataTypeEnum.NUMBER));
-        cols.add(new ColumnModel("op.name", DataTypeEnum.STRING));
-        cols.add(new ColumnModel("pr.settleDate", DataTypeEnum.DATE));
-        return cols;
-    }
-
-    @Override
-    public List<Order> getOrders() {
-        List<Order> orderList = new ArrayList<>();
-        orderList.add(Order.asc("contract.expenseType"));
-        orderList.add(Order.asc("contract.supplyCompany"));
-        orderList.add(Order.asc("pr.settleDate"));
-        return orderList;
+        return ajaxModel();
     }
 }

@@ -17,7 +17,7 @@ public enum MeetingSummaryType implements MyEnum<MeetingSummaryType> {
 	SAFE_CIVILIZATION("SAFE_CIVILIZATION","安全文明"),
 	SAMPLE_ACCEPTANCE("SAMPLE_ACCEPTANCE","样板验收"),
 	STAGE_ACCEPTANCE("STAGE_ACCEPTANCE","阶段验收"),
-	OTHER("OTHER","其他");
+	OTHER("OTHER","其它");
 
 	private String name;
 	private String value;

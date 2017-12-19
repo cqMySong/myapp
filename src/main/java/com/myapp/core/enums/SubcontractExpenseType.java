@@ -13,7 +13,7 @@ import java.util.Map;
  */
 public enum SubcontractExpenseType implements MyEnum<SubcontractExpenseType> {
     ARTIFICIAL("ARTIFICIAL","人工费"),
-    OTHER("OTHER","其他");
+    OTHER("OTHER","其它");
 
     private String name;
     private String value;

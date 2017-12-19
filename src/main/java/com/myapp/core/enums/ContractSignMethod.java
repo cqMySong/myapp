@@ -17,7 +17,8 @@ public enum ContractSignMethod implements MyEnum<ContractSignMethod> {
 	 */
 	CURRENT("CURRENT","现有合同条款"),
 	NEGOTIATION("NEGOTIATION","定向谈判"),
-	BIDDING("BIDDING","招投标");
+	BIDDING("BIDDING","招投标"),
+	OTHER("OTHER","其它");
 
 	private String name;
 	private String value;
@@ -27,6 +28,7 @@ public enum ContractSignMethod implements MyEnum<ContractSignMethod> {
         map.put(CURRENT.getValue(), CURRENT);
         map.put(NEGOTIATION.getValue(), NEGOTIATION);
         map.put(BIDDING.getValue(), BIDDING);
+		map.put(OTHER.getValue(), OTHER);
     }
 
 	ContractSignMethod(String value, String name){

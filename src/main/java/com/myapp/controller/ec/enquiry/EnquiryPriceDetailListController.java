@@ -4,10 +4,13 @@ import com.alibaba.fastjson.JSONObject;
 import com.myapp.core.annotation.PermissionAnn;
 import com.myapp.core.base.service.impl.AbstractBaseService;
 import com.myapp.core.controller.BaseListController;
+import com.myapp.core.controller.BasePageListController;
 import com.myapp.core.enums.BaseMethodEnum;
 import com.myapp.core.enums.ContractSignMethod;
 import com.myapp.core.enums.DataTypeEnum;
+import com.myapp.core.exception.db.QueryException;
 import com.myapp.core.model.ColumnModel;
+import com.myapp.core.model.WebDataModel;
 import com.myapp.core.util.BaseUtil;
 import com.myapp.core.util.WebUtil;
 import com.myapp.service.ec.budget.EnquiryPriceDetailService;
@@ -16,6 +19,8 @@ import org.hibernate.criterion.Order;
 import org.hibernate.criterion.Restrictions;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.servlet.ModelAndView;
 
 import javax.annotation.Resource;
 import java.util.HashMap;
@@ -28,82 +33,52 @@ import java.util.Map;
  * @author ： ly
  * @date: 2017-08-28 21:02
  */
-@PermissionAnn(name="系统管理.现场管理.预算.预算询价",number="app.ec.purchase.procurementplan")
+@PermissionAnn(name="系统管理.现场管理.预算.材设采购准备",number="app.ec.budget.enquiryprice")
 @Controller
 @RequestMapping("ec/budget/enquirypricedetail")
-public class EnquiryPriceDetailListController extends BaseListController {
+public class EnquiryPriceDetailListController extends BasePageListController {
     @Resource
     private EnquiryPriceDetailService enquiryPriceDetailService;
 
-    @Override
-    public String getEditUrl() {
-        return "";
+    @RequestMapping("/list")
+    public ModelAndView analysisList(){
+        Map params = new HashMap();
+        return toPage("ec/budget/enquiry/enquiryPriceDetailList", params);
     }
-
-    @Override
-    public String getListUrl() {
-        return "ec/budget/enquiry/enquiryPriceDetailList";
-    }
-
     @Override
     public AbstractBaseService getService() {
         return this.enquiryPriceDetailService;
     }
 
-    @Override
-    public void packageUIParams(Map params) {
-        super.packageUIParams(params);
-        if(BaseMethodEnum.ADDNEW.equals(baseMethod)){
-            if(params!=null&&params.get("uiCtx")!=null){
-                String uiCtx = (String) params.get("uiCtx");
-                params.put("uiCtx", WebUtil.UUID_ReplaceID(uiCtx));
+    @RequestMapping(value="/query")
+    @ResponseBody
+    public WebDataModel materialAnalysis(){
+        init();
+        String search = request.getParameter("search");
+        String projectId = "-1";
+        Map<String,Object> params = new HashMap<>();
+        if(!BaseUtil.isEmpty(search)) {
+            Map searchMap = JSONObject.parseObject(search, new HashMap().getClass());
+            if(searchMap!=null&&searchMap.get("projectId")!=null){
+                projectId = searchMap.get("projectId").toString();
+            }
+            if(searchMap!=null&&searchMap.get("startDate")!=null){
+                params.put("startDate",searchMap.get("startDate"));
+            }
+            if(searchMap!=null&&searchMap.get("endDate")!=null){
+                params.put("endDate",searchMap.get("endDate"));
+            }
+            if(searchMap!=null&&searchMap.get("materialName")!=null){
+                params.put("materialName",searchMap.get("materialName"));
             }
         }
-    }
-    @Override
-    public void executeQueryParams(Criteria query) {
-        super.executeQueryParams(query);
-        String serach = request.getParameter("search");
-        String projectId = "xyz";
-        if(!BaseUtil.isEmpty(serach)){
-            Map searchMap = JSONObject.parseObject(serach, new HashMap().getClass());
-            Object objTree = searchMap.get("tree");
-            if(objTree!=null){
-                Map treeMap = JSONObject.parseObject(objTree.toString(), new HashMap().getClass());
-                Object idObj = treeMap.get("id");
-                Object type = treeMap.get("type");
-                if(type!=null&&idObj!=null){
-                    if("project".equals(type.toString())){
-                        projectId = idObj.toString();
-                    }
-                }
-            }
+        params.put("projectId",projectId);
+        try {
+            this.data = enquiryPriceDetailService.queryEnquiryPrice(getCurPage(),getPageSize(),params);
+        } catch (QueryException e) {
+            e.printStackTrace();
         }
-        query.add(Restrictions.eq("pro.id",projectId));
-    }
-    @Override
-    public List<ColumnModel> getDataBinding() {
-        List<ColumnModel> cols = super.getDataBinding();
-        cols.add(new ColumnModel("intentionPrice"));
-        cols.add(new ColumnModel("paymentMethod"));
-        cols.add(new ColumnModel("origin"));
-        cols.add(new ColumnModel("supplyCycle"));
-        cols.add(new ColumnModel("supplyCompany"));
-        cols.add(new ColumnModel("contactMan"));
-        cols.add(new ColumnModel("contactTel"));
-        cols.add(new ColumnModel("contractSignMethod",DataTypeEnum.ENUM, ContractSignMethod.class));
-        cols.add(new ColumnModel("p.createDate",DataTypeEnum.DATE));
-        cols.add(new ColumnModel("mat.number"));
-        cols.add(new ColumnModel("bdi.quantity"));
-        cols.add(new ColumnModel("bdi.materialName"));
-        cols.add(new ColumnModel("bdi.budgetaryPrice"));
-        cols.add(new ColumnModel("bdi.specification"));
-        cols.add(new ColumnModel("bdi.measureUnitInfo"));
-        return cols;
+        return ajaxModel();
     }
 
-    @Override
-    public Order getOrder() {
-        return Order.asc("budgetingDetailInfo");
-    }
 }

@@ -15,7 +15,7 @@ public enum ExpenseType implements MyEnum<ExpenseType> {
     MATERIAL("MATERIAL","材料费"),
     ARTIFICIAL("ARTIFICIAL","人工费"),
     EQUIPMENT("EQUIPMENT","机械费"),
-    OTHER("OTHER","其他");
+    OTHER("OTHER","其它");
 
     private String name;
     private String value;

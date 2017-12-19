@@ -76,7 +76,7 @@ public class MaterialSettleService extends BaseInterfaceService<MaterialSettleIn
         List<Object> paramList = new ArrayList<>();
         StringBuffer sql = new StringBuffer();
         sql.append("select b.fname,b.fnumber,case when b.fExpenseType='MATERIAL' then '材料费' ")
-           .append("when b.fExpenseType='EQUIPMENT' then '机械费' else '其他' end as fExpenseType,")
+           .append("when b.fExpenseType='EQUIPMENT' then '机械费' else '其它' end as fExpenseType,")
            .append("b.fAmount,a.fSettleAmount,a.fOperatorId,")
            .append("(select sum(d.fSettleAmount) from t_ec_material_settle d where ")
            .append("d.fPurchaseContractId = a.fPurchaseContractId and d.fenddate<=a.fenddate ");

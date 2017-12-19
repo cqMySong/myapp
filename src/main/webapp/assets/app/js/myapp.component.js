@@ -45,7 +45,7 @@
 					thisObj.initEnvent(_ckrad_opt.event);
 				}
 			}else if(_type ==DataType.date||_type ==DataType.datetime){
-				thisObj.initViewr({icon:_opt.icon});
+				thisObj.initViewr(_opt);
 				thisObj.initRender(_opt);
 				thisObj.initEnvent();
 			}else if(_type == DataType.F7){

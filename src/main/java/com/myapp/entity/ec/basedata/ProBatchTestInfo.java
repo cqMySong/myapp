@@ -7,26 +7,24 @@ import javax.persistence.JoinColumn;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
-import org.hibernate.annotations.Parameter;
-import org.hibernate.annotations.Type;
-
 import com.myapp.core.annotation.MyEntityAnn;
-import com.myapp.core.base.entity.CoreBaseDataInfo;
-import com.myapp.enums.ec.TestGroup;
+import com.myapp.core.base.entity.CoreBaseInfo;
 
 /**
  *-----------MySong---------------
  * ©MySong基础框架搭建
- * @author mySong @date 2017年10月23日 
- * @system: 技术负责人：检验批信息
+ * @author mySong @date 2017年12月18日 
+ * @system: 技术负责人：项目级检验批信息
  *-----------MySong---------------
  */
-@MyEntityAnn(name="检验批信息")
+@MyEntityAnn(name="项目检验批信息")
 @Entity
-@Table(name="t_ec_bathchtest")
-public class BatchTestInfo extends CoreBaseDataInfo {
+@Table(name="t_ec_probathchtest")
+public class ProBatchTestInfo extends CoreBaseInfo {
 	private ProBaseWbsInfo proBaseWbs;//检验批分解结构
 	private String content;//检验批划分办法
+	private String remark;
+	private ProjectInfo project;
 	
 	@OneToOne(fetch=FetchType.LAZY)
 	@JoinColumn(name = "fprowbsId")
@@ -41,12 +39,25 @@ public class BatchTestInfo extends CoreBaseDataInfo {
 	public String getContent() {
 		return content;
 	}
-	
 	public void setContent(String content) {
 		this.content = content;
 	}
 	
+	@Column(name="fremark",length=250)
+	public String getRemark() {
+		return remark;
+	}
+	public void setRemark(String remark) {
+		this.remark = remark;
+	}
 	
-	
+	@OneToOne(fetch=FetchType.LAZY)
+	@JoinColumn(name = "fprojectId")
+	public ProjectInfo getProject() {
+		return project;
+	}
+	public void setProject(ProjectInfo project) {
+		this.project = project;
+	}
 	
 }

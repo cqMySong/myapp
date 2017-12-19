@@ -34,14 +34,15 @@
 			<div class="row mt10">
 				<div class="col-sm-6">
 					<div class="input-group">
-						<span class="input-group-addon lable">分项工程</span> 
-						<input name="proBaseWbs" class="input-item form-control read" data-opt="{type:'f7',uiWin:{title:'分项工程'}}" />
+						<span class="input-group-addon lable">工程项目</span> 
+						<input name="project" class="input-item form-control read" data-opt="{type:'f7'}"/>
 					</div>
 				</div>
 				<div class="col-sm-6">
 					<div class="input-group">
-						<span class="input-group-addon lable">启用</span> 
-						<input class="require input-item" name="enabled" data-opt="{type:'checkbox'}" type="checkbox">
+						<span class="input-group-addon lable">分项工程</span> 
+						<input name="proBaseWbs" class="input-item form-control"
+						 data-opt="{type:'f7',uiWin:{title:'分项工程',height:560,width:800,url:'ec/basedata/proBaseWbsF7'}}" />
 					</div>
 				</div>
 			</div>
@@ -78,15 +79,15 @@
 			var uiCtx = getUICtx();
 			if(!webUtil.isEmpty(uiCtx)&&$.isPlainObject(uiCtx)
 					&&!webUtil.isEmpty(uiCtx.tree)){
-				$('input[name="proBaseWbs"]').myF7().setData(uiCtx.tree);
+				$('input[name="project"]').myF7().setData(uiCtx.tree);
 			}
 		}
 	}
 
 	$(document).ready(function() {
 		var editUI = $('#editPanel').editUI({
-			title : "检验批划分",
-			baseUrl : "ec/basedata/batchtest",
+			title : "项目检验批划分",
+			baseUrl : "ec/basedata/probatchtest",
 			toolbar : "#table-toolbar",
 			form : {
 				el : "#editForm"

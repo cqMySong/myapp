@@ -6,8 +6,8 @@
 </head>
 <script type="text/javascript">
 </script>
-<body style="padding:2px;overflow: hidden;">
-	<div class="panel">
+<body style="padding:2px;overflow: hidden;"  class="panel">
+	<div>
 		<ul class="nav nav-tabs nav-success">
 			<li class="">
 				<a href="#uploadFile" class="_tabHeader" data-toggle="tab">
@@ -177,9 +177,9 @@ $(document).ready(function() {
 	var sear_btn_gp = $('#seachGBtn').myBtnGroup();
 	sear_btn_gp.addSearch({items:queryCols,dataChange:search_Query});
 	var dataURL = "base/attach/list";
-	var myQueryTalbOpt = {striped:true,height:440,sortStable:true,showRefresh:false,clicToSelect:true
+	var myQueryTalbOpt = {striped:true,height:400,sortStable:true,showRefresh:false,clicToSelect:true
 			,cache:false,pageSize:10,showToggle:true,showColumns:true,idField:"id",mypagination:true
-			,toolbar:"#table-toolbar",url:dataURL,queryParams:getMyQueryParams};
+			,toolbar:"#table-toolbar",url:dataURL,queryParams:getMyQueryParams,selectModel:2};
 
 	tblMain =  $('#tblMain').myDataTable(myQueryTalbOpt);
 	tblMainReshDdata();

@@ -65,6 +65,12 @@ public class ColumnModel {
 			this.format = "id,name";
 		}
 	}
+	public ColumnModel(String name,DataTypeEnum dataType,Class claz,String format){
+		this.name = name;
+		this.dataType = dataType;
+		this.claz = claz;
+		this.format = format;
+	}
 	
 	public ColumnModel(String name,DataTypeEnum dataType,String format){
 		this.name = name;

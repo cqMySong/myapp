@@ -25,7 +25,7 @@
 								<th data-field="proBaseWbs_name">分项工程</th>
 								<th data-field="number">编码</th>
 								<th data-field="name">名称</th>
-								<th data-field="content" data-width="400" data-type="textarea">划分标准</th>
+								<th data-field="content" data-width="400" data-type="textarea">划分办法</th>
 								<th data-field="enabled" data-type="checkbox">启用</th>
 								<th data-field="remark" data-width="300" data-type="textarea">备注</th>
 							</tr>

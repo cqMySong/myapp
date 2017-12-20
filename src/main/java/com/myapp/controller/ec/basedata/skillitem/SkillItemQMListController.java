@@ -26,7 +26,7 @@ import com.myapp.service.ec.basedata.SkillItemService;
 @PermissionAnn(name="系统管理.现场管理.基础数据.施工技术交底",number="app.ec.basedata.qmskillitem")
 @Controller
 @RequestMapping("ec/basedata/qmskillitems")
-public class SkillClassQMListController extends BaseDataListController {
+public class SkillItemQMListController extends BaseDataListController {
 	@Resource
 	public SkillItemService skillItemService;
 

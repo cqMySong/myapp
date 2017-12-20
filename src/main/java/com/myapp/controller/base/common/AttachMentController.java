@@ -89,6 +89,9 @@ public class AttachMentController extends BaseController {
 			if(isOk){
 				AttachFileInfo atFile = (AttachFileInfo) retMap.get("attachInfo");
 				if(atFile!=null&&atFile.getItems().size()>0){
+					if(BaseUtil.isEmpty(atFile.getId())){
+						atFile.setUploader(getCurUser());
+					}
 					if(atFile.getComplete()){
 						String hql = "from FtpServerInfo where enabled=?";
 						List ftpparams = new ArrayList();

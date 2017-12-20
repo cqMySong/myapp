@@ -8,7 +8,10 @@ import java.util.Set;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
+import javax.persistence.JoinColumn;
 import javax.persistence.OneToMany;
+import javax.persistence.OneToOne;
 import javax.persistence.OrderBy;
 import javax.persistence.Table;
 
@@ -46,6 +49,7 @@ public class AttachFileInfo extends CoreInfo {
 	private String file;//真实保存在磁盘上的文件名，不包括路径
 	private Date uploadDate;
 	private Date lastUpdateDate;
+	private UserInfo uploader;//上传人
 	
 	@Column(name="fFileName")
 	public String getFileName() {
@@ -170,6 +174,14 @@ public class AttachFileInfo extends CoreInfo {
 	}
 	public void setLoadedSize(BigDecimal loadedSize) {
 		this.loadedSize = loadedSize;
+	}
+	@OneToOne(fetch=FetchType.LAZY)
+	@JoinColumn(name = "fuploaderId")
+	public UserInfo getUploader() {
+		return uploader;
+	}
+	public void setUploader(UserInfo uploader) {
+		this.uploader = uploader;
 	}
 	
 	

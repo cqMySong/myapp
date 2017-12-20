@@ -19,7 +19,7 @@ import com.myapp.enums.ec.SkillType;
  * ©MySong基础框架搭建
  * @author mySong @date 2017年10月22日 
  * @system:
- * 技术分类明显 包括施工技术和安全技术
+ * 技术分类明细 包括施工技术和安全技术
  *-----------MySong---------------
  */
 @MyEntityAnn(name="技术分类明细")

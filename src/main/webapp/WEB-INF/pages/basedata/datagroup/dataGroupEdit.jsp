@@ -68,6 +68,7 @@ function afterAction(_opt){
 		if(!webUtil.isEmpty(uiCtx)&&$.isPlainObject(uiCtx)
 				&&!webUtil.isEmpty(uiCtx.tree)){
 			$('input[name="parent"]').myF7().setData(uiCtx.tree);
+			$('input[name="number"]').val(uiCtx.tree.number+'.');
 		}
 		$('input[name="code"]').val(code);
 	}

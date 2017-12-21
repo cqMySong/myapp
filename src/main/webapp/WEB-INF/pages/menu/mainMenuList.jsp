@@ -80,7 +80,7 @@ function fromterUrl(value, row, index){
 	var params = row.params;
 	var url = value;
 	if(!webUtil.isEmpty(params)){
-		if(url.indexOf('?')>0) url +='?';
+		if(url.indexOf('?')<0) url +='?';
 		url +=params;
 	}
 	return url;

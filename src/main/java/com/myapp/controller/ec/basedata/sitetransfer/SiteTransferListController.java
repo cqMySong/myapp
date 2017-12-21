@@ -1,13 +1,12 @@
-package com.myapp.controller.base.material;
+package com.myapp.controller.ec.basedata.sitetransfer;
 
 import com.myapp.core.annotation.PermissionAnn;
 import com.myapp.core.base.service.impl.AbstractBaseService;
-import com.myapp.core.controller.BaseDataListController;
-import com.myapp.core.entity.MeasureUnitInfo;
+import com.myapp.core.controller.BaseListController;
 import com.myapp.core.enums.DataTypeEnum;
+import com.myapp.core.enums.TransferTypeEnum;
 import com.myapp.core.model.ColumnModel;
-import com.myapp.core.enums.MaterialType;
-import com.myapp.core.service.MaterialService;
+import com.myapp.service.ec.basedata.SiteTransferService;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 
@@ -15,40 +14,41 @@ import javax.annotation.Resource;
 import java.util.List;
 
 /**
- * 包路径：com.myapp.controller.base.material
- * 功能说明：
+ * @path：com.myapp.controller.base.sitetransfer
+ * @description：
  * @author ： ly
  * @date: 2017-08-25 17:28
  */
-@PermissionAnn(name="系统管理.基础资料.物料信息",number="app.basedata.material")
+@PermissionAnn(name="系统管理.现场管理.基础数据.场地移交",number="app.ec.basedata.sitetransfer")
 @Controller
-@RequestMapping("base/materials")
-public class MaterialListController extends BaseDataListController {
+@RequestMapping("ec/basedata/sitetransfers")
+public class SiteTransferListController extends BaseListController {
     @Resource
-    private MaterialService materialService;
+    private SiteTransferService siteTransferService;
     @Override
     public String getEditUrl() {
-        return "basedata/material/materialEdit";
+        return "ec/basedata/sitetransfer/siteTransferEdit";
     }
 
     @Override
     public String getListUrl() {
-        return "basedata/material/materialList";
+        return "ec/basedata/sitetransfer//siteTransferList";
     }
 
     @Override
     public AbstractBaseService getService() {
-        return this.materialService;
+        return this.siteTransferService;
     }
     @Override
     public List<ColumnModel> getDataBinding() {
         List<ColumnModel> cols = super.getDataBinding();
-        cols.add(new ColumnModel("pinyin"));
-        cols.add(new ColumnModel("specification"));
-        ColumnModel measureUnitInfo = new ColumnModel("unit",DataTypeEnum.F7,"id,name");
-        measureUnitInfo.setClaz(MeasureUnitInfo.class);
-        cols.add(measureUnitInfo);
-        cols.add(new ColumnModel("materialType",DataTypeEnum.ENUM,MaterialType.class));
+        cols.add(new ColumnModel("name"));
+        cols.add(new ColumnModel("number"));
+        cols.add(new ColumnModel("transferType",DataTypeEnum.ENUM, TransferTypeEnum.class));
+        cols.add(new ColumnModel("transferUnit"));
+        cols.add(new ColumnModel("receivingUnit"));
+        cols.add(new ColumnModel("transferDate", DataTypeEnum.DATE));
+        cols.add(new ColumnModel("transferRange"));
         return cols;
     }
 

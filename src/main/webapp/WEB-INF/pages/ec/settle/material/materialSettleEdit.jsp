@@ -69,6 +69,14 @@
 			</div>
 		</div>
 		<div class="row mt10">
+			<div class="col-sm-12">
+				<div class="input-group">
+					<span class="input-group-addon lable">工作内容</span>
+					<textarea name="jobContent" style="height:38px;" class="input-item form-control"></textarea>
+				</div>
+			</div>
+		</div>
+		<div class="row mt10">
 			<div class="col-sm-3">
 				<div class="input-group">
 					<span class="input-group-addon lable">工程项目</span>

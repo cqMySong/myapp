@@ -46,6 +46,10 @@ public class MaterialSettleInfo extends CoreBaseBillInfo {
      */
     private String remark;
     /**
+     * 工作内容
+     */
+    private String jobContent;
+    /**
      * 采购合同信息
      */
     private PurchaseContractInfo purchaseContractInfo;
@@ -137,5 +141,13 @@ public class MaterialSettleInfo extends CoreBaseBillInfo {
 
     public void setPurchaseContractInfo(PurchaseContractInfo purchaseContractInfo) {
         this.purchaseContractInfo = purchaseContractInfo;
+    }
+    @Column(name="fJobContent",length = 500)
+    public String getJobContent() {
+        return jobContent;
+    }
+
+    public void setJobContent(String jobContent) {
+        this.jobContent = jobContent;
     }
 }

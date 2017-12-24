@@ -54,9 +54,28 @@ public class SubContractLedgerListController extends BasePageListController {
     @ResponseBody
     public WebDataModel materialAnalysis(){
         init();
+        String search = request.getParameter("search");
+        String projectId = "-1";
+        Map<String,Object> params = new HashMap<>();
+        if(!BaseUtil.isEmpty(search)) {
+            Map searchMap = JSONObject.parseObject(search, new HashMap().getClass());
+            if(searchMap!=null&&searchMap.get("projectId")!=null){
+                projectId = searchMap.get("projectId").toString();
+            }
+            if(searchMap!=null&&searchMap.get("startDate")!=null){
+                params.put("startDate",searchMap.get("startDate"));
+            }
+            if(searchMap!=null&&searchMap.get("endDate")!=null){
+                params.put("endDate",searchMap.get("endDate"));
+            }
+            if(searchMap!=null&&searchMap.get("contractName")!=null){
+                params.put("contractName",searchMap.get("contractName"));
+            }
+        }
+        params.put("projectId",projectId);
         try {
-            //this.data = materialSettleService.queryMaterialAnalysis(getCurPage(),getPageSize(),null);
-        } catch (Exception e) {
+            this.data = subContractPaymentService.querySubContractPaymentLedger(getCurPage(),getPageSize(),params);
+        } catch (QueryException e) {
             e.printStackTrace();
         }
         return ajaxModel();

@@ -86,6 +86,7 @@ public class MaterialSettleEditController extends BaseBillEditController {
         cols.add(new ColumnModel("name"));
         cols.add(new ColumnModel("number"));
         cols.add(new ColumnModel("remark"));
+        cols.add(new ColumnModel("jobContent"));
         cols.add(new ColumnModel("operator", DataTypeEnum.F7,UserInfo.class));
         cols.add(new ColumnModel("startDate", DataTypeEnum.DATE));
         cols.add(new ColumnModel("endDate", DataTypeEnum.DATE));

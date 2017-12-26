@@ -43,6 +43,8 @@ public class ProLabourEditController extends BaseEditController{
 		cols.add(new ColumnModel("remark"));
 		cols.add(new ColumnModel("addr"));
 		cols.add(new ColumnModel("idCard"));
+		cols.add(new ColumnModel("bank"));
+		cols.add(new ColumnModel("bankNo"));
 		cols.add(new ColumnModel("project",DataTypeEnum.F7,ProjectInfo.class));
 		cols.add(new ColumnModel("workType",DataTypeEnum.F7,WorkTypeInfo.class));
 		cols.add(new ColumnModel("sex",DataTypeEnum.ENUM,Sex.class));

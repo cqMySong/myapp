@@ -78,6 +78,20 @@
 				</div>
 			</div>
 			<div class="row mt10">
+				<div class="col-sm-6">
+					<div class="input-group">
+						<span class="input-group-addon lable">开户银行</span> 
+						<input name="bank" class="form-control input-item" >
+					</div>
+				</div>
+				<div class="col-sm-6">
+					<div class="input-group">
+						<span class="input-group-addon lable">银行账号</span> 
+						<input name="bankNo" class="input-item form-control"/>
+					</div>
+				</div>
+			</div>
+			<div class="row mt10">
 				<div class="col-sm-12">
 					<div class="input-group">
 						<span class="input-group-addon lable">地址</span>

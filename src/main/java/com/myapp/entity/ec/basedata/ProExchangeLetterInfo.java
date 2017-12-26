@@ -15,7 +15,6 @@ import org.hibernate.annotations.Type;
 import com.myapp.core.annotation.MyEntityAnn;
 import com.myapp.core.base.entity.CoreBaseInfo;
 import com.myapp.core.entity.UserInfo;
-import com.myapp.core.enums.Sex;
 import com.myapp.enums.ec.LetterType;
 
 /**

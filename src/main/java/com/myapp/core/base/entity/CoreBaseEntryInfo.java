@@ -19,8 +19,8 @@ public class CoreBaseEntryInfo<T> extends CoreInfo {
 	private T parent;
 	private Integer seq;
 	           
-	@ManyToOne(cascade={CascadeType.ALL})
-	@JoinColumn(name="fprentid")  
+	@ManyToOne
+	@JoinColumn(name="fprentid",updatable=false)  
 	public T getParent() {
 		return parent;
 	}

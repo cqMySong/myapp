@@ -35,6 +35,8 @@ public class ProLabourInfo extends CoreBaseInfo {
 	private Date joinDate;
 	private String idCard;
 	private String remark;
+	private String bank;//开户行
+	private String bankNo;//银行账户
 	
 	@Column(name="fsex",length=20)
 	@Type(type="myEnum",parameters={@Parameter(name="enumClass",value="com.myapp.core.enums.Sex")})
@@ -95,6 +97,20 @@ public class ProLabourInfo extends CoreBaseInfo {
 	}
 	public void setRemark(String remark) {
 		this.remark = remark;
+	}
+	@Column(name="fbank",length=100)
+	public String getBank() {
+		return bank;
+	}
+	public void setBank(String bank) {
+		this.bank = bank;
+	}
+	@Column(name="fbankNo",length=100)
+	public String getBankNo() {
+		return bankNo;
+	}
+	public void setBankNo(String bankNo) {
+		this.bankNo = bankNo;
 	}
 	
 }

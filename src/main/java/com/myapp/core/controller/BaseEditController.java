@@ -412,6 +412,7 @@ public abstract class BaseEditController extends CoreBaseController {
 						cbInfo.put(name, entrySet);
 						if(entrysMap!=null&&entrysMap.size()>0){
 							for (CoreBaseEntryInfo eInfo : entrysMap.values()) {  
+//								eInfo.setParent(null);
 								getService().deleteEntity(eInfo);
 							}
 						}

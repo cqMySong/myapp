@@ -1,4 +1,4 @@
-package com.myapp.controller.ec.basedata.labour;
+package com.myapp.controller.ec.labour;
 
 import java.util.HashMap;
 import java.util.List;
@@ -16,47 +16,45 @@ import com.alibaba.fastjson.JSONObject;
 import com.myapp.core.annotation.PermissionAnn;
 import com.myapp.core.base.service.impl.AbstractBaseService;
 import com.myapp.core.controller.BaseListController;
+import com.myapp.core.entity.UserInfo;
+import com.myapp.core.enums.BillState;
 import com.myapp.core.enums.DataTypeEnum;
-import com.myapp.core.enums.Sex;
 import com.myapp.core.model.ColumnModel;
 import com.myapp.core.util.BaseUtil;
-import com.myapp.core.util.WebUtil;
 import com.myapp.entity.ec.basedata.ProjectInfo;
-import com.myapp.entity.ec.basedata.WorkTypeInfo;
-import com.myapp.service.ec.basedata.ProLabourService;
+import com.myapp.service.ec.labour.ProLabourWageService;
 
 /**
  *-----------MySong---------------
  * ©MySong基础框架搭建
- * @author mySong @date 2017年12月12日 
+ * @author mySong @date 2017年12月24日 
  * @system:
- * 项目劳务人员备案表
+ * 项目民工工资表
  *-----------MySong---------------
  */
-@PermissionAnn(name="系统管理.现场管理.劳务人员.项目劳务人员备案",number="app.ec.labour.prolabour")
+@PermissionAnn(name="系统管理.现场管理.劳务人员.项目民工工资表",number="app.ec.labour.prolabourwage")
 @Controller
-@RequestMapping("ec/labour/prolabours")
-public class ProLabourListController extends BaseListController {
+@RequestMapping("ec/labour/prolabourwages")
+public class ProLabourWageListController extends BaseListController {
 	
 	@Resource
-	public ProLabourService proLabourService;
+	public ProLabourWageService proLabourWageService;
 	public AbstractBaseService getService() {
-		return proLabourService;
+		return proLabourWageService;
 	}
 
 	public List<ColumnModel> getDataBinding() {
 		List<ColumnModel> cols = super.getDataBinding();
 		cols.add(new ColumnModel("name"));
 		cols.add(new ColumnModel("number"));
-		cols.add(new ColumnModel("addr"));
-		cols.add(new ColumnModel("idCard"));
-		cols.add(new ColumnModel("bank"));
-		cols.add(new ColumnModel("bankNo"));
+		cols.add(new ColumnModel("labourGroup"));
 		cols.add(new ColumnModel("project",DataTypeEnum.F7,ProjectInfo.class));
-		cols.add(new ColumnModel("workType",DataTypeEnum.F7,WorkTypeInfo.class));
-		cols.add(new ColumnModel("sex",DataTypeEnum.ENUM,Sex.class));
-		cols.add(new ColumnModel("age",DataTypeEnum.INT));
-		cols.add(new ColumnModel("joinDate",DataTypeEnum.DATE));
+		cols.add(new ColumnModel("createUser",DataTypeEnum.F7,UserInfo.class));
+		cols.add(new ColumnModel("auditor",DataTypeEnum.F7,UserInfo.class));
+		cols.add(new ColumnModel("bizDate",DataTypeEnum.DATE));
+		cols.add(new ColumnModel("createDate",DataTypeEnum.DATE));
+		cols.add(new ColumnModel("auditDate",DataTypeEnum.DATE));
+		cols.add(new ColumnModel("billState",DataTypeEnum.ENUM,BillState.class));
 		return cols;
 	}
 	
@@ -81,11 +79,11 @@ public class ProLabourListController extends BaseListController {
 		query.add(se);
 	}
 	public String getEditUrl() {
-		return "ec/basedata/labour/proLabourEdit";
+		return "ec/labour/proLabourWageEdit";
 	}
 
 	public String getListUrl() {
-		return "ec/basedata/labour/proLabourList";
+		return "ec/labour/proLabourWageList";
 	}
 
 }

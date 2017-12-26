@@ -19,8 +19,8 @@
 						 <thead >
 							<tr>
 								<th data-field="project_name">工程项目</th>
-								<th data-field="number">主题</th>
-								<th data-field="name">编码</th>
+								<th data-field="number">编码</th>
+								<th data-field="name">主题</th>
 								<th data-field="type" data-type="select">函件类别</th>
 								<th data-field="dispatchUnit">发文单位</th>
 								<th data-field="dispatchDage" data-type="date">发文时间</th>

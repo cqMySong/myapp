@@ -191,10 +191,17 @@ public abstract class BaseF7QueryController extends BasePageListController {
 		}
 	}
 	
-	public void executeQueryParams(Criteria query) {
+	protected Map getSearchPrams() {
 		String serach = request.getParameter("search");
 		if(!BaseUtil.isEmpty(serach)){
-			Map searchMap = JSONObject.parseObject(serach, new HashMap().getClass());
+			return JSONObject.parseObject(serach, new HashMap().getClass());
+		}
+		return null;
+	}
+	
+	public void executeQueryParams(Criteria query) {
+		Map searchMap = getSearchPrams();
+		if(!BaseUtil.isEmpty(searchMap)&&searchMap.size()>0){
 			Object obj_field = searchMap.get("key");
 			Object obj_val = searchMap.get("value");
 			Object obj_type = searchMap.get("type");
@@ -220,9 +227,8 @@ public abstract class BaseF7QueryController extends BasePageListController {
 		}
 	}
 	public Map getQueryUiCtx() {
-		String serach = request.getParameter("search");
-		if(!BaseUtil.isEmpty(serach)){
-			Map searchMap = JSONObject.parseObject(serach, new HashMap().getClass());
+		Map searchMap = getSearchPrams();
+		if(!BaseUtil.isEmpty(searchMap)&&searchMap.size()>0){
 			if(searchMap!=null&&searchMap.containsKey("uiCtx")){
 				Object uiCtxObj = searchMap.get("uiCtx");
 				if(uiCtxObj!=null) return JSONObject.parseObject(uiCtxObj.toString(), new HashMap().getClass());

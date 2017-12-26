@@ -62,7 +62,7 @@ function getTreeQueryParams(){
 }
 $(document).ready(function() {
 	var treeNode2QueryProp = ["id","name","number","longNumber","type"];
-    var editWin ={title:'项目劳务人员备案',width:620,height:450};
+    var editWin ={title:'项目劳务人员备案',width:620,height:500};
     var treeOpt = {setting:{data: {
         	simpleData: {enable:true,idKey: "id", pIdKey: "parentId",rootPId: ''}
    	 }}};

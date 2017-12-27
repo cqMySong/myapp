@@ -25,7 +25,7 @@ import com.myapp.service.ec.basedata.ProResourceDataService;
  *-----------MySong---------------
  * ©MySong基础框架搭建
  * @author mySong @date 2017年12月11日 
- * @system: 项目级资料目录(安全 ，技术)
+ * @system: 项目级资料目录(安全 ，技术,.....)
  *-----------MySong---------------
  */
 public abstract class ProResourceDataBaseListController extends BaseListController {

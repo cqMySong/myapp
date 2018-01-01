@@ -6,7 +6,7 @@
 	var MyComponet = function(el,type){
 		this.$element = el;
 		this.type = type||DataType.text;
-	}
+	};
 	MyComponet.prototype = {
 		init:function(_opt){
 			var _type = this.type;

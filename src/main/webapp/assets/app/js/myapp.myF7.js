@@ -13,7 +13,7 @@ var MyF7 = function(el){
 	 this.dataFormat = undefined;
 	 this.dataChange = undefined;
 	 this.closeWin = undefined;
-}
+};
 MyF7.prototype = {
 	init:function(opt){
 		var $thisDom = this.$element;
@@ -105,7 +105,7 @@ MyF7.prototype = {
 						}
 					}
 					return true;
-				}
+				};
 				webUtil.openWin(_win);
 			}
 		}

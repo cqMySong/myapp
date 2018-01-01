@@ -221,7 +221,11 @@ public abstract class BaseF7QueryController extends BasePageListController {
 					}else if(DataTypeEnum.NUMBER.equals(dte)){
 						obj_val = new BigDecimal(obj_val.toString());
 					}
-					query.add(Restrictions.eq(obj_field.toString(),obj_val));
+					if(DataTypeEnum.STRING.equals(dte)){
+						query.add(Restrictions.like(obj_field.toString(), "%"+obj_val+"%"));
+					}else{
+						query.add(Restrictions.eq(obj_field.toString(),obj_val));
+					}
 				}
 			}
 		}

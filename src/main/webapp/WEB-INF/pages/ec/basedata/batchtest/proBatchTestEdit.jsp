@@ -3,7 +3,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-<title>检验批划分</title>
+<title>项目检验批划分</title>
 </head>
 <style type="text/css">
 </style>
@@ -17,7 +17,22 @@
 		<form id="editForm">
 			<div style="display: none;">
 			</div>
-			<div class="row">
+			<div class="row ">
+				<div class="col-sm-6">
+					<div class="input-group">
+						<span class="input-group-addon lable">工程项目</span> 
+						<input name="project" class="input-item form-control read" data-opt="{type:'f7'}"/>
+					</div>
+				</div>
+				<div class="col-sm-6">
+					<div class="input-group">
+						<span class="input-group-addon lable">分项工程</span> 
+						<input name="proBaseWbs" class="input-item form-control"
+						 data-opt="{type:'f7',dataChange:proBaseWbs_dataChange,uiWin:{title:'分项工程',height:560,width:800,url:'ec/basedata/proBaseWbsF7'}}" />
+					</div>
+				</div>
+			</div>
+			<div class="row mt10">
 				<div class="col-sm-6">
 					<div class="input-group">
 						<span class="input-group-addon lable">编码</span> 
@@ -32,21 +47,6 @@
 				</div>
 			</div>
 			<div class="row mt10">
-				<div class="col-sm-6">
-					<div class="input-group">
-						<span class="input-group-addon lable">工程项目</span> 
-						<input name="project" class="input-item form-control read" data-opt="{type:'f7'}"/>
-					</div>
-				</div>
-				<div class="col-sm-6">
-					<div class="input-group">
-						<span class="input-group-addon lable">分项工程</span> 
-						<input name="proBaseWbs" class="input-item form-control"
-						 data-opt="{type:'f7',uiWin:{title:'分项工程',height:560,width:800,url:'ec/basedata/proBaseWbsF7'}}" />
-					</div>
-				</div>
-			</div>
-			<div class="row mt10">
 				<div class="col-sm-12">
 					<div class="input-group">
 						<span class="input-group-addon lable">划分办法</span>
@@ -57,8 +57,8 @@
 			<div class="row mt10">
 				<div class="col-sm-12">
 					<div class="input-group">
-						<span class="input-group-addon lable">备注</span>
-						<textarea name="remark" class="input-item form-control" rows="1"></textarea>
+						<span class="input-group-addon lable">划分标准</span>
+						<textarea name="remark" class="input-item form-control read" rows="1"></textarea>
 					</div>
 				</div>
 			</div>
@@ -95,5 +95,33 @@
 		});
 		editUI.onLoad();
 	})
+	var proBaseWbsUrl = 'ec/basedata/batchtests/batchTestData';
+	function proBaseWbs_dataChange(oldVal,newVal){
+		var starand = "";
+		if(!webUtil.isEmpty(newVal)&&!webUtil.isEmpty(newVal.id)){
+			var dataParams = {wbsId:newVal.id};
+			webUtil.ajaxData({url:proBaseWbsUrl,data:dataParams,async:false,success:function(data){
+				var retData = data.data;
+				if(!webUtil.isEmpty(retData)){
+					starand = retData.content;
+					var number = $('input[name="number"]').val();
+					var name = $('input[name="name"]').val();
+					var content = $('textarea[name="content"]').val();
+					if(webUtil.isEmpty(number)){
+						$('input[name="number"]').val(retData.number);
+					}
+					if(webUtil.isEmpty(name)){
+						$('input[name="name"]').val(retData.name);
+					}
+					if(webUtil.isEmpty(content)){
+						$('textarea[name="content"]').val(starand);
+					}
+				}
+			}});
+		}
+		$('textarea[name="remark"]').val(starand);
+		
+		
+	}
 </script>
 </html>

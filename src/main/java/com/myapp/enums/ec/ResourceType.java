@@ -12,13 +12,13 @@ import com.myapp.core.base.enums.MyEnum;
  *-----------MySong---------------
  */
 public enum ResourceType implements MyEnum<ResourceType>{
-	JSYQYSML("JSYQYSML","技术要求及验收目录"),OTHER("OTHER","其他");
+	AQJSYQYSML("AQJSYQYSML","安全技术要求及验收目录"),OTHER("OTHER","其他");
 
 	private String name;
 	private String value;
 	private static final Map<String, ResourceType> map = new HashMap<String, ResourceType>();
 	static {
-        map.put(JSYQYSML.getValue(), JSYQYSML);
+        map.put(AQJSYQYSML.getValue(), AQJSYQYSML);
         map.put(OTHER.getValue(), OTHER);
     }
 

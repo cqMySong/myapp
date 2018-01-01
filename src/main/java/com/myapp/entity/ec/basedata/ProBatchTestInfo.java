@@ -23,7 +23,7 @@ import com.myapp.core.base.entity.CoreBaseInfo;
 public class ProBatchTestInfo extends CoreBaseInfo {
 	private ProBaseWbsInfo proBaseWbs;//检验批分解结构
 	private String content;//检验批划分办法
-	private String remark;
+	private String remark; //标准划分办法
 	private ProjectInfo project;
 	
 	@OneToOne(fetch=FetchType.LAZY)
@@ -43,7 +43,7 @@ public class ProBatchTestInfo extends CoreBaseInfo {
 		this.content = content;
 	}
 	
-	@Column(name="fremark",length=250)
+	@Column(name="fremark",length=500)
 	public String getRemark() {
 		return remark;
 	}

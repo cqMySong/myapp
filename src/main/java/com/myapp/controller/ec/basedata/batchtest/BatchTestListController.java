@@ -1,6 +1,5 @@
 package com.myapp.controller.ec.basedata.batchtest;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -12,10 +11,10 @@ import org.hibernate.criterion.MatchMode;
 import org.hibernate.criterion.Restrictions;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.alibaba.fastjson.JSONObject;
-import com.myapp.core.annotation.AuthorAnn;
 import com.myapp.core.annotation.PermissionAnn;
 import com.myapp.core.base.service.impl.AbstractBaseService;
 import com.myapp.core.controller.BaseDataListController;
@@ -23,9 +22,8 @@ import com.myapp.core.enums.DataTypeEnum;
 import com.myapp.core.model.ColumnModel;
 import com.myapp.core.model.WebDataModel;
 import com.myapp.core.util.BaseUtil;
-import com.myapp.core.util.EnumUtil;
+import com.myapp.entity.ec.basedata.BatchTestInfo;
 import com.myapp.entity.ec.basedata.ProBaseWbsInfo;
-import com.myapp.enums.ec.TestGroup;
 import com.myapp.service.ec.basedata.BatchTestService;
 
 @PermissionAnn(name="系统管理.现场管理.基础数据.检验批划分",number="app.ec.basedata.batchtest")
@@ -66,6 +64,24 @@ public class BatchTestListController extends BaseDataListController {
 			}
 		}
 	}
+	
+	@ResponseBody
+	@RequestMapping(value="/batchTestData",method=RequestMethod.POST)
+	public WebDataModel getBatchTestData() {
+		String wbsId = request.getParameter("wbsId");
+		if(!BaseUtil.isEmpty(wbsId)){
+			BatchTestInfo batInfo = batchTestService.getBatchTestByBaseWBS(wbsId, Boolean.TRUE);
+			Map retMap = new HashMap();
+			if(batInfo!=null){
+				retMap.put("name", batInfo.getName());
+				retMap.put("number", batInfo.getNumber());
+				retMap.put("content", batInfo.getContent());
+			}
+			data = retMap;
+		}
+		return ajaxModel();
+	}
+	
 	
 	public String getEditUrl() {
 		return "ec/basedata/batchtest/batchTestEdit";

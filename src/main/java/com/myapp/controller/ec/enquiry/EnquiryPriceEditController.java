@@ -60,6 +60,9 @@ public class EnquiryPriceEditController extends BaseBillEditController {
                 JSONObject enquiryPriceDetail = null;
                 JSONObject budgetingDetail = null;
                 JSONObject materialType = null;
+                if(enquiryPriceDetails==null){
+                    return;
+                }
                 for(int i=0;i<enquiryPriceDetails.size();i++){
                     enquiryPriceDetail = enquiryPriceDetails.getJSONObject(i);
                     budgetingDetail = enquiryPriceDetail.getJSONObject("budgetingDetailInfo");

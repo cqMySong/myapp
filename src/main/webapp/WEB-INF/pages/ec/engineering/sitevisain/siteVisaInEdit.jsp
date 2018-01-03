@@ -38,14 +38,14 @@
 			<div class="col-sm-4">
 				<div class="input-group">
 					<span class="input-group-addon lable">支出签证</span>
-					<input class="require input-item form-control" name="siteVisaOutInfo"
+					<input class="input-item form-control" name="siteVisaOutInfo"
 						   data-opt="{type:'f7',dataChange:selectVisaOut,uiWin:{title:'现场签证(支出)',height:600,width:800,url:'ec/engineering/siteVisaOutF7'}}" />
 				</div>
 			</div>
 			<div class="col-sm-4">
 				<div class="input-group">
 					<span class="input-group-addon lable">支出单号</span>
-					<input class="input-item form-control require read" name="visaOutNumber"/>
+					<input class="input-item form-control read" name="visaOutNumber"/>
 				</div>
 			</div>
 			<div class="col-sm-4">

@@ -8,7 +8,9 @@ import com.myapp.core.entity.UserInfo;
 import com.myapp.core.enums.*;
 import com.myapp.core.model.ColumnModel;
 import com.myapp.entity.ec.basedata.ProjectInfo;
+import com.myapp.entity.ec.engineering.SiteVisaOutDetailInfo;
 import com.myapp.entity.ec.engineering.SiteVisaOutInfo;
+import com.myapp.entity.ec.purchase.PurchaseContractDetailInfo;
 import com.myapp.service.ec.engineering.SiteVisaOutService;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -66,6 +68,19 @@ public class SiteVisaOutEditController extends BaseBillEditController {
         ColumnModel project = new ColumnModel("project",DataTypeEnum.F7,"id,name");
         project.setClaz(ProjectInfo.class);
         cols.add(project);
+
+        ColumnModel siteVisaOutDetailInfos = new ColumnModel("siteVisaOutDetailInfos", DataTypeEnum.ENTRY,
+                SiteVisaOutDetailInfo.class);
+        siteVisaOutDetailInfos.getCols().add(new ColumnModel("id", DataTypeEnum.PK));
+        siteVisaOutDetailInfos.getCols().add(new ColumnModel("typeOfWork", DataTypeEnum.ENUM, TypeOfWork.class));
+        siteVisaOutDetailInfos.getCols().add(new ColumnModel("workStartTime",DataTypeEnum.DATETIME));
+        siteVisaOutDetailInfos.getCols().add(new ColumnModel("workEndTime", DataTypeEnum.DATETIME));
+        siteVisaOutDetailInfos.getCols().add(new ColumnModel("mechanicalName", DataTypeEnum.STRING));
+        siteVisaOutDetailInfos.getCols().add(new ColumnModel("mechanicalStartTime",DataTypeEnum.DATETIME));
+        siteVisaOutDetailInfos.getCols().add(new ColumnModel("mechanicalEndTime",DataTypeEnum.DATETIME));
+        siteVisaOutDetailInfos.getCols().add(new ColumnModel("materialName"));
+        siteVisaOutDetailInfos.getCols().add(new ColumnModel("useCount", DataTypeEnum.NUMBER));
+        cols.add(siteVisaOutDetailInfos);
 
         return cols;
     }

@@ -179,7 +179,7 @@
     }
     $(document).ready(function() {
         editUI = $('#editPanel').editUI({
-            title : "工程付款",billModel:2,
+            title : "工程收款",billModel:2,
             baseUrl : "ec/engineering/proprietorpayment",
             toolbar : "#table-toolbar",
             form : {

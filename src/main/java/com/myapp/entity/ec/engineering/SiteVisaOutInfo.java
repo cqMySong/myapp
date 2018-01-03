@@ -9,6 +9,7 @@ import org.hibernate.annotations.Type;
 import javax.persistence.*;
 import java.math.BigDecimal;
 import java.util.Date;
+import java.util.Set;
 
 /**
  * @path：com.myapp.entity.ec.engineering
@@ -56,6 +57,10 @@ public class SiteVisaOutInfo extends CoreBaseBillInfo {
      * 现场签证(收入)
      */
     private SiteVisaInInfo siteVisaInInfo;
+    /**
+     * 现场签证支出明细
+     */
+    private Set<SiteVisaOutDetailInfo> siteVisaOutDetailInfos;
 
     @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "fProjectId")
@@ -136,5 +141,15 @@ public class SiteVisaOutInfo extends CoreBaseBillInfo {
 
     public void setSiteVisaInInfo(SiteVisaInInfo siteVisaInInfo) {
         this.siteVisaInInfo = siteVisaInInfo;
+    }
+
+    @OneToMany(cascade={CascadeType.ALL},mappedBy="parent")
+    @OrderBy("seq ASC")
+    public Set<SiteVisaOutDetailInfo> getSiteVisaOutDetailInfos() {
+        return siteVisaOutDetailInfos;
+    }
+
+    public void setSiteVisaOutDetailInfos(Set<SiteVisaOutDetailInfo> siteVisaOutDetailInfos) {
+        this.siteVisaOutDetailInfos = siteVisaOutDetailInfos;
     }
 }

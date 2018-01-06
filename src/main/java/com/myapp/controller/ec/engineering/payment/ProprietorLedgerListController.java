@@ -10,6 +10,7 @@ import com.myapp.core.model.WebDataModel;
 import com.myapp.core.util.BaseUtil;
 import com.myapp.service.ec.engineering.ProprietorContractService;
 import com.myapp.service.ec.engineering.ProprietorPaymentService;
+import com.myapp.service.ec.engineering.SiteVisaInService;
 import com.myapp.service.ec.settle.MaterialSettleService;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -34,6 +35,8 @@ public class ProprietorLedgerListController extends BasePageListController {
     private ProprietorContractService proprietorContractService;
     @Resource
     private ProprietorPaymentService proprietorPaymentService;
+    @Resource
+    private SiteVisaInService siteVisaInService;
     @RequestMapping("/list")
     public ModelAndView analysisList(){
         Map params = new HashMap();
@@ -55,6 +58,7 @@ public class ProprietorLedgerListController extends BasePageListController {
             result.put("settle",proprietorContractService.queryByProjectAndType(projectId,
                     ProprietorContractType.SETTLE));
             result.put("payment",proprietorPaymentService.queryByProject(projectId));
+            result.put("siteVisa",siteVisaInService.queryByProject(projectId));
             this.data = result;
         } catch (Exception e) {
             e.printStackTrace();

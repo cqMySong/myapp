@@ -89,6 +89,25 @@
         $(".mainContrainer").height(height);
         initOrgTree();
 	});
+    function chargingBasis(value) {
+        var txt = value;
+        if(value=='INCREASE_CONTRACT'){
+            txt = '合同外增加';
+        }else if(value=='EMERGENCY_INSPECTION'){
+            txt = '应急检查';
+        }else if(value=='OWNER_ORDER'){
+            txt = '业主指令';
+        }else if(value=='CONTRACT_STIPULATION'){
+            txt = '合同约定';
+        }else if(value=='INCREASE_QUANTITY'){
+            txt = '工程量增加';
+        }else if(value=='OTHER'){
+            txt = '其他';
+        }else{
+            txt='';
+		}
+        return txt;
+    }
     function queryLedger(){
         webUtil.ajaxData({url:'ec/engineering/proprietorledgers/query',
 			data:{projectId:curSelOrg.id},
@@ -118,6 +137,28 @@
                         "<th colspan='2'></th>" +
                         "</tr>";
 				}
+                if(ledgerData['siteVisa']&&ledgerData['siteVisa'].length>0){
+                    strContent+="<tr><th rowspan='"+(ledgerData['siteVisa'].length+2)+"' " +
+                        "style='text-align: center;vertical-align: middle;'>签证费用</th>" +
+                        "<th>名称</th>" +
+                        "<th colspan='4'>签证内容</th><th colspan='2'>金额（元）</th>" +
+                        "<th colspan='2'>计价依据</th>" +
+                        "</tr>";
+                    var totalVisaAmount = 0;
+                    $.each(ledgerData['siteVisa'],function(i,v){
+                        strContent+="<tr>" +
+                            "<td>"+v["name"]+"</td>" +
+                            "<td colspan='4'>"+v["chargingContent"]+"</td>" +
+                            "<td colspan='2'>"+v["amount"]+"</td>" +
+                            "<td colspan='2'>"+chargingBasis(v["chargingBasis"])+"</td>" +
+                            "</tr>";
+                        totalVisaAmount+=parseFloat(v["amount"]);
+                    });
+                    strContent+="<tr>" +
+                        "<th>合计</th><th colspan='4'></th><th colspan='2'>"+totalVisaAmount+"</th>" +
+                        "<th colspan='2'></th>" +
+                        "</tr>";
+                }
                 if(ledgerData['payment']&&ledgerData['payment'].length>0){
                     strContent+="<tr><th rowspan='"+(ledgerData['payment'].length+2)+"' " +
 						"style='text-align: center;vertical-align: middle;'>工程进度款</th>" +

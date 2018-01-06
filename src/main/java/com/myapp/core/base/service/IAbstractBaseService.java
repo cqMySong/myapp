@@ -10,6 +10,7 @@ import com.myapp.core.base.entity.CoreInfo;
 import com.myapp.core.exception.db.AddNewException;
 import com.myapp.core.exception.db.DeleteException;
 import com.myapp.core.exception.db.QueryException;
+import com.myapp.core.exception.db.ReadException;
 import com.myapp.core.model.PageModel;
 
 /**
@@ -33,4 +34,5 @@ public interface IAbstractBaseService {
 	public Criteria initQueryCriteria(Class claz)throws QueryException;
 	public Criteria initQueryCriteria(String entityName)throws QueryException;
 	public List executeSQLQuery(String sql,Object[] params)throws QueryException;
+	public boolean isExist(String hql, Object[] params) throws QueryException,ReadException; 
 }

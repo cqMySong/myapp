@@ -3,7 +3,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<title>项目施工日志</title>
+<title>项目进度工作汇报</title>
 </head>
 <style type="text/css">
 </style>
@@ -82,20 +82,22 @@
 			</div>
 			<div class="row mt10">
 				<div class="col-sm-12 " style="border: 1px solid #ddd;">
-					<table name="planReportItems" class="input-entry" data-opt="{type:'entry',height:420,toolbar:{title:'施工日志填报'}
-							,tableOpt:{editDataChanged:planItems_dataChanged},addRow:tblAddRow}">
+					<table name="planReportItems" class="input-entry" data-opt="{type:'entry',height:420,selectModel:2,toolbar:{title:'施工日志填报'}
+							,tableOpt:{editDataChanged:planItems_dataChanged,selectModel:2},addRow:tblAddRow}">
 						<thead>
 							<tr>
-								<th data-field="proStructure" data-width="200" rowspan="2" data-type="f7" data-formatter="displayName" data-locked="true">项目工程结构</th>
-								<th data-field="proSub" rowspan="2" data-width="100" data-type="f7" data-locked="true">项目分部工程</th>
-								<th data-field="proSubItem" data-width="100" rowspan="2" data-type="f7" data-locked="true">项目分项结构</th>
+								<th data-field="proStructure" data-width="200" rowspan="2" data-type="f7" data-formatter="displayName" data-locked="true" data-align="left">项目工程结构</th>
+								<th data-field="projectWbs" rowspan="2"  data-type="f7" data-width="300" data-formatter="displayName" data-locked="true" data-align="left">分解结构</th>
+								<th data-field="proSub" rowspan="2" data-visible="false"  data-type="f7" data-locked="true">项目分部工程</th>
+								<th data-field="proSubItem" data-visible="false" rowspan="2" data-type="f7" data-locked="true">项目分项结构</th>
 								<th data-field="planContent" data-locked="true" rowspan="2" data-type="textarea">计划内容</th>
-								<th colspan="2" data-width="210">工作日志</th>
+								<th colspan="3" data-width="210">工作日志</th>
 								<th data-field="planItemId" data-visible="false" data-locked="true" rowspan="2">计划ID</th>
 							</tr>
 							<tr>
-								<th data-field="begDate" class="_myMerge" data-type="date">开始日期</th>
-								<th data-field="endDate" data-type="date">完成日期</th>
+								<th data-field="begDate" data-width="180" class="_myMerge" data-type="date">开始日期</th>
+								<th data-field="endDate" data-width="180" data-type="date">完成日期</th>
+								<th data-field="progress" data-width="100" data-type="number">完成进度(%)</th>
 							</tr>
 						</thead>
 					</table>
@@ -150,11 +152,10 @@
 	var planItemsEntry;
 	var planItemsEntryObj;
 	function tblAddRow(table){
-		
-		var _win = {width:900,height:750,maxmin:false};
+		var _win = {width:950,height:800,maxmin:false};
 		_win.url = webUtil.toUrl('ec/plan/projectplanitems/show')+'?projectId='+$('input[name="project"]').myF7().getValue();
 		_win.btns = ['确定','取消'];
-		_win.title = '计划明细导入';
+		_win.title = '<i class="fa fa-windows"></i>&nbsp;计划明细导入';
 		_win.btnCallBack = function(index,layerIndex,layero){
 			if(layero){
 				var iframe_win = $(layero).parent().find('#layui-layer-iframe'+layerIndex)[0].contentWindow;
@@ -181,6 +182,7 @@
 							newRow.proSubItem = drow.proSubItem;
 							newRow.planContent = drow.content;
 							newRow.planItemId = drow.id;
+							newRow.projectWbs = drow.projectWbs;
 							planItemsEntry.addRow(newRow);
 						}
 					}

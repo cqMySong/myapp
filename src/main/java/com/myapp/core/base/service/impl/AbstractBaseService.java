@@ -197,13 +197,8 @@ public abstract class AbstractBaseService implements IAbstractBaseService {
 		}
 	}
 	
-	public void deleteEntity(Object entity) {
-		 try {
-			getBaseDao().deleteEntity(entity);
-		} catch (DeleteException e) {
-			e.printStackTrace();
-			log.error(e.getMessage());
-		}
+	public void deleteEntity(Object entity) throws DeleteException{
+		getBaseDao().deleteEntity(entity);
 	}
 	
 	public List findByHQL(String hql, Object[] params) {
@@ -320,5 +315,18 @@ public abstract class AbstractBaseService implements IAbstractBaseService {
 		newParams.add(idparams.toArray());
 		executeUpdata(delHql,newParams.toArray());
 	}
-
+	
+	public boolean isExist(String hql, Object[] params) throws QueryException,
+			ReadException {
+		return isExist(getEntityClass(),hql,params);
+	}
+	
+	public boolean isExist(Class claz,String hql, Object[] params)throws QueryException
+		, ReadException {
+		if(!BaseUtil.isEmpty(hql)){
+			return queryEntity(claz, hql, params)!=null;
+		}
+		return false;
+	}
+	
 }

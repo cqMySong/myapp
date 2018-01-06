@@ -22,7 +22,7 @@ import com.myapp.service.ec.basedata.ProBaseWbsService;
  *-----------MySong---------------
  * ©MySong基础框架搭建
  * @author mySong @date 2017年12月18日 
- * @system: 系统级检验批
+ * @system: 系统级工程基础分解结构
  *-----------MySong---------------
  */
 @Controller

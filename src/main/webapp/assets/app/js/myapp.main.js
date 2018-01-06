@@ -16,7 +16,7 @@ var MyPillTreeMenu = function(ele, opt){
 	 this.$element = ele;
 	 var defaults = {};
      this.options = $.extend(true,{},defaults, opt);
-}
+};
 MyPillTreeMenu.prototype = {
 	init:function(opt){
 		var $thisDom = this.$element;
@@ -478,12 +478,12 @@ MyBtnGroups.prototype = {
 			});
 		}
 	}
-}
+};
 $.fn.myBtnGroup = function(options) {
 	if(!$(this).hasClass('btn-group')) $(this).addClass('btn-group');
     var settings = $.extend({}, options);
     return new MyBtnGroups($(this),settings);
-}
+};
 })(jQuery, window, document);
 
 /**
@@ -531,7 +531,7 @@ var MyDataTable = function(ele, opt){
 				opt.selectChanaged(thisCurRowIdx,row,$el);
 			}
 		}
-	 }
+	 };
 	 opt.onClickRow = undefined;
 	 this.mypagination = undefined;
 	 this.$pagination = undefined;
@@ -549,7 +549,7 @@ var MyDataTable = function(ele, opt){
     	 this.addMyPagination(this.mypagination);
      }
      this.editDataChanged = undefined;
-}
+};
 MyDataTable.prototype = {
 	addMyPagination:function(_opt){
 		var _tblBody = this.$element.parent('div.fixed-table-body');
@@ -714,7 +714,7 @@ MyDataTable.prototype = {
 					_myTableMain.mypagination.pageSize = _ret_Data.pageSize;
 					_myTableMain.mypagination.totalPages = _ret_Data.totalPages;
 					_myTableMain.$pagination.find('input._tocurPage').val(_ret_Data.currentPage);
-					_myTableMain.$pagination.find('span.pagination-info').html("显示第 "+(_ret_Data.startNum+1)+" 到第 "+(_ret_Data.startNum+_ret_Data.pageSize)+" 条记录，总共  "+_ret_Data.totalRows+" 条记录")
+					_myTableMain.$pagination.find('span.pagination-info').html("显示第 "+(_ret_Data.startNum+1)+" 到第 "+(_ret_Data.startNum+_ret_Data.pageSize)+" 条记录，总共  "+_ret_Data.totalRows+" 条记录");
 				}
 				var _dataRows = _ret_Data.datas;
 				if(!webUtil.isEmpty(_dataRows)){
@@ -757,7 +757,7 @@ MyDataTable.prototype = {
 	getSelectRow:function(){
 		var selRows = this.getSelectRows();
 		if(!webUtil.isEmpty(selRows)&&selRows.length>0){
-			return selRows.eq(0);
+			return selRows[0];
 		}
 		return null;
 	},
@@ -769,7 +769,11 @@ MyDataTable.prototype = {
 		return -1;
 	},
 	getSelectRows:function(){
-		return this.$element.find('tbody>tr.selected');
+		var seledRow = [];
+		this.$element.find('tbody>tr.selected').each(function(){
+			seledRow.push($(this));
+		});
+		return seledRow;
 	},
 	getRowCount:function(){
 		return this.$element.find('tbody>tr').length;
@@ -1169,14 +1173,14 @@ MyDataTable.prototype = {
 				};
 				
 				_editorOpt.initData = thisMyTable.getTableCellValue(obj.rowIndex,obj.field);
-				var editOpt = $.extend(true,{}, _editorOpt)
+				var editOpt = $.extend(true,{}, _editorOpt);
 				var thisEditor = thisColumn.editor;
 				if(!webUtil.isEmpty(thisEditor)){
 					if(typeof thisEditor === 'string'){
 						thisEditor = webUtil.str2Json(thisEditor);
 					}
 					if($.isPlainObject(thisEditor)){
-						editOpt = $.extend(true,editOpt, thisEditor)
+						editOpt = $.extend(true,editOpt, thisEditor);
 					}
 				}
 				colEditor.initEditor(editOpt);
@@ -1188,12 +1192,12 @@ MyDataTable.prototype = {
 			return true;
 		});
 	}
-}
+};
 $.fn.myDataTable = function(options) {
 	 var defaults = {height:600};
      var settings = $.extend(true,defaults, options);
      return new MyDataTable($(this),settings);
-}
+};
 })(jQuery, window, document);
 
 ;(function($, window, document, undefined) {

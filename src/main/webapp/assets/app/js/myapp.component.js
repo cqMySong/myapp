@@ -428,10 +428,10 @@
 				}
 			}
 		}
-	}
-	$.fn.myComponet = function(type,options) {
+	};
+	$.fn.myComponet = function(type,opts) {
 		var defaults = {method:'init',opt:undefined};
-		var options = $.extend(true,{},defaults, options);
+		var options = $.extend(true,{},defaults, opts);
 		if(webUtil.isEmpty(type)) type = DataType.text;
 		var mycom = new MyComponet($(this),type);
 		var _data = options.opt;
@@ -456,6 +456,6 @@
 				webUtil.mesg("未知情况:其他的待续.....");
 			}
 		}
-		return mycom
-	}
+		return mycom;
+	};
 })(jQuery, window, document);

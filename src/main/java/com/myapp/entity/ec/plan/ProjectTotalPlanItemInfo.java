@@ -15,6 +15,7 @@ import com.myapp.core.entity.UserInfo;
 import com.myapp.entity.ec.basedata.ProStructureInfo;
 import com.myapp.entity.ec.basedata.ProSubInfo;
 import com.myapp.entity.ec.basedata.ProSubItemInfo;
+import com.myapp.entity.ec.basedata.ProjectWbsInfo;
 
 /**
  *-----------MySong---------------
@@ -28,8 +29,11 @@ import com.myapp.entity.ec.basedata.ProSubItemInfo;
 @Table(name="t_ec_projectTotalPlanItem")
 public class ProjectTotalPlanItemInfo extends CoreBaseEntryInfo<ProjectTotalPlanInfo> {
 	private ProStructureInfo proStructure;//项目结构
-	private ProSubInfo proSub;//项目分部
-	private ProSubItemInfo proSubItem;//工程分项
+	private ProjectWbsInfo projectWbs;//工程分解结构
+	
+	private ProSubInfo proSub;//项目分部 @作废
+	private ProSubItemInfo proSubItem;//工程分项@作废
+	
 	private Date planBegDate;//计划开始日期
 	private Date planEndDate;//计划截止日期
 	private Integer planDays;//计划工期
@@ -165,6 +169,14 @@ public class ProjectTotalPlanItemInfo extends CoreBaseEntryInfo<ProjectTotalPlan
 	}
 	public void setDutyers(String dutyers) {
 		this.dutyers = dutyers;
+	}
+	@OneToOne(fetch=FetchType.LAZY)
+	@JoinColumn(name = "fprojectWbsId")
+	public ProjectWbsInfo getProjectWbs() {
+		return projectWbs;
+	}
+	public void setProjectWbs(ProjectWbsInfo projectWbs) {
+		this.projectWbs = projectWbs;
 	}
 	
 	

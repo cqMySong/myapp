@@ -9,8 +9,6 @@ import javax.annotation.Resource;
 
 import org.hibernate.Criteria;
 import org.hibernate.criterion.Order;
-import org.hibernate.criterion.ProjectionList;
-import org.hibernate.criterion.Projections;
 import org.hibernate.criterion.Restrictions;
 import org.hibernate.sql.JoinType;
 import org.springframework.stereotype.Controller;
@@ -19,6 +17,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
 import com.alibaba.fastjson.JSONObject;
+import com.myapp.core.annotation.AuthorAnn;
 import com.myapp.core.base.dao.MyResultTransFormer;
 import com.myapp.core.base.service.impl.AbstractBaseService;
 import com.myapp.core.controller.BasePageListController;
@@ -34,6 +33,7 @@ import com.myapp.core.util.WebUtil;
 import com.myapp.entity.ec.basedata.ProStructureInfo;
 import com.myapp.entity.ec.basedata.ProSubInfo;
 import com.myapp.entity.ec.basedata.ProSubItemInfo;
+import com.myapp.entity.ec.basedata.ProjectWbsInfo;
 import com.myapp.entity.ec.plan.ProjectTotalPlanItemInfo;
 
 /**
@@ -59,6 +59,10 @@ public class ProjectPlanItemsController extends BasePageListController {
 		proStructure.setClaz(ProStructureInfo.class);
 		cols.add(proStructure);
 		
+		ColumnModel psCol = new ColumnModel("projectWbs",DataTypeEnum.F7,ProjectWbsInfo.class);
+		psCol.setFormat("id,name,displayName");
+		cols.add(psCol);
+		
 		ColumnModel proSub = new ColumnModel("proSub",DataTypeEnum.F7,"id,name");
 		proSub.setClaz(ProSubInfo.class);
 		cols.add(proSub);
@@ -82,7 +86,7 @@ public class ProjectPlanItemsController extends BasePageListController {
 		return projectId;
 	}
 	
-	
+	@AuthorAnn(doLongin=true,doPermission=false)
 	@RequestMapping("/show")
 	public ModelAndView show(){
 		init();

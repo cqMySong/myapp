@@ -28,6 +28,7 @@ import com.myapp.entity.ec.basedata.ProStructureInfo;
 import com.myapp.entity.ec.basedata.ProSubInfo;
 import com.myapp.entity.ec.basedata.ProSubItemInfo;
 import com.myapp.entity.ec.basedata.ProjectInfo;
+import com.myapp.entity.ec.basedata.ProjectWbsInfo;
 import com.myapp.entity.ec.plan.ProjectPlanReportInfo;
 import com.myapp.entity.ec.plan.ProjectPlanReportItemInfo;
 import com.myapp.entity.ec.plan.ProjectTotalPlanInfo;
@@ -78,6 +79,10 @@ public class ProjectPlanReportEditController extends BaseBillEditController{
 		psCol.setFormat("id,displayName");
 		planItems.getCols().add(psCol);
 		
+		ColumnModel prowbs = new ColumnModel("projectWbs",DataTypeEnum.F7,ProjectWbsInfo.class);
+		prowbs.setFormat("id,name,displayName");
+		planItems.getCols().add(prowbs);
+		
 		ColumnModel proSubItem = new ColumnModel("proSubItem",DataTypeEnum.F7,"id,name");
 		proSubItem.setClaz(ProSubItemInfo.class);
 		planItems.getCols().add(proSubItem);
@@ -93,6 +98,7 @@ public class ProjectPlanReportEditController extends BaseBillEditController{
 		planItems.getCols().add(new ColumnModel("begDate",DataTypeEnum.DATE));
 		planItems.getCols().add(new ColumnModel("endDate",DataTypeEnum.DATE));
 		planItems.getCols().add(new ColumnModel("planContent"));
+		planItems.getCols().add(new ColumnModel("progress",DataTypeEnum.NUMBER));
 		planItems.getCols().add(new ColumnModel("planItemId"));
 		cols.add(planItems);
 		return cols;
@@ -113,6 +119,7 @@ public class ProjectPlanReportEditController extends BaseBillEditController{
 					String proId = WebUtil.UUID_ReplaceID((String) treeMap.get("id"));
 					String proName = (String) treeMap.get("name");
 					ProjectInfo pInfo = new ProjectInfo();
+					
 					pInfo.setId(proId);
 					pInfo.setName(proName);
 					proTotalPlanInfo.setProject(pInfo);
@@ -138,6 +145,11 @@ public class ProjectPlanReportEditController extends BaseBillEditController{
 							pstInfo.setId((String)item.get("proStructureId"));
 							pstInfo.setDisplayName((String)item.get("proStructureName"));
 							itemInfo.setProStructure(pstInfo);
+							ProjectWbsInfo pwInfo = new ProjectWbsInfo();
+							pwInfo.setId((String)item.get("proWbsId"));
+							pwInfo.setDisplayName((String)item.get("proWbsDisplayName"));
+							itemInfo.setProjectWbs(pwInfo);
+							
 							ProSubInfo psInfo = new ProSubInfo();
 							psInfo.setId((String)item.get("proSubId"));
 							psInfo.setName((String)item.get("proSubName"));

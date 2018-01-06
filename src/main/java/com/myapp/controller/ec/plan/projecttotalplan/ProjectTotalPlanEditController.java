@@ -1,12 +1,16 @@
 package com.myapp.controller.ec.plan.projecttotalplan;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 
 import javax.annotation.Resource;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
 
+import com.myapp.core.annotation.AuthorAnn;
 import com.myapp.core.annotation.PermissionAnn;
 import com.myapp.core.base.entity.CoreBaseInfo;
 import com.myapp.core.base.service.impl.AbstractBaseService;
@@ -15,10 +19,13 @@ import com.myapp.core.entity.UserInfo;
 import com.myapp.core.enums.BillState;
 import com.myapp.core.enums.DataTypeEnum;
 import com.myapp.core.model.ColumnModel;
+import com.myapp.core.model.WebDataModel;
+import com.myapp.core.util.BaseUtil;
 import com.myapp.entity.ec.basedata.ProStructureInfo;
 import com.myapp.entity.ec.basedata.ProSubInfo;
 import com.myapp.entity.ec.basedata.ProSubItemInfo;
 import com.myapp.entity.ec.basedata.ProjectInfo;
+import com.myapp.entity.ec.basedata.ProjectWbsInfo;
 import com.myapp.entity.ec.plan.ProjectTotalPlanInfo;
 import com.myapp.entity.ec.plan.ProjectTotalPlanItemInfo;
 import com.myapp.service.ec.plan.ProjectTotalPlanService;
@@ -62,10 +69,14 @@ public class ProjectTotalPlanEditController extends BaseBillEditController{
 		psCol.setFormat("id,name,displayName");
 		planItems.getCols().add(psCol);
 		
+		ColumnModel prowbs = new ColumnModel("projectWbs",DataTypeEnum.F7,ProjectWbsInfo.class);
+		prowbs.setFormat("id,name,displayName");
+		planItems.getCols().add(prowbs);
+		
+		//作废
 		ColumnModel proSubItem = new ColumnModel("proSubItem",DataTypeEnum.F7,"id,name");
 		proSubItem.setClaz(ProSubItemInfo.class);
 		planItems.getCols().add(proSubItem);
-		
 		ColumnModel proSub = new ColumnModel("proSub",DataTypeEnum.F7,"id,name");
 		proSub.setClaz(ProSubInfo.class);
 		planItems.getCols().add(proSub);
@@ -87,6 +98,62 @@ public class ProjectTotalPlanEditController extends BaseBillEditController{
 		cols.add(planItems);
 		return cols;
 	}
+	
+	protected boolean verifyInput(Object editData) {
+		boolean isOk = super.verifyInput(editData);
+		if(isOk){
+			if(editData!=null&&editData instanceof ProjectTotalPlanInfo){
+				ProjectTotalPlanInfo ptInfo = (ProjectTotalPlanInfo) editData;
+				ProjectInfo project = ptInfo.getProject();
+				if(project==null){
+					isOk = false;
+					setErrorMesg("项目总进度计划中工程项目不能为空!");
+				}else{
+					String hql = "from ProjectTotalPlanInfo where project.id=?";
+					List params = new ArrayList();
+					params.add(project.getId());
+					if(!BaseUtil.isEmpty(ptInfo.getId())){
+						hql+=" and id!=?";
+						params.add(ptInfo.getId());
+					}
+					try{
+						if(projectTotalPlanService.isExist(hql, params.toArray())){
+							isOk = false;
+							setErrorMesg(project.getName()+"已经存在了项目的总进度计划，不允许重复出现!");
+						}
+					}catch(Exception e){
+						isOk = false;
+						e.printStackTrace();
+						setExceptionMesg(e.getMessage());
+					}
+				}
+			}
+		}
+		return isOk;
+	}
+	
+	protected boolean verifyInputSubmit(Object editData) {
+		boolean isOk = super.verifyInputSubmit(editData);
+		if(isOk){
+			if(editData!=null&&editData instanceof ProjectTotalPlanInfo){
+				ProjectTotalPlanInfo ptInfo = (ProjectTotalPlanInfo) editData;
+				Set<ProjectTotalPlanItemInfo> items = ptInfo.getPlanItems();
+				if(items==null||items.size()<=0) {
+					isOk = false;
+					setErrorMesg("项目总进度计划明细不能为空!");
+				}
+			}
+		}
+		return isOk;
+	}
+	
+	@AuthorAnn(doPermission=false)
+	@RequestMapping("/checkRemoveItem")
+	@ResponseBody
+	public WebDataModel checkRemoveItem(){
+		return projectTotalPlanService.checkRemoveItemId(request.getParameter("itemId"));
+	}
+	
 	
 	public Object createNewData() {
 		ProjectTotalPlanInfo proTotalPlanInfo = new ProjectTotalPlanInfo();

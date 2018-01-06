@@ -1,6 +1,7 @@
 package com.myapp.service.ec.stock;
 
 import com.myapp.core.entity.MaterialInfo;
+import com.myapp.core.exception.db.DeleteException;
 import com.myapp.core.exception.db.SaveException;
 import com.myapp.core.exception.db.UpdateException;
 import com.myapp.core.service.base.BaseInterfaceService;
@@ -8,9 +9,11 @@ import com.myapp.entity.ec.basedata.ProjectInfo;
 import com.myapp.entity.ec.purchase.PurchaseContractDetailInfo;
 import com.myapp.entity.ec.purchase.PurchaseStockDetailInfo;
 import com.myapp.entity.ec.stock.StockInfo;
+
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
+
 import java.math.BigDecimal;
 import java.util.List;
 import java.util.Map;
@@ -77,8 +80,9 @@ public class StockService  extends BaseInterfaceService<StockInfo> {
     /**
      * 功能：删除库存信息
      * @param purchaseStockDetailInfo
+     * @throws DeleteException 
      */
-    public void deleteByInStock(PurchaseStockDetailInfo purchaseStockDetailInfo){
+    public void deleteByInStock(PurchaseStockDetailInfo purchaseStockDetailInfo) throws DeleteException{
         String hql = "select stockInfo from StockInfo stockInfo where stockInfo.purchaseStockDetailInfo.id=?";
         StockInfo stockInfo = queryEntity(StockInfo.class,hql,new String[]{purchaseStockDetailInfo.getId()});
         if(stockOutDetailService.isStockOutByStockId(stockInfo)){

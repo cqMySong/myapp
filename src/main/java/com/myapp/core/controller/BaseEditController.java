@@ -33,6 +33,7 @@ import com.myapp.core.enums.BaseMethodEnum;
 import com.myapp.core.enums.BillState;
 import com.myapp.core.enums.DataTypeEnum;
 import com.myapp.core.enums.PermissionTypeEnum;
+import com.myapp.core.exception.db.DeleteException;
 import com.myapp.core.exception.db.QueryException;
 import com.myapp.core.exception.db.SaveException;
 import com.myapp.core.model.ColumnModel;
@@ -108,7 +109,7 @@ public abstract class BaseEditController extends CoreBaseController {
 	protected void storeData(BaseMethodEnum bme,Object editData) throws SaveException{
 	}
 	
-	protected boolean beforeOperate(BaseMethodEnum bme) throws ClassNotFoundException, InstantiationException, IllegalAccessException{
+	protected boolean beforeOperate(BaseMethodEnum bme) throws ClassNotFoundException, InstantiationException, IllegalAccessException, DeleteException{
 		boolean toGo = true;
 		init();
 		if(BaseMethodEnum.ADDNEW.equals(bme)){
@@ -338,7 +339,7 @@ public abstract class BaseEditController extends CoreBaseController {
 		return val;	
 	}
 	
-	private void packageJson2EditData() throws ClassNotFoundException, InstantiationException, IllegalAccessException{
+	private void packageJson2EditData() throws ClassNotFoundException, InstantiationException, IllegalAccessException, DeleteException{
 		String editData_str = request.getParameter("editData");
 		if(BaseUtil.isEmpty(editData_str)) return;
 		Map editData_map = JSONObject.parseObject(editData_str, new HashMap().getClass());

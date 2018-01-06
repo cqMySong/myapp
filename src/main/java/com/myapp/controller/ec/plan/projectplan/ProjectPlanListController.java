@@ -65,13 +65,16 @@ public class ProjectPlanListController extends BasePageListController {
 		hql.append(" ,proSub.name as proSubName,proSubItem.name as proSubItemName");
 		hql.append(" ,a.planBegDate as bd,a.planEndDate as ed,a.planDays as days");
 		hql.append(" ,a.content as content,a.proQty as proQty,a.dutyers as dutyers");
-		hql.append(" ,a.remark as remark");
+		hql.append(" ,proWbs.displayName as proWbsName,a.remark as remark");
 		hql.append(" from ProjectTotalPlanItemInfo as a");
 		hql.append(" inner join a.parent as parent");
 		hql.append(" left outer join parent.project as project");
 		hql.append(" left outer join a.proStructure as proStructure");
+		hql.append(" left outer join a.projectWbs as proWbs");
+		
 		hql.append(" left outer join a.proSub as proSub");
 		hql.append(" left outer join a.proSubItem as proSubItem");
+		
 		hql.append(" where project.id=? and (a.planBegDate <=? ");
 		hql.append(" and a.planEndDate >=?) ");
 		//计划开始日期小于等于统计截止日期  且 计划截止日期大于等于统计开始日期 

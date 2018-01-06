@@ -242,13 +242,13 @@ EditUI.prototype = {
 			var tb = $(dataObj.tableOpt.cusTopToolBar);
 			tb.find('.pull-right>.btn-group>._addRow').click({source:tblEntry},function(e){
 				if(!webUtil.isEmpty(dataObj.addRow)&&$.isFunction(dataObj.addRow)){
-					dataObj.addRow(e.source);
+					dataObj.addRow(e.data.source);
 				}else{
 					var toAdd = true;
 					var tbar = dataObj.toolbar;
 					if(!webUtil.isEmpty(tbar)&&!webUtil.isEmpty(tbar.beforeClick)
 							&&$.isFunction(tbar.beforeClick)){
-						toAdd = tbar.beforeClick('addRow');
+						toAdd = tbar.beforeClick(e.data.source,'addRow');
 					}
 					var rowData = {};
 					if(toAdd){
@@ -276,19 +276,30 @@ EditUI.prototype = {
 			});
 			tb.find('.pull-right>.btn-group>._removeRow').click({source:tblEntry},function(e){
 				if(!webUtil.isEmpty(dataObj.reomveRow)&&$.isFunction(dataObj.reomveRow)){
-					dataObj.reomveRow(e.source);
+					dataObj.reomveRow(e.data.source);
 				}else{
 					var tbar = dataObj.toolbar;
 					var toRemove = true;
 					if(!webUtil.isEmpty(tbar)&&!webUtil.isEmpty(tbar.beforeClick)
 							&&$.isFunction(tbar.beforeClick)){
-						toRemove = tbar.beforeClick('removeRow');
+						toRemove = tbar.beforeClick(e.data.source,'removeRow');
 					}
 					if(toRemove){
-						tblEntry.removeRow(tblEntry.getSelectRow());
-						if(!webUtil.isEmpty(tbar)&&!webUtil.isEmpty(tbar.afterClick)
-								&&$.isFunction(tbar.afterClick)){
-							tbar.afterClick('removeRow',null);
+						var selRows = tblEntry.getSelectRows();
+						if(!webUtil.isEmpty(selRows)){
+							if($.isArray(selRows)){
+								for(var i=selRows.length-1;i>=0;i--){
+									tblEntry.removeRow(selRows[i]);
+								}
+							}else{
+								tblEntry.removeRow(selRows);
+							}
+							if(!webUtil.isEmpty(tbar)&&!webUtil.isEmpty(tbar.afterClick)
+									&&$.isFunction(tbar.afterClick)){
+								tbar.afterClick('removeRow',null);
+							}
+						}else{
+							webUtil.mesg('请先选中对应的数据行，才可以删除!');
 						}
 					}
 				}

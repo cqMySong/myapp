@@ -15,6 +15,7 @@ import com.myapp.core.entity.UserInfo;
 import com.myapp.entity.ec.basedata.ProStructureInfo;
 import com.myapp.entity.ec.basedata.ProSubInfo;
 import com.myapp.entity.ec.basedata.ProSubItemInfo;
+import com.myapp.entity.ec.basedata.ProjectWbsInfo;
 
 /**
  *-----------MySong---------------
@@ -28,8 +29,11 @@ import com.myapp.entity.ec.basedata.ProSubItemInfo;
 @Table(name="t_ec_proWorkPlanItem")
 public class ProjectPlanReportItemInfo extends CoreBaseEntryInfo<ProjectPlanReportInfo> {
 	private ProStructureInfo proStructure;//项目结构
-	private ProSubInfo proSub;//项目分部
-	private ProSubItemInfo proSubItem;//工程分项
+	private ProjectWbsInfo projectWbs;//工程分解结构
+	
+	private ProSubInfo proSub;//项目分部 @作废
+	private ProSubItemInfo proSubItem;//工程分项 @作废
+	
 	private String planContent;//计划内容
 	private Date fillDate;//填报日期
 	private BigDecimal progress;//当前工程完成进度
@@ -132,7 +136,14 @@ public class ProjectPlanReportItemInfo extends CoreBaseEntryInfo<ProjectPlanRepo
 	public void setEndDate(Date endDate) {
 		this.endDate = endDate;
 	}
-	
+	@OneToOne(fetch=FetchType.LAZY)
+	@JoinColumn(name = "fprojectWbsId")
+	public ProjectWbsInfo getProjectWbs() {
+		return projectWbs;
+	}
+	public void setProjectWbs(ProjectWbsInfo projectWbs) {
+		this.projectWbs = projectWbs;
+	}
 	
 	
 	

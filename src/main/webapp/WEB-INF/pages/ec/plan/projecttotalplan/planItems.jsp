@@ -22,9 +22,10 @@ if(proIdObj!=null) projectId = proIdObj.toString();
 		<table id="tblMain">
 			<thead>
 				<tr>
-					<th data-field="proStructure" rowspan="2" data-type="f7" data-formatter="displayName">项目工程结构</th>
-					<th data-field="proSub" rowspan="2"  data-type="f7">项目分部工程</th>
-					<th data-field="proSubItem" rowspan="2" data-type="f7">项目分项结构</th>
+					<th data-field="proStructure" rowspan="2" data-type="f7" data-width="200" data-formatter="displayName" data-align="left">项目工程结构</th>
+					<th data-field="projectWbs" rowspan="2"  data-type="f7" data-width="300" data-formatter="displayName" data-align="left">分解结构</th>
+					<th data-field="proSub" data-visible="false" rowspan="2"  data-type="f7">项目分部工程</th>
+					<th data-field="proSubItem" data-visible="false" rowspan="2" data-type="f7">项目分项结构</th>
 					<th colspan="3">计划</th>
 					<th data-field="content" rowspan="2"   data-type="textarea">工作内容</th>
 					<th data-field="proQty" rowspan="2" >工程量</th>
@@ -51,9 +52,10 @@ if(proIdObj!=null) projectId = proIdObj.toString();
 			<table id="tblSelMain">
 				<thead>
 					<tr>
-						<th data-field="proStructure" rowspan="2" data-type="f7" data-formatter="displayName">项目工程结构</th>
-						<th data-field="proSub" rowspan="2"  data-type="f7">项目分部工程</th>
-						<th data-field="proSubItem" rowspan="2" data-type="f7">项目分项结构</th>
+						<th data-field="proStructure" rowspan="2" data-type="f7" data-formatter="displayName" data-align="left">项目工程结构</th>
+						<th data-field="projectWbs" rowspan="2"  data-type="f7" data-width="300" data-formatter="displayName" data-align="left">分解结构</th>
+						<th data-field="proSub" data-visible="false" rowspan="2"  data-type="f7">项目分部工程</th>
+						<th data-field="proSubItem" data-visible="false" rowspan="2" data-type="f7">项目分项结构</th>
 						<th colspan="3">计划</th>
 						<th data-field="content" rowspan="2"   data-type="textarea">工作内容</th>
 						<th data-field="proQty" rowspan="2" >工程量</th>
@@ -187,7 +189,7 @@ $(document).ready(function() {
 	$('body').layout({applyDefaultStyles: true});
 	
 	if(mutil){
-		var _defEntryTableOpt = {mypagination:false,height:200,sortStable:false};
+		var _defEntryTableOpt = {mypagination:false,height:230,sortStable:false};
 		var thisTblOpt = $.extend(true,{}, _defEntryTableOpt,{updateRow2Body:false,cusTopToolBar:$('#selToolBar')});
 		thisTblOpt.onDblClickRow = dbClick_toRemoveRow;
 		tblSelMain = $('#tblSelMain').myDataTable(thisTblOpt);

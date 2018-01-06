@@ -15,7 +15,6 @@ import org.springframework.web.servlet.ModelAndView;
 
 import com.alibaba.fastjson.JSONObject;
 import com.myapp.core.annotation.AuthorAnn;
-import com.myapp.core.base.setting.SystemConstant;
 import com.myapp.core.enums.DataTypeEnum;
 import com.myapp.core.exception.db.QueryException;
 import com.myapp.core.model.ColumnModel;
@@ -43,7 +42,7 @@ public abstract class BaseF7QueryController extends BasePageListController {
 		return null;
 	}
 	
-	private void pacageDisplayCols(List displayCols,ColumnModel cm){
+	private void packageDisplayCols(List displayCols,ColumnModel cm){
 		DataTypeEnum dte = cm.getDataType();
 		String alias =  cm.getAlias();
 		if(DataTypeEnum.F7.equals(dte)){
@@ -54,11 +53,12 @@ public abstract class BaseF7QueryController extends BasePageListController {
 					String f7Item = formts[i];
 					if(!f7Item.equals("id")){
 						Map colMap = new HashMap();
+						boolean isVisible = showCol(alias+"_"+f7Item);
 						colMap.put("field", alias+"_"+f7Item);
 						colMap.put("type", WebUtil.Web_DataType_text);
 						colMap.put("name", alias_zhs[i]);
-						colMap.put("filter", cm.isQueryFilter());
-						colMap.put("visible", showCol(alias+"_"+f7Item));
+						colMap.put("filter", cm.isQueryFilter()&&isVisible);
+						colMap.put("visible", isVisible);
 						displayCols.add(colMap);
 					}
 				}
@@ -69,7 +69,7 @@ public abstract class BaseF7QueryController extends BasePageListController {
 				DataTypeEnum entrydte = entryCol.getDataType();
 				if(!entryCol.isQueryDisplay()) continue;
 				if(DataTypeEnum.PK.equals(entrydte)) continue;
-				pacageDisplayCols(displayCols,entryCol);
+				packageDisplayCols(displayCols,entryCol);
 			}
 		}else{
 			String type = WebUtil.Web_DataType_text;
@@ -84,12 +84,13 @@ public abstract class BaseF7QueryController extends BasePageListController {
 			}else if(DataTypeEnum.ENUM.equals(dte)){
 				type = WebUtil.Web_DataType_select;
 			}
+			boolean isVisible = showCol(alias);
 			Map colMap = new HashMap();
 			colMap.put("field",alias);
 			colMap.put("type",type);
 			colMap.put("name", cm.getAlias_zh());
-			colMap.put("visible", showCol(alias));
-			colMap.put("filter", cm.isQueryFilter());
+			colMap.put("visible", isVisible);
+			colMap.put("filter", cm.isQueryFilter()&&isVisible);
 			displayCols.add(colMap);
 		}
 	}
@@ -115,7 +116,7 @@ public abstract class BaseF7QueryController extends BasePageListController {
 				DataTypeEnum dte = cm.getDataType();
 				if(!cm.isQueryDisplay()) continue;
 				if(DataTypeEnum.PK.equals(dte)) continue;
-				pacageDisplayCols(displayCols,cm);
+				packageDisplayCols(displayCols,cm);
 			}
 		}
 		String path = request.getServletPath();
@@ -149,9 +150,9 @@ public abstract class BaseF7QueryController extends BasePageListController {
 			init();
 			Criteria query = initQueryCriteria();
 			executeQueryParams(query);
-			Order order = getOrder();
-			if(order!=null){
-				query.addOrder(order);
+			List<Order> orders = getOrders();
+			for(Order order:orders){
+				if(order!=null) query.addOrder(order);
 			}
 			afterQuery(getService().toPageQuery(query, getProjectionList(), getCurPage(), getPageSize()));
 //			data = getService().toPageQuery(query, getProjectionList(), getCurPage(), getPageSize());
@@ -160,6 +161,15 @@ public abstract class BaseF7QueryController extends BasePageListController {
 			setExceptionMesg(e.getMessage());
 		}
 		return ajaxModel();
+	}
+	
+	public List<Order> getOrders(){
+		List<Order> orders = new ArrayList<Order>();
+		Order order = getOrder();
+		if(order!=null){
+			orders.add(order);
+		}
+		return orders;
 	}
 	
 	public void afterQuery(PageModel pm) throws QueryException{

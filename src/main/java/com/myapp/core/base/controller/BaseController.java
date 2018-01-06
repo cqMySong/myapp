@@ -104,7 +104,7 @@ public class BaseController {
     	setMesg(STATUSCODE_INFO,mesg);
     }
     public void setExceptionMesg(String mesg){
-    	setMesg(STATUSCODE_INFO,mesg);
+    	setMesg(STATUSCODE_EXCEPTION,mesg);
     	this.data = null;
     }
     public void setErrorMesg(String mesg){

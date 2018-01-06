@@ -103,13 +103,13 @@ function initGantView(){
 			//alert("data = "+data.label);
 		},
 		leftCols:[
-		          {text:'单位工程',name:'dwgc',algin:'left',width:100},
-		          {text:'分部工程',name:'fbgc',algin:'left',width:100},
-		          {text:'分项工程',name:'fxgc',algin:'left',width:120},
+		          {text:'单位工程',name:'dwgc',algin:'left',width:150},
+		          {text:'分解结构',name:'wbs',algin:'left',width:150},
 		          {text:'具体工作内容',name:'content',type:'textarea',algin:'center',width:150},
 		          {text:'生产情况',name:'item',algin:'center',width:60},
 		          {text:'开始时间',name:'bd',width:70},
 		          {text:'截止时间',name:'ed',width:70},
+		          {text:'进度完成(%)',name:'progress',width:80},
 		          {text:'工程量',name:'proqty',width:50},
 		          {text:'施工人员',name:'sgry',width:80},
 		          {text:'持续天数',name:'days',width:60}

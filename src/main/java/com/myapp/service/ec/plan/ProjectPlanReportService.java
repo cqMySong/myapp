@@ -1,5 +1,6 @@
 package com.myapp.service.ec.plan;
 
+import java.math.BigDecimal;
 import java.util.Date;
 import java.util.Set;
 
@@ -41,9 +42,10 @@ public class ProjectPlanReportService extends BaseInterfaceService<ProjectPlanRe
 						if(ptiInfo.getRealBegDate()==null){
 							ptiInfo.setRealBegDate(bd);
 						}
-						if(ptiInfo.getRealEndDate()==null){
+						if(ed!=null){
 							ptiInfo.setRealEndDate(ed);
 						}
+						ptiInfo.setProgress(itemInfo.getProgress());
 						bsService.saveEntity(ptiInfo);
 					}
 				}

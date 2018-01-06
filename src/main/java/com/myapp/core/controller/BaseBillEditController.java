@@ -8,6 +8,7 @@ import com.myapp.core.annotation.PermissionItemAnn;
 import com.myapp.core.base.entity.CoreBaseBillInfo;
 import com.myapp.core.enums.BaseMethodEnum;
 import com.myapp.core.enums.BillState;
+import com.myapp.core.exception.db.DeleteException;
 import com.myapp.core.exception.db.SaveException;
 import com.myapp.core.model.WebDataModel;
 import com.myapp.core.util.BaseUtil;
@@ -30,7 +31,7 @@ public abstract class BaseBillEditController extends BaseEditController {
 	}
 	protected boolean beforeOperate(BaseMethodEnum bme)
 			throws ClassNotFoundException, InstantiationException,
-			IllegalAccessException {
+			IllegalAccessException, DeleteException {
 		boolean toGo = super.beforeOperate(bme);
 		if(toGo&&(BaseMethodEnum.AUDIT.equals(bme)
 				||BaseMethodEnum.UNAUDIT.equals(bme))){

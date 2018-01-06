@@ -58,7 +58,7 @@
 				<div class="col-sm-12">
 					<div class="input-group">
 						<span class="input-group-addon lable">备注</span>
-						<textarea name="remark" style="height:40px;" class="input-item form-control"></textarea>
+						<textarea name="remark" style="height:70px;" class="input-item form-control"></textarea>
 					</div>
 				</div>
 			</div>
@@ -66,17 +66,23 @@
 			<div class="row mt10">
 				<div class="col-sm-12 " style="border: 1px solid #ddd;">
 					<table name="planItems" class="input-entry" data-opt="{type:'entry',height:430,tableOpt:{editDataChanged:planItems_dataChanged}
-							,toolbar:{title:'项目总计划清单'}}">
+							,toolbar:{title:'项目总计划清单',beforeClick:item_beforeClick}
+							,defRowData:{progress:0}}">
 						<thead>
 							<tr>
-								<th data-field="proStructure" data-width="200" rowspan="2" data-type="f7" data-formatter="displayName" data-locked="true"
-										data-editor="{uiWin:{title:'项目结构',height:600,width:300,url:'ec/basedata/proStructureF7',uiParams:getParams}}">项目工程结构</th>
-								<th data-field="proSub" rowspan="2"  data-type="f7" 
+								<th data-field="proStructure" data-width="200" rowspan="2" data-type="f7" data-formatter="displayName" 
+										data-locked="true" data-align="left"
+										data-editor="{uiWin:{title:'单位工程',height:600,width:300,url:'ec/basedata/proStructureF7',uiParams:getParams}}">单位工程</th>
+								<th data-field="projectWbs" rowspan="2"  data-type="f7" data-width="300" data-formatter="displayName"
+										data-align="left"
+										data-editor="{uiWin:{title:'工程分解结构',height:580,width:750,url:'ec/basedata/proWbsF7',uiParams:getParams}}">分解结构</th>
+										
+								<th data-field="proSub" rowspan="2"  data-type="f7" data-visible="false"
 										data-editor="{uiWin:{title:'项目分部工程',height:550,width:680,url:'ec/basedata/proSubF7',uiParams:getParams}}">项目分部工程</th>
-								<th data-field="proSubItem" rowspan="2" data-type="f7"
+								<th data-field="proSubItem" rowspan="2" data-type="f7" data-visible="false"
 										data-editor="{uiWin:{title:'项目分项工程',height:550,width:680,url:'ec/basedata/proSubItemF7',uiParams:getParams}}">项目分项结构</th>
 								<th colspan="3">计划</th>
-								<th data-field="progress" rowspan="2"  data-type="number">当前进度</th>
+								<th data-field="progress" rowspan="2"  data-type="number" data-locked="true">当前进度</th>
 								<th data-field="content" rowspan="2" data-width="220"  data-type="textarea">工作内容</th>
 								<th data-field="proQty" rowspan="2" >工程量</th>
 								<th data-field="dutyers" rowspan="2" data-type="f7"
@@ -194,6 +200,14 @@
 				proStructure.displayName = newData.proStruct_displayName;
 			}
 			planItemsEntry.setTableCellValue(obj.rowIndex,'proStructure',proStructure);
+		}else if('projectWbs'==obj.field){
+			var newData = obj.rowData[obj.field];
+			var proStructure = {};
+			if(!webUtil.isEmpty(newData)){
+				proStructure.id = newData.proStruct_id;
+				proStructure.displayName = newData.proStruct_displayName;
+			}
+			planItemsEntry.setTableCellValue(obj.rowIndex,'proStructure',proStructure);
 		}
 	}
 	
@@ -234,6 +248,30 @@
 			}
 		}
 	}
+var itemRemoveUrl = "ec/plan/projecttotalplan/checkRemoveItem";
+	function item_beforeClick(table,optName){
+		if(!webUtil.isEmpty(table)){
+			if('removeRow'==optName){
+				var rIndex = table.getSelectRowIndex();
+				if(rIndex>=0){
+					var rowData = table.getRowData(rIndex);
+					if(!webUtil.isEmpty(rowData)){
+						var data = {itemId:rowData.id};
+						var ret = false;
+						webUtil.ajaxData({url:itemRemoveUrl,data:data,async:false,success:function(data){
+							var statusCode = $(data).attr('statusCode');
+							if(0==statusCode){
+								ret = true;
+							}
+						}});
+						return ret;
+					}
+				}
+			}
+		}
+		return true;
+	}
+	
 	$(document).ready(function() {
 		editUI = $('#editPanel').editUI({
 			title : "项目总计划",billModel:2,

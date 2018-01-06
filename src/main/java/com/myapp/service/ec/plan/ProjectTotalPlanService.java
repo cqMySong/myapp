@@ -11,11 +11,16 @@ import java.util.Set;
 import org.springframework.stereotype.Service;
 
 import com.myapp.core.enums.BillState;
+import com.myapp.core.exception.db.DeleteException;
 import com.myapp.core.exception.db.QueryException;
+import com.myapp.core.exception.db.ReadException;
+import com.myapp.core.model.WebDataModel;
 import com.myapp.core.service.base.BaseInterfaceService;
 import com.myapp.core.util.BaseUtil;
 import com.myapp.core.util.DateUtil;
 import com.myapp.core.util.WebUtil;
+import com.myapp.entity.ec.plan.ProjectPlanReportInfo;
+import com.myapp.entity.ec.plan.ProjectPlanReportItemInfo;
 import com.myapp.entity.ec.plan.ProjectTotalPlanInfo;
 
 /**
@@ -37,18 +42,18 @@ public class ProjectTotalPlanService extends BaseInterfaceService<ProjectTotalPl
 	public List getPlanFinishCompareRpt(String proId) throws QueryException{
 		if(BaseUtil.isEmpty(proId)) return null;
 		StringBuffer sb = new StringBuffer();
-		sb.append(" select pte.fid as id,pst.fname as dwgc,ps.fname as fbgc");
-		sb.append(" ,psi.fname as fxgc,pte.fcontent as content");
+		sb.append(" select pte.fid as id,pst.fdisplayName as dwgc,pwb.fdisplayName as wbs");
+		sb.append(" ,pte.fprogress as pprogress,pte.fcontent as content");
 		sb.append(" ,pte.fplanBegDate as bd,pte.fplanEndDate as ed,pte.fproQty as proqty");
 		sb.append(" ,pte.fdutyers as sgry,pte.fplanDays as days");
-		sb.append(" ,rpt.repid as repid,rpt.bd as relbd,rpt.ed as reled");
+		sb.append(" ,rpt.repid as repid,rpt.bd as relbd,rpt.ed as reled,rpt.progress as relprogress");
 		sb.append(" from t_ec_projectTotalPlan as pt");
 		sb.append(" left join t_ec_projectTotalPlanItem as pte on pte.fprentid=pt.fid ");
 		sb.append(" left join t_ec_proStructure as pst on pst.fid=pte.fproStructureId ");
-		sb.append(" left join t_ec_proSub as ps on ps.fid=pte.fproSubId ");
-		sb.append(" left join t_ec_proSubItem as psi on psi.fid=pte.fproSubItemId ");
+		sb.append(" left join t_ec_projectwbs as pwb on pwb.fid = pte.fprojectWbsId");
+		
 		sb.append(" left join (");
-		sb.append("  SELECT a.fPlanItemId as ptid,a.fid as repid,a.fbegDate AS bd,a.fendDate AS ed");
+		sb.append("  SELECT a.fPlanItemId as ptid,a.fid as repid,a.fbegDate AS bd,a.fendDate AS ed,a.fprogress as progress");
 		sb.append("  from t_ec_proWorkPlanItem a,t_ec_proWorkPlanReport b");
 		sb.append("  where a.fprentid = b.fid and b.fBillState =? and b.fprojectId =?");
 		sb.append("  and a.fbegDate is not null and a.fendDate is not null");
@@ -75,8 +80,8 @@ public class ProjectTotalPlanService extends BaseInterfaceService<ProjectTotalPl
 					if(!BaseUtil.isEmpty(pid)&&!planSet.contains(pid)){
 						Map<String,Object> curData = new HashMap<String,Object>();
 						curData.put("dwgc", data.get("dwgc"));
-						curData.put("fbgc", data.get("fbgc"));
-						curData.put("fxgc", data.get("fxgc"));
+						curData.put("wbs", data.get("wbs"));
+						curData.put("progress", data.get("pprogress"));
 						curData.put("content", data.get("content"));
 						curData.put("item", "进度计划");
 						Date bd = obj2Date(data.get("bd"));
@@ -111,7 +116,7 @@ public class ProjectTotalPlanService extends BaseInterfaceService<ProjectTotalPl
 						itemData.put("id",WebUtil.UUID2String2(pid));
 						itemData.put("from",bdStr);
 						itemData.put("to",edStr);
-						itemData.put("percent",-1);
+						itemData.put("percent",data.get("pprogress"));
 						itemData.put("desc",data.get("content"));
 						itemData.put("label",data.get("content"));
 						items.add(itemData);
@@ -119,13 +124,12 @@ public class ProjectTotalPlanService extends BaseInterfaceService<ProjectTotalPl
 						ganttDatas.add(curData);
 						planSet.add(pid);
 					}
-					sb.append(" ,rpt.repid as repid,rpt.bd as relbd,rpt.ed as reled");
 					String repid = (String)data.get("repid");
 					if(!BaseUtil.isEmpty(repid)&&!planSet.contains(repid)){
 						Map<String,Object> curData = new HashMap<String,Object>();
 						curData.put("dwgc", "   ");
-						curData.put("fbgc", "   ");
-						curData.put("fxgc", "   ");
+						curData.put("wbs",  "   ");
+						curData.put("progress", data.get("relprogress"));
 						curData.put("content", "   ");
 						curData.put("item", "实际完成");
 						Date bd = obj2Date(data.get("relbd"));
@@ -142,7 +146,7 @@ public class ProjectTotalPlanService extends BaseInterfaceService<ProjectTotalPl
 						itemData.put("id",WebUtil.UUID2String2(pid));
 						itemData.put("from",bdStr);
 						itemData.put("to",edStr);
-						itemData.put("percent",-1);
+						itemData.put("percent",data.get("relprogress"));
 						itemData.put("desc","  ");
 						itemData.put("label","  ");
 						items.add(itemData);
@@ -191,6 +195,52 @@ public class ProjectTotalPlanService extends BaseInterfaceService<ProjectTotalPl
 		return days;
 	}
 	
+	public WebDataModel checkRemoveItemId(String itemId){
+		WebDataModel wdm = new WebDataModel();
+		wdm.setData(null);
+		int code = 0;
+		String mesg = "";
+		if(!BaseUtil.isEmpty(itemId)){
+			String hql = " from ProjectPlanReportItemInfo where planItemId=?";
+			try{
+				if(isExist(ProjectPlanReportItemInfo.class, hql, new String[]{itemId})){
+					code = -1;
+					mesg = "已经存在了此工作项的工作汇报情况，不允许删除此项的计划!";
+				}
+			}catch(Exception e){
+				code = -1;
+				e.printStackTrace();
+				mesg = "查询检索失败!";
+			}
+		}
+		wdm.setStatusCode(code);
+		wdm.setStatusMesg(mesg);
+		return wdm;
+	}
 	
+	public void deleteEntity(Object entity) throws DeleteException {
+		if(entity!=null&&entity instanceof ProjectTotalPlanInfo){
+			String ptId = ((ProjectTotalPlanInfo)entity).getId();
+			if(!BaseUtil.isEmpty(ptId)){
+				String hql = "from ProjectPlanReportInfo where planInfo.id=?";
+				try{
+					if(isExist(ProjectPlanReportInfo.class, hql, new String[]{ptId})){
+						throw new DeleteException("已经存在了此项目进度计划的工作汇报，不允许删除!");
+					}
+				}catch(QueryException e){
+					e.printStackTrace();
+				}catch(ReadException e){
+					e.printStackTrace();
+				}
+			}
+		}
+		super.deleteEntity(entity);
+	}
 	
+	//列表界面中使用的通过id直接删除：在抽象类删除对象都是要处理成对象的 不如在此就转换成对象 不用反复操作
+	public void deleteEntity(String id) throws DeleteException {
+		if(!BaseUtil.isEmpty(id)){
+			deleteEntity(getEntity(id));
+		}
+	}
 }

@@ -38,6 +38,12 @@
 		<div class="row mt10">
 			<div class="col-sm-4">
 				<div class="input-group">
+					<span class="input-group-addon lable">公司资质</span>
+					<input name="aptitude" class="require input-item form-control require"/>
+				</div>
+			</div>
+			<div class="col-sm-4">
+				<div class="input-group">
 					<span class="input-group-addon lable">合同金额</span>
 					<input name="amount" class="require input-item form-control require" type="number" />
 				</div>
@@ -48,10 +54,26 @@
 					<input type="text" name="contractDate" class="form-control input-item require" data-opt="{type:'date'}">
 				</div>
 			</div>
+		</div>
+		<div class="row mt10">
 			<div class="col-sm-4">
 				<div class="input-group">
 					<span class="input-group-addon lable">负责人</span>
-					<input name="director" class="input-item form-control require"/>
+					<input name="directorName" class="input-item form-control require"/>
+				</div>
+			</div>
+			<div class="col-sm-4">
+				<div class="input-group">
+					<span class="input-group-addon lable">联系电话</span>
+					<input name="directorTel" class="input-item form-control require"/>
+				</div>
+			</div>
+			<div class="col-sm-4">
+				<div class="input-group">
+					<span class="input-group-addon lable">付款方式</span>
+					<select name="paymentMethod" data-opt="{type:'select',selected:'ADVANCE',url:'base/common/combox?enum=com.myapp.core.enums.PaymentMethod'}"
+							class="form-control input-item require">
+					</select>
 				</div>
 			</div>
 		</div>
@@ -163,7 +185,7 @@
     }
     $(document).ready(function() {
         editUI = $('#editPanel').editUI({
-            title : "工程合同",billModel:2,
+            title : "分包合同",billModel:2,
             baseUrl : "ec/engineering/subcontract",
             toolbar : "#table-toolbar",
             form : {

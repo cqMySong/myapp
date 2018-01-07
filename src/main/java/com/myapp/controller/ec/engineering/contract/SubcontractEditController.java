@@ -54,6 +54,9 @@ public class SubcontractEditController extends BaseBillEditController {
         cols.add(new ColumnModel("treatyContents"));
         cols.add(new ColumnModel("amount",DataTypeEnum.NUMBER));
         cols.add(new ColumnModel("director"));
+        cols.add(new ColumnModel("directorTel",DataTypeEnum.STRING));
+        cols.add(new ColumnModel("aptitude",DataTypeEnum.STRING));
+        cols.add(new ColumnModel("paymentMethod",DataTypeEnum.ENUM,PaymentMethod.class));
         cols.add(new ColumnModel("contractDate",DataTypeEnum.DATE));
         cols.add(new ColumnModel("subcontractExpenseType", DataTypeEnum.ENUM,SubcontractExpenseType.class));
         cols.add(new ColumnModel("billState",DataTypeEnum.ENUM, BillState.class));

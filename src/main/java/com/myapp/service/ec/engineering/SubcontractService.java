@@ -1,12 +1,18 @@
 package com.myapp.service.ec.engineering;
 
+import com.myapp.core.exception.db.QueryException;
 import com.myapp.core.exception.db.SaveException;
+import com.myapp.core.model.PageModel;
 import com.myapp.core.service.base.BaseInterfaceService;
+import com.myapp.core.util.BaseUtil;
 import com.myapp.entity.ec.engineering.SubcontractInfo;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
 
 /**
  * @path：com.myapp.service.ec.engineering
@@ -60,5 +66,35 @@ public class SubcontractService extends BaseInterfaceService<SubcontractInfo> {
         subcontractInfo.setBalanceAmount(subcontractInfo.getBalanceAmount()
                 .subtract(changeAmount));
         super.saveEntity(subcontractInfo);
+    }
+
+
+    /**
+     * 功能：劳务分包登记备案台帐
+     * @param curPage
+     * @param pageSize
+     * @param params
+     * @return
+     * @throws QueryException
+     */
+    public PageModel queryArtificialContractLedger(Integer curPage, Integer pageSize, Map<String,Object> params)
+            throws QueryException {
+        List<Object> paramList = new ArrayList<>();
+        StringBuffer sql = new StringBuffer();
+        sql.append("select b.fname as unitName,a.fTreatyContents as treatyContents,")
+                .append("a.fDirectorName as directorName,a.fDirectorTel as directorTel,")
+                .append("a.fAptitude as aptitude ")
+                .append("from t_ec_subcontract a,t_ec_ecUnit b ")
+                .append("where a.fEcUnitId = b.fId and a.fSubcontractExpenseType = 'ARTIFICIAL' and a.fProjectId=? ");
+        paramList.add(params.get("projectId"));
+        if(!BaseUtil.isEmpty(params.get("unitName"))){
+            sql.append("and b.fname like ? ");
+            paramList.add("%"+params.get("unitName")+"%");
+        }
+        if(!BaseUtil.isEmpty(params.get("directorName"))){
+            sql.append("and a.fdirectorName like ? ");
+            paramList.add("%"+params.get("directorName")+"%");
+        }
+        return toPageSqlQuery(curPage,pageSize,sql.toString(),paramList.toArray());
     }
 }

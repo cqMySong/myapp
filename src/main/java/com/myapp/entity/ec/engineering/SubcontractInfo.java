@@ -3,6 +3,7 @@ package com.myapp.entity.ec.engineering;
 import com.myapp.core.annotation.MyEntityAnn;
 import com.myapp.core.base.entity.CoreBaseBillInfo;
 import com.myapp.core.enums.ExpenseType;
+import com.myapp.core.enums.PaymentMethod;
 import com.myapp.core.enums.SubcontractExpenseType;
 import com.myapp.entity.ec.basedata.ECUnitInfo;
 import com.myapp.entity.ec.basedata.ProjectInfo;
@@ -48,6 +49,18 @@ public class SubcontractInfo extends CoreBaseBillInfo {
      * 负责人姓名
      */
     private String directorName;
+    /**
+     * 负责人联系电话
+     */
+    private String directorTel;
+    /**
+     * 资质
+     */
+    private String aptitude;
+    /**
+     * 付款方式
+     */
+    private PaymentMethod paymentMethod;
     /**
      * 合同内容
      */
@@ -157,5 +170,32 @@ public class SubcontractInfo extends CoreBaseBillInfo {
 
     public void setSubcontractExpenseType(SubcontractExpenseType subcontractExpenseType) {
         this.subcontractExpenseType = subcontractExpenseType;
+    }
+
+    @Column(name="fDirectorTel",length = 50)
+    public String getDirectorTel() {
+        return directorTel;
+    }
+
+    public void setDirectorTel(String directorTel) {
+        this.directorTel = directorTel;
+    }
+
+    @Column(name="fAptitude",length = 100)
+    public String getAptitude() {
+        return aptitude;
+    }
+
+    public void setAptitude(String aptitude) {
+        this.aptitude = aptitude;
+    }
+    @Column(name="fPaymentMethod",length = 20)
+    @Type(type="myEnum",parameters={@org.hibernate.annotations.Parameter(name="enumClass",value="com.myapp.core.enums.PaymentMethod")})
+    public PaymentMethod getPaymentMethod() {
+        return paymentMethod;
+    }
+
+    public void setPaymentMethod(PaymentMethod paymentMethod) {
+        this.paymentMethod = paymentMethod;
     }
 }

@@ -2,8 +2,10 @@ package com.myapp.controller.ec.basedata.weather;
 
 import com.alibaba.fastjson.JSON;
 import com.myapp.core.annotation.PermissionAnn;
+import com.myapp.core.annotation.PermissionItemAnn;
 import com.myapp.core.base.service.impl.AbstractBaseService;
 import com.myapp.core.controller.BasePageListController;
+import com.myapp.core.enums.PermissionTypeEnum;
 import com.myapp.core.exception.db.QueryException;
 import com.myapp.core.exception.db.SaveException;
 import com.myapp.core.model.WebDataModel;
@@ -32,6 +34,7 @@ public class WeatherController extends BasePageListController {
     @Resource
     private WeatherService  weatherService;
 
+    @PermissionItemAnn(name="查看",number="onload",type= PermissionTypeEnum.PAGE)
     @RequestMapping("/list")
     public ModelAndView analysisList(){
         Map params = new HashMap();

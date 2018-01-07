@@ -1,0 +1,111 @@
+package com.myapp.entity.ec.stock;
+
+import com.myapp.core.annotation.MyEntityAnn;
+import com.myapp.core.base.entity.CoreBaseBillInfo;
+import com.myapp.core.entity.MaterialInfo;
+import com.myapp.core.entity.MeasureUnitInfo;
+import com.myapp.entity.ec.basedata.ProjectInfo;
+
+import javax.persistence.*;
+import java.math.BigDecimal;
+import java.util.Date;
+
+/**
+ * @path：com.myapp.entity.ec.stock
+ * @description：材料周转、租用归还信息
+ * @author： ly
+ * @date: 2018-01-06 23:56
+ */
+@Entity
+@MyEntityAnn(name="材料周转、租用归还信息")
+@Table(name="t_ec_material_back")
+public class MaterialLeaseBackInfo extends CoreBaseBillInfo {
+    /**
+     * 项目工程
+     */
+    private ProjectInfo project;
+
+    private MaterialLeaseInfo materialLeaseInfo;
+
+    /**
+     * 材料信息
+     */
+    private MaterialInfo materialInfo;
+    /**
+     * 单位
+     */
+    private MeasureUnitInfo measureUnitInfo;
+
+    private Date backDate;
+
+    private BigDecimal backCount;
+
+    private String remark;
+
+    @OneToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "fProjectId")
+    public ProjectInfo getProject() {
+        return project;
+    }
+
+    public void setProject(ProjectInfo project) {
+        this.project = project;
+    }
+
+    @OneToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "fMaterialLeaseId")
+    public MaterialLeaseInfo getMaterialLeaseInfo() {
+        return materialLeaseInfo;
+    }
+
+    public void setMaterialLeaseInfo(MaterialLeaseInfo materialLeaseInfo) {
+        this.materialLeaseInfo = materialLeaseInfo;
+    }
+
+    @Column(name="fBackDate")
+    public Date getBackDate() {
+        return backDate;
+    }
+
+    public void setBackDate(Date backDate) {
+        this.backDate = backDate;
+    }
+
+    @Column(name="fBackCount",precision = 10,scale = 2)
+    public BigDecimal getBackCount() {
+        return backCount;
+    }
+
+    public void setBackCount(BigDecimal backCount) {
+        this.backCount = backCount;
+    }
+
+    @Column(name="fRemark",length = 500)
+    public String getRemark() {
+        return remark;
+    }
+
+    public void setRemark(String remark) {
+        this.remark = remark;
+    }
+
+    @OneToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "fMaterialId")
+    public MaterialInfo getMaterialInfo() {
+        return materialInfo;
+    }
+
+    public void setMaterialInfo(MaterialInfo materialInfo) {
+        this.materialInfo = materialInfo;
+    }
+
+    @OneToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "fMeasureUnitId")
+    public MeasureUnitInfo getMeasureUnitInfo() {
+        return measureUnitInfo;
+    }
+
+    public void setMeasureUnitInfo(MeasureUnitInfo measureUnitInfo) {
+        this.measureUnitInfo = measureUnitInfo;
+    }
+}

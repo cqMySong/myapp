@@ -2,11 +2,13 @@ package com.myapp.controller.ec.engineering.payment;
 
 import com.alibaba.fastjson.JSONObject;
 import com.myapp.core.annotation.PermissionAnn;
+import com.myapp.core.annotation.PermissionItemAnn;
 import com.myapp.core.base.service.impl.AbstractBaseService;
 import com.myapp.core.controller.BasePageListController;
 import com.myapp.core.enums.BaseMethodEnum;
 import com.myapp.core.enums.DataTypeEnum;
 import com.myapp.core.enums.ExpenseType;
+import com.myapp.core.enums.PermissionTypeEnum;
 import com.myapp.core.exception.db.QueryException;
 import com.myapp.core.model.ColumnModel;
 import com.myapp.core.model.WebDataModel;
@@ -40,6 +42,7 @@ public class SubContractLedgerListController extends BasePageListController {
     @Resource
     private SubContractPaymentService subContractPaymentService;
 
+    @PermissionItemAnn(name="查看",number="onload",type= PermissionTypeEnum.PAGE)
     @RequestMapping("/list")
     public ModelAndView analysisList(){
         Map params = new HashMap();

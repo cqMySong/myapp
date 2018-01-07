@@ -2,8 +2,10 @@ package com.myapp.controller.ec.purchase.apply;
 
 import com.alibaba.fastjson.JSONObject;
 import com.myapp.core.annotation.PermissionAnn;
+import com.myapp.core.annotation.PermissionItemAnn;
 import com.myapp.core.base.service.impl.AbstractBaseService;
 import com.myapp.core.controller.BasePageListController;
+import com.myapp.core.enums.PermissionTypeEnum;
 import com.myapp.core.model.WebDataModel;
 import com.myapp.core.util.BaseUtil;
 import com.myapp.service.ec.purchase.ApplyMaterialService;
@@ -22,13 +24,14 @@ import java.util.Map;
  * @author： ly
  * @date: 2017-11-19 14:58
  */
-@PermissionAnn(name="系统管理.现场管理.采购管理.供应台账",number="app.ec.purchase.supplyledger")
+@PermissionAnn(name="系统管理.现场管理.采购管理.材料申购、供应台账",number="app.ec.purchase.supplyledger")
 @Controller
 @RequestMapping("ec/purchase/supplyledger")
 public class SupplyLedgerListController extends BasePageListController {
     @Resource
     private ApplyMaterialService applyMaterialService;
 
+    @PermissionItemAnn(name="查看",number="onload",type= PermissionTypeEnum.PAGE)
     @RequestMapping("/list")
     public ModelAndView analysisList(){
         Map params = new HashMap();

@@ -1,58 +1,46 @@
-package com.myapp.controller.ec.settle;
+package com.myapp.controller.ec.stock.lease;
 
 import com.alibaba.fastjson.JSONObject;
 import com.myapp.core.annotation.PermissionAnn;
 import com.myapp.core.annotation.PermissionItemAnn;
 import com.myapp.core.base.service.impl.AbstractBaseService;
-import com.myapp.core.controller.BaseListController;
 import com.myapp.core.controller.BasePageListController;
-import com.myapp.core.enums.BaseMethodEnum;
-import com.myapp.core.enums.DataTypeEnum;
-import com.myapp.core.enums.ExpenseType;
 import com.myapp.core.enums.PermissionTypeEnum;
 import com.myapp.core.exception.db.QueryException;
-import com.myapp.core.model.ColumnModel;
 import com.myapp.core.model.WebDataModel;
 import com.myapp.core.util.BaseUtil;
-import com.myapp.core.util.WebUtil;
-import com.myapp.service.ec.settle.MaterialSettleDetailService;
-import com.myapp.service.ec.settle.MaterialSettleService;
-import org.hibernate.Criteria;
-import org.hibernate.criterion.Order;
-import org.hibernate.criterion.Restrictions;
+import com.myapp.service.ec.stock.MaterialLeaseService;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
 import javax.annotation.Resource;
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 /**
- * @path：com.myapp.controller.ec.settle
- * @description：材设结算一览表
- * @author ： ly
- * @date: 2017-08-28 21:02
+ * @path：com.myapp.controller.ec.engineering.sitevisaout
+ * @description：周转材料、设备使用（租用）一览表
+ * @author： ly
+ * @date: 2018-01-06 10:57
  */
-@PermissionAnn(name="系统管理.现场管理.结算管理.材设结算一览表",number="app.ec.settle.materialsettleledger")
+@PermissionAnn(name="系统管理.现场管理.库存管理.设备使用（租用）一览表",number="app.ec.stock.leaseledger")
 @Controller
-@RequestMapping("ec/settle/materialsettleledgers")
-public class MaterialSettleLedgerListController extends BasePageListController {
+@RequestMapping("ec/stock/leaseledger")
+public class MaterialLeaseLedgerListController extends BasePageListController {
     @Resource
-    private MaterialSettleService materialSettleService;
+    private MaterialLeaseService materialLeaseService;
 
     @PermissionItemAnn(name="查看",number="onload",type= PermissionTypeEnum.PAGE)
     @RequestMapping("/list")
     public ModelAndView analysisList(){
         Map params = new HashMap();
-        return toPage("ec/settle/material/materialSettleLedgerList", params);
+        return toPage("ec/stock/lease/leaseLedgerList", params);
     }
     @Override
     public AbstractBaseService getService() {
-        return this.materialSettleService;
+        return this.materialLeaseService;
     }
 
     @RequestMapping(value="/query")
@@ -73,13 +61,13 @@ public class MaterialSettleLedgerListController extends BasePageListController {
             if(searchMap!=null&&searchMap.get("endDate")!=null){
                 params.put("endDate",searchMap.get("endDate"));
             }
-            if(searchMap!=null&&searchMap.get("supplyCompany")!=null){
-                params.put("supplyCompany",searchMap.get("supplyCompany"));
+            if(searchMap!=null&&searchMap.get("leaseUnit")!=null){
+                params.put("leaseUnit",searchMap.get("leaseUnit"));
             }
         }
         params.put("projectId",projectId);
         try {
-            this.data = materialSettleService.queryMaterialSettleLedger(getCurPage(),getPageSize(),params);
+            this.data = materialLeaseService.queryLeaseLedger(getCurPage(),getPageSize(),params);
         } catch (QueryException e) {
             e.printStackTrace();
         }

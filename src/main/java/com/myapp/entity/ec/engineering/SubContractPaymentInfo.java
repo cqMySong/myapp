@@ -83,7 +83,7 @@ public class SubContractPaymentInfo extends CoreBaseBillInfo {
     }
 
     @OneToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "fEngineeringContractId")
+    @JoinColumn(name = "fSubcontracId")
     public SubcontractInfo getSubcontractInfo() {
         return subcontractInfo;
     }

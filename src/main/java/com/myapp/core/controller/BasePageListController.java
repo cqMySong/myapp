@@ -1,22 +1,38 @@
 package com.myapp.core.controller;
 
+import java.net.URLEncoder;
 import java.util.ArrayList;
-import java.util.HashMap;
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
+import org.apache.poi.ss.usermodel.Workbook;
 import org.hibernate.Criteria;
+import org.hibernate.criterion.Order;
 import org.hibernate.criterion.ProjectionList;
 import org.hibernate.criterion.Projections;
 import org.hibernate.criterion.Restrictions;
+import org.springframework.http.MediaType;
+import org.springframework.web.bind.annotation.RequestMapping;
 
+import cn.afterturn.easypoi.excel.ExcelExportUtil;
+import cn.afterturn.easypoi.excel.entity.ExportParams;
+import cn.afterturn.easypoi.excel.entity.params.ExcelExportEntity;
+
+import com.myapp.core.annotation.AuthorAnn;
+import com.myapp.core.annotation.PermissionItemAnn;
 import com.myapp.core.base.dao.MyResultTransFormer;
-import com.myapp.core.base.enums.MyEnum;
 import com.myapp.core.base.setting.SystemConstant;
 import com.myapp.core.enums.DataTypeEnum;
+import com.myapp.core.enums.FileType;
 import com.myapp.core.exception.db.QueryException;
 import com.myapp.core.model.ColumnModel;
+import com.myapp.core.model.PageModel;
 import com.myapp.core.util.BaseUtil;
+import com.myapp.core.util.DateUtil;
 import com.myapp.core.util.EnumUtil;
 
 /**
@@ -108,4 +124,78 @@ public abstract class BasePageListController extends CoreBaseController {
 			}
 		}
 	}
+	public String[] getBooleanReplace(){
+		return new String[]{"是_true","否_false"};
+	}
+	public void executeQueryParams(Criteria query) {
+		
+	}
+	
+	public List<Order> getOrders(){
+		return new ArrayList<Order>();
+	}
+	public String getHeadTitle(){
+		return "信息表";
+	}
+	public String getSecondTitle(){
+		return getCurUser().getName()+" "+DateUtil.formatDate(new Date())+" 制表";
+	}
+	public String getSheetName(){
+		return getHeadTitle();
+	}
+	
+	public String getFileName() {
+		return getHeadTitle();
+	}
+	
+	public ExportParams getExportParams() {
+		return new ExportParams(getHeadTitle(),getSecondTitle(), getSheetName());
+	}
+	
+	@AuthorAnn(doLongin=true,doPermission=false)
+	@RequestMapping(value="/export",produces= MediaType.APPLICATION_OCTET_STREAM_VALUE)
+    public void export(HttpServletRequest request,HttpServletResponse response){
+    	FileType fileType = getExportType();
+    	if(fileType!=null&&FileType.EXCEL.equals(fileType)){
+    		try{
+    			ExportParams params = getExportParams();
+        		List<ExcelExportEntity> headers = getExportHeader();
+        		if(params!=null&&headers!=null&&headers.size()>0){
+        			List<Map<String, Object>> datas = getExportData();
+        			if(datas==null){
+        				init();
+        				Criteria query = initQueryCriteria();
+        				executeQueryParams(query);
+        				List<Order> orders = getOrders();
+        				if(query!=null&&orders!=null&&orders.size()>0){
+        					for(Order order:orders){
+        						query.addOrder(order);
+        					}
+        				}
+        				String pgsize = request.getParameter("pageSize");
+            			int pages = -1;
+            			if(!BaseUtil.isEmpty(pgsize)){
+            				pages = Integer.valueOf(pgsize);
+            			}
+            			PageModel pm = getService().toPageQuery(query, getProjectionList(), getCurPage(), pages);
+            			datas = pm.getDatas();
+        			}
+        			if(datas==null) datas = new ArrayList<Map<String, Object>>();
+        			if(datas!=null){
+        				Workbook workbook = ExcelExportUtil.exportExcel(params, headers, datas); 
+        				String fileName = getFileName();
+        				if(BaseUtil.isEmpty(fileName)) fileName = "数据导出";
+        				fileName =  new String(fileName.getBytes("gb2312"),"iso8859-1")+".xls";
+        				response.setHeader("content-Type", "application/vnd.ms-excel");
+        				response.setHeader("Content-Disposition", "attachment;filename=" + fileName);
+        				response.setCharacterEncoding("UTF-8");
+        				workbook.write(response.getOutputStream());
+        			}
+        		}
+    		}catch (Exception e) {
+    			e.printStackTrace();
+    			setExceptionMesg(e.getMessage());
+    		}
+    	}
+    }
 }

@@ -1,6 +1,7 @@
 package com.myapp.core.base.controller;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
@@ -9,11 +10,17 @@ import javax.servlet.http.HttpServletResponse;
 import org.apache.log4j.LogManager;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.MediaType;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.ModelAndView;
+
+import cn.afterturn.easypoi.excel.entity.ExportParams;
+import cn.afterturn.easypoi.excel.entity.params.ExcelExportEntity;
 
 import com.myapp.core.base.setting.SystemConstant;
 import com.myapp.core.entity.UserInfo;
 import com.myapp.core.enums.BaseMethodEnum;
+import com.myapp.core.enums.FileType;
 import com.myapp.core.model.MyWebContext;
 import com.myapp.core.model.WebDataModel;
 import com.myapp.core.util.BaseUtil;
@@ -159,5 +166,22 @@ public class BaseController {
     	return null;
     }
     
+    public FileType getExportType(){
+    	return FileType.EXCEL;
+    }
     
+    public List<ExcelExportEntity> getExportHeader(){
+    	return null;
+    }
+    
+    public ExportParams getExportParams(){
+    	return null;
+    }
+    
+    public List<Map<String, Object>> getExportData(){
+    	return null;
+    }
+    public String getFileName(){
+    	return "文档";
+    }
 }

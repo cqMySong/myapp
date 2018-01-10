@@ -1,9 +1,13 @@
 package com.myapp.core.controller;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
+
+import cn.afterturn.easypoi.excel.entity.ExportParams;
+import cn.afterturn.easypoi.excel.entity.params.ExcelExportEntity;
 
 import com.myapp.core.annotation.PermissionItemAnn;
 import com.myapp.core.base.entity.CoreBaseDataInfo;
@@ -29,6 +33,24 @@ public abstract class BaseDataListController extends BaseListController {
 		cols.add(new ColumnModel("enabled"));
 		cols.add(new ColumnModel("remark"));
 		return cols;
+	}
+	
+	public String getHeadTitle() {
+		return "基础资料信息";
+	}
+	
+	public List<ExcelExportEntity> getExportHeader() {
+		List<ExcelExportEntity> entity = new ArrayList<ExcelExportEntity>();
+		entity.add(new ExcelExportEntity("编码", "number"));
+		entity.add(new ExcelExportEntity("名称", "name",80));
+		ExcelExportEntity enabled = new ExcelExportEntity("启用", "enabled");
+		enabled.setReplace(getBooleanReplace());
+		entity.add(enabled);
+		ExcelExportEntity remark = new ExcelExportEntity("备注", "remark");
+		remark.setWidth(100);
+		remark.setWrap(true);
+		entity.add(remark);
+		return entity;
 	}
 	
 	@PermissionItemAnn(name="启用",number="enable")

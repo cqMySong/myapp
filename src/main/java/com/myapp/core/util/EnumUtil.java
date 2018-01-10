@@ -68,20 +68,36 @@ public class EnumUtil {
 		return null;
 	}
 	
+	public static String[] enum2Strs(String enum_str){
+		String els = "";
+		Object[] enum_obj = getEnums(enum_str);
+		if(enum_obj!=null&&enum_obj.length>0){
+			for(Object item:enum_obj){
+				if(item instanceof MyEnum){
+					MyEnum me = (MyEnum) item;
+					if(!BaseUtil.isEmpty(els)) els+=",";
+					els+=me.getName()+"_"+me.getValue();
+				}
+			}
+		}
+		return els.split(",");
+	}
+	
 	
 	
 	public static void main(String[] args){
-		Object[] objs = getEnums(Sex.class.getName());
-		for(Object sx:objs){
-			if(sx instanceof Enum){
-				Enum sse  = (Enum) sx;
-				System.out.println(sse.name()+" = "+sse.valueOf(Sex.class, sse.name()));
-			}
-		}
-		Object obj = getEnum(Sex.class.getName(),"WOMAN");
-		if(obj instanceof MyEnum){
-			MyEnum me = (MyEnum)obj;
-			System.out.println(me.getName()+" == "+me.getValue());
-		}
+		System.out.println(enum2Strs(Sex.class.getName()).length);
+//		Object[] objs = getEnums(Sex.class.getName());
+//		for(Object sx:objs){
+//			if(sx instanceof Enum){
+//				Enum sse  = (Enum) sx;
+//				System.out.println(sse.name()+" = "+sse.valueOf(Sex.class, sse.name()));
+//			}
+//		}
+//		Object obj = getEnum(Sex.class.getName(),"WOMAN");
+//		if(obj instanceof MyEnum){
+//			MyEnum me = (MyEnum)obj;
+//			System.out.println(me.getName()+" == "+me.getValue());
+//		}
 	}
 }

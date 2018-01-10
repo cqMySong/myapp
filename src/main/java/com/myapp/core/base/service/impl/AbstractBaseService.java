@@ -290,6 +290,7 @@ public abstract class AbstractBaseService implements IAbstractBaseService {
 	public PageModel toPageQuery(Criteria query,ProjectionList pList,Integer curPage, Integer pageSize){
 		if(query==null) return null;
 		long rowCount = ((Long)query.setProjection(Projections.rowCount()).uniqueResult()).longValue();
+		if(pageSize!=null&&pageSize.intValue()==-1) pageSize = Integer.valueOf(rowCount+"");
 		PageModel pm = new PageModel(curPage, pageSize, rowCount);
 		if(pList!=null){
 			query.setProjection(pList);

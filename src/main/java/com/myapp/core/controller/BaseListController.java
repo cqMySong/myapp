@@ -113,6 +113,7 @@ public abstract class BaseListController extends BasePageListController {
 	}
 
 	public void executeQueryParams(Criteria query) {
+		super.executeQueryParams(query);
 		String serach = request.getParameter("search");
 		if(!BaseUtil.isEmpty(serach)){
 			Map searchMap = JSONObject.parseObject(serach, new HashMap().getClass());
@@ -258,7 +259,7 @@ public abstract class BaseListController extends BasePageListController {
 	}
 	
 	public List<Order> getOrders(){
-		List<Order> orders = new ArrayList<Order>();
+		List<Order> orders = super.getOrders();
 		orders.add(getOrder());
 		return orders;
 	}

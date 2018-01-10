@@ -14,6 +14,8 @@ import org.hibernate.criterion.Restrictions;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 
+import cn.afterturn.easypoi.excel.entity.params.ExcelExportEntity;
+
 import com.alibaba.fastjson.JSONObject;
 import com.myapp.core.annotation.PermissionAnn;
 import com.myapp.core.base.service.impl.AbstractBaseService;
@@ -100,5 +102,49 @@ public class MainMenuListController extends BaseTreeListController {
 	}
 	public AbstractBaseService getTreeService() {
 		return mainMenuService;
+	}
+	
+	public String getHeadTitle() {
+		return "系统菜单";
+	}
+	
+	public List<ExcelExportEntity> getExportHeader() {
+		List<ExcelExportEntity> entity = new ArrayList<ExcelExportEntity>();
+		entity.add(new ExcelExportEntity("编码", "number"));
+		entity.add(new ExcelExportEntity("名称", "name"));
+		entity.add(new ExcelExportEntity("地址", "url"));
+		entity.add(new ExcelExportEntity("参数", "params"));
+		ExcelExportEntity iconType = new ExcelExportEntity("图标类型", "iconType");
+		iconType.setGroupName("图标");
+		iconType.setOrderNum(1);
+		iconType.setReplace(EnumUtil.enum2Strs(IconType.class.getName()));
+		entity.add(iconType);
+		ExcelExportEntity iconCodeType = new ExcelExportEntity("图标代码类型", "iconCodeType");
+		iconCodeType.setGroupName("图标");
+		iconCodeType.setOrderNum(2);
+		iconCodeType.setReplace(EnumUtil.enum2Strs(IconCodeType.class.getName()));
+		entity.add(iconCodeType);
+		ExcelExportEntity icon = new ExcelExportEntity("图标类", "icon");
+		icon.setGroupName("图标");
+		icon.setOrderNum(3);
+		entity.add(icon);
+		
+		ExcelExportEntity sysMenu = new ExcelExportEntity("系统菜单", "sysMenu");
+		sysMenu.setReplace(getBooleanReplace());
+		entity.add(sysMenu);
+		ExcelExportEntity onShow = new ExcelExportEntity("显示", "onShow");
+		onShow.setReplace(getBooleanReplace());
+		entity.add(onShow);
+		ExcelExportEntity menuOpenType = new ExcelExportEntity("打开方式", "menuOpenType");
+		menuOpenType.setReplace(EnumUtil.enum2Strs(MenuOpenType.class.getName()));
+		entity.add(menuOpenType);
+		entity.add(new ExcelExportEntity("上级编码", "parent_number"));
+		entity.add(new ExcelExportEntity("上级名称", "parent_name"));
+		ExcelExportEntity remark = new ExcelExportEntity("备注", "remark");
+		remark.setWidth(80);
+		remark.setWrap(true);
+		remark.setOrderNum(4);
+		entity.add(remark);
+		return entity;
 	}
 }

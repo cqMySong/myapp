@@ -26,7 +26,7 @@ var ListUI = function(el,options){
 			 editWin:{title:'^~^',openType:'WIN',url:'',maxmin:false,width:800,height:600,callBack:undefined,btns:null},
 			 pageSize :20,curPage :1,listData:undefined,btns:undefined,pagination:true,listModel:0,
 			 extendTableOptions:undefined,totalPages:0,queryColumn:undefined,
-			 search:true,searchParams:undefined
+			 search:true,searchParams:undefined,toExport:true,exportUrl:undefined
 	};
 	this.options = $.extend(true,{},_Def_listUI, options);
 	this.options.editWin.title = '<i class="fa fa-windows"></i>&nbsp;'+this.options.editWin.title;
@@ -67,6 +67,13 @@ var ListUI = function(el,options){
 		btng.addBtn(toDoBtnGroup({text:'修改',icon:"fa fa-edit",clickFun:this.edit}));
 		btng.addBtn(toDoBtnGroup({text:'删除',icon:"fa fa-trash",clickFun:this.remove}));
 		btng.addBtn(toDoBtnGroup({text:'刷新',icon:"fa fa-refresh",clickFun:this.refresh}));
+		if(this.options.toExport){
+			if(webUtil.isEmpty(this.options.exportUrl)){
+				this.options.exportUrl = this.options.baseUrl+'/export';
+			}
+			btng.addBtn(toDoBtnGroup({text:'导出',icon:"fa fa-file-excel-o",clickFun:this.toExport}));
+		}
+		
 		btng.addBtn(toDoBtnGroup({text:'附件管理',icon:"fa fa-paperclip",clickFun:this.attach}));
 		btng.addBtn(toDoBtnGroup({text:'查询',icon:"fa fa-filter",clickFun:this.query}));
 	}
@@ -304,6 +311,25 @@ ListUI.prototype = {
 		var $thisList = btn.owerObj;
 		$thisList.executeQuery();
 	},
+	toExport:function(btn){
+		var $thisList = btn.owerObj;
+		var opts = $thisList.options;
+		var exportUrl = opts.exportUrl;
+		if(!webUtil.isEmpty(exportUrl)){
+			exportUrl = webUtil.toUrl(exportUrl);
+			var dataParams = opts.searchParams;
+			if(!webUtil.isEmpty(dataParams)){
+				if($.isFunction(opts.searchParams)){
+					dataParams = opts.searchParams();
+				}
+				if($.isPlainObject(dataParams)){
+					dataParams = 'search='+webUtil.json2Str(dataParams);
+				}
+				exportUrl +=(exportUrl.indexOf('?')>0?'&':'?')+encodeURI(dataParams);
+			}
+			$("#_tempIf").attr('src',exportUrl);
+		}
+	},
 	query:function(btn){
 		var $obj = btn.owerObj;
 		if($obj){
@@ -385,10 +411,7 @@ function afterAction(opt){
 }
 
 $(document).ready(function(){
-	
+	$("#_tempIf").attr('src',"");
 })
 </script>
-
-
-
-
+<iframe id="_tempIf" width=0 height=0 marginheight=0 marginwidth=0 scrolling=no src="" style="display: none;"></iframe>

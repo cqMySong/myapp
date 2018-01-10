@@ -15,6 +15,8 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.ModelAndView;
 
+import cn.afterturn.easypoi.excel.entity.params.ExcelExportEntity;
+
 import com.alibaba.fastjson.JSONObject;
 import com.myapp.core.annotation.PermissionAnn;
 import com.myapp.core.base.service.impl.AbstractBaseService;
@@ -103,4 +105,26 @@ public class OrgListController extends BaseTreeListController {
 	public AbstractBaseService getTreeService() {
 		return orgService;
 	}
+	
+	public String getHeadTitle() {
+		return "组织机构";
+	}
+	
+	public List<ExcelExportEntity> getExportHeader() {
+		List<ExcelExportEntity> entity = new ArrayList<ExcelExportEntity>();
+		entity.add(new ExcelExportEntity("编码", "number"));
+		entity.add(new ExcelExportEntity("名称", "name"));
+		ExcelExportEntity orgType = new ExcelExportEntity("组织类型", "orgType");
+		orgType.setReplace(EnumUtil.enum2Strs(OrgTypeEnum.class.getName()));
+		entity.add(orgType);
+		entity.add(new ExcelExportEntity("简码", "shortCode"));
+		entity.add(new ExcelExportEntity("上级编码", "parent_number"));
+		entity.add(new ExcelExportEntity("上级名称", "parent_name"));
+		ExcelExportEntity remark = new ExcelExportEntity("备注", "remark");
+		remark.setWidth(80);
+		remark.setWrap(true);
+		entity.add(remark);
+		return entity;
+	}
+	
 }

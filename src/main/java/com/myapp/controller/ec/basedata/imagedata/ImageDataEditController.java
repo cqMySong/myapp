@@ -11,10 +11,7 @@ import com.myapp.core.enums.ImageDataType;
 import com.myapp.core.exception.db.QueryException;
 import com.myapp.core.model.ColumnModel;
 import com.myapp.core.util.WebUtil;
-import com.myapp.entity.ec.basedata.ImageDataInfo;
-import com.myapp.entity.ec.basedata.ProBatchTestInfo;
-import com.myapp.entity.ec.basedata.ProStructureInfo;
-import com.myapp.entity.ec.basedata.ProjectInfo;
+import com.myapp.entity.ec.basedata.*;
 import com.myapp.entity.ec.labour.LabourEnterInfo;
 import com.myapp.service.ec.basedata.ImageDataService;
 import com.myapp.service.ec.labour.LabourEnterService;
@@ -68,6 +65,9 @@ public class ImageDataEditController extends BaseEditController {
 		proBatchTest.setClaz(ProBatchTestInfo.class);
 		cols.add(proBatchTest);
 
+		ColumnModel proBaseWbs = new ColumnModel("proBaseWbs",DataTypeEnum.F7,"id,name");
+		proBaseWbs.setClaz(ProBaseWbsInfo.class);
+		cols.add(proBaseWbs);
 		return cols;
 	}
 	@Override

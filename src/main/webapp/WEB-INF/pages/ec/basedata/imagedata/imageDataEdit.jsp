@@ -48,6 +48,22 @@
 			<div class="row">
 				<div class="col-sm-6">
 					<div class="input-group">
+						<span class="input-group-addon lable">分部分项</span>
+						<input name="proBaseWbs" class="input-item form-control"
+							   data-opt="{type:'f7',uiWin:{title:'分项工程',height:560,width:800,url:'ec/basedata/proBaseWbsF7',uiParams:proBaseWbsParam}}" />
+					</div>
+				</div>
+				<div class="col-sm-6 mb15">
+					<div class="input-group">
+						<span class="input-group-addon lable">检验批</span>
+						<input name="proBatchTest" class="input-item form-control"
+							   data-opt="{type:'f7',dataChange:proBatchTestChange,uiWin:{title:'项目检验批',height:580,width:800,url:'ec/basedata/proBatchTestF7',uiParams:proBatchTestParam}}" />
+					</div>
+				</div>
+			</div>
+			<div class="row">
+				<div class="col-sm-6">
+					<div class="input-group">
 						<span class="input-group-addon lable">资料类型</span>
 						<select name="imageDataType" data-opt="{type:'select',selected:'IMAGE',url:'base/common/combox?enum=com.myapp.core.enums.ImageDataType'}"
 								class="form-control input-item require">
@@ -102,7 +118,23 @@
 		pro.projectId = $('input[name="project"]').myF7().getValue();
 		return pro;
 	}
-
+	function proBatchTestChange(oldVal,newVal){
+		if(newVal){
+		    console.log(newVal);
+            $('input[name="proBaseWbs"]').myF7().setData({id:newVal.proBaseWbs_id,name:newVal.proBaseWbs_displayName});
+		}
+	}
+	function proBaseWbsParam() {
+        var pro = {};
+        pro.projectId = $('input[name="project"]').myF7().getValue();
+        return pro;
+    }
+	function proBatchTestParam() {
+        var pro = {};
+        pro.projectId = $('input[name="project"]').myF7().getValue();
+        pro.proBaseWbs = $('input[name="proBaseWbs"]').myF7().getValue();
+        return pro;
+    }
 	$(document).ready(function() {
 		var editUI = $('#editPanel').editUI({
 			title : "工程影像资料",

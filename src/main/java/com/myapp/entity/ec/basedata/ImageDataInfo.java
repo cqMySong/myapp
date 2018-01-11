@@ -27,6 +27,10 @@ public class ImageDataInfo extends CoreBaseInfo {
      */
     private ProStructureInfo proStructure;
     /**
+     *分部分项工程
+     */
+    private ProBaseWbsInfo proBaseWbs;
+    /**
      * 项目级别检验批划分
      */
     private ProBatchTestInfo proBatchTest;
@@ -111,5 +115,15 @@ public class ImageDataInfo extends CoreBaseInfo {
 
     public void setRemark(String remark) {
         this.remark = remark;
+    }
+
+    @OneToOne(fetch= FetchType.LAZY)
+    @JoinColumn(name = "fProBaseWbsId")
+    public ProBaseWbsInfo getProBaseWbs() {
+        return proBaseWbs;
+    }
+
+    public void setProBaseWbs(ProBaseWbsInfo proBaseWbs) {
+        this.proBaseWbs = proBaseWbs;
     }
 }

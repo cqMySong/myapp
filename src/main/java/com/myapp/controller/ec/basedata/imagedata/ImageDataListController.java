@@ -9,6 +9,7 @@ import com.myapp.core.enums.DataTypeEnum;
 import com.myapp.core.enums.ImageDataType;
 import com.myapp.core.model.ColumnModel;
 import com.myapp.core.util.BaseUtil;
+import com.myapp.entity.ec.basedata.ProBaseWbsInfo;
 import com.myapp.entity.ec.basedata.ProBatchTestInfo;
 import com.myapp.entity.ec.basedata.ProStructureInfo;
 import com.myapp.entity.ec.basedata.ProjectInfo;
@@ -54,6 +55,7 @@ public class ImageDataListController extends BaseListController {
 		cols.add(new ColumnModel("createUser",DataTypeEnum.F7,UserInfo.class));
 		cols.add(new ColumnModel("proBatchTest",DataTypeEnum.F7,ProBatchTestInfo.class));
 		cols.add(new ColumnModel("proStructure",DataTypeEnum.F7,ProStructureInfo.class));
+		cols.add(new ColumnModel("proBaseWbs",DataTypeEnum.F7,ProBaseWbsInfo.class));
 		cols.add(new ColumnModel("createDate",DataTypeEnum.DATE));
 		return cols;
 	}
@@ -72,6 +74,8 @@ public class ImageDataListController extends BaseListController {
 				if(type!=null&&idObj!=null){
 					if("project".equals(type.toString())){
 						se = Restrictions.eq("project.id", idObj.toString());
+					}else if("proStructure".equals(type.toString())){
+						se = Restrictions.eq("proStructure.id", idObj.toString());
 					}
 				}
 			}

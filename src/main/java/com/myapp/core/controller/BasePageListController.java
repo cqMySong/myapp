@@ -161,6 +161,9 @@ public abstract class BasePageListController extends CoreBaseController {
     			ExportParams params = getExportParams();
         		List<ExcelExportEntity> headers = getExportHeader();
         		if(params!=null&&headers!=null&&headers.size()>0){
+        			for(int i=0;i<headers.size();i++ ){
+        				headers.get(i).setOrderNum(i+1);
+        			}
         			List<Map<String, Object>> datas = getExportData();
         			if(datas==null){
         				init();

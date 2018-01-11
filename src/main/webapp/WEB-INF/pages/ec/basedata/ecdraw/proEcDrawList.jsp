@@ -25,7 +25,7 @@
 						 <thead >
 							<tr>
 								<th data-field="project_name">工程项目</th>
-								<th data-field="group_displayName" data-width="350" data-align="left">分部分项工程</th>
+								<th data-field="group_displayName" data-width="350" data-align="left">资料目录</th>
 								<th data-field="number">编码</th>
 								<th data-field="name">名称</th>
 								<th data-field="attachs">附件</th>

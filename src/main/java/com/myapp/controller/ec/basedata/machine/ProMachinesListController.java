@@ -1,5 +1,6 @@
 package com.myapp.controller.ec.basedata.machine;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -12,6 +13,8 @@ import org.hibernate.criterion.SimpleExpression;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 
+import cn.afterturn.easypoi.excel.entity.params.ExcelExportEntity;
+
 import com.alibaba.fastjson.JSONObject;
 import com.myapp.core.annotation.PermissionAnn;
 import com.myapp.core.base.service.impl.AbstractBaseService;
@@ -19,7 +22,9 @@ import com.myapp.core.controller.BaseListController;
 import com.myapp.core.enums.DataTypeEnum;
 import com.myapp.core.model.ColumnModel;
 import com.myapp.core.util.BaseUtil;
+import com.myapp.core.util.EnumUtil;
 import com.myapp.entity.ec.basedata.ProjectInfo;
+import com.myapp.enums.ec.LetterType;
 import com.myapp.service.ec.basedata.ProMachinesService;
 
 /**
@@ -80,5 +85,19 @@ public class ProMachinesListController extends BaseListController {
 	public String getListUrl() {
 		return "ec/basedata/machine/proMachinesList";
 	}
-
+	
+	public String getHeadTitle() {
+		return "现场施工机械一览表";
+	}
+	
+	public List<ExcelExportEntity> getExportHeader() {
+		List<ExcelExportEntity> entitys = new ArrayList<ExcelExportEntity>();
+		entitys.add(new ExcelExportEntity("工程项目", "project_name"));
+		entitys.add(new ExcelExportEntity("机械编码", "number"));
+		entitys.add(new ExcelExportEntity("机械名称", "name"));
+		entitys.add(new ExcelExportEntity("操作人员", "operator"));
+		entitys.add(new ExcelExportEntity("维修人员", "maintenancer"));
+		entitys.add(new ExcelExportEntity("验收情况", "checkContent"));
+		return entitys;
+	}
 }

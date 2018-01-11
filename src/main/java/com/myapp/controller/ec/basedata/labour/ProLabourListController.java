@@ -1,5 +1,6 @@
 package com.myapp.controller.ec.basedata.labour;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -12,6 +13,8 @@ import org.hibernate.criterion.SimpleExpression;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 
+import cn.afterturn.easypoi.excel.entity.params.ExcelExportEntity;
+
 import com.alibaba.fastjson.JSONObject;
 import com.myapp.core.annotation.PermissionAnn;
 import com.myapp.core.base.service.impl.AbstractBaseService;
@@ -20,6 +23,7 @@ import com.myapp.core.enums.DataTypeEnum;
 import com.myapp.core.enums.Sex;
 import com.myapp.core.model.ColumnModel;
 import com.myapp.core.util.BaseUtil;
+import com.myapp.core.util.EnumUtil;
 import com.myapp.core.util.WebUtil;
 import com.myapp.entity.ec.basedata.ProjectInfo;
 import com.myapp.entity.ec.basedata.WorkTypeInfo;
@@ -87,5 +91,29 @@ public class ProLabourListController extends BaseListController {
 	public String getListUrl() {
 		return "ec/basedata/labour/proLabourList";
 	}
+	public String getHeadTitle() {
+		return "项目劳务人员备案表";
+	}
+	
+	public List<ExcelExportEntity> getExportHeader() {
+		List<ExcelExportEntity> entitys = new ArrayList<ExcelExportEntity>();
+		entitys.add(new ExcelExportEntity("工程项目", "project_name"));
+		entitys.add(new ExcelExportEntity("工号", "number"));
+		entitys.add(new ExcelExportEntity("姓名", "name"));
+		entitys.add(new ExcelExportEntity("身份证号", "idCard",20));
+		ExcelExportEntity sex = new ExcelExportEntity("性别", "sex");
+		sex.setReplace(EnumUtil.enum2Strs(Sex.class.getName()));
+		entitys.add(sex);
+		entitys.add(new ExcelExportEntity("年龄", "age"));
+		entitys.add(new ExcelExportEntity("工种", "workType_name"));
+		ExcelExportEntity joinDate = new ExcelExportEntity("进场时间", "joinDate");
+		joinDate.setFormat("yyyy-MM-dd");
+		entitys.add(joinDate);
+		ExcelExportEntity addr = new ExcelExportEntity("地址", "addr");
+		addr.setWidth(80);
+		entitys.add(addr);
+		return entitys;
+	}
+	
 
 }

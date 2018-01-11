@@ -1,5 +1,7 @@
 package com.myapp.controller.ec.basedata.meetingsummary;
 
+import cn.afterturn.easypoi.excel.entity.params.ExcelExportEntity;
+
 import com.alibaba.fastjson.JSONObject;
 import com.myapp.core.annotation.PermissionAnn;
 import com.myapp.core.base.service.impl.AbstractBaseService;
@@ -14,12 +16,15 @@ import com.myapp.entity.ec.basedata.ProjectInfo;
 import com.myapp.enums.UnitType;
 import com.myapp.service.ec.basedata.ECUnitService;
 import com.myapp.service.ec.basedata.MeetingSummaryService;
+
 import org.hibernate.Criteria;
 import org.hibernate.criterion.Restrictions;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import javax.annotation.Resource;
+
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -80,6 +85,25 @@ public class MeetingSummaryListController extends BaseListController {
 		project.setClaz(ProjectInfo.class);
 		cols.add(project);
 		return cols;
+	}
+	
+	public String getHeadTitle() {
+		return "会议纪要";
+	}
+	
+	public List<ExcelExportEntity> getExportHeader() {
+		List<ExcelExportEntity> entitys = new ArrayList<ExcelExportEntity>();
+		entitys.add(new ExcelExportEntity("工程项目", "project_name"));
+		entitys.add(new ExcelExportEntity("纪要编码", "number"));
+		entitys.add(new ExcelExportEntity("纪要名称", "name"));
+		ExcelExportEntity meetingDate = new ExcelExportEntity("记录时间", "meetingDate");
+		meetingDate.setFormat("yyyy-MM-dd");
+		entitys.add(meetingDate);
+		ExcelExportEntity content = new ExcelExportEntity("纪要内容", "content");
+		content.setWidth(80);
+		content.setWrap(true);
+		entitys.add(content);
+		return entitys;
 	}
 
 

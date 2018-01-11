@@ -6,7 +6,6 @@ import java.util.List;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import cn.afterturn.easypoi.excel.entity.ExportParams;
 import cn.afterturn.easypoi.excel.entity.params.ExcelExportEntity;
 
 import com.myapp.core.annotation.PermissionItemAnn;
@@ -42,12 +41,12 @@ public abstract class BaseDataListController extends BaseListController {
 	public List<ExcelExportEntity> getExportHeader() {
 		List<ExcelExportEntity> entity = new ArrayList<ExcelExportEntity>();
 		entity.add(new ExcelExportEntity("编码", "number"));
-		entity.add(new ExcelExportEntity("名称", "name",80));
+		entity.add(new ExcelExportEntity("名称", "name"));
 		ExcelExportEntity enabled = new ExcelExportEntity("启用", "enabled");
 		enabled.setReplace(getBooleanReplace());
 		entity.add(enabled);
 		ExcelExportEntity remark = new ExcelExportEntity("备注", "remark");
-		remark.setWidth(100);
+		remark.setWidth(80);
 		remark.setWrap(true);
 		entity.add(remark);
 		return entity;

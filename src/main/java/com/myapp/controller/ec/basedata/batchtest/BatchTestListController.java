@@ -14,14 +14,18 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import cn.afterturn.easypoi.excel.entity.params.ExcelExportEntity;
+
 import com.alibaba.fastjson.JSONObject;
 import com.myapp.core.annotation.PermissionAnn;
 import com.myapp.core.base.service.impl.AbstractBaseService;
 import com.myapp.core.controller.BaseDataListController;
 import com.myapp.core.enums.DataTypeEnum;
+import com.myapp.core.enums.MenuOpenType;
 import com.myapp.core.model.ColumnModel;
 import com.myapp.core.model.WebDataModel;
 import com.myapp.core.util.BaseUtil;
+import com.myapp.core.util.EnumUtil;
 import com.myapp.entity.ec.basedata.BatchTestInfo;
 import com.myapp.entity.ec.basedata.ProBaseWbsInfo;
 import com.myapp.service.ec.basedata.BatchTestService;
@@ -39,7 +43,7 @@ public class BatchTestListController extends BaseDataListController {
 	}
 	public List<ColumnModel> getDataBinding() {
 		List<ColumnModel> cols = super.getDataBinding();
-		cols.add(new ColumnModel("proBaseWbs",DataTypeEnum.F7,ProBaseWbsInfo.class));
+		cols.add(new ColumnModel("proBaseWbs",DataTypeEnum.F7,ProBaseWbsInfo.class,"id,name,displayName"));
 		cols.add(new ColumnModel("content"));
 		return cols;
 	}
@@ -89,6 +93,21 @@ public class BatchTestListController extends BaseDataListController {
 
 	public String getListUrl() {
 		return "ec/basedata/batchtest/batchTestList";
+	}
+	
+	public String getHeadTitle() {
+		return "检验批划分标准";
+	}
+	public List<ExcelExportEntity> getExportHeader() {
+		List<ExcelExportEntity> entitys = super.getExportHeader();
+		ExcelExportEntity proBaseWbs = new ExcelExportEntity("分部分项工程", "proBaseWbs_displayName");
+		entitys.add(0,proBaseWbs);
+		
+		ExcelExportEntity content = new ExcelExportEntity("划分标准", "content");
+		content.setWrap(true);
+		content.setWidth(60);
+		entitys.add(3,content);
+		return entitys;
 	}
 
 }

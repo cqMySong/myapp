@@ -1,5 +1,6 @@
 package com.myapp.controller.ec.basedata.letter;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -12,14 +13,18 @@ import org.hibernate.criterion.SimpleExpression;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 
+import cn.afterturn.easypoi.excel.entity.params.ExcelExportEntity;
+
 import com.alibaba.fastjson.JSONObject;
 import com.myapp.core.annotation.PermissionAnn;
 import com.myapp.core.base.service.impl.AbstractBaseService;
 import com.myapp.core.controller.BaseListController;
 import com.myapp.core.entity.UserInfo;
 import com.myapp.core.enums.DataTypeEnum;
+import com.myapp.core.enums.Sex;
 import com.myapp.core.model.ColumnModel;
 import com.myapp.core.util.BaseUtil;
+import com.myapp.core.util.EnumUtil;
 import com.myapp.entity.ec.basedata.ProjectInfo;
 import com.myapp.enums.ec.LetterType;
 import com.myapp.service.ec.basedata.ProExchangeLetterService;
@@ -84,6 +89,33 @@ public class ProExchangeLetterListController extends BaseListController {
 
 	public String getListUrl() {
 		return "ec/basedata/letter/proExchangeLetterList";
+	}
+	
+	public String getHeadTitle() {
+		return "项目往来单位函件";
+	}
+	
+	public List<ExcelExportEntity> getExportHeader() {
+		List<ExcelExportEntity> entitys = new ArrayList<ExcelExportEntity>();
+		entitys.add(new ExcelExportEntity("工程项目", "project_name"));
+		entitys.add(new ExcelExportEntity("编码", "number"));
+		entitys.add(new ExcelExportEntity("主题", "name"));
+		ExcelExportEntity type = new ExcelExportEntity("函件类别", "type");
+		type.setReplace(EnumUtil.enum2Strs(LetterType.class.getName()));
+		entitys.add(type);
+		entitys.add(new ExcelExportEntity("发文单位", "dispatchUnit"));
+		ExcelExportEntity dispatchDage = new ExcelExportEntity("发文时间", "dispatchDage");
+		dispatchDage.setFormat("yyyy-MM-dd");
+		entitys.add(dispatchDage);
+		entitys.add(new ExcelExportEntity("收文单位", "receivedUnit"));
+		ExcelExportEntity receivedDate = new ExcelExportEntity("发文时间", "receivedDate");
+		receivedDate.setFormat("yyyy-MM-dd");
+		entitys.add(receivedDate);
+		entitys.add(new ExcelExportEntity("制单人", "createUser_name"));
+		ExcelExportEntity createDate = new ExcelExportEntity("制单时间", "createDate");
+		createDate.setFormat("yyyy-MM-dd");
+		entitys.add(createDate);
+		return entitys;
 	}
 
 }

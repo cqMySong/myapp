@@ -1,5 +1,6 @@
 package com.myapp.controller.ec.basedata.batchtest;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -11,6 +12,8 @@ import org.hibernate.criterion.Restrictions;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
+
+import cn.afterturn.easypoi.excel.entity.params.ExcelExportEntity;
 
 import com.alibaba.fastjson.JSONObject;
 import com.myapp.core.annotation.AuthorAnn;
@@ -90,6 +93,27 @@ public class ProBatchTestListController extends BaseListController {
 			setErrorMesg(e.getMessage());
 		}
 		return ajaxModel();
+	}
+	
+	public String getHeadTitle() {
+		return "项目检验批划分";
+	}
+	public List<ExcelExportEntity> getExportHeader() {
+		List<ExcelExportEntity> entitys = new ArrayList<ExcelExportEntity>();
+		entitys.add(new ExcelExportEntity("工程项目", "project_name"));
+		ExcelExportEntity proBaseWbs = new ExcelExportEntity("分部分项工程", "proBaseWbs_displayName");
+		entitys.add(proBaseWbs);
+		entitys.add(new ExcelExportEntity("编码", "number"));
+		entitys.add(new ExcelExportEntity("名称", "name"));
+		ExcelExportEntity content = new ExcelExportEntity("划分标准", "content");
+		content.setWrap(true);
+		content.setWidth(60);
+		entitys.add(content);
+		ExcelExportEntity remark = new ExcelExportEntity("备注", "remark");
+		remark.setWidth(80);
+		remark.setWrap(true);
+		entitys.add(remark);
+		return entitys;
 	}
 
 }

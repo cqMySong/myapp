@@ -39,7 +39,7 @@
 <%@include file="../../../base/base_treelist.jsp"%>
 <script type="text/javascript">
 function doLayout(){
-	webUtil.mesg('后期修改重新统一布局界面高宽!');
+	
 }
 var thisOrgList ;
 var includeChild;

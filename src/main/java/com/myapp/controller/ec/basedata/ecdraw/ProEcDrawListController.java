@@ -1,5 +1,6 @@
 package com.myapp.controller.ec.basedata.ecdraw;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -11,6 +12,8 @@ import org.hibernate.criterion.Restrictions;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
+
+import cn.afterturn.easypoi.excel.entity.params.ExcelExportEntity;
 
 import com.alibaba.fastjson.JSONObject;
 import com.myapp.core.annotation.AuthorAnn;
@@ -89,5 +92,17 @@ public class ProEcDrawListController extends BaseListController {
 		}
 		return ajaxModel();
 	}
-
+	public String getHeadTitle() {
+		return "项目施工图";
+	}
+	public List<ExcelExportEntity> getExportHeader() {
+		List<ExcelExportEntity> entitys = new ArrayList<ExcelExportEntity>();
+		entitys.add(new ExcelExportEntity("工程项目", "project_name"));
+		ExcelExportEntity group = new ExcelExportEntity("资料目录", "group_displayName");
+		group.setWidth(80);
+		entitys.add(group);
+		entitys.add(new ExcelExportEntity("编码", "number"));
+		entitys.add(new ExcelExportEntity("名称", "name"));
+		return entitys;
+	}
 }

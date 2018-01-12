@@ -14,6 +14,8 @@ import org.hibernate.criterion.SimpleExpression;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 
+import cn.afterturn.easypoi.excel.entity.params.ExcelExportEntity;
+
 import com.alibaba.fastjson.JSONObject;
 import com.myapp.core.annotation.PermissionAnn;
 import com.myapp.core.base.service.impl.AbstractBaseService;
@@ -22,7 +24,9 @@ import com.myapp.core.entity.UserInfo;
 import com.myapp.core.enums.DataTypeEnum;
 import com.myapp.core.model.ColumnModel;
 import com.myapp.core.util.BaseUtil;
+import com.myapp.core.util.EnumUtil;
 import com.myapp.entity.ec.basedata.ProjectInfo;
+import com.myapp.enums.ec.LetterType;
 import com.myapp.service.ec.basedata.OnDutyRecordService;
 
 /**
@@ -92,5 +96,18 @@ public class OnDutyRecordListController extends BaseListController {
 	public String getListUrl() {
 		return "ec/basedata/ondutyrecord/onDutyRecordList";
 	}
-
+	
+	public String getHeadTitle() {
+		return "安保值班记录";
+	}
+	
+	public List<ExcelExportEntity> getExportHeader() {
+		List<ExcelExportEntity> entitys = new ArrayList<ExcelExportEntity>();
+		entitys.add(stringEntity("工程项目", "project_name"));
+		entitys.add(dateEntity("值班时间", "dutyDate"));
+		entitys.add(dateEntity("计划值班人员", "planDutyor"));
+		entitys.add(dateEntity("实际值班人员", "realDutyor"));
+		entitys.add(remarkEntity("交接事项", "content"));
+		return entitys;
+	}
 }

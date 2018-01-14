@@ -102,7 +102,6 @@ public class ProLabourListController extends BaseListController {
 		entitys.add(new ExcelExportEntity("姓名", "name"));
 		entitys.add(new ExcelExportEntity("身份证号", "idCard",20));
 		ExcelExportEntity sex = new ExcelExportEntity("性别", "sex");
-		sex.setReplace(EnumUtil.enum2Strs(Sex.class.getName()));
 		entitys.add(sex);
 		entitys.add(new ExcelExportEntity("年龄", "age"));
 		entitys.add(new ExcelExportEntity("工种", "workType_name"));

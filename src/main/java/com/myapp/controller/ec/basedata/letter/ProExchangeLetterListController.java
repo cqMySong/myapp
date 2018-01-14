@@ -101,7 +101,6 @@ public class ProExchangeLetterListController extends BaseListController {
 		entitys.add(new ExcelExportEntity("编码", "number"));
 		entitys.add(new ExcelExportEntity("主题", "name"));
 		ExcelExportEntity type = new ExcelExportEntity("函件类别", "type");
-		type.setReplace(EnumUtil.enum2Strs(LetterType.class.getName()));
 		entitys.add(type);
 		entitys.add(new ExcelExportEntity("发文单位", "dispatchUnit"));
 		ExcelExportEntity dispatchDage = new ExcelExportEntity("发文时间", "dispatchDage");

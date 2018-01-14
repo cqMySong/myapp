@@ -19,6 +19,8 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import cn.afterturn.easypoi.excel.entity.params.ExcelExportEntity;
+
 import com.alibaba.fastjson.JSONObject;
 import com.myapp.core.annotation.AuthorAnn;
 import com.myapp.core.annotation.PermissionAnn;
@@ -34,6 +36,7 @@ import com.myapp.core.util.EnumUtil;
 import com.myapp.entity.ec.basedata.StructTypeInfo;
 import com.myapp.enums.IndustryType;
 import com.myapp.enums.ProjectState;
+import com.myapp.enums.ec.ProWbsType;
 import com.myapp.service.ec.basedata.ProjectService;
 
 /**
@@ -131,5 +134,27 @@ public class ProjectListController extends BaseListController {
 	}
 	public String getListUrl() {
 		return "ec/basedata/project/projectList";
+	}
+	
+	public String getHeadTitle() {
+		return "工程项目";
+	}
+	
+	public List<ExcelExportEntity> getExportHeader() {
+		List<ExcelExportEntity> entitys = new ArrayList<ExcelExportEntity>();
+		entitys.add(stringEntity("项目编码", "number"));
+		entitys.add(stringEntity("项目名称", "name"));
+		entitys.add(stringEntity("工程分类", "industryType"));
+		entitys.add(stringEntity("项目状态", "proState"));
+		entitys.add(stringEntity("所属组织", "org_name"));
+		entitys.add(stringEntity("项目地址", "address"));
+		entitys.add(stringEntity("项目规模", "scale"));
+		entitys.add(stringEntity("建筑高度(m)", "eavesHeight"));
+		entitys.add(stringEntity("层高(m)", "floorHeight"));
+		entitys.add(stringEntity("结构类型", "structTypes"));
+		entitys.add(stringEntity("占地面积", "area"));
+		entitys.add(stringEntity("抗震等级", "aseismicLevel"));
+		entitys.add(remarkEntity("备注", "remark"));
+		return entitys;
 	}
 }

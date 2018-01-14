@@ -1,6 +1,5 @@
 package com.myapp.core.controller;
 
-import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -23,13 +22,13 @@ import cn.afterturn.easypoi.excel.entity.ExportParams;
 import cn.afterturn.easypoi.excel.entity.params.ExcelExportEntity;
 
 import com.myapp.core.annotation.AuthorAnn;
-import com.myapp.core.annotation.PermissionItemAnn;
 import com.myapp.core.base.dao.MyResultTransFormer;
 import com.myapp.core.base.setting.SystemConstant;
 import com.myapp.core.enums.DataTypeEnum;
 import com.myapp.core.enums.FileType;
 import com.myapp.core.exception.db.QueryException;
 import com.myapp.core.model.ColumnModel;
+import com.myapp.core.model.KeyValueModel;
 import com.myapp.core.model.PageModel;
 import com.myapp.core.util.BaseUtil;
 import com.myapp.core.util.DateUtil;
@@ -46,7 +45,7 @@ import com.myapp.core.util.EnumUtil;
 public abstract class BasePageListController extends CoreBaseController {
 	private Integer curPage;
 	private Integer pageSize;
-	
+	public boolean toDoData = false;
 	public Integer getCurPage() {
 		String cpage = request.getParameter("curPage");
 		if(!BaseUtil.isEmpty(cpage)){
@@ -74,7 +73,27 @@ public abstract class BasePageListController extends CoreBaseController {
 	public void setPageSize(Integer pageSize) {
 		this.pageSize = pageSize;
 	}
-	
+	public List<ColumnModel> getPackageDataCol(){
+		List<ColumnModel> cols = getDataBinding();
+		List<ColumnModel> toDoCols = new ArrayList<ColumnModel>(); 
+		for(ColumnModel cm:cols){
+			DataTypeEnum dte = cm.getDataType();
+			if(dte.equals(DataTypeEnum.MUTILF7)&&cm.getClaz()!=null){
+				toDoCols.add(cm);
+			}else if((DataTypeEnum.ENUM.equals(dte)||DataTypeEnum.MUTILENUM.equals(dte))
+					&&cm.getClaz()!=null){
+				toDoCols.add(cm);
+			}
+		}
+		return toDoCols;
+	}
+	public void packageDatas(List datas) throws QueryException{
+		if(datas==null||datas.size()<=0) return;
+		List<ColumnModel> cms = getPackageDataCol();
+		if(cms!=null&&cms.size()>0){
+			packageListDataColumns(datas, cms);
+		}
+	}
 	public void packageListDataColumns(List datas ,List<ColumnModel> cms) throws QueryException{
 		if(datas!=null&&datas.size()>0&&cms!=null&&cms.size()>0){
 			for(int i=0;i<datas.size();i++){
@@ -105,20 +124,55 @@ public abstract class BasePageListController extends CoreBaseController {
 					}
 					query.setProjection(props);
 					query.setResultTransformer(new MyResultTransFormer(cm.getClaz()));
-					row.put(key, query.list());
+					List list = query.list();
+					if(toDoData){
+						String keyDatas = "";
+						if(list!=null&&list.size()>0){
+							for(int i=0;i<list.size();i++){
+								Object objItem = list.get(i);
+								if(objItem!=null&&objItem instanceof Map){
+									Map objMap = (Map) objItem;
+									Object objVal = objMap.get("name");
+									if(objVal==null) objVal = objMap.get("number");
+									if(objVal!=null){
+										if(!BaseUtil.isEmpty(keyDatas)) keyDatas +=",";
+										keyDatas +=objVal.toString();
+									}
+								}
+							}
+						}
+						row.put(key,keyDatas);
+					}else{
+						row.put(key,list);
+					}
 				}else if((DataTypeEnum.ENUM.equals(dte)||DataTypeEnum.MUTILENUM.equals(dte))
 						&&cm.getClaz()!=null){
 					String enClazName = cm.getClaz().getName();
 					boolean isMutil = DataTypeEnum.MUTILENUM.equals(dte);
 					if(isMutil){
 						String[] ems = objval.toString().split(",");
+						String name = "";
 						List emList = new ArrayList();
 						for(String em:ems){
-							emList.add(EnumUtil.getEnumItemKv(enClazName,em));
+							KeyValueModel kvm = EnumUtil.getEnumItemKv(enClazName,em);
+							emList.add(kvm);
+							if(toDoData&&kvm!=null){
+								if(!BaseUtil.isEmpty(name)) name +=",";
+								name+=kvm.getVal();
+							}
 						}
-						row.put(key,emList);
+						if(toDoData){
+							row.put(key,name);
+						}else{
+							row.put(key,emList);
+						}
 					}else{
-						row.put(key,EnumUtil.getEnumItemKv(enClazName,objval.toString()));
+						KeyValueModel kvm = EnumUtil.getEnumItemKv(enClazName,objval.toString());
+						if(toDoData){
+							row.put(key, kvm.getVal());
+						}else{
+							row.put(key,kvm);
+						}
 					}
 				}
 			}
@@ -151,6 +205,26 @@ public abstract class BasePageListController extends CoreBaseController {
 	public ExportParams getExportParams() {
 		return new ExportParams(getHeadTitle(),getSecondTitle(), getSheetName());
 	}
+	public ExcelExportEntity stringEntity(String name,String key){
+		return new ExcelExportEntity(name, key);
+	}
+	public ExcelExportEntity dateEntity(String name,String key){
+		ExcelExportEntity entity = stringEntity(name,key);
+		entity.setFormat("yyyy-MM-dd");
+		return entity;
+	}
+	public ExcelExportEntity booleanEntity(String name,String key){
+		ExcelExportEntity entity = stringEntity(name,key);
+		entity.setReplace(getBooleanReplace());
+		return entity;
+	}
+	public ExcelExportEntity remarkEntity(String name,String key){
+		ExcelExportEntity entity = stringEntity(name,key);
+		entity.setWidth(80);
+		entity.setWrap(true);
+		return entity;
+	}
+	
 	
 	@AuthorAnn(doLongin=true,doPermission=false)
 	@RequestMapping(value="/export",produces= MediaType.APPLICATION_OCTET_STREAM_VALUE)
@@ -167,6 +241,7 @@ public abstract class BasePageListController extends CoreBaseController {
         			List<Map<String, Object>> datas = getExportData();
         			if(datas==null){
         				init();
+        				toDoData = true;
         				Criteria query = initQueryCriteria();
         				executeQueryParams(query);
         				List<Order> orders = getOrders();
@@ -182,6 +257,10 @@ public abstract class BasePageListController extends CoreBaseController {
             			}
             			PageModel pm = getService().toPageQuery(query, getProjectionList(), getCurPage(), pages);
             			datas = pm.getDatas();
+            			toDoData = true;
+            			packageDatas(datas);
+            			toDoData = false;
+            			
         			}
         			if(datas==null) datas = new ArrayList<Map<String, Object>>();
         			if(datas!=null){

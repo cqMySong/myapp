@@ -68,7 +68,7 @@ public class EnumUtil {
 		return null;
 	}
 	
-	public static String[] enum2Strs(String enum_str){
+	public static String[] enum2Strs1(String enum_str){
 		String els = "";
 		Object[] enum_obj = getEnums(enum_str);
 		if(enum_obj!=null&&enum_obj.length>0){
@@ -86,7 +86,7 @@ public class EnumUtil {
 	
 	
 	public static void main(String[] args){
-		System.out.println(enum2Strs(Sex.class.getName()).length);
+		System.out.println(enum2Strs1(Sex.class.getName()).length);
 //		Object[] objs = getEnums(Sex.class.getName());
 //		for(Object sx:objs){
 //			if(sx instanceof Enum){

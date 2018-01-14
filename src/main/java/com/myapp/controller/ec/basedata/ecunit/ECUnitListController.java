@@ -50,7 +50,6 @@ public class ECUnitListController extends BaseDataListController {
 	public List<ExcelExportEntity> getExportHeader() {
 		List<ExcelExportEntity> entity = super.getExportHeader();
 		ExcelExportEntity unitType = new ExcelExportEntity("计量单位", "unitType");
-		unitType.setReplace(EnumUtil.enum2Strs(UnitType.class.getName()));
 		entity.add(2,unitType);
 		return entity;
 	}

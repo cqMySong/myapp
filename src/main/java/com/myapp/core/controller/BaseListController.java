@@ -90,27 +90,6 @@ public abstract class BaseListController extends BasePageListController {
 		}
 		this.data = pm;
 	}
-	public List<ColumnModel> getPackageDataCol(){
-		List<ColumnModel> cols = getDataBinding();
-		List<ColumnModel> toDoCols = new ArrayList<ColumnModel>(); 
-		for(ColumnModel cm:cols){
-			DataTypeEnum dte = cm.getDataType();
-			if(dte.equals(DataTypeEnum.MUTILF7)&&cm.getClaz()!=null){
-				toDoCols.add(cm);
-			}else if((DataTypeEnum.ENUM.equals(dte)||DataTypeEnum.MUTILENUM.equals(dte))
-					&&cm.getClaz()!=null){
-				toDoCols.add(cm);
-			}
-		}
-		return toDoCols;
-	}
-	public void packageDatas(List datas) throws QueryException{
-		if(datas==null||datas.size()<=0) return;
-		List<ColumnModel> cms = getPackageDataCol();
-		if(cms!=null&&cms.size()>0){
-			packageListDataColumns(datas, cms);
-		}
-	}
 
 	public void executeQueryParams(Criteria query) {
 		super.executeQueryParams(query);

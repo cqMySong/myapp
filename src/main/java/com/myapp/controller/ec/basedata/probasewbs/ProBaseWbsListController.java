@@ -1,5 +1,6 @@
 package com.myapp.controller.ec.basedata.probasewbs;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -13,6 +14,8 @@ import org.hibernate.criterion.Restrictions;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
+
+import cn.afterturn.easypoi.excel.entity.params.ExcelExportEntity;
 
 import com.alibaba.fastjson.JSONObject;
 import com.myapp.core.annotation.AuthorAnn;
@@ -119,5 +122,18 @@ public class ProBaseWbsListController extends BaseTreeListController {
 		return ajaxModel();
 	}
 	
+	public String getHeadTitle() {
+		return "工程基础分解结构";
+	}
 	
+	public List<ExcelExportEntity> getExportHeader() {
+		List<ExcelExportEntity> entitys = new ArrayList<ExcelExportEntity>();
+		entitys.add(stringEntity("结构编码", "number"));
+		entitys.add(stringEntity("结构名称", "name"));
+		entitys.add(stringEntity("上级结构", "parent_name"));
+		entitys.add(stringEntity("结构类型", "wbsType"));
+		entitys.add(booleanEntity("启用", "enabled"));
+		entitys.add(remarkEntity("备注", "remark"));
+		return entitys;
+	}
 }

@@ -115,7 +115,6 @@ public class OrgListController extends BaseTreeListController {
 		entity.add(new ExcelExportEntity("编码", "number"));
 		entity.add(new ExcelExportEntity("名称", "name"));
 		ExcelExportEntity orgType = new ExcelExportEntity("组织类型", "orgType");
-		orgType.setReplace(EnumUtil.enum2Strs(OrgTypeEnum.class.getName()));
 		entity.add(orgType);
 		entity.add(new ExcelExportEntity("简码", "shortCode"));
 		entity.add(new ExcelExportEntity("上级编码", "parent_number"));

@@ -18,6 +18,9 @@
 		<a class="btn btn-success" id="btnTemplate" href="${appRoot}/importTemplate/${templateName}">
 			<i class="fa fa-download"></i>&nbsp;文件模版
 		</a>
+		<button class="btn btn-success" id="btnExportTemp" toUrl="${downTempURL}">
+			<i class="fa fa-download"></i>&nbsp;模版文件
+		</button>
 	</div>
 
 	<ul id="fileList" class="media-list media-list-contacts mt20"
@@ -30,21 +33,30 @@
 <%@include file="/WEB-INF/pages/inc/webBase.inc"%>
 <script type="text/javascript">
     var billId = 'importExcel';
+    var uiCtx = '${uiCtx}'||'';
     function getBillId(){
         return billId;
     }
     //附件断点续传功能的相关配置
-    var _attach_initFile = {
-        url:app.root+'/base/attach/initFile',
-        sourceId:billId
-    };
+  var _attach_initFile = {};
     function getImportUrl() {
 		return '${uploadPath}';
     }
+    function _getUploadParams(formData){
+    	formData.append("sourceBillID", getBillId());
+    	formData.append("uiCtx", uiCtx);
+    	return formData;
+    }
+    $(document).ready(function() {
+    	$('#btnExportTemp').click(function(){
+    		var url = $(this).attr('toUrl');
+    		$('#downWin').attr('src',url);
+    	});
+    });
 </script>
 <script src="${appRoot}/assets/lib/attach/js/moxie.js"></script>
-<script src="${appRoot}/assets/lib/attach/js/plupload.dev.js?v=2"></script>
+<script src="${appRoot}/assets/lib/attach/js/plupload.dev.js?v=12"></script>
 <script src="${appRoot}/assets/lib/attach/js/jquery.md5.js"></script>
-<script src="${appRoot}/assets/lib/attach/js/attach_import.js?v=33"></script>
+<script src="${appRoot}/assets/lib/attach/js/attach_import.js?v=113"></script>
 <iframe id="downWin" width=0 height=0 marginheight=0 marginwidth=0 scrolling=no src="" style="display: none;"></iframe>
 </html>

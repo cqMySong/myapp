@@ -51,7 +51,7 @@ Date.prototype.format = function(format) {
            }
     }
     return format;
-}
+};
 Date.prototype.addDays = function(d){
 	var date = this.getDate(); 
 	this.setDate(date + d); 
@@ -188,7 +188,7 @@ function Map() {
             var k = this.keys[i];
             s += k+"="+this.data[k];
             if(this.keys.length>i+1){
-                s+=','
+                s+=',';
             }
         }
         s+="}";
@@ -336,7 +336,7 @@ var webUtil = {
 	showMesg:function(obj){
 		// layer open 中的type 定义 0（信息框，默认）1（页面层）2（iframe层）3（加载层）4（tips层）。
 		//shade  0-1  越大背景色越深
-		var _opt = {title:obj.title||'....',content:obj.content||'',shade:0.1,scrollbar:false}
+		var _opt = {title:obj.title||'....',content:obj.content||'',shade:0.1,scrollbar:false};
 		_opt.icon = webUtil.getMesgIcon(obj.type);
 		parent.layer.open(_opt);
 	},
@@ -369,7 +369,7 @@ var webUtil = {
 			_opt.width = _maxWidth-2;
 		}
 		//winUrl = encodeURI(winUrl.replace(/\"/g,"'")); 
-		var layer_index = parent.layer.open({type : 2,
+		parent.layer.open({type : 2,
 			btn : _opt.btns,title :_opt.title,scrollbar : false,
 			shadeClose : false,close : false,shade : true,shade : 0.1,zIndex:2500,
 			maxmin : _opt.maxmin,area:[ _opt.width+'px', _opt.height+'px' ],
@@ -450,7 +450,7 @@ var webUtil = {
 	},
 	ajaxData:function(_opt){
 		var opt = $.extend(true,{},ajax_defaultOpt,_opt);
-		var _thisUrl = webUtil.toUrl(_opt.url)
+		var _thisUrl = webUtil.toUrl(_opt.url);
 		var loadIdx = layer.msg('数据处理中...', {icon: 16,time:0,shade : true,shade: 0.1});
 		$.ajax({type:opt.type,url:_thisUrl,async:opt.async,data:opt.data,dataType:opt.dataType,success:function(data){
 			layer.close(loadIdx);

@@ -1,5 +1,6 @@
 package com.myapp.core.base.controller;
 
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -24,6 +25,7 @@ import com.myapp.core.enums.FileType;
 import com.myapp.core.model.MyWebContext;
 import com.myapp.core.model.WebDataModel;
 import com.myapp.core.util.BaseUtil;
+import com.myapp.core.util.DateUtil;
 
 /**
  *-----------MySong---------------
@@ -174,14 +176,48 @@ public class BaseController {
     	return null;
     }
     
-    public ExportParams getExportParams(){
-    	return null;
-    }
-    
     public List<Map<String, Object>> getExportData(){
     	return null;
     }
-    public String getFileName(){
-    	return "文档";
-    }
+    
+    public String getHeadTitle(){
+		return "信息表";
+	}
+    
+	public String getSecondTitle(){
+		return null;
+	}
+	
+	public String getSheetName(){
+		return getHeadTitle();
+	}
+	
+	public String getFileName() {
+		return getHeadTitle();
+	}
+	public String[] getBooleanReplace(){
+		return new String[]{"是_true","否_false"};
+	}
+	public ExportParams getExportParams() {
+		return new ExportParams(getHeadTitle(),getSecondTitle(), getSheetName());
+	}
+	public ExcelExportEntity stringEntity(String name,String key){
+		return new ExcelExportEntity(name, key);
+	}
+	public ExcelExportEntity dateEntity(String name,String key){
+		ExcelExportEntity entity = stringEntity(name,key);
+		entity.setFormat("yyyy-MM-dd");
+		return entity;
+	}
+	public ExcelExportEntity booleanEntity(String name,String key){
+		ExcelExportEntity entity = stringEntity(name,key);
+		entity.setReplace(getBooleanReplace());
+		return entity;
+	}
+	public ExcelExportEntity remarkEntity(String name,String key){
+		ExcelExportEntity entity = stringEntity(name,key);
+		entity.setWidth(80);
+		entity.setWrap(true);
+		return entity;
+	}
 }

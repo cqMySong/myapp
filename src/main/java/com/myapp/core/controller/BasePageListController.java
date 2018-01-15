@@ -178,9 +178,7 @@ public abstract class BasePageListController extends CoreBaseController {
 			}
 		}
 	}
-	public String[] getBooleanReplace(){
-		return new String[]{"是_true","否_false"};
-	}
+	
 	public void executeQueryParams(Criteria query) {
 		
 	}
@@ -188,43 +186,18 @@ public abstract class BasePageListController extends CoreBaseController {
 	public List<Order> getOrders(){
 		return new ArrayList<Order>();
 	}
-	public String getHeadTitle(){
-		return "信息表";
+	
+	public String getFileName(){
+    	return "数据表导出";
+    }
+	
+	public String getHeadTitle() {
+		return "数据信息";
 	}
+	
 	public String getSecondTitle(){
 		return getCurUser().getName()+" "+DateUtil.formatDate(new Date())+" 制表";
 	}
-	public String getSheetName(){
-		return getHeadTitle();
-	}
-	
-	public String getFileName() {
-		return getHeadTitle();
-	}
-	
-	public ExportParams getExportParams() {
-		return new ExportParams(getHeadTitle(),getSecondTitle(), getSheetName());
-	}
-	public ExcelExportEntity stringEntity(String name,String key){
-		return new ExcelExportEntity(name, key);
-	}
-	public ExcelExportEntity dateEntity(String name,String key){
-		ExcelExportEntity entity = stringEntity(name,key);
-		entity.setFormat("yyyy-MM-dd");
-		return entity;
-	}
-	public ExcelExportEntity booleanEntity(String name,String key){
-		ExcelExportEntity entity = stringEntity(name,key);
-		entity.setReplace(getBooleanReplace());
-		return entity;
-	}
-	public ExcelExportEntity remarkEntity(String name,String key){
-		ExcelExportEntity entity = stringEntity(name,key);
-		entity.setWidth(80);
-		entity.setWrap(true);
-		return entity;
-	}
-	
 	
 	@AuthorAnn(doLongin=true,doPermission=false)
 	@RequestMapping(value="/export",produces= MediaType.APPLICATION_OCTET_STREAM_VALUE)

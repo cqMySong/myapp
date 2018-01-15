@@ -307,15 +307,17 @@ var plupload = {
 	_initNewFile:function(file){
 		//return {id:'sdfadf',md5:'zhongguojiayou',formatSize:plupload.formatSize(file.size),loaded:105,offset:105};
 		var $file_md5 = $.md5(file.name+'-'+file.lastModifiedDate.getTime()+'-'+file.size);
-		var fileObj = {md5:$file_md5,formatSize:plupload.formatSize(file.size)};
-		var params = {};
-		params.sourceId = _attach_initFile.sourceId;
-		params.md5 = $file_md5;
-		$.ajax({type:'POST',url:_attach_initFile.url,data:params,async:false
-				,dataType:'json',success:function(data){
-					fileObj.loaded = data.loaded;
-					fileObj.offset = data.loaded;
-				}});
+		var fileObj = {md5:$file_md5,formatSize:plupload.formatSize(file.size),loaded:0,offset:0};
+		if(_attach_initFile&&_attach_initFile.sourceId&&_attach_initFile.url){
+			var params = {};
+			params.sourceId = _attach_initFile.sourceId;
+			params.md5 = $file_md5;
+			$.ajax({type:'POST',url:_attach_initFile.url,data:params,async:false
+					,dataType:'json',success:function(data){
+						fileObj.loaded = data.loaded;
+						fileObj.offset = data.loaded;
+					}});
+		}
 		return fileObj;
 	},
 	

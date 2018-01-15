@@ -189,15 +189,23 @@
     }
     function showImportWin(btn){
         var forwardUrl = webUtil.toUrl('ec/budget/budgeting/import/view');
+        var params = {projectId:$('input[name="project"]').myF7().getValue()};//可以传递参数
         webUtil.openWin({maxmin:false,width:500,height:400,title:'导入预算信息',url:forwardUrl,
-            btnCallBack:function(btnIndex,index,layero){
+        	uiParams:params,btnCallBack:function(btnIndex,index,layero){
             	if(layero){
-                    var result = $(layero).find("iframe")[0].contentWindow._importResult;
-                    if(result){
-                        $.each(result,function(i,data){
-                            btn.entry.insertRow(i,data);
-						})
-					}
+                    var winUI = $(layero).find("iframe")[0].contentWindow;
+                    if(btnIndex==1){//表示确定 确认要导入正确的数据
+                    	if(winUI.isOk()){//数据正确的情况下方可导入
+                    		var resultData = winUI.getData(false);//true 代表为全部返回结果，false代表只是返回对应的数据结果
+                    		alert('数据结果个数：'+resultData.length);
+                    	}
+                    }
+                    
+                  //  if(result){
+                   //     $.each(result,function(i,data){
+                   //         btn.entry.insertRow(i,data);
+					//	})
+					//}
 				}
 				return true;
 			}});

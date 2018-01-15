@@ -82,6 +82,7 @@ public class WebContextService extends AbstractBaseService{
 							List<Map<String, String>> jobItem = new ArrayList<Map<String,String>>(); 
 							for(PositionJobDutyInfo p_jobDutyInfo:jobItems){
 								JobDutyInfo jobDutyInfo = p_jobDutyInfo.getJobDuty();
+								if(jobDutyInfo==null) continue;
 								Map<String, String> item = new HashMap<String, String>();
 								item.put("id", jobDutyInfo.getId());
 								item.put("name", jobDutyInfo.getName());

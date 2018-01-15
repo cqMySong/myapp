@@ -43,7 +43,7 @@ function getTempFileItemEl(file){
 			_fileItem.push('</div>');
 		_fileItem.push('</a>');
 	_fileItem.push('</li>');
-   return _fileItem.join('')
+   return _fileItem.join('');
 }
 function _addFileItemsDom(files){
 	if (files) {

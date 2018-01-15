@@ -43,7 +43,7 @@ function getTempFileItemEl(file){
 			_fileItem.push('</div>');
 		_fileItem.push('</a>');
 	_fileItem.push('</li>');
-   return _fileItem.join('')
+   return _fileItem.join('');
 }
 function _addFileItemsDom(files){
 	if (files) {
@@ -96,14 +96,23 @@ function _convertFileSize(size){
 	}
 	return toDisplay;
 }
-function _getUploadParams(formData){
-	formData.append("sourceBillID", getBillId());
-	return formData;
-}
 
 var _upFiles = 0;
-var attachUrl = app.root+'/ec/budget/budgeting/upload';
-var _importResult = {};
+var _data = {};
+var _isOk = false;
+function getData(all){
+	if(all){
+		return _data;
+	}else{
+		if(!webUtil.isEmpty(_data)){
+			return _data.data;
+		}
+		return {};
+	}
+}
+function isOk(){
+	return _isOk;
+}
 $(document).ready(function() {
 	var uploader = new plupload.Uploader({
             runtimes : 'html5,flash,silverlight,html4',//设置运行环境，会按设置的顺序，可以选择的值有html5,gears,flash,silverlight,browserplus,html
@@ -116,7 +125,7 @@ $(document).ready(function() {
 			},
 			silverlight_xap_url : _attachRoot+'js/Moxie.xap',
 	        url : getImportUrl(),//上传文件路径
-            chunk_size : '0',//分块大小，小于这个大小的不分块
+            chunk_size : '100mb',//分块大小，小于这个大小的不分块
             unique_names : true,//生成唯一文件名
             browse_button : 'selectFile', 
             max_file_size : '100mb',//100b, 10kb, 10mb, 1gb
@@ -139,13 +148,32 @@ $(document).ready(function() {
                         return false;
 					}
                     var fid = file.id;
-                    var importResult = JSON.parse(info.response);
-                    console.log(importResult);
-                    var msg = importResult.errMesg==''?"系统已经上传解析完毕":importResult.errMesg;
-                    var _html = '<i class="fa fa-coffee"></i>&nbsp;'+msg+'</span>';
+                    _data = JSON.parse(info.response)||{};
+                    _isOk = false;
+                    var _html = '<i class="fa fa-coffee"></i>&nbsp;文件上传处理完毕!</span>';
+                    if(!webUtil.isEmpty(_data)){
+                    	var statusCode = _data.statusCode;
+                    	var alertType = 'alert-success';
+                    	var title = '成功';
+                    	var mesg = _data.statusMesg||'';
+                    	if(statusCode!=0){ //异常或者错误或者提示或者警告
+                    		if(statusCode<0){//异常 错误
+                    			alertType = 'alert-danger';
+                    			title = (statusCode==-1?'错误':'异常');
+                    		}else if(statusCode==100){//警告
+                    			alertType = 'alert-warning';
+                    			title = '警告';
+                    		}else if(statusCode==1){
+                    			alertType = 'alert-info';
+                    			title = '提示';
+                    		}
+        				}
+                    	_html += '</br><div style="padding:8px 5px;" class="alert '+alertType+'"><strong>'+title+'! </strong>'+mesg+'</div>';
+        				if(statusCode>=0){
+        					_isOk = true;
+        				}
+                    }
                     $('#'+fid).find('span._statusMesg').html(_html);
-                    _importResult = importResult.data;
-                    console.log(_importResult);
                 },
                 UploadComplete : function( up,files ) {
 

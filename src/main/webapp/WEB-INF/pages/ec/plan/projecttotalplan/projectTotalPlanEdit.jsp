@@ -272,6 +272,34 @@ var itemRemoveUrl = "ec/plan/projecttotalplan/checkRemoveItem";
 		return true;
 	}
 	
+	 function showImportWin(btn){
+	        var project = $('input[name="project"]').myF7().getData();
+	        if(!webUtil.isEmpty(project)){
+	        	var forwardUrl = webUtil.toUrl('ec/plan/projecttotalplan/import/view');
+	        	var params = {proId:project.id,proName:project.name};//可以传递参数
+		        webUtil.openWin({maxmin:false,width:500,height:400,title:'导入预算信息',url:forwardUrl,
+		        	uiParams:params,btnCallBack:function(btnIndex,index,layero){
+		            	if(layero){
+		                    var winUI = $(layero).find("iframe")[0].contentWindow;
+		                    if(btnIndex==1){//表示确定 确认要导入正确的数据
+		                    	if(winUI.isOk()){//数据正确的情况下方可导入
+		                    		var resultData = winUI.getData(false);//true 代表为全部返回结果，false代表只是返回对应的数据结果
+		                    		if(!webUtil.isEmpty(resultData)){
+		                    			 $.each(resultData,function(i,_rdata){
+		                    				 btn.entry.addRow(_rdata);
+		                    			 });
+		                    		}
+		                    	}
+		                    }
+						}
+						return true;
+					}});
+	        }else{
+	        	webUtil.mesg('当前工程项目为空，无法对应的数据可导入!');
+	        }
+	        
+		}
+	
 	$(document).ready(function() {
 		editUI = $('#editPanel').editUI({
 			title : "项目总计划",billModel:2,
@@ -288,6 +316,7 @@ var itemRemoveUrl = "ec/plan/projecttotalplan/checkRemoveItem";
 			planItemsEntry = planItemsEntryObj.entry;
 			var rightBtnGroup = planItemsEntryObj.toolbar.find('.pull-right>.btn-group').myBtnGroup();
 			rightBtnGroup.addBtn({entry:planItemsEntry,css:'btn-sm',text:'复制插入',icon:"fa fa-edit",clickFun:btnCopyInsertRow});
+			rightBtnGroup.addBtn({entry:planItemsEntry,css:'btn-sm',text:'导入',icon:"fa fa-file-excel-o",clickFun:showImportWin});
 			planItemsEntry.resetView();
 		}
 		var height = top.getTopMainHeight();

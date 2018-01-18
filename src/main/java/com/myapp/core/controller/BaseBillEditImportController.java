@@ -1,20 +1,20 @@
 package com.myapp.core.controller;
 
-import java.io.File;
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.apache.poi.hssf.usermodel.HSSFDataFormat;
 import org.apache.poi.hssf.usermodel.HSSFRichTextString;
 import org.apache.poi.ss.usermodel.BorderStyle;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.CellStyle;
+import org.apache.poi.ss.usermodel.CellType;
 import org.apache.poi.ss.usermodel.FillPatternType;
 import org.apache.poi.ss.usermodel.HorizontalAlignment;
 import org.apache.poi.ss.usermodel.IndexedColors;
@@ -30,11 +30,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 
-import cn.afterturn.easypoi.excel.ExcelExportUtil;
-import cn.afterturn.easypoi.excel.ExcelImportUtil;
 import cn.afterturn.easypoi.excel.entity.ExportParams;
 import cn.afterturn.easypoi.excel.entity.ImportParams;
 import cn.afterturn.easypoi.excel.entity.params.ExcelExportEntity;
@@ -44,16 +41,14 @@ import cn.afterturn.easypoi.excel.imports.ExcelImportServer;
 import cn.afterturn.easypoi.exception.excel.ExcelExportException;
 import cn.afterturn.easypoi.handler.inter.IExcelVerifyHandler;
 
+import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.myapp.core.annotation.AuthorAnn;
-import com.myapp.core.base.service.IImportConvertService;
-import com.myapp.core.entity.AttachFileInfo;
 import com.myapp.core.enums.FileType;
 import com.myapp.core.model.ResultModel;
 import com.myapp.core.model.WebDataModel;
-import com.myapp.core.service.base.AttachFileService;
 import com.myapp.core.util.BaseUtil;
-import com.myapp.core.util.UploadUtil;
+import com.myapp.core.util.MyExcelExportUtil;
 
 /**
  * @path：com.myapp.core.controller
@@ -62,31 +57,10 @@ import com.myapp.core.util.UploadUtil;
  * @date: 2017-10-24 22:08
  */
 public abstract class BaseBillEditImportController extends BaseBillEditController {
-    @Resource
-    public AttachFileService attachFileService;
-    /**
-     * 功能：获取excel导入转换的实体对象
-     * @return
-     */
-    public abstract Class getExcelToEntityClass();
-
-    /**
-     * 功能：获取excel的读取参数
-     * @return
-     */
-    public abstract ImportParams getExcelImportParams();
-
-    /**
-     * 获取导入后业务处理类
-     * @return
-     */
-    public abstract IImportConvertService getImportConvertService();
-
-    /**
-     * 功能:获取模版下载名称
-     * @return
-     */
-    public abstract String getImportTemplateName();
+    //此方法可以暂时保留 方便以后灵活运用
+	public String getImportTemplateName(){
+    	return "";
+    }
 
     /**
      * 功能：跳转到导入操作界面
@@ -97,72 +71,18 @@ public abstract class BaseBillEditImportController extends BaseBillEditControlle
         model.addAttribute("uploadPath",request.getRequestURI().replace("/import/view","/importData"));
         model.addAttribute("downTempURL",request.getRequestURI().replace("/import/view","/downTemp"));
         model.addAttribute("templateName",getImportTemplateName());
-        model.addAttribute("uiCtx",getUiCtx());
+        model.addAttribute("uiCtx",JSON.toJSONString(getUiCtx()));
         return  "base/excel_import";
     }
-
-    @RequestMapping(value = "/upload", method = RequestMethod.POST)
-    public String upload(@RequestBody MultipartFile file
-            ,@RequestParam String fileName, @RequestParam String md5
-            ,@RequestParam String sourceBillID, @RequestParam String formatSize
-            ,@RequestParam String fileSize){
-        init();
-        try {
-            Map params = new HashMap();
-            params.put("md5", md5);
-            params.put("fileName", fileName);
-            params.put("file", file);
-            params.put("sourceBillID", sourceBillID);
-            params.put("formatSize", formatSize);
-            params.put("fileSize", fileSize);
-            String attachDir = UploadUtil.UPLOAD_DEFPATH;
-            Object attDirObj = request.getServletContext().getAttribute("attachDir");
-            if(attDirObj!=null){
-                attachDir = attDirObj.toString();
-            }
-            Map retMap = UploadUtil.toUpLoadFile(attachFileService, params, attachDir);
-            boolean isOk = (boolean) retMap.get("status");
-            if(isOk){
-                AttachFileInfo atFile = (AttachFileInfo) retMap.get("attachInfo");
-                if(atFile!=null&&atFile.getItems().size()>0){
-                    ImportParams importParams = getExcelImportParams();
-                    if(importParams==null){
-                        importParams = new ImportParams();
-                        importParams.setTitleRows(0);
-                        importParams.setHeadRows(1);
-                    }
-                    List<Object> list = ExcelImportUtil.importExcel(
-                            new File(atFile.getPath()+"/"+atFile.getFile()),
-                            getExcelToEntityClass(), importParams);
-                    WebDataModel convertResult = getImportConvertService().importConvertBusiness(list);
-                    this.statusMesg = convertResult.getStatusMesg();
-                    this.data = convertResult.getData();
-                }else{
-                    this.statusCode = STATUSCODE_ERROR;
-                    this.statusMesg = "文件上传失败！";
-                }
-            }else{
-                this.statusCode = STATUSCODE_ERROR;
-                this.statusMesg = (String) retMap.get("mesg");
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-            this.statusCode = STATUSCODE_EXCEPTION;
-            this.statusMesg = e.getMessage();
-        }
-        JSONObject json = new JSONObject();
-        json.put("status", true);
-        json.put("errMesg", this.statusMesg);
-        json.put("data",this.data);
-        request.setAttribute("result",json.toJSONString());
-        return "base/upload";
-    }
     
-    
-    private boolean isAbort = false;//验证到错误是否终止数据的解析
+    private boolean isAbort = true;//验证到错误是否终止数据的解析
 	private int rowIdx = 0;
 	private static String resultKey = "__result";
+	private Map uiParams = new HashMap();
 	
+	public Map getParams(){
+		return this.uiParams;
+	}
 	public ResultModel verifyRowData(int rowIdx,Map obj){
 		return new ResultModel();
 	}
@@ -202,9 +122,8 @@ public abstract class BaseBillEditImportController extends BaseBillEditControlle
 	
 	public ImportParams initImportParams(){
 		ImportParams params = new ImportParams();
-		params.setTitleRows(getTitleRows()+1);//把表列那一行也算着title
-		int headRowcount = getHeadRows()[1];//默认导入是加入一行隐藏行的
-		params.setHeadRows(headRowcount);//
+		params.setTitleRows(getTitleRows()+getHeadRows()[1]);//把表列那一行也算着title
+		params.setHeadRows(1);//
 		params.setNeedVerfiy(false);
 		params.setVerifyHanlder(new IExcelVerifyHandler<Map>() {
 			public ExcelVerifyHanlderResult verifyHandler(Map obj) {
@@ -214,7 +133,7 @@ public abstract class BaseBillEditImportController extends BaseBillEditControlle
 		return params;
 	}
 	
-	public ExcelImportResult getImportData(InputStream in) throws Exception{
+	public ExcelImportResult toDoImportData(InputStream in) throws Exception{
 		if(in==null) return null;
 		ExcelImportServer server = new ExcelImportServer();
 		return server.importExcelByIs(in, Map.class, initImportParams());
@@ -252,9 +171,6 @@ public abstract class BaseBillEditImportController extends BaseBillEditControlle
 		
 		return wdm;
 	}
-	public Map<String,Object> packageRowData(Map<String ,String> headMap,Map<String,Object> rm){
-		return null;
-	}
 	
 	@AuthorAnn(doLongin=false,doPermission=false)
 	@RequestMapping(value="importData",method = RequestMethod.POST)
@@ -262,7 +178,10 @@ public abstract class BaseBillEditImportController extends BaseBillEditControlle
 		WebDataModel wdm = new WebDataModel();
 		try{
 			if(file!=null){
-				ExcelImportResult eir = getImportData(file.getInputStream());
+				if(!BaseUtil.isEmpty(uiCtx)){
+					uiParams = JSONObject.parseObject(uiCtx, new HashMap().getClass());
+				}
+				ExcelImportResult eir = toDoImportData(file.getInputStream());
 				List<Map<String,Object>> importDatas = eir.getList();
 				if(importDatas!=null&&importDatas.size()>0){
 					wdm = packageImportData(importDatas,uiCtx);
@@ -279,6 +198,8 @@ public abstract class BaseBillEditImportController extends BaseBillEditControlle
 		}catch(Exception e){
 			e.printStackTrace();
 			setExceptionMesg(e.getMessage());
+			wdm.setStatusMesg("数据处理异常!"+e.getMessage().replaceAll("cn.afterturn.easypoi.exception.excel.ExcelExportException:", ""));
+			wdm.setStatusCode(STATUSCODE_EXCEPTION);
 		}
 		JSONObject json = new JSONObject();
         json.put("statusCode", wdm.getStatusCode());
@@ -308,32 +229,43 @@ public abstract class BaseBillEditImportController extends BaseBillEditControlle
 		cellStyle.setBorderTop(BorderStyle.DOTTED);//上边框    
 		cellStyle.setBorderRight(BorderStyle.DOTTED);//右边框   
 		cellStyle.setLocked(true);
+		cellStyle.setDataFormat(getDataFormat("@"));
 		return cellStyle;
+	}
+	
+	public CellStyle getColumnStyle(Workbook workbook,String key){
+		CellStyle columnStyle= workbook.createCellStyle();
+		columnStyle.setDataFormat(getDataFormat("@"));
+		return columnStyle;
 	}
 	
 	public void initHeader(Workbook workbook,List<ExcelExportEntity> headers){
 		int[] rows = getHeadRows();
 		if(rows!=null&&rows.length==2){
 			Sheet sheet = workbook.getSheetAt(0);
-			int startRowIdx = rows[0]+(getFillRemark()!=null?1:0);
+			int startRowIdx = rows[0];
 			int length = rows[1];
 			CellStyle headStyle = getHeadStyle(workbook);
-			Row hedadKeyRow = sheet.createRow(startRowIdx+1);
+			Row hedadKeyRow = sheet.createRow(startRowIdx+length);
 			for(int i=0;i<length;i++){
 				Row headRow = sheet.getRow(startRowIdx+i);
 				if(headRow!=null){
 					for(int j=0;j<headers.size();j++){
 						Cell tCell = headRow.getCell(j);
-						tCell.setCellStyle(headStyle);
+						if(tCell==null){
+							tCell = headRow.createCell(j, CellType.STRING);
+						}
+						if(tCell!=null) tCell.setCellStyle(headStyle);
 						if(i==length-1){
+							String key = headers.get(j).getKey().toString();
+							sheet.setDefaultColumnStyle(j, getColumnStyle(workbook,key));
 							Cell keyCell = hedadKeyRow.createCell(j);
-							keyCell.setCellValue(headers.get(j).getKey().toString());
-							
+							keyCell.setCellValue(key);
 						}
 					}
 				}
 			}
-			sheet.createFreezePane(0, startRowIdx+1);
+			sheet.createFreezePane(0, startRowIdx+length);
 			hedadKeyRow.setZeroHeight(true);
 		}
 	}
@@ -345,6 +277,13 @@ public abstract class BaseBillEditImportController extends BaseBillEditControlle
 	public String getFillRemark(){
 		return "";
 	}
+	
+	//此方法只能用于一些内置的格式
+	public short getDataFormat(String format){
+		if(BaseUtil.isEmpty(format))  format = "@";
+		return HSSFDataFormat.getBuiltinFormat(format);
+	}
+	
 	public CellStyle getRemarkStyle(Workbook workbook){
 		CellStyle cellStyle= workbook.createCellStyle(); 
 		cellStyle.setWrapText(true);
@@ -357,13 +296,14 @@ public abstract class BaseBillEditImportController extends BaseBillEditControlle
 		cellStyle.setBorderTop(BorderStyle.DOTTED);//上边框    
 		cellStyle.setBorderRight(BorderStyle.DOTTED);//右边框   
 		cellStyle.setLocked(true);
+		cellStyle.setDataFormat(HSSFDataFormat.getBuiltinFormat("@"));
 		return cellStyle;
 	}
 	public void initRemark(Workbook workbook,int length){
 		int[] rows = getHeadRows();
 		String remark = getFillRemark();
 		if(remark!=null&&rows!=null&&rows.length==2){
-			int startRowIndx =  rows[0];
+			int startRowIndx =  rows[0]-1;
 			Sheet sheet = workbook.getSheetAt(0);
 			int lastRowNo = sheet.getLastRowNum();  
 			sheet.shiftRows(startRowIndx, lastRowNo, 1);
@@ -398,8 +338,7 @@ public abstract class BaseBillEditImportController extends BaseBillEditControlle
         			for(int i=0;i<headers.size();i++ ){
         				headers.get(i).setOrderNum(i+1);
         			}
-        			
-    				Workbook workbook = ExcelExportUtil.exportExcel(params, headers, new ArrayList()); 
+    				Workbook workbook = MyExcelExportUtil.exportExcel(params, headers, new ArrayList()); 
     				initRemark(workbook,headers.size());
     				initHeader(workbook,headers);
     				String fileName = getFileName();
@@ -416,4 +355,14 @@ public abstract class BaseBillEditImportController extends BaseBillEditControlle
     		}
     	}
 	}
+
+	public boolean isAbort() {
+		return isAbort;
+	}
+
+	public void setAbort(boolean isAbort) {
+		this.isAbort = isAbort;
+	}
+	
+	
 }

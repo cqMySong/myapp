@@ -17,6 +17,7 @@ import org.springframework.web.servlet.ModelAndView;
 
 import cn.afterturn.easypoi.excel.entity.ExportParams;
 import cn.afterturn.easypoi.excel.entity.params.ExcelExportEntity;
+import cn.afterturn.easypoi.handler.inter.IExcelDataHandler;
 
 import com.myapp.core.base.setting.SystemConstant;
 import com.myapp.core.entity.UserInfo;
@@ -199,10 +200,16 @@ public class BaseController {
 		return new String[]{"是_true","否_false"};
 	}
 	public ExportParams getExportParams() {
-		return new ExportParams(getHeadTitle(),getSecondTitle(), getSheetName());
+		ExportParams epoms = new ExportParams(getHeadTitle(),getSecondTitle(), getSheetName());
+		return epoms;
 	}
 	public ExcelExportEntity stringEntity(String name,String key){
 		return new ExcelExportEntity(name, key);
+	}
+	public ExcelExportEntity stringEntity(String name,String key,String groupName){
+		ExcelExportEntity entity = stringEntity(name,key);
+		entity.setGroupName(groupName);
+		return entity;
 	}
 	public ExcelExportEntity dateEntity(String name,String key){
 		ExcelExportEntity entity = stringEntity(name,key);

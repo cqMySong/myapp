@@ -15,9 +15,6 @@
 		<button class="btn btn-success" id="btnUploader"  type="button">
 			<i class="fa fa-upload"></i>&nbsp;开始上传
 		</button>
-		<a class="btn btn-success" id="btnTemplate" href="${appRoot}/importTemplate/${templateName}">
-			<i class="fa fa-download"></i>&nbsp;文件模版
-		</a>
 		<button class="btn btn-success" id="btnExportTemp" toUrl="${downTempURL}">
 			<i class="fa fa-download"></i>&nbsp;模版文件
 		</button>
@@ -33,7 +30,7 @@
 <%@include file="/WEB-INF/pages/inc/webBase.inc"%>
 <script type="text/javascript">
     var billId = 'importExcel';
-    var uiCtx = '${uiCtx}'||'';
+    var uiCtx = '';
     function getBillId(){
         return billId;
     }
@@ -44,12 +41,22 @@
     }
     function _getUploadParams(formData){
     	formData.append("sourceBillID", getBillId());
-    	formData.append("uiCtx", uiCtx);
+    	if(!webUtil.isEmpty(uiCtx)){
+    		formData.append("uiCtx", uiCtx);
+    	}
     	return formData;
     }
     $(document).ready(function() {
+    	uiCtx = ${uiCtx};
+    	if(!webUtil.isEmpty(uiCtx)){
+    		uiCtx = webUtil.json2Str(uiCtx);
+    	}
     	$('#btnExportTemp').click(function(){
     		var url = $(this).attr('toUrl');
+    		if(!webUtil.isEmpty(uiCtx)){
+    			uiCtx = webUtil.json2Str(uiCtx);
+    			url+=(url.indexOf('?')>0?'&':'?')+'uiCtx='+uiCtx;
+    		}
     		$('#downWin').attr('src',url);
     	});
     });

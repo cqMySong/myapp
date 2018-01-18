@@ -49,22 +49,18 @@ public class BudgetingEditController extends BaseBillEditImportController {
         return new BudgetingInfo();
     }
 
-    @Override
     public CoreBaseInfo getEntityInfo() {
         return new BudgetingInfo();
     }
 
-    @Override
     public AbstractBaseService getService() {
         return this.budgetingService;
     }
 
-    @Override
     public IImportConvertService getImportConvertService() {
        return this.budgetingService;
     }
 
-    @Override
     public String getImportTemplateName() {
         return "budget.xls";
     }
@@ -109,12 +105,10 @@ public class BudgetingEditController extends BaseBillEditImportController {
         return cols;
     }
 
-    @Override
     public Class getExcelToEntityClass() {
         return BudgetingModel.class;
     }
 
-    @Override
     public ImportParams getExcelImportParams() {
         ImportParams params = new ImportParams();
         params.setTitleRows(0);
@@ -127,7 +121,7 @@ public class BudgetingEditController extends BaseBillEditImportController {
     }
     
     public int[] getHeadRows() {
-    	return new int[]{2,1};
+    	return new int[]{3,1};
     }
     
     public String getFillRemark() {

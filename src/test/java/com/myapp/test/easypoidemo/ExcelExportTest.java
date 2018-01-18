@@ -34,13 +34,13 @@ public class ExcelExportTest {
 		    entity.add(sex);
 		    ExcelExportEntity et = new ExcelExportEntity("实际年龄","03");
 		    et.setGroupName("年龄");
-		    et.setStatistics(true);
+//		    et.setStatistics(true);
 //		    et.setOrderNum(1);
 		    entity.add(et);
 		    ExcelExportEntity et2 = new ExcelExportEntity("虚拟年龄","04");
 		    et2.setGroupName("年龄");
-		    et2.setFormat("yyyy-MM-dd");
-		    et2.setWidth(50);
+//		    et2.setFormat("yyyy-MM-dd");
+//		    et2.setWidth(50);
 //		    et2.setOrderNum(2);
 		    entity.add(et2);
 		    ExcelExportEntity remark = new ExcelExportEntity("备注", "05");
@@ -59,12 +59,12 @@ public class ExcelExportTest {
 		        map.put("05","1:sdfaf;\n2:adfasdfaadfa大发送到");
 		        list.add(map);
 		    }
-		    Workbook workbook = ExcelExportUtil.exportExcel(new ExportParams(null,"xxx人 2018-01-05-7 制表", "sheet"), entity, list); 
+		    Workbook workbook = ExcelExportUtil.exportExcel(new ExportParams("adfasd打发","xxx人 2018-01-05-7 制表", "sheet"), entity, list); 
 			File savefile = new File("D:/excel/");
 	        if (!savefile.exists()) {
 	            savefile.mkdirs();
 	        }
-	        FileOutputStream fos = new FileOutputStream("D:/excel/exportTemp_image.xls");
+	        FileOutputStream fos = new FileOutputStream("D:/excel/tttt.xls");
 	        workbook.write(fos);
 	        fos.close();
 		}catch(Exception e){

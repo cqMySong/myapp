@@ -3,7 +3,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-	<title>现场签证(支出)</title>
+	<title>项目质量样板职责</title>
 </head>
 <style type="text/css">
 </style>
@@ -15,76 +15,64 @@
 	<div id="table-toolbar"></div>
 	<form id="editForm">
 		<div class="row">
-			<div class="col-sm-3">
+			<div class="col-sm-4">
 				<div class="input-group">
-					<span class="input-group-addon lable">签证名称</span>
-					<input class="input-item form-control require" name="name"/>
+					<span class="input-group-addon lable">样板单号</span>
+					<input class="require input-item" name="number">
 				</div>
 			</div>
-			<div class="col-sm-3">
+			<div class="col-sm-4">
 				<div class="input-group">
-					<span class="input-group-addon lable">签证单号</span>
-					<input class="input-item form-control require" name="number"/>
+					<span class="input-group-addon lable">样板名称</span>
+					<input name="name" class="input-item form-control require"/>
 				</div>
 			</div>
-			<div class="col-sm-3">
+			<div class="col-sm-4">
 				<div class="input-group">
-					<span class="input-group-addon lable">签证时间</span>
-					<input type="text" name="visaDate" class="form-control input-item require" data-opt="{type:'date'}">
-				</div>
-			</div>
-			<div class="col-sm-3">
-				<div class="input-group">
-					<span class="input-group-addon lable">签证单位</span>
-					<input class="input-item form-control require" name="visaUnit"/>
+					<span class="input-group-addon lable">分部名称</span>
+					<input type="text" name="branchBaseWbs" class="form-control input-item require"
+						   data-opt="{type:'f7',uiWin:{title:'分部名称',height:600,width:800,url:'ec/basedata/proWbsF7'}}">
 				</div>
 			</div>
 		</div>
 		<div class="row mt10">
-			<div class="col-sm-3">
+			<div class="col-sm-4">
 				<div class="input-group">
-					<span class="input-group-addon lable">工作部位</span>
-					<input  name="workPart" class="form-control input-item require"/>
+					<span class="input-group-addon lable">分项名称</span>
+					<input type="text" name="subentry" class="form-control input-item require"
+						   data-opt="{type:'f7',uiWin:{title:'分项名称',height:600,width:800,url:'ec/basedata/proWbsF7'}}">
 				</div>
 			</div>
-			<div class="col-sm-9">
+			<div class="col-sm-4">
 				<div class="input-group">
-					<span class="input-group-addon lable">工作内容</span>
-					<textarea name="jobContent" style="height:40px;" class="input-item form-control"></textarea>
+					<span class="input-group-addon lable">预计施工时间</span>
+					<input name="expectStartDate" class="input-item form-control" data-opt="{type:'date'}">
 				</div>
 			</div>
-		</div>
-		<div class="row mt10">
-			<div class="col-sm-3">
+			<div class="col-sm-4">
 				<div class="input-group">
-					<span class="input-group-addon lable">计费依据</span>
-					<select name="chargingBasis" data-opt="{type:'select',selected:'INCREASE_CONTRACT',url:'base/common/combox?enum=com.myapp.core.enums.ChargingBasis'}"
-							class="form-control input-item require">
-					</select>
-				</div>
-			</div>
-			<div class="col-sm-9">
-				<div class="input-group">
-					<span class="input-group-addon lable">依据说明</span>
-					<input class="input-item form-control require" name="chargingContent"/>
+					<span class="input-group-addon lable">样板验收时间</span>
+					<input name="acceptanceDate" class="input-item form-control" data-opt="{type:'date'}">
 				</div>
 			</div>
 		</div>
 		<div class="row mt10">
-			<div class="col-sm-3">
+			<div class="col-sm-12">
 				<div class="input-group">
-					<span class="input-group-addon lable">签证金额</span>
-					<input type="number" name="amount" class="form-control input-item require"/>
+					<span class="input-group-addon lable">操作要点</span>
+					<textarea name="operationPoint"  rows="3" class="input-item form-control"></textarea>
 				</div>
 			</div>
-			<div class="col-sm-3">
+		</div>
+		<div class="row mt10">
+			<div class="col-sm-4">
 				<div class="input-group">
 					<span class="input-group-addon lable">所属工程</span>
 					<input name="project" class="require input-item form-control"
 						   data-opt="{type:'f7',uiWin:{title:'工程项目',height:600,width:300,url:'ec/basedata/project'}}" />
 				</div>
 			</div>
-			<div class="col-sm-3">
+			<div class="col-sm-4">
 				<div class="input-group">
 					<span class="input-group-addon lable">业务状态</span>
 					<select name="billState" data-opt="{type:'select',selected:'ADDNEW',url:'base/common/combox?enum=com.myapp.core.enums.BillState'}"
@@ -92,26 +80,11 @@
 					</select>
 				</div>
 			</div>
-		</div>
-		<div class="row mt10">
-			<div class="col-sm-12 " style="border: 1px solid #ddd;">
-				<table name="siteVisaOutDetailInfos" class="input-entry" >
-					<thead>
-					<tr>
-						<th data-field="typeOfWork" data-width="100" data-type="select"
-						data-editor="{type:'select',url:'base/common/combox?enum=com.myapp.core.enums.TypeOfWork'}">工种</th>
-						<th data-field="workStartTime" data-type="datetime" data-width="100">工作开始时间</th>
-						<th data-field="workEndTime" data-type="datetime" data-width="100">工作结束时间</th>
-						<th data-field="mechanicalName" data-type="text">机械名称/型号</th>
-						<th data-field="mechanicalStartTime" data-type="datetime" data-width="120">工作开始时间</th>
-						<th data-field="mechanicalEndTime" data-type="datetime"  data-width="120">工作结束时间</th>
-						<th data-field="materialName" data-type="text" data-width="100">材料名称</th>
-						<th data-field="useCount" data-type="number" data-width="100">数量</th>
-					</tr>
-					</thead>
-				</table>
+			<div class="col-sm-4">
+
 			</div>
 		</div>
+
 		<div class="row mt10">
 			<div class="col-sm-4">
 				<div class="input-group">
@@ -158,23 +131,22 @@
 <%@include file="../../../base/base_edit.jsp"%>
 <script type="text/javascript">
     var editUI;
-    var siteVisaOutDetailInfosEntry;
-    var siteVisaOutDetailInfosEntryObj;
     function getParams(){
         var pro = {};
         pro.projectId = $('input[name="project"]').myF7().getValue();
         return pro;
     }
-
     /**
      * 一切操作前的接口函数
      */
     function beforeAction(opt) {
+        var director = $('input[name="director"]').myF7().getData();
+        if(director){
+            $('input[name="directorName"]').val(director.name);
+		}
         return true;
     }
-    function siteVisaOutDetailInfos_dataChanged($cell,obj){
 
-    }
 
     function afterAction(_opt){
         if(_opt==OperateType.addnew){
@@ -186,26 +158,15 @@
         }
     }
     $(document).ready(function() {
-        var height = window.outerHeight-530;
-        var entryOption = "{type:'entry',height:"+height+",tableOpt:{editDataChanged:siteVisaOutDetailInfos_dataChanged}"+
-            ",toolbar:{title:'现场签证(支出)清单'}}";
-        $("table.input-entry").attr("data-opt",entryOption);
         editUI = $('#editPanel').editUI({
-            title : "现场签证(支出)",billModel:2,
-            baseUrl : "ec/engineering/sitevisaout",
+            title : "项目质量样板职责",billModel:2,
+            baseUrl : "ec/quality/template",
             toolbar : "#table-toolbar",
             form : {
                 el : "#editForm"
             }
         });
         editUI.onLoad();
-
-        siteVisaOutDetailInfosEntryObj = editUI.getEntryObj('siteVisaOutDetailInfos');
-        if(!webUtil.isEmpty(siteVisaOutDetailInfosEntryObj)){
-            siteVisaOutDetailInfosEntry = siteVisaOutDetailInfosEntryObj.entry;
-            siteVisaOutDetailInfosEntry.resetView();
-        }
-        webUtil.initMainPanel('#editPanel');
     })
 </script>
 </html>

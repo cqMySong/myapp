@@ -56,16 +56,16 @@
 				<table name="applyMaterialDetailInfos" class="input-entry" >
 					<thead>
 					<tr>
-						<th data-field="materialType" data-width="80" data-type="select" data-locked="true">物料类型</th>
+						<th data-field="materialType" data-width="100" data-type="select" data-locked="true">物料类型</th>
 						<th data-field="materialInfo" data-type="f7"  data-visible="false">物料信息</th>
-						<th data-field="budgetingDetailInfo" data-type="f7"  data-width="150"
+						<th data-field="budgetingDetailInfo" data-type="f7"
 							data-editor="{mutil:true,uiWin:{title:'预算详细',height:580,width:880,url:'ec/budget/budgetingDetailF7',uiParams:getParams}}">物料名称</th>
-						<th data-field="specification" data-type="text" data-locked="true" data-width="100">规格</th>
+						<th data-field="specification" data-type="text" data-locked="true" data-width="150">规格</th>
 						<th data-field="measureUnit" data-type="f7" data-locked="true" data-width="80">计量单位</th>
 						<th data-field="quantity" data-type="text" data-locked="true" data-width="80">数量</th>
 						<th data-field="budgetaryPrice" data-width="100" data-type="text" data-locked="true">预算价</th>
 						<th data-field="purchaseNum"  data-width="100" data-type="number">申购数量</th>
-						<th data-field="arrivalTime"  data-width="100"  data-type="date">计划到场时间</th>
+						<th data-field="arrivalTime"  data-width="120"  data-type="date">计划到场时间</th>
 					</tr>
 					</thead>
 				</table>

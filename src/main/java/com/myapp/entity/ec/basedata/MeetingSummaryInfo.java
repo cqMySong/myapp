@@ -1,5 +1,6 @@
 package com.myapp.entity.ec.basedata;
 
+import com.myapp.core.annotation.MyEntityAnn;
 import com.myapp.core.base.entity.CoreBaseBillInfo;
 import com.myapp.core.enums.MeetingSummaryType;
 import org.hibernate.annotations.Type;
@@ -13,6 +14,7 @@ import java.util.Date;
  * @author： ly
  * @date: 2017-11-19 20:59
  */
+@MyEntityAnn(name="会议纪要")
 @Entity
 @Table(name="t_ec_meeting_summary")
 public class MeetingSummaryInfo extends CoreBaseBillInfo {

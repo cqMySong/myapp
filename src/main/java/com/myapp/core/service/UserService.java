@@ -1,8 +1,11 @@
 package com.myapp.core.service;
 
 import java.security.NoSuchAlgorithmException;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
+import com.myapp.core.entity.PositionInfo;
 import com.myapp.core.exception.db.QueryException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -40,4 +43,19 @@ public class UserService extends BaseInterfaceService<UserInfo> {
 		String hql = "select u from UserInfo as u where u.number=?";
 		return  queryEntity(hql,new String[]{number});
 	}
+
+	public List<PositionInfo> queryPositionByMain(String userId){
+		String hql = "select b.position as position from UserInfo as u,UserPositionInfo as  b " +
+				"where u.id = b.parent.id and u.id=? and b.main=true";
+		List<Map<String,Object>> result = findByHQL(hql,new Object[]{userId});
+		if(result!=null&&result.size()>0){
+			List<PositionInfo> positionInfos = new ArrayList<>();
+			for(Map<String,Object> map:result){
+				positionInfos.add((PositionInfo) map.get("position"));
+			}
+			return  positionInfos;
+		}
+		return null;
+	}
+
 }

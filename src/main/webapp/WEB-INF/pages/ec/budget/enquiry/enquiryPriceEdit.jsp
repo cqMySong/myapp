@@ -67,7 +67,7 @@
 						<th data-field="paymentMethod"  data-width="100"  data-type="text">付款方式</th>
 						<th data-field="origin"  data-width="100" data-type="text">产地</th>
 						<th data-field="supplyCycle"  data-width="100" data-type="text">供货周期</th>
-						<th data-field="supplyCompany"  data-width="100" data-type="text">单位</th>
+						<th data-field="supplyCompany"  data-type="text">单位</th>
 						<th data-field="contactMan"  data-width="100" data-type="text">联系人</th>
 						<th data-field="contactTel"  data-width="100" data-type="text">联系电话</th>
 						<th data-field="contractSignMethod"  data-width="100" data-type="select"

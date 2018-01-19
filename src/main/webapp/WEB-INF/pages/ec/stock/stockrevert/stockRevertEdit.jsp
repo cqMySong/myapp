@@ -70,10 +70,10 @@
 						<tr>
 							<th data-field="stockOutDetailInfo" data-type="f7"  data-visible="false">出库明细</th>
 							<th data-field="stockOutNumber" data-type="text" data-locked="true" data-width="150">出库单号</th>
-							<th data-field="materialType" data-width="100" data-type="select" data-locked="true">材料类型</th>
-							<th data-field="material" data-type="f7"  data-width="150"
+							<th data-field="materialType" data-width="120" data-type="select" data-locked="true">材料类型</th>
+							<th data-field="material" data-type="f7"
 								data-editor="{mutil:true,uiWin:{title:'出库信息',height:580,width:880,url:'ec/stock/stockOutDetailF7',uiParams:getParams}}">物料名称</th>
-							<th data-field="specification" data-type="text" data-locked="true" data-width="100">规格</th>
+							<th data-field="specification" data-type="text" data-locked="true" data-width="120">规格</th>
 							<th data-field="measureUnit" data-type="text" data-locked="true" data-width="100">计量单位</th>
 							<th data-field="count" data-type="number" data-width="100">归还数量</th>
 							<th data-field="remark" data-type="text" data-width="100">备注</th>

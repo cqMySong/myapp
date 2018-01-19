@@ -71,13 +71,13 @@
 					<thead>
 					<tr>
 						<th data-field="applyMaterialInfo" data-width="100" data-type="f7" data-locked="true">申购单号</th>
-						<th data-field="materialType" data-width="100" data-type="select" data-locked="true">材料类型</th>
+						<th data-field="materialType" data-width="120" data-type="select" data-locked="true">材料类型</th>
 						<th data-field="applyMaterialDetailInfo" data-type="f7" data-visible="false">申购明细</th>
-						<th data-field="material" data-type="f7"  data-width="150"
+						<th data-field="material" data-type="f7"
 							data-editor="{mutil:true,uiWin:{title:'申购信息',height:580,width:880,url:'ec/purchase/applyMaterialDetailF7',uiParams:getParams}}">物料名称</th>
-						<th data-field="specification" data-type="text" data-locked="true" data-width="100">规格</th>
+						<th data-field="specification" data-type="text" data-locked="true" data-width="120">规格</th>
 						<th data-field="measureUnitName" data-type="text" data-locked="true" data-width="100">计量单位</th>
-						<th data-field="origin" data-type="text" data-width="100">产地</th>
+						<th data-field="origin" data-type="text" data-width="200">产地</th>
 						<th data-field="count" data-type="number" data-width="100">入库数量</th>
 						<th data-field="remark" data-type="text" data-width="100">备注</th>
 					</tr>

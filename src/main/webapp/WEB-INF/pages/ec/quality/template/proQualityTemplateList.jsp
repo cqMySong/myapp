@@ -2,12 +2,15 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<title>库存归还</title>
+<title>项目质量样板职责</title>
 </head>
 <script type="text/javascript">
 </script>
 <body style="padding: 5px;">
-	<div id="table-toolbar" class="panel" style="height:42px;padding-top:2px;"></div>
+	<div id="table-toolbar" class="panel" style="height:42px;padding-top: 2px;">
+		<button class="btn btn-success" type="button" id="jobRequire">
+			<span class="fa fa-file-o"></span>&nbsp;工作要求</button>
+	</div>
 	<div class="mainContrainer">
 		<div class="leftContainer" id="tree_container"></div>
 		<div class="rightContainer" id="tblMain_container">
@@ -19,12 +22,15 @@
 						 <thead >
 							<tr>
 								<th data-field="project_name">工程项目</th>
-								<th data-field="name">归还说明</th>
-								<th data-field="number">归还单号</th>
-								<th data-field="revertStockDate" data-type="date">归还时间</th>
-								<th data-field="returnPerson">归还人</th>
-								<th data-field="billState" data-type="select">业务状态</th>
-								<th data-field="remark">备注</th>
+								<th data-field="name">名称</th>
+								<th data-field="number">单号</th>
+								<th data-field="branchBaseWbs_name">分部名称</th>
+								<th data-field="subentry_name">分项名称</th>
+								<th data-field="operationPoint" data-type="textarea">操作要点</th>
+								<th data-field="expectStartDate" data-type="date">预计实施时间</th>
+								<th data-field="acceptanceDate" data-type="date">验收时间</th>
+								<th data-field="billState" data-type="select">状态</th>
+								<th data-field="createUser_name">创建人</th>
 							</tr>
 						</thead>
 					</table>
@@ -56,19 +62,31 @@
 
 	$(document).ready(function() {
 			var treeNode2QueryProp = ["id","name","number","longNumber","type"];
-			var editWin ={title:'物料归还',width:(window.outerWidth-50),height:(window.outerHeight-100)};
+			var editWin ={title:'项目质量样板',width:900,height:(window.outerHeight-260)};
 			var treeOpt = {
 					setting:{
 						data: {
 							simpleData: {enable:true,idKey: "id", pIdKey: "parentId",rootPId: ''}
 						}
 					}};
-			var height = window.outerHeight-307;
-			thisOrgList = $('body').treeListUI({tableEl:'#tblMain',treeUrl:'ec/basedata/projects/projectTree',baseUrl:'ec/stock/stockreverts',title:'项目工程',height:(height+42),
+			var height = window.outerHeight-305;
+			thisOrgList = $('body').treeListUI({tableEl:'#tblMain',treeUrl:'ec/basedata/projects/projectTree',baseUrl:'ec/quality/templates',title:'项目工程',height:(height+42),
 							treeContainer:"#tree_container",editWin:editWin,toolbar:"#table-toolbar",searchParams:{includeChild:true},treeOpt:treeOpt
 							,treeNode2QueryProp:treeNode2QueryProp,extendTableOptions:{toolbar:'#tblMain_toolbar',height:height,sortStable:false}});
 			thisOrgList.onLoad();
-
+			$('#jobRequire').on('click',function(){
+                var _selRows = thisOrgList.listUI.getSelectRow();
+                if(!webUtil.isEmpty(_selRows)&&_selRows.length>0){
+                    var _thisRowData = _selRows[0];
+                    var _win = $.extend(true,{},{title:'工作要求',width:900,height:500,btns:[]});
+                    _win.title = _win.title+'-确认';
+                    _win.url =  webUtil.toUrl('ec/quality/templates/job/require');
+                    _win.uiParams = {proQualityTemplateId:_thisRowData.id};
+                    webUtil.openWin(_win);
+                }else{
+                    webUtil.mesg('请先选中对应的数据行，方可进行工作要求操作!');
+                }
+			});
 	});
 
 </script>

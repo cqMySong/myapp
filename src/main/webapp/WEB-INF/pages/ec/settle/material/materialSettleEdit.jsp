@@ -104,11 +104,11 @@
 				<table name="materialSettleDetailInfos" class="input-entry" >
 					<thead>
 						<tr>
-							<th data-field="materialType" data-width="100" data-type="select" data-locked="true">物料类型</th>
+							<th data-field="materialType" data-width="120" data-type="select" data-locked="true">物料类型</th>
 							<th data-field="materialInfo" data-type="f7" data-visible="false">物料id</th>
 							<th data-field="purchaseContractDetailInfo" data-type="f7" data-visible="false">采购明细id</th>
-							<th data-field="materialName" data-locked="true" data-width="100">物料名称</th>
-							<th data-field="specification" data-type="text" data-locked="true" data-width="100">规格</th>
+							<th data-field="materialName" data-locked="true">物料名称</th>
+							<th data-field="specification" data-type="text" data-locked="true" data-width="120">规格</th>
 							<th data-field="measureUnitName" data-type="text" data-locked="true" data-width="100">单位</th>
 							<th data-field="price" data-type="number" data-locked="true" data-width="100">采购单价</th>
 							<th data-field="settleCount" data-type="number" data-width="100">结算数量</th>

@@ -98,15 +98,15 @@
 				<table name="purchaseContractDetailInfos" class="input-entry" >
 					<thead>
 					<tr>
-						<th data-field="materialType" data-width="100" data-type="select" data-locked="true"
+						<th data-field="materialType" data-width="120" data-type="select" data-locked="true"
 						data-editor="{type:'select',url:'base/common/combox?enum=com.myapp.enums.materialType'}">材料类型</th>
 						<th data-field="applyMaterialDetailInfo" data-type="f7" data-visible="false">申购单id</th>
 						<th data-field="materialName" data-type="text" data-visible="false">材料名称</th>
-						<th data-field="material" data-type="f7"  data-width="150"
+						<th data-field="material" data-type="f7"
 							data-editor="{mutil:true,uiWin:{title:'材料申购单',height:580,width:880,url:'ec/purchase/applyMaterialDetailF7',uiParams:getParams}}">物料名称</th>
-						<th data-field="specification" data-type="text" data-locked="true" data-width="100">规格</th>
+						<th data-field="specification" data-type="text" data-locked="true" data-width="150">规格</th>
 						<th data-field="measureUnitName" data-type="text" data-locked="true" data-width="100">计量单位</th>
-						<th data-field="origin"  data-width="100" data-type="text">产地</th>
+						<th data-field="origin"  data-width="200" data-type="text">产地</th>
 						<th data-field="quantity" data-type="number" data-width="100">采购数量</th>
 						<th data-field="purchasePrice" data-width="100"  data-type="number">采购单价</th>
 						<th data-field="totalPrice" data-width="100"  data-type="text" data-locked="true">总计</th>

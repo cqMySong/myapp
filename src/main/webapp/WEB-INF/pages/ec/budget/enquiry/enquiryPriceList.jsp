@@ -7,7 +7,7 @@
 <script type="text/javascript">
 </script>
 <body style="padding: 5px;">
-	<div id="table-toolbar" class="panel" style="height:60px;margin-bottom:5px;"></div>
+	<div id="table-toolbar" class="panel" style="height:42px;padding-top:2px;"></div>
 	<div class="mainContrainer">
 		<div class="leftContainer" id="tree_container"></div>
 		<div class="rightContainer" id="tblMain_container">
@@ -63,7 +63,7 @@
 							simpleData: {enable:true,idKey: "id", pIdKey: "parentId",rootPId: ''}
 						}
 					}};
-			var height = window.outerHeight-325;
+			var height = window.outerHeight-307;
 			thisOrgList = $('body').treeListUI({tableEl:'#tblMain',treeUrl:'ec/basedata/projects/projectTree',baseUrl:'ec/budget/enquiryprices',title:'项目工程',height:(height+42),
 							treeContainer:"#tree_container",editWin:editWin,toolbar:"#table-toolbar",searchParams:{includeChild:true},treeOpt:treeOpt
 							,treeNode2QueryProp:treeNode2QueryProp,extendTableOptions:{toolbar:'#tblMain_toolbar',height:height,sortStable:false}});

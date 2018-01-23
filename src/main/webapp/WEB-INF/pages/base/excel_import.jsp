@@ -54,7 +54,6 @@
     	$('#btnExportTemp').click(function(){
     		var url = $(this).attr('toUrl');
     		if(!webUtil.isEmpty(uiCtx)){
-    			uiCtx = webUtil.json2Str(uiCtx);
     			url+=(url.indexOf('?')>0?'&':'?')+'uiCtx='+uiCtx;
     		}
     		$('#downWin').attr('src',url);

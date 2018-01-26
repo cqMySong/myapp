@@ -39,7 +39,7 @@
 			<div class="col-sm-4">
 				<div class="input-group">
 					<span class="input-group-addon lable">分项名称</span>
-					<input type="text" name="subentry" class="form-control input-item require"
+					<input type="text" name="subentry" class="form-control input-item"
 						   data-opt="{type:'f7',uiWin:{title:'分项名称',height:600,width:800,url:'ec/basedata/proWbsF7'}}">
 				</div>
 			</div>

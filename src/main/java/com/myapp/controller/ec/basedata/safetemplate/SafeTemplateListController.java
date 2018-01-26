@@ -36,10 +36,8 @@ public class SafeTemplateListController extends BaseDataListController {
 	@Override
 	public List<ColumnModel> getDataBinding() {
 		List<ColumnModel> cols = super.getDataBinding();
-		cols.add(new ColumnModel("position", DataTypeEnum.F7, PositionInfo.class));
 		cols.add(new ColumnModel("branchBaseWbs", DataTypeEnum.F7, ProBaseWbsInfo.class));
 		cols.add(new ColumnModel("subentry", DataTypeEnum.F7, ProBaseWbsInfo.class));
-		cols.add(new ColumnModel("jobRequirement"));
 		return cols;
 	}
 	@Override

@@ -277,7 +277,7 @@ var itemRemoveUrl = "ec/plan/projecttotalplan/checkRemoveItem";
 	        if(!webUtil.isEmpty(project)){
 	        	var forwardUrl = webUtil.toUrl('ec/plan/projecttotalplan/import/view');
 	        	var params = {proId:project.id,proName:project.name};//可以传递参数
-		        webUtil.openWin({maxmin:false,width:500,height:400,title:'导入预算信息',url:forwardUrl,
+		        webUtil.openWin({maxmin:false,width:500,height:400,title:'导入项目计划信息',url:forwardUrl,
 		        	uiParams:params,btnCallBack:function(btnIndex,index,layero){
 		            	if(layero){
 		                    var winUI = $(layero).find("iframe")[0].contentWindow;

@@ -5,6 +5,7 @@ import com.myapp.core.base.entity.CoreBaseDataInfo;
 import com.myapp.core.entity.PositionInfo;
 
 import javax.persistence.*;
+import java.util.Set;
 
 /**
  * @path：com.myapp.entity.ec.basedata
@@ -17,10 +18,6 @@ import javax.persistence.*;
 @Table(name="t_ec_safe_template")
 public class SafeTemplateInfo extends CoreBaseDataInfo {
     /**
-     * 岗位信息
-     */
-    private PositionInfo position;
-    /**
      * 分部
      */
     private ProBaseWbsInfo branchBaseWbs;
@@ -28,20 +25,8 @@ public class SafeTemplateInfo extends CoreBaseDataInfo {
      * 分项
      */
     private ProBaseWbsInfo subentry;
-    /**
-     * 工作要求
-     */
-    private String jobRequirement;
 
-    @OneToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "fPositionId")
-    public PositionInfo getPosition() {
-        return position;
-    }
-
-    public void setPosition(PositionInfo position) {
-        this.position = position;
-    }
+    private Set<SafeTemplateDetailInfo> safeTemplateDetailInfos;
 
     @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "fBranchBaseWbsId")
@@ -61,12 +46,14 @@ public class SafeTemplateInfo extends CoreBaseDataInfo {
     public void setSubentry(ProBaseWbsInfo subentry) {
         this.subentry = subentry;
     }
-    @Column(name = "fJobRequirement",length=500)
-    public String getJobRequirement() {
-        return jobRequirement;
+
+    @OneToMany(cascade={CascadeType.ALL},mappedBy="parent")
+    @OrderBy("seq ASC")
+    public Set<SafeTemplateDetailInfo> getSafeTemplateDetailInfos() {
+        return safeTemplateDetailInfos;
     }
 
-    public void setJobRequirement(String jobRequirement) {
-        this.jobRequirement = jobRequirement;
+    public void setSafeTemplateDetailInfos(Set<SafeTemplateDetailInfo> safeTemplateDetailInfos) {
+        this.safeTemplateDetailInfos = safeTemplateDetailInfos;
     }
 }

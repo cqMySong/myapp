@@ -3,6 +3,8 @@ package com.myapp.controller.ec.budget;
 import cn.afterturn.easypoi.excel.entity.ImportParams;
 import cn.afterturn.easypoi.excel.entity.params.ExcelExportEntity;
 
+import cn.afterturn.easypoi.excel.entity.result.ExcelImportResult;
+import com.alibaba.fastjson.JSONObject;
 import com.myapp.core.annotation.PermissionAnn;
 import com.myapp.core.base.entity.CoreBaseInfo;
 import com.myapp.core.base.service.IImportConvertService;
@@ -12,8 +14,12 @@ import com.myapp.core.entity.MeasureUnitInfo;
 import com.myapp.core.entity.UserInfo;
 import com.myapp.core.enums.BillState;
 import com.myapp.core.enums.DataTypeEnum;
+import com.myapp.core.enums.ResultTypeEnum;
 import com.myapp.core.model.ColumnModel;
 import com.myapp.core.entity.MaterialInfo;
+import com.myapp.core.model.ResultModel;
+import com.myapp.core.service.MaterialService;
+import com.myapp.core.util.BaseUtil;
 import com.myapp.entity.ec.basedata.ProjectInfo;
 import com.myapp.entity.ec.budget.BudgetingDetailInfo;
 import com.myapp.entity.ec.budget.BudgetingInfo;
@@ -28,8 +34,10 @@ import org.springframework.web.bind.annotation.RequestMapping;
 
 import javax.annotation.Resource;
 
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 /**
  * @path：com.myapp.controller.ec.budget
@@ -43,26 +51,20 @@ import java.util.List;
 public class BudgetingEditController extends BaseBillEditImportController {
     @Resource
     private BudgetingService budgetingService;
+    @Resource
+    private MaterialService materialService;
 
     @Override
     public Object createNewData() {
         return new BudgetingInfo();
     }
-
+    @Override
     public CoreBaseInfo getEntityInfo() {
         return new BudgetingInfo();
     }
-
+    @Override
     public AbstractBaseService getService() {
         return this.budgetingService;
-    }
-
-    public IImportConvertService getImportConvertService() {
-       return this.budgetingService;
-    }
-
-    public String getImportTemplateName() {
-        return "budget.xls";
     }
 
     @Override
@@ -104,26 +106,20 @@ public class BudgetingEditController extends BaseBillEditImportController {
 
         return cols;
     }
-
-    public Class getExcelToEntityClass() {
-        return BudgetingModel.class;
+    @Override
+    public ExcelImportResult toDoImportData(InputStream in) throws Exception {
+        setAbort(true);
+        return super.toDoImportData(in);
     }
-
-    public ImportParams getExcelImportParams() {
-        ImportParams params = new ImportParams();
-        params.setTitleRows(0);
-        params.setHeadRows(1);
-        return params;
-    }
-    
+    @Override
     public String getHeadTitle() {
     	return "预算编制";
     }
-    
+    @Override
     public int[] getHeadRows() {
     	return new int[]{3,1};
     }
-    
+    @Override
     public String getFillRemark() {
     	StringBuffer sb = new StringBuffer();
     	sb.append("\r\n\t 1:材料编码不能为空，切必须存在!");
@@ -131,11 +127,11 @@ public class BudgetingEditController extends BaseBillEditImportController {
     	sb.append("\r\n\t 3:预算单价和数量为数字类型!");
     	return sb.toString();
     }
-    
+    @Override
     public short getRemrkHeight() {
     	return 1080;
     }
-    
+    @Override
     public List<ExcelExportEntity> getExportHeader() {
     	List<ExcelExportEntity> headers = new ArrayList<ExcelExportEntity>();
     	headers.add(stringEntity("序号", "seq"));
@@ -146,5 +142,59 @@ public class BudgetingEditController extends BaseBillEditImportController {
     	headers.add(stringEntity("预算数量", "qty"));
     	headers.add(stringEntity("预算单价", "price"));
     	return headers;
+    }
+    private MaterialInfo materialInfo = null;
+    private JSONObject budgetingDetailInfo = null;
+    private JSONObject columnJson = null;
+    @Override
+    public ResultModel verifyRowData(int rowIdx, Map rowMap) {
+        ResultModel rm = new ResultModel();
+        if(rowMap!=null&&rowMap.size()>0){
+            StringBuffer msg = new StringBuffer();
+            Object obj = rowMap.get("qty");
+            if(obj==null){
+                msg.append("<br/>预算数量，不允许导入!");
+            }else if(!BaseUtil.isNumeric(obj.toString())){
+                msg.append("<br/>预算数量，不是数字类型的不允许导入!");
+            }
+            obj = rowMap.get("price");
+            if(obj==null){
+                msg.append("<br/>预算单价，不允许导入!");
+            }else if(!BaseUtil.isNumeric(obj.toString())){
+                msg.append("<br/>预算单价，不是数字类型的不允许导入!");
+            }
+            obj = rowMap.get("matNumber");
+            if(obj==null){
+                msg.append("<br/>材料编号为空，不允许导入!");
+            }else{
+                materialInfo = materialService.queryByCode(obj.toString());
+                if(materialInfo==null){
+                    msg.append("<br/>在物料基础信息中未找到，不允许导入!");
+                }
+            }
+            if(!BaseUtil.isEmpty(msg.toString())){
+                rm.setResultType(ResultTypeEnum.ERROR);
+                rm.setMesg("第["+(rowIdx+5)+"]行中:"+msg.toString());
+            }else{
+                budgetingDetailInfo = new JSONObject();
+                budgetingDetailInfo.put("quantity",rowMap.get("qty"));
+                budgetingDetailInfo.put("budgetaryPrice",rowMap.get("price"));
+                columnJson = new JSONObject();
+                columnJson.put("id",materialInfo.getId());
+                columnJson.put("name",materialInfo.getName());
+                budgetingDetailInfo.put("material",columnJson);
+                columnJson =  new JSONObject();
+                columnJson.put("id",materialInfo.getUnit().getId());
+                columnJson.put("name",materialInfo.getUnit().getName());
+                budgetingDetailInfo.put("measureUnitInfo",columnJson);
+                budgetingDetailInfo.put("specification",materialInfo.getSpecification());
+                columnJson =  new JSONObject();
+                columnJson.put("key",materialInfo.getMaterialType().getValue());
+                columnJson.put("val",materialInfo.getMaterialType().getName());
+                budgetingDetailInfo.put("materialType",columnJson);
+                rowMap.put("returnJson",budgetingDetailInfo);
+            }
+        }
+        return rm;
     }
 }

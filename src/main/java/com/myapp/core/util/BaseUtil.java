@@ -12,6 +12,8 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 /**
  *------------------☆重庆MySong☆------------------------
@@ -145,5 +147,13 @@ public abstract class BaseUtil {
 			md.update(inputStr.getBytes());
 			return new BigInteger(1, md.digest()).toString(16);
 	    }
-	
+
+		public static boolean isNumeric(String str) {
+			Pattern pattern = Pattern.compile("-?[0-9]+.*[0-9]*");
+			Matcher isNum = pattern.matcher(str);
+			if (!isNum.matches()) {
+				return false;
+			}
+			return true;
+		}
 }

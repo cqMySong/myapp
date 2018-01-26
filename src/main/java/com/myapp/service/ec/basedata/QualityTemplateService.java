@@ -4,6 +4,9 @@ import com.myapp.core.service.base.BaseInterfaceService;
 import com.myapp.entity.ec.basedata.QualityTemplateInfo;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+import java.util.Map;
+
 /**
  * @path：com.myapp.service.ec.basedata
  * @description：
@@ -19,11 +22,15 @@ public class QualityTemplateService extends  BaseInterfaceService<QualityTemplat
      * @param positionId
      * @return
      */
-    public QualityTemplateInfo queryByPositionAndSubEntry(String branchBaseWbsId,
+    public String queryByPositionAndSubEntry(String branchBaseWbsId,
                                                           String subentryId,String positionId){
-        String hql = "select qt from QualityTemplateInfo as qt " +
-                "where qt.branchBaseWbs.id = ? and qt.subentry.id=? and qt.position.id=? and " +
-                "qt.enabled=true ";
-        return queryEntity(hql,new Object[]{branchBaseWbsId,subentryId,positionId});
+        String hql = "select qtd.jobRequirement as jobRequirement from QualityTemplateInfo as qt,QualityTemplateDetailInfo as qtd " +
+                "where qtd.parent.id = qt.id and qt.branchBaseWbs.id = ? and qt.subentry.id=? " +
+                "and qtd.position.id=? and qt.enabled=true and qtd.enable = true";
+        List<Map<String,String>> result = findByHQL(hql,new Object[]{branchBaseWbsId,subentryId,positionId});
+        if(result!=null&&result.size()>0){
+            return result.get(0).get("jobRequirement");
+        }
+        return null;
     }
 }

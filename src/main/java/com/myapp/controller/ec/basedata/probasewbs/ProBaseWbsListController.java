@@ -23,7 +23,7 @@ import com.myapp.core.annotation.PermissionAnn;
 import com.myapp.core.base.service.impl.AbstractBaseService;
 import com.myapp.core.controller.BaseTreeListController;
 import com.myapp.core.enums.DataTypeEnum;
-import com.myapp.core.exception.db.AddNewException;
+import com.myapp.core.exception.db.SaveException;
 import com.myapp.core.model.ColumnModel;
 import com.myapp.core.model.WebDataModel;
 import com.myapp.core.util.BaseUtil;
@@ -115,7 +115,7 @@ public class ProBaseWbsListController extends BaseTreeListController {
 		String structId = request.getParameter("structId");
 		try {
 			return proBaseWbsService.batchInitProWbsData(structId);
-		} catch (AddNewException e) {
+		} catch (SaveException e) {
 			e.printStackTrace();
 			setErrorMesg(e.getMessage());
 		}

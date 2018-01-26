@@ -8,6 +8,7 @@ import java.util.Map;
 import org.springframework.stereotype.Service;
 
 import com.myapp.core.exception.db.AddNewException;
+import com.myapp.core.exception.db.SaveException;
 import com.myapp.core.model.WebDataModel;
 import com.myapp.core.service.base.BaseInterfaceService;
 import com.myapp.core.util.BaseUtil;
@@ -29,7 +30,7 @@ import com.myapp.enums.ec.ProWbsType;
 public class ProBaseWbsService extends BaseInterfaceService<ProBaseWbsInfo> {
 	
 	// 导入单位工程对应下的标准分解结构
-	public WebDataModel batchInitProWbsData(String structId) throws AddNewException{
+	public WebDataModel batchInitProWbsData(String structId) throws SaveException{
 		WebDataModel wdm = new WebDataModel();
 		wdm.setData(null);
 		int code = 0;

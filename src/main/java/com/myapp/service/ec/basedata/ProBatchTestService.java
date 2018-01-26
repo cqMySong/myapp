@@ -48,7 +48,7 @@ public class ProBatchTestService extends BaseInterfaceService<ProBatchTestInfo> 
 		return super.saveEntity(entity);
 	}
 	
-	public WebDataModel batchInitProData(String proJectId) throws AddNewException{
+	public WebDataModel batchInitProData(String proJectId) throws SaveException{
 		WebDataModel wdm = new WebDataModel();
 		wdm.setData(null);
 		int code = 0;

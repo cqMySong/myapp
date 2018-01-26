@@ -5,12 +5,10 @@ import java.util.List;
 
 import org.springframework.stereotype.Service;
 
-import com.myapp.core.exception.db.AddNewException;
+import com.myapp.core.exception.db.SaveException;
 import com.myapp.core.model.WebDataModel;
 import com.myapp.core.service.base.BaseInterfaceService;
 import com.myapp.core.util.BaseUtil;
-import com.myapp.entity.ec.basedata.BatchTestInfo;
-import com.myapp.entity.ec.basedata.ProBatchTestInfo;
 import com.myapp.entity.ec.basedata.ProSkillDisclosureInfo;
 import com.myapp.entity.ec.basedata.ProjectInfo;
 import com.myapp.entity.ec.basedata.SkillItemInfo;
@@ -29,7 +27,7 @@ public class ProSkillDisclosureService extends
 		BaseInterfaceService<ProSkillDisclosureInfo> {
 
 	//导入标准的技术交底内容
-	public WebDataModel batchInitProData(String proJectId,SkillType st) throws AddNewException{
+	public WebDataModel batchInitProData(String proJectId,SkillType st) throws SaveException{
 		WebDataModel wdm = new WebDataModel();
 		wdm.setData(null);
 		int code = 0;

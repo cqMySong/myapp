@@ -24,11 +24,11 @@ import com.myapp.core.model.PageModel;
  *-----------MySong---------------
  */
 public interface IAbstractBaseDao {
-	public Serializable addNewEntity(Object entity) throws AddNewException;
 	public Object loadEntity(Class claz,String id) throws ReadException;
 	public Object getEntity(Class claz,String id) throws ReadException;
 	public Object queryEntity(Class claz,String hql,Object[] params) throws ReadException;
 	public List getEntityCollection(Class claz) throws ReadException;
+	public Serializable addNewEntity(Object entity) throws SaveException;
 	public Object saveEntity(Object entity) throws SaveException;
 	public void deleteEntity(Class claz,String id) throws DeleteException;
 	public void deleteEntity(Object entity) throws DeleteException;

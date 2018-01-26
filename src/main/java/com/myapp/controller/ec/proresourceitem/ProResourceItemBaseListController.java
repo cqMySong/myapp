@@ -16,7 +16,7 @@ import com.myapp.core.annotation.AuthorAnn;
 import com.myapp.core.base.service.impl.AbstractBaseService;
 import com.myapp.core.controller.BaseListController;
 import com.myapp.core.enums.DataTypeEnum;
-import com.myapp.core.exception.db.AddNewException;
+import com.myapp.core.exception.db.SaveException;
 import com.myapp.core.model.ColumnModel;
 import com.myapp.core.model.WebDataModel;
 import com.myapp.core.util.BaseUtil;
@@ -78,7 +78,7 @@ public abstract class ProResourceItemBaseListController extends BaseListControll
 		String projectId = request.getParameter("projectId");
 		try {
 			return proResourceItemService.batchInitProData(projectId,getResourceType());
-		} catch (AddNewException e) {
+		} catch (SaveException e) {
 			e.printStackTrace();
 			setErrorMesg(e.getMessage());
 		}

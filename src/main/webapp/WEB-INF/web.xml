@@ -17,6 +17,10 @@
 		<param-name>myapp</param-name>
 		<param-value>classpath:myapp.properties</param-value>
 	</context-param>
+	<context-param>
+		<param-name>license</param-name>
+		<param-value>classpath:lic/license.data</param-value>
+	</context-param>
 	<listener>
 		<listener-class>org.springframework.web.util.Log4jConfigListener</listener-class>
 	</listener>

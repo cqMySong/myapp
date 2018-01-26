@@ -5,12 +5,10 @@ import java.util.List;
 
 import org.springframework.stereotype.Service;
 
-import com.myapp.core.entity.basedate.DataGroupInfo;
-import com.myapp.core.exception.db.AddNewException;
+import com.myapp.core.exception.db.SaveException;
 import com.myapp.core.model.WebDataModel;
 import com.myapp.core.service.base.BaseInterfaceService;
 import com.myapp.core.util.BaseUtil;
-import com.myapp.entity.ec.basedata.ProEcDrawInfo;
 import com.myapp.entity.ec.basedata.ProResourceItemInfo;
 import com.myapp.entity.ec.basedata.ProjectInfo;
 import com.myapp.entity.ec.basedata.ResourceItemInfo;
@@ -30,7 +28,7 @@ public class ProResourceItemService extends
 	/**
 	 * 项目级资料目录
 	 */
-	public WebDataModel batchInitProData(String proJectId,ResourceType rt) throws AddNewException{
+	public WebDataModel batchInitProData(String proJectId,ResourceType rt) throws SaveException{
 		WebDataModel wdm = new WebDataModel();
 		wdm.setData(null);
 		int code = 0;

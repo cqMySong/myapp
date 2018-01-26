@@ -11,6 +11,7 @@ import com.myapp.core.exception.db.AddNewException;
 import com.myapp.core.exception.db.DeleteException;
 import com.myapp.core.exception.db.QueryException;
 import com.myapp.core.exception.db.ReadException;
+import com.myapp.core.exception.db.SaveException;
 import com.myapp.core.model.PageModel;
 
 /**
@@ -22,7 +23,8 @@ import com.myapp.core.model.PageModel;
  *-----------MySong---------------
  */
 public interface IAbstractBaseService {
-	public Serializable addNewEntity(Object entity) throws AddNewException;
+	public Serializable addNewEntity(Object entity) throws SaveException;
+	public Object saveEntity(Object entity) throws SaveException;
 	public <T> T loadEntity(Class<T> c,String id);
 	public <T> T getEntity(Class<T> c,String id);
 	public <T> T queryEntity(Class<T> c, String hql, Object[] params);

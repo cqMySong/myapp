@@ -7,6 +7,8 @@ import java.util.List;
 import java.util.Map;
 
 import javax.annotation.Resource;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
 import org.apache.log4j.LogManager;
 import org.apache.log4j.Logger;
@@ -16,6 +18,7 @@ import org.hibernate.criterion.ProjectionList;
 import org.hibernate.criterion.Projections;
 import org.hibernate.criterion.Restrictions;
 import org.hibernate.transform.Transformers;
+import org.springframework.beans.factory.annotation.Autowired;
 
 import com.myapp.core.base.dao.IAbstractBaseDao;
 import com.myapp.core.base.dao.impl.AbstractBaseDao;
@@ -44,6 +47,9 @@ import com.myapp.core.util.BaseUtil;
 public abstract class AbstractBaseService implements IAbstractBaseService {
 	private static final Logger log = LogManager.getLogger(AbstractBaseDao.class);
 	
+	 @Autowired
+	 public HttpServletRequest request;
+	    
 	protected abstract Class getEntityClass();
 	
 	@Resource
@@ -210,7 +216,7 @@ public abstract class AbstractBaseService implements IAbstractBaseService {
 		}
 		return null;
 	}
-	public Serializable addNewEntity(Object entity) throws AddNewException {
+	public Serializable addNewEntity(Object entity) throws SaveException {
 		return getBaseDao().addNewEntity(entity);
 	}
 	public PageModel toPageQuery(Integer curPage, Integer pageSize, String hql,

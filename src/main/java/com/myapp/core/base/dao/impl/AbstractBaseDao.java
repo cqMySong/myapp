@@ -4,7 +4,11 @@ import java.io.Serializable;
 import java.util.Collections;
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
+
+import javax.servlet.ServletContext;
+import javax.servlet.http.HttpServletRequest;
 
 import org.apache.log4j.LogManager;
 import org.apache.log4j.Logger;
@@ -21,6 +25,7 @@ import org.hibernate.engine.spi.SessionFactoryImplementor;
 import org.hibernate.hql.internal.ast.QueryTranslatorImpl;
 import org.hibernate.persister.entity.AbstractEntityPersister;
 import org.hibernate.transform.Transformers;
+import org.springframework.beans.factory.annotation.Autowired;
 
 import com.myapp.core.annotation.MyEntityAnn;
 import com.myapp.core.base.dao.IAbstractBaseDao;
@@ -37,6 +42,9 @@ import com.myapp.core.enums.BillState;
 import com.myapp.core.enums.EntityTypeEnum;
 import com.myapp.core.exception.db.DeleteException;
 import com.myapp.core.exception.db.ReadException;
+import com.myapp.core.exception.db.SaveException;
+import com.myapp.core.license.LicenseInfo;
+import com.myapp.core.license.ModelItemInfo;
 import com.myapp.core.model.PageModel;
 import com.myapp.core.util.BaseUtil;
 import com.myapp.core.uuid.UuidUtils;
@@ -52,7 +60,8 @@ import com.myapp.core.uuid.UuidUtils;
 public abstract class AbstractBaseDao implements IAbstractBaseDao {
 	private static final Logger log = LogManager.getLogger(AbstractBaseDao.class);
 	private Class claz;
-	
+	@Autowired
+	public HttpServletRequest request;
 	public abstract Session getCurrentSession() ;
 	public abstract SessionFactory getSessionFactory();
 	public Object loadEntity(Class claz, String id) {
@@ -94,7 +103,37 @@ public abstract class AbstractBaseDao implements IAbstractBaseDao {
 		}
 	}
 	
-	public Object saveEntity(Object entity) {
+	private void checkLicense(Object entity) throws SaveException{
+		if(request==null) return;
+		ServletContext ctx = request.getServletContext();
+		if(ctx!=null&&entity!=null){
+			Object licObj = ctx.getAttribute(SystemConstant.LICENSE_KEY);
+			if(licObj!=null&&licObj instanceof LicenseInfo){
+				LicenseInfo licInfo = (LicenseInfo) licObj;
+				Map<String,ModelItemInfo> models = licInfo.getModelsMap();
+				if(models!=null&&models.size()>0){
+					Class entClas = entity.getClass();
+					ModelItemInfo mdInfo = models.get(entClas.getName());
+					if(mdInfo!=null){
+						Serializable pk = null;
+						if(entity instanceof CoreInfo){
+							pk = ((CoreInfo)entity).getId();
+						}
+						int qty = mdInfo.getCount();
+						String hql = "select id from "+entClas.getSimpleName();
+						long count = getCount(getCurrentSession(), hql, null);
+						if((BaseUtil.isEmpty(pk)&&count>=qty)
+								||(!BaseUtil.isEmpty(pk)&&count>qty)){
+							String mesg = mdInfo.getName()+"的许可数量达到最大限制数,禁止保存!";
+							throw new SaveException(mesg);
+						}
+					}
+				}
+			}
+		}
+	}
+	
+	public Object saveEntity(Object entity) throws SaveException{
 		if(entity!=null){
 			Serializable pk = null;
 			if(entity instanceof CoreInfo){
@@ -107,6 +146,7 @@ public abstract class AbstractBaseDao implements IAbstractBaseDao {
 			if(BaseUtil.isEmpty(pk)){
 				pk = addNewEntity(entity);
 			}else{
+				checkLicense(entity);
 				Session sesion = getCurrentSession();
 				boolean toUpTree = false;
 				if(entity instanceof CoreBaseTreeInfo){
@@ -249,8 +289,9 @@ public abstract class AbstractBaseDao implements IAbstractBaseDao {
 		return et;
 	}
 	
-	public Serializable addNewEntity(Object entity) {
+	public Serializable addNewEntity(Object entity) throws SaveException{
 		if(entity!=null){
+			checkLicense(entity);
 			Session session = getCurrentSession();
 			if(!(entity instanceof SubsystemTreeInfo)){
 				Class claz = entity.getClass();

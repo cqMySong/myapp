@@ -7,6 +7,7 @@ import org.springframework.stereotype.Service;
 
 import com.myapp.core.entity.basedate.DataGroupInfo;
 import com.myapp.core.exception.db.AddNewException;
+import com.myapp.core.exception.db.SaveException;
 import com.myapp.core.model.WebDataModel;
 import com.myapp.core.service.base.BaseInterfaceService;
 import com.myapp.core.util.BaseUtil;
@@ -28,7 +29,7 @@ public class ProEcDrawService extends BaseInterfaceService<ProEcDrawInfo> {
 	/**
 	 * 项目级施工图分类标准
 	 */
-	public WebDataModel batchInitProData(String proJectId) throws AddNewException{
+	public WebDataModel batchInitProData(String proJectId) throws SaveException{
 		WebDataModel wdm = new WebDataModel();
 		wdm.setData(null);
 		int code = 0;

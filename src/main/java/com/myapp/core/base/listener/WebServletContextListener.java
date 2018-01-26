@@ -18,6 +18,9 @@ import org.apache.log4j.Logger;
 import org.springframework.util.ResourceUtils;
 import org.springframework.util.StringUtils;
 
+import com.myapp.core.base.setting.SystemConstant;
+import com.myapp.core.license.LicenseHelper;
+import com.myapp.core.license.LicenseInfo;
 import com.myapp.core.util.BaseUtil;
 
 /**
@@ -31,6 +34,8 @@ import com.myapp.core.util.BaseUtil;
 public class WebServletContextListener implements ServletContextListener {
 	private static final Logger log = LogManager.getLogger(WebServletContextListener.class);
 	public static final String CONFIG_APP_PARAM = "myapp";
+	public static final String CONFIG_LICENSE_FILE = "license";
+	
 	public void contextInitialized(ServletContextEvent sce) {
 		log.info("webContext begin init !!!");
 		ServletContext ctx = sce.getServletContext();  
@@ -55,6 +60,35 @@ public class WebServletContextListener implements ServletContextListener {
 				log.error("webContext init load properties file error !!!");
 			}
 		}
+		String licenseFile = ctx.getInitParameter(CONFIG_LICENSE_FILE);
+		String lic_msg = "";
+		if(licenseFile!=null&&!BaseUtil.isEmpty(licenseFile)){
+			try {
+				File file = ResourceUtils.getFile(licenseFile);
+				if(file.exists()){
+					LicenseInfo licInfo = LicenseHelper.decryptLicense(file);
+					if(licInfo!=null){
+						ctx.setAttribute(SystemConstant.LICENSE_KEY, licInfo);
+					}else{
+						lic_msg = "无授权许可数据!";
+					}
+				}else{
+					lic_msg = "无授权许可文件!";
+				}
+			} catch (FileNotFoundException e) {
+				e.printStackTrace();
+				lic_msg = e.getMessage();
+				log.error("webContext init license file is not find!!!");
+			} catch (Exception e) {
+				e.printStackTrace();
+				lic_msg = e.getMessage();
+				log.error("license 文件问题!!!"+e.getMessage());
+			}
+		}else{
+			log.error("web.xml中未配置对应的许可路径 !!!");
+			lic_msg ="web.xml中未配置对应的许可路径 !!!";
+		}
+		ctx.setAttribute(SystemConstant.LICENSEVERIFY_KEY, lic_msg);
 //		context.getInitParameter(name)
 	}
 

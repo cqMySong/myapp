@@ -65,16 +65,14 @@ public class ProSafeTemplateDetailService extends BaseInterfaceService<ProSafeTe
             List<PositionInfo> userMainPosition = userService.queryPositionByMain(checkerId);
             if(userMainPosition!=null){
                 ProSafeTemplateInfo proSafeTemplateInfo = proSafeTemplateService.loadEntity(proSafeTemplateId);
-                SafeTemplateInfo SafeTemplateInfo = null;
                 String jobRequirement = null;
                 String[] jobRequirementArr = null;
                 List<String> jobRequirementList = null;
                 for(PositionInfo positionInfo:userMainPosition){
-                    SafeTemplateInfo = safeTemplateService.queryByPositionAndSubEntry(
+                    jobRequirement = safeTemplateService.queryByPositionAndSubEntry(
                             proSafeTemplateInfo.getBranchBaseWbs().getBaseWbs().getId(),
                             proSafeTemplateInfo.getSubentry().getBaseWbs().getId(),positionInfo.getId());
-                    if(SafeTemplateInfo!=null&& !StringUtils.isEmpty(SafeTemplateInfo.getJobRequirement())){
-                        jobRequirement = SafeTemplateInfo.getJobRequirement();
+                    if(!StringUtils.isEmpty(jobRequirement)){
                         jobRequirementArr = jobRequirement.split("\n");
                         jobRequirementList = new ArrayList<>();
                         for(String jobStr:jobRequirementArr){

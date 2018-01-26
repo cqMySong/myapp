@@ -65,16 +65,14 @@ public class ProQualityTemplateDetailService extends BaseInterfaceService<ProQua
             List<PositionInfo> userMainPosition = userService.queryPositionByMain(checkerId);
             if(userMainPosition!=null){
                 ProQualityTemplateInfo proQualityTemplateInfo = proQualityTemplateService.loadEntity(proQualityTemplateId);
-                QualityTemplateInfo qualityTemplateInfo = null;
                 String jobRequirement = null;
                 String[] jobRequirementArr = null;
                 List<String> jobRequirementList = null;
                 for(PositionInfo positionInfo:userMainPosition){
-                    qualityTemplateInfo = qualityTemplateService.queryByPositionAndSubEntry(
+                    jobRequirement = qualityTemplateService.queryByPositionAndSubEntry(
                             proQualityTemplateInfo.getBranchBaseWbs().getBaseWbs().getId(),
                             proQualityTemplateInfo.getSubentry().getBaseWbs().getId(),positionInfo.getId());
-                    if(qualityTemplateInfo!=null&& !StringUtils.isEmpty(qualityTemplateInfo.getJobRequirement())){
-                        jobRequirement = qualityTemplateInfo.getJobRequirement();
+                    if(!StringUtils.isEmpty(jobRequirement)){
                         jobRequirementArr = jobRequirement.split("\n");
                         jobRequirementList = new ArrayList<>();
                         for(String jobStr:jobRequirementArr){

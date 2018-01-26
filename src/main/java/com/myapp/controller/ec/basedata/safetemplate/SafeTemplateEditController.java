@@ -7,9 +7,7 @@ import com.myapp.core.controller.BaseDataEditController;
 import com.myapp.core.entity.PositionInfo;
 import com.myapp.core.enums.DataTypeEnum;
 import com.myapp.core.model.ColumnModel;
-import com.myapp.entity.ec.basedata.ProBaseWbsInfo;
-import com.myapp.entity.ec.basedata.QualityTemplateInfo;
-import com.myapp.entity.ec.basedata.SafeTemplateInfo;
+import com.myapp.entity.ec.basedata.*;
 import com.myapp.service.ec.basedata.QualityTemplateService;
 import com.myapp.service.ec.basedata.SafeTemplateService;
 import org.springframework.stereotype.Controller;
@@ -38,10 +36,21 @@ public class SafeTemplateEditController extends BaseDataEditController{
 	@Override
 	public List<ColumnModel> getDataBinding() {
 		List<ColumnModel> cols = super.getDataBinding();
-		cols.add(new ColumnModel("position", DataTypeEnum.F7, PositionInfo.class));
 		cols.add(new ColumnModel("branchBaseWbs", DataTypeEnum.F7, ProBaseWbsInfo.class));
 		cols.add(new ColumnModel("subentry", DataTypeEnum.F7, ProBaseWbsInfo.class));
-		cols.add(new ColumnModel("jobRequirement"));
+
+		ColumnModel safeTemplateDetail = new ColumnModel("safeTemplateDetailInfos",DataTypeEnum.ENTRY,
+				SafeTemplateDetailInfo.class);
+
+		ColumnModel position = new ColumnModel("position",DataTypeEnum.F7,"id,name");
+		position.setClaz(PositionInfo.class);
+		safeTemplateDetail.getCols().add(position);
+
+		safeTemplateDetail.getCols().add(new ColumnModel("id",DataTypeEnum.PK));
+		safeTemplateDetail.getCols().add(new ColumnModel("jobRequirement",DataTypeEnum.STRING));
+		safeTemplateDetail.getCols().add(new ColumnModel("enable",DataTypeEnum.BOOLEAN));
+
+		cols.add(safeTemplateDetail);
 		return cols;
 	}
 	@Override

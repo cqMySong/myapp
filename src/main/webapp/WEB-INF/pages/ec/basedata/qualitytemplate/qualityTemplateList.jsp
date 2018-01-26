@@ -19,8 +19,6 @@
 					<th data-field="name">名称</th>
 					<th data-field="branchBaseWbs_name">分部</th>
 					<th data-field="subentry_name">分项</th>
-					<th data-field="position_name">岗位名称</th>
-					<th data-field="jobRequirement" data-type="textarea">工作要求</th>
 					<th data-field="enabled" data-type="checkbox">启用</th>
 				</tr>
 			</thead>
@@ -43,8 +41,8 @@ function enableClick(btn){
 }
 
 $(document).ready(function() {
-	var editWin ={title:'质量样板工作要点',width:620,height:550};
-	var height = top.getTopMainHeight()-45;
+    var height = top.getTopMainHeight()-45;
+	var editWin ={title:'质量样板工作要点',width:1000,height:height+90};
 	listUI = $('#listPanel').listUI({tableEl:'#tblMain',listModel:1,baseUrl:'ec/basedata/qualitytemplates'
 		,editWin:editWin,toolbar:"#table-toolbar",extendTableOptions:{height:height-40}});
 	listUI.onLoad();

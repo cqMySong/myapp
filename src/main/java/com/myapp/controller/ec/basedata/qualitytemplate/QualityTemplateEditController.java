@@ -4,11 +4,15 @@ import com.myapp.core.annotation.PermissionAnn;
 import com.myapp.core.base.entity.CoreBaseInfo;
 import com.myapp.core.base.service.impl.AbstractBaseService;
 import com.myapp.core.controller.BaseDataEditController;
+import com.myapp.core.entity.MaterialInfo;
+import com.myapp.core.entity.MeasureUnitInfo;
 import com.myapp.core.entity.PositionInfo;
 import com.myapp.core.enums.DataTypeEnum;
 import com.myapp.core.model.ColumnModel;
 import com.myapp.entity.ec.basedata.ProBaseWbsInfo;
+import com.myapp.entity.ec.basedata.QualityTemplateDetailInfo;
 import com.myapp.entity.ec.basedata.QualityTemplateInfo;
+import com.myapp.entity.ec.budget.BudgetingDetailInfo;
 import com.myapp.service.ec.basedata.QualityTemplateService;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -36,10 +40,21 @@ public class QualityTemplateEditController extends BaseDataEditController{
 	@Override
 	public List<ColumnModel> getDataBinding() {
 		List<ColumnModel> cols = super.getDataBinding();
-		cols.add(new ColumnModel("position", DataTypeEnum.F7, PositionInfo.class));
 		cols.add(new ColumnModel("branchBaseWbs", DataTypeEnum.F7, ProBaseWbsInfo.class));
 		cols.add(new ColumnModel("subentry", DataTypeEnum.F7, ProBaseWbsInfo.class));
-		cols.add(new ColumnModel("jobRequirement"));
+
+		ColumnModel qualityTemplateDetail = new ColumnModel("qualityTemplateDetailInfos",DataTypeEnum.ENTRY,
+				QualityTemplateDetailInfo.class);
+
+		ColumnModel position = new ColumnModel("position",DataTypeEnum.F7,"id,name");
+		position.setClaz(PositionInfo.class);
+		qualityTemplateDetail.getCols().add(position);
+
+		qualityTemplateDetail.getCols().add(new ColumnModel("id",DataTypeEnum.PK));
+		qualityTemplateDetail.getCols().add(new ColumnModel("jobRequirement",DataTypeEnum.STRING));
+		qualityTemplateDetail.getCols().add(new ColumnModel("enable",DataTypeEnum.BOOLEAN));
+
+		cols.add(qualityTemplateDetail);
 		return cols;
 	}
 	@Override

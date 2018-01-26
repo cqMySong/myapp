@@ -76,7 +76,6 @@ public class BudgetingService extends BaseInterfaceService<BudgetingInfo>
                         .append("与物料基础信息中规格不一致,请检查<br/>");
                 continue;
              }
-             System.out.println(materialInfo.getUnit());
              budgetingDetailInfo = new JSONObject();
              budgetingDetailInfo.put("quantity",budgetingModel.getQuantity());
              budgetingDetailInfo.put("budgetaryPrice",budgetingModel.getBudgetaryPrice());

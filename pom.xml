@@ -287,6 +287,43 @@
 			<artifactId>easypoi-annotation</artifactId>
 			<version>3.0.3</version>
 		</dependency>
+		
+		<!-- doc 2 html -->
+		<dependency>  
+		    <groupId>aspose-cad</groupId>  
+		    <artifactId>aspose-cad</artifactId>  
+		    <version>1.0</version>  
+		    <scope>system</scope>  
+		    <systemPath>${project.basedir}/src/main/webapp/WEB-INF/lib/aspose-cad.jar</systemPath>  
+		</dependency> 
+		<dependency>  
+		    <groupId>aspose-cells</groupId>  
+		    <artifactId>aspose-cells</artifactId>  
+		    <version>9.0.0</version>  
+		    <scope>system</scope>  
+		    <systemPath>${project.basedir}/src/main/webapp/WEB-INF/lib/aspose-cells-9.0.0.jar</systemPath>  
+		</dependency> 
+		<dependency>  
+		    <groupId>aspose.slides</groupId>  
+		    <artifactId>aspose.slides</artifactId>  
+		    <version>15.9.0</version>  
+		    <scope>system</scope>  
+		    <systemPath>${project.basedir}/src/main/webapp/WEB-INF/lib/aspose.slides-15.9.0.jar</systemPath>  
+		</dependency> 
+		<dependency>  
+		    <groupId>gzpykj-word</groupId>  
+		    <artifactId>gzpykj-word</artifactId>  
+		    <version>1.1</version>  
+		    <scope>system</scope>  
+		    <systemPath>${project.basedir}/src/main/webapp/WEB-INF/lib/gzpykj-word-1.1.jar</systemPath>  
+		</dependency>
+		<dependency>  
+		    <groupId>html5</groupId>  
+		    <artifactId>html5</artifactId>  
+		    <version>1.0</version>  
+		    <scope>system</scope>  
+		    <systemPath>${project.basedir}/src/main/webapp/WEB-INF/lib/html5.jar</systemPath>  
+		</dependency>
 	</dependencies>
 
 </project>

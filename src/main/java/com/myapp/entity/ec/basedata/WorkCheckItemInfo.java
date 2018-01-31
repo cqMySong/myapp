@@ -8,6 +8,7 @@ import org.hibernate.annotations.Parameter;
 import org.hibernate.annotations.Type;
 
 import com.myapp.core.base.entity.CoreBaseDataInfo;
+import com.myapp.enums.ec.WorkCheckGroup;
 import com.myapp.enums.ec.WorkCheckType;
 
 /**
@@ -20,6 +21,7 @@ import com.myapp.enums.ec.WorkCheckType;
 @Entity
 @Table(name="t_ec_workcheckItem")
 public class WorkCheckItemInfo extends CoreBaseDataInfo {
+	private WorkCheckGroup workCheckGroup;//检验分组
 	private WorkCheckType workCheckType;//检验分类
 	private String checkRequire;//检查要求
 	
@@ -39,4 +41,14 @@ public class WorkCheckItemInfo extends CoreBaseDataInfo {
 	public void setCheckRequire(String checkRequire) {
 		this.checkRequire = checkRequire;
 	}
+	@Column(name="fworkcheckgroup",length=10)
+	@Type(type="myEnum",parameters={@Parameter(name="enumClass",value="com.myapp.enums.ec.WorkCheckGroup")})
+	public WorkCheckGroup getWorkCheckGroup() {
+		return workCheckGroup;
+	}
+	public void setWorkCheckGroup(WorkCheckGroup workCheckGroup) {
+		this.workCheckGroup = workCheckGroup;
+	}
+	
+	
 }

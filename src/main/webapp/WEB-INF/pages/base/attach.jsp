@@ -48,17 +48,21 @@
 						<button type="button" id="download" class="btn btn-success">
 							<i class="fa fa-download"></i>&nbsp;下载
 						</button>
+						<button type="button" id="onlineView" class="btn btn-success">
+							<i class="fa fa-eye"></i>&nbsp;预览
+						</button>
 					</div>
 					<div class="btn-group" id="seachGBtn">
 					</div>
 				</div>
 				<table id="tblMain">
 					<thead><tr>
-						<th data-field="fileName">文件名</th>
+						<th data-field="fileName" >文件名</th>
 						<th data-field="fmortSize">大小</th>
-						<th data-field="uploadDate" data-type="datetime">上传时间</th>
+						<th data-field="uploadDate" data-type="date">上传时间</th>
 						<th data-field="storageType" data-formatter="storeage_formater">存储位置</th>
 						<th data-field="complete" data-type="checkbox">上传完毕</th>
+						<th data-formatter="opt_formater" data-width="120">操作</th>
 					</tr></thead>
 				</table>
 			</div>
@@ -81,6 +85,7 @@ var _attach_initFile = {
 <script src="<%=appRoot%>/assets/lib/attach/js/plupload.dev.js?v=2"></script>
 <script src="<%=appRoot%>/assets/lib/attach/js/jquery.md5.js"></script>
 <script type="text/javascript">
+var operate = '${operate}';
 var refesh = false;
 var tblMain;
 var thisQueryParams = {};
@@ -115,7 +120,34 @@ function storeage_formater(value, row, index){
 	}
 	return txt;
 }
-
+function opt_formater(value, row, index){
+	var html = '<div class="btn-group">';
+	html+= '<button style="padding:5px;" class="btn btn-success" onclick="_onlineview(\''+row.id+'\')"><i class="fa fa-eye"></i>预览</button>';
+	html+= '<button style="padding:5px;" class="btn btn-success" onclick="_downdoc(\''+row.id+'\')"><i class="fa fa-download"></i>下载</button>';
+	html+= '</div>';
+	return html;
+}
+function _onlineview(rid){
+	if(webUtil.isEmpty(rid)) return;
+	var viewUrl ='base/attach/view';
+	var _data = {};
+	_data.id = rid;
+	webUtil.ajaxData({url:viewUrl,async:false,data:_data,success:function(data){
+		var fileData = data.data;
+		if(!webUtil.isEmpty(fileData)){
+			var title = fileData.fileName||'在线文档查看';
+			title ='<i class="fa fa-file-text-o"></i>&nbsp;'+title;
+			webUtil.openWin({title:title,width:1000,height:750,btns:['关闭'],url:fileData.viewUrl});
+		}
+	}});
+}
+function _downdoc(rid){
+	if(webUtil.isEmpty(rid)) return;
+	var downUrl = webUtil.toUrl('base/attach/down');
+	downUrl+= '?id='+rid;
+	
+	$('#downWin').attr("src",downUrl);
+}
 function tblMainReshDdata(){
 	tblMain.refreshData();
 }
@@ -159,20 +191,24 @@ function removeFile(){
 function downloadFile(){
 	var _selRows = tblMain.getSelections();
 	if(!webUtil.isEmpty(_selRows)&&_selRows.length==1){
-		var downUrl = webUtil.toUrl('base/attach/down');
-		downUrl+= '?id='+_selRows[0].id;
-		$('#downWin').attr("src",downUrl);
+		_downdoc(_selRows[0].id);
 	}else{
 		webUtil.mesg("请先选择对应的数据行且一次只能选择一个文件进行下载!");
 	}
 }
-
+function onlineViewDoc(){
+	var _selRows = tblMain.getSelections();
+	if(!webUtil.isEmpty(_selRows)&&_selRows.length==1){
+		_onlineview(_selRows[0].id);
+	}else{
+		webUtil.mesg("请先选择对应的数据行且一次只能选择一个文件进行下载!");
+	}
+}
 $(document).ready(function() {
 	var tbl_tr = $('#tblMain').find('thead>tr');
 	var queryCols = [];
 	queryCols.push({key:'_blank',text:'-清空选择-',type:'blank'});
 	queryCols.push({key:'fileName',text:'文件名',type:'text'});
-	var dataURL = '${dataUrl}';
 	
 	var sear_btn_gp = $('#seachGBtn').myBtnGroup();
 	sear_btn_gp.addSearch({items:queryCols,dataChange:search_Query});
@@ -194,12 +230,28 @@ $(document).ready(function() {
 			}
 		}
 	});
+	if('view'==operate){
+		$('._tabHeader').each(function(){
+			$('.tab-pane').removeClass('active');
+			var target = $(this).attr('href');
+			if('#attList'==target){
+				$(target).addClass('active');
+				$(this).show();
+			}else{
+				$(this).hide();
+			}
+		});
+	}
+	
 	
 	$('#removeFile').click(function(){
 		removeFile();
 	});
 	$('#download').click(function(){
 		downloadFile();
+	});
+	$('#onlineView').click(function(){
+		onlineViewDoc();
 	});
 });
 </script>

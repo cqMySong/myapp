@@ -85,6 +85,7 @@ public class ProjectWbsF7QueryController extends BaseF7QueryController {
 		super.executeQueryParams(query);
 		query.add(Restrictions.eq("enabled",Boolean.TRUE));
 		Map uiCtx = getQueryUiCtx();
+		System.out.println(uiCtx);
 		if(uiCtx!=null){
 			Object projectIdObj = uiCtx.get("projectId");
 			if(projectIdObj!=null){

@@ -40,9 +40,9 @@ public class LicenseHelper  {
 		"Hk+wyoYRjXwIRes8Q6OU1fflcfbNJ7FZVbdv6GIknhM0Pr+x8aTPpOsui1PvVeEvUZF1wIDAQAB";
 	
 	public static LicenseInfo initLicenseData(String machineCode){
-		LicenseInfo ltInfo = new LicenseInfo("重庆中科控股公司", "ZKKG");
+		LicenseInfo ltInfo = new LicenseInfo("重庆松龙建筑有限公司", "CQSLJZ");
 		ltInfo.setBegDate(DateUtil.addDay(new Date(), -1));
-		ltInfo.setEndDate(DateUtil.addDay(new Date(), 15));
+		ltInfo.setEndDate(DateUtil.addDay(new Date(), 60));
 		ltInfo.setType(LicenseType.RELEASE);
 		ltInfo.setAppName("现场施工项目");
 		ltInfo.setMachineCode(machineCode);
@@ -116,8 +116,9 @@ public class LicenseHelper  {
 	
 	public static void main(String[] args)  {
 		try{
-			genLicenseFile("d:/lic/license.data",SystemTool.getMachineCode());
-			decryptLicense(new File("d:/lic/license.data"));
+			String marchCode = "TCMxmdeuuyHGCogzk9m26Q==";//人和电脑机器码
+			genLicenseFile("d:/lic/license.data",marchCode);
+//			decryptLicense(new File("d:/lic/license.data"));
 		}catch(Exception e){
 			e.printStackTrace();
 			System.err.println(e.getMessage());

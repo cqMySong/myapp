@@ -14,6 +14,7 @@ if(typeof DataType == "undefined"){
 	DataType.checkbox = 'checkbox';
 	DataType.radio = 'radio';
 	DataType.password = 'password';
+	DataType.attach = 'attach';
 }
 if(typeof OperateType == "undefined"){
 	var OperateType = {};

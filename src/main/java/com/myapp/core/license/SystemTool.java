@@ -54,7 +54,7 @@ public class SystemTool {
 		String str6 = getSerialNumber("C");// C硬盘序列号
 		String MachineCode = str4 + str5 + str6;
 		String md5 = EncoderByMd5(MachineCode);// md5加密
-		System.out.println("MachineCode = " + MachineCode);
+		System.out.println("license md5  = " + md5);
 		return md5;
 	}
 

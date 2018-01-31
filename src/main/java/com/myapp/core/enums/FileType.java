@@ -16,7 +16,7 @@ import com.myapp.core.util.BaseUtil;
  *-----------MySong---------------
  */
 public enum FileType implements MyEnum<FileType> {
-	DOC("DOC","word"),EXCEL("EXCEL","excel"),PPT("PPT","ppt"),ZIP("ZIP","压缩文件"),IMG("IMG","图片");
+	DOC("DOC","word"),EXCEL("EXCEL","excel"),PPT("PPT","ppt"),ZIP("ZIP","压缩文件"),IMG("IMG","图片"),PDF("PDF","pdf");
 
 	private String name;
 	private String value;
@@ -27,6 +27,7 @@ public enum FileType implements MyEnum<FileType> {
         map.put(PPT.getValue(), PPT);
         map.put(ZIP.getValue(), ZIP);
         map.put(IMG.getValue(), IMG);
+        map.put(PDF.getValue(), PDF);
     }
 
 	FileType(String value,String name){

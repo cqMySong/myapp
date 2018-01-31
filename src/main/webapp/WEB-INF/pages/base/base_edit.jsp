@@ -517,9 +517,12 @@ EditUI.prototype = {
 		if(thisEditUI.actionBefore(OperateType.attach)){
 			var bid = billId;
 			if(!webUtil.isEmpty(bid)){
+				var isEdit = thisEditUI.isEdit();
+				var _operate = OperateType.view;
+				if(isEdit) _operate = OperateType.edit;
 				var attachUrl = webUtil.toUrl('base/attach')+'/toAttach';
 				var _win = {url:attachUrl,maxmin:false,title:thisEditUI.options.title+'-附件管理'};
-				_win.uiParams = 'billId='+bid;
+				_win.uiParams = 'billId='+bid+'&operate='+_operate;
 				_win.btns = ['关闭'];
 				webUtil.openWin(_win);
 			}else{
@@ -527,13 +530,17 @@ EditUI.prototype = {
 			}
 		}
 	},
-	initUIStyle:function(){
-		//根据界面的状态 设置是否可用相关的组件
+	isEdit:function(){
 		var _operate = this.operate||OperateType.view;
 		var isEdit = true
 		if(_operate==OperateType.view){
 			isEdit = false;
 		}
+		return isEdit;
+	},
+	initUIStyle:function(){
+		//根据界面的状态 设置是否可用相关的组件
+		var isEdit = this.isEdit();
 		this.editForm.setFormEnabled(isEdit);
 		var entrys = this.getEntrys();
 		if(webUtil.isEmpty(entrys)) return;

@@ -94,6 +94,17 @@ var ListUI = function(el,options){
 
 	var tbl_opts = $.extend(true,{}, def_listTable_options, this.options.extendTableOptions);
 	this.tblMain =  $(this.options.tableEl).myDataTable(tbl_opts);
+	this.tblMain.addTableEvent('click-cell',function(e,$td,obj){
+		var thisColumn  = obj.column;
+		if(!webUtil.isEmpty(thisColumn)&&!webUtil.isEmpty(thisColumn.type)){
+			if(DataType.attach==thisColumn.type&&obj.value>0){
+				var rowData = obj.row;
+				if(!webUtil.isEmpty(rowData)){
+					_openAttach(rowData.id,thisObj.options.editWin.title,'view');
+				}
+			}
+		}
+	});
 	
 	if(this.options.search){
 		var _searchItems = [];
@@ -293,11 +304,7 @@ ListUI.prototype = {
 			if(!webUtil.isEmpty(_selRows)&&_selRows.length>0){
 				var bid = _selRows[0][$thisList.pkCol];
 				if(!webUtil.isEmpty(bid)){
-					var attachUrl = webUtil.toUrl('base/attach')+'/toAttach';
-					var _win = {url:attachUrl,maxmin:false,title:$thisList.options.editWin.title+'-附件管理'};
-					_win.uiParams = 'billId='+bid;
-					_win.btns = ['关闭'];
-					webUtil.openWin(_win);
+					_openAttach(bid,$thisList.options.editWin.title,'view');
 				}else{
 					webUtil.mesg('单据主键为空或者不存在，不能查看附件!');
 				}
@@ -413,5 +420,16 @@ function afterAction(opt){
 $(document).ready(function(){
 	$("#_tempIf").attr('src',"");
 })
+function _openAttach(bid,title,operate){
+	if(webUtil.isEmpty(bid)) return;
+	if(webUtil.isEmpty(title)) title = '单据';
+	if(webUtil.isEmpty(operate)) operate='view';
+	
+	var attachUrl = webUtil.toUrl('base/attach')+'/toAttach';
+	var _win = {url:attachUrl,maxmin:false,title:title+'-附件管理'};
+	_win.uiParams = 'billId='+bid+'&operate='+operate;
+	_win.btns = ['关闭'];
+	webUtil.openWin(_win);
+}
 </script>
 <iframe id="_tempIf" width=0 height=0 marginheight=0 marginwidth=0 scrolling=no src="" style="display: none;"></iframe>

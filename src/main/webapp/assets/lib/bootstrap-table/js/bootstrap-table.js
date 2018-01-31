@@ -779,7 +779,13 @@
                        		}
                        		return txt;
                            }
-                     }
+                     }else if(_thisColumn.type==DataType.attach){
+                    	 _thisColumn.formatter = function(value, row, index){
+                    		var html = '';
+                    		html+= '<a style="padding:1px 5px;" class="btn btn-success"><i class="fa fa-paperclip"></i>&nbsp;'+value+'</a>';
+                    		return html;
+                         }
+                      }
                 }
                 
                 column.push(_thisColumn);

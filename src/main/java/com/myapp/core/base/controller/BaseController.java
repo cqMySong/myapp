@@ -62,7 +62,8 @@ public class BaseController {
     	if(params==null) params = new HashMap();
     	params.put("statusCode", this.statusCode);
     	params.put("statusMesg", this.statusMesg);
-    	params.put("operate", getBaseMethod().getValue());
+    	if(!params.containsKey("operate"))
+    		params.put("operate", getBaseMethod().getValue());
     }
     public ModelAndView toPage(String page,Map params){
     	return initMav(page,params);

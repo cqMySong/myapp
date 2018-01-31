@@ -69,32 +69,28 @@ public class AESUtil {
 		ltInfo.setEndDate(DateUtil.addDay(new Date(), 30));
 		ltInfo.setType(LicenseType.RELEASE);
 		ltInfo.addModels(new ModelItemInfo(UserInfo.class.getName(), "用户", 5));
-		ltInfo.addModels(new ModelItemInfo(ProjectInfo.class.getName(), "工程项目", 5));
-		
+		ltInfo.addModels(new ModelItemInfo(ProjectInfo.class.getName(), "工程项目",5));
+
 		System.out.println(ltInfo.toJosnString());
-		ByteArrayOutputStream bo = new ByteArrayOutputStream();  
-		 ObjectOutputStream oo = new ObjectOutputStream(bo);  
-		 oo.writeObject(ltInfo);  
-		 byte[] bytes = bo.toByteArray();  
-		 bo.close();  
-		 oo.close();  
-		 String password = "12142425";
-		 byte[] encryData = encrypt(bytes, password);
-		 
-		 byte[] decryptData = decrypt(encryData, password);
-		 
-		 ByteArrayInputStream bi = new ByteArrayInputStream(decryptData);
-		 ObjectInputStream oi = new ObjectInputStream(bi);
-		 Object obj = oi.readObject();
-	   	bi.close();
-	    oi.close();
-	   
-	    System.out.println(obj.toString());
-	    
-	    for(int i=0;i<20;i++){
-	    	UUID uuid=UUID.randomUUID();
-	 	    System.out.println(uuid.toString());
-	    }
+		ByteArrayOutputStream bo = new ByteArrayOutputStream();
+		ObjectOutputStream oo = new ObjectOutputStream(bo);
+		oo.writeObject(ltInfo);
+		byte[] bytes = bo.toByteArray();
+		bo.close();
+		oo.close();
+		String password = "12142425";
+		byte[] encryData = encrypt(bytes, password);
+
+		byte[] decryptData = decrypt(encryData, password);
+
+		ByteArrayInputStream bi = new ByteArrayInputStream(decryptData);
+		ObjectInputStream oi = new ObjectInputStream(bi);
+		Object obj = oi.readObject();
+		bi.close();
+		oi.close();
+
+		System.out.println(obj.toString());
+	  
 	 }
 
 }

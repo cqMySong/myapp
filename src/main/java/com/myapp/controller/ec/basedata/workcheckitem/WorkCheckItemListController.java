@@ -8,30 +8,33 @@ import java.util.Map;
 import javax.annotation.Resource;
 
 import org.hibernate.Criteria;
+import org.hibernate.criterion.Order;
 import org.hibernate.criterion.Restrictions;
-import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.alibaba.fastjson.JSONObject;
 import com.myapp.core.annotation.AuthorAnn;
-import com.myapp.core.annotation.PermissionAnn;
 import com.myapp.core.base.service.impl.AbstractBaseService;
 import com.myapp.core.controller.BaseDataListController;
 import com.myapp.core.enums.DataTypeEnum;
-import com.myapp.core.enums.UnitClass;
 import com.myapp.core.model.ColumnModel;
 import com.myapp.core.model.WebDataModel;
 import com.myapp.core.util.BaseUtil;
 import com.myapp.core.util.EnumUtil;
+import com.myapp.enums.ec.WorkCheckGroup;
 import com.myapp.enums.ec.WorkCheckType;
 import com.myapp.service.ec.basedata.WorkCheckItemService;
 
-@PermissionAnn(name="系统管理.现场管理.基础数据.施工现场检查项目",number="app.ec.basedata.workcheckitem")
-@Controller
-@RequestMapping("ec/basedata/workcheckitems")
-public class WorkCheckItemListController extends BaseDataListController {
-	
+/**
+ *-----------MySong---------------
+ * ©MySong基础框架搭建
+ * @author mySong @date 2018年1月31日 
+ * @system:
+ * 现场施工日 周 月检查项目配置 基类
+ *-----------MySong---------------
+ */
+public abstract class WorkCheckItemListController extends BaseDataListController {
 	@Resource
 	public WorkCheckItemService workCheckItemService;
 
@@ -40,13 +43,15 @@ public class WorkCheckItemListController extends BaseDataListController {
 	}
 	public List<ColumnModel> getDataBinding() {
 		List<ColumnModel> cols = super.getDataBinding();
+		cols.add(new ColumnModel("workCheckGroup",DataTypeEnum.ENUM,WorkCheckGroup.class));
 		cols.add(new ColumnModel("workCheckType",DataTypeEnum.ENUM,WorkCheckType.class));
 		cols.add(new ColumnModel("checkRequire"));
 		return cols;
 	}
 	
 	public String getRootName(){
-		return "施工现场检查类别";
+		WorkCheckGroup wcg = getWorkCheckGroup();
+		return "施工现场"+(wcg!=null?wcg.getName():"")+"检查类别";
 	}
 	@AuthorAnn(doPermission=false)
 	@RequestMapping(value="/treeData")
@@ -71,8 +76,13 @@ public class WorkCheckItemListController extends BaseDataListController {
 		}
 		return ajaxModel();
 	}
+	public abstract WorkCheckGroup getWorkCheckGroup();
 	public void executeQueryParams(Criteria query) {
 		super.executeQueryParams(query);
+		WorkCheckGroup wcg = getWorkCheckGroup();
+		if(wcg!=null){
+			query.add(Restrictions.eq("workCheckGroup",wcg));
+		}
 		String serach = request.getParameter("search");
 		if(!BaseUtil.isEmpty(serach)){
 			Map searchMap = JSONObject.parseObject(serach, new HashMap().getClass());
@@ -87,12 +97,11 @@ public class WorkCheckItemListController extends BaseDataListController {
 			}
 		}
 	}
-	public String getEditUrl() {
-		return "ec/basedata/workcheckitem/workCheckItemEdit";
+	
+	public List<Order> getOrders() {
+		List<Order> orders = new ArrayList<Order>();
+		orders.add(Order.asc("workCheckType"));
+		orders.add(Order.asc("number"));
+		return orders;
 	}
-
-	public String getListUrl() {
-		return "ec/basedata/workcheckitem/workCheckItemList";
-	}
-
 }

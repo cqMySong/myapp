@@ -2,6 +2,7 @@
 <%@ page import="com.myapp.core.license.LicenseInfo" %>
 <%@ page import="com.myapp.core.license.ModelItemInfo" %>
 <%@ page import="com.myapp.core.util.DateUtil" %>
+<%@ page import="com.myapp.core.license.SystemTool" %>
 <%@ page import="java.util.List" %>
 <!DOCTYPE html>
 <html lang="en">
@@ -45,18 +46,20 @@
 						<a >特征码<i class="fa fa-eye"></i></a>
 					</li>
 					<li id="machCode" style="display: none;color: #fff;">
-						[<%=licInfo.getMachineCode()%>]
+						<%if(licInfo!=null){%>[<%=licInfo.getMachineCode()%>]<%}%>
 					</li>
 				</ul>
 				<div class="panel-heading">
-					<h3 class="panel-title"><%=licInfo.getAppName() %>系统授权许可详情</h3>
+					<h3 class="panel-title">
+						<%if(licInfo!=null){%><%=licInfo.getAppName() %><%}%>系统授权许可详情</h3>
 				</div>
-				<div class="panel-body" style="padding: 5px;">
+				<div class="panel-body" style="padding: 5px;"> 
 					<%
 						if (licInfo == null) {
 					%>
 					<div class="alert alert-warning">
 						<strong>License!</strong>无合法的许可文件!
+						特征码:<%=SystemTool.getMachineCode()%>
 					</div>
 					<%
 						} else {

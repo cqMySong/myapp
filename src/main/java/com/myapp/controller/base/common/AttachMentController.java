@@ -1,16 +1,21 @@
 package com.myapp.controller.base.common;
 
+import java.io.BufferedInputStream;
+import java.io.BufferedOutputStream;
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.OutputStream;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 
 import javax.annotation.Resource;
+import javax.servlet.ServletContext;
 import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -31,16 +36,18 @@ import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
 
 import com.alibaba.fastjson.JSONObject;
+import com.myapp.core.annotation.AuthorAnn;
 import com.myapp.core.base.controller.BaseController;
 import com.myapp.core.base.setting.SystemConstant;
 import com.myapp.core.entity.AttachFileInfo;
-import com.myapp.core.entity.FileItemsInfo;
 import com.myapp.core.entity.FtpServerInfo;
+import com.myapp.core.enums.FileType;
 import com.myapp.core.enums.StoreageTypeEnum;
 import com.myapp.core.model.WebDataModel;
 import com.myapp.core.service.base.AttachFileService;
 import com.myapp.core.service.base.FtpServerService;
 import com.myapp.core.util.BaseUtil;
+import com.myapp.core.util.DocConvertUtil;
 import com.myapp.core.util.FileUtil;
 import com.myapp.core.util.FtpClientUtil;
 import com.myapp.core.util.UploadUtil;
@@ -65,6 +72,15 @@ public class AttachMentController extends BaseController {
 	@Resource
 	public FtpServerService ftpServerService;
 	
+	public String getAttachDir(){
+		String attachDir = UploadUtil.UPLOAD_DEFPATH;
+		Object attDirObj = request.getServletContext().getAttribute("attachDir");
+		if(attDirObj!=null){
+			attachDir = attDirObj.toString();
+		}
+		return attachDir;
+	}
+	
 	@RequestMapping(value = "/upload", method = RequestMethod.POST)  
 	public String upload(@RequestBody MultipartFile file
             ,@RequestParam String fileName,@RequestParam String md5
@@ -79,12 +95,7 @@ public class AttachMentController extends BaseController {
 			params.put("sourceBillID", sourceBillID);
 			params.put("formatSize", formatSize);
 			params.put("fileSize", fileSize);
-			String attachDir = UploadUtil.UPLOAD_DEFPATH;
-			Object attDirObj = request.getServletContext().getAttribute("attachDir");
-			if(attDirObj!=null){
-				attachDir = attDirObj.toString();
-			}
-			Map retMap = UploadUtil.toUpLoadFile(attachFileService, params, attachDir);
+			Map retMap = UploadUtil.toUpLoadFile(attachFileService, params, getAttachDir());
 			boolean isOk = (boolean) retMap.get("status");
 			if(isOk){
 				AttachFileInfo atFile = (AttachFileInfo) retMap.get("attachInfo");
@@ -139,11 +150,22 @@ public class AttachMentController extends BaseController {
 		return "base/upload";
 	}
 	
+	public String getOperate(){
+		String operate = WebUtil.UUID_ReplaceID(getParamterByRequest("operate"));
+		if(BaseUtil.isNotEmpty(operate)){
+			if(operate.equalsIgnoreCase("view")||operate.equalsIgnoreCase("edit")){
+				return operate.toLowerCase();
+			}
+		}
+		return "view";
+	}
+	
 	@RequestMapping("/toAttach")
 	public ModelAndView toAttach(){
 		Map params = new HashMap();
 		params.put("billId", getSourceBillId());
 		params.put("billEntryId", getSourceBillEntryId());
+		params.put("operate", getOperate());
 		return toPage("base/attach", params);
 	}
 	
@@ -268,6 +290,127 @@ public class AttachMentController extends BaseController {
 			if(temFile.exists()) temFile.delete();
 		}
 		attachFileService.deleteEntity(entityId);
+	}
+	
+	@ResponseBody
+	@RequestMapping(value="/view",method=RequestMethod.POST)
+	@AuthorAnn(doLongin=false,doPermission=false)
+	public WebDataModel view(){
+		init();
+		String billId = getBillId();
+		if(!BaseUtil.isEmpty(billId)){
+			AttachFileInfo afInfo = (AttachFileInfo) attachFileService.getEntity(billId);
+			if(afInfo.getComplete()){
+				FileType ftype = DocConvertUtil.getFileType(afInfo.getFile());
+				if(ftype!=null&&(FileType.DOC.equals(ftype)
+						||FileType.EXCEL.equals(ftype)||FileType.PPT.equals(ftype)
+						||FileType.PDF.equals(ftype))){
+					ServletContext ctx = request.getServletContext();
+					String attachFilePath = getAttachDir(); 
+					String onlineDir = ctx.getRealPath("/")+"onlineview";
+					String srcFile = afInfo.getFile();
+					srcFile = srcFile.replaceAll("%", "");
+					String fname = DocConvertUtil.getFileNamePrefx(srcFile);
+					String viewUrlPath = request.getContextPath()+"/onlineview/html/"+fname;
+					File viewFile = new File(onlineDir+"/html/"+fname,"index.html");
+					if(!viewFile.exists()){//文件还未转换过的
+						File targetFile = new File(onlineDir+"/"+srcFile);
+						if(targetFile.exists()){
+							//文件已经存在的情况下
+						}else{
+							StoreageTypeEnum ste = afInfo.getStorageType();
+							String file = afInfo.getPath()+"/"+afInfo.getFile();//此文件位置为最初的目录位置
+							
+							InputStream in = null;
+							OutputStream out = null; 
+							BufferedInputStream bis = null;
+							BufferedOutputStream bos = null;
+							try{
+								if(StoreageTypeEnum.FTP.equals(ste)){
+									String ftpId = afInfo.getFtpId();
+									if(!BaseUtil.isEmpty(ftpId)){
+										FtpServerInfo ftpInfo = (FtpServerInfo) ftpServerService.getEntity(ftpId);
+										if(ftpInfo!=null){
+											FtpClientUtil ftp = ftpServerService.getMyFtpClient(ftpInfo);
+											if(ftp!=null){
+//												in = ftp.downFtpFile(file);
+												in =null;
+												targetFile = new File(onlineDir+"/"+srcFile);
+												DocConvertUtil.checkFilePath(targetFile.getParentFile());
+												ftp.downloadFile(file, onlineDir+"/"+srcFile);
+											}
+										}
+									}
+								}else if(StoreageTypeEnum.APP.equals(ste)){
+									File serverFile = new File(file);
+									if(serverFile.exists()){
+										in = new FileInputStream(serverFile);  
+									}
+								}
+								if(in!=null){
+									targetFile = new File(onlineDir+"/"+srcFile);
+									DocConvertUtil.checkFilePath(targetFile.getParentFile());
+									bis = new BufferedInputStream(in);
+									FileOutputStream fileOut = new FileOutputStream(targetFile);  
+									bos = new BufferedOutputStream(fileOut);
+									byte[] buf = new byte[4096];  
+									int length = bis.read(buf);  
+									//保存文件  
+									while(length != -1){
+										 bos.write(buf, 0, length);  
+										 length = bis.read(buf);  
+									}  
+								}
+							}catch (Exception e) {
+								e.printStackTrace();
+								setExceptionMesg("文档下载出错:"+e.getMessage());
+							}finally{
+								try {
+									if(bos!=null) bos.close();  
+									if(bis!=null) bis.close();
+									if(out!=null){
+										out.flush();
+										out.close();
+									}
+									if(in!=null)in.close();
+								} catch (IOException e) {
+									e.printStackTrace();
+									setExceptionMesg("文档下载出错:"+e.getMessage());
+								}
+							}
+						}
+						try{
+							//文档转换
+							targetFile = new File(onlineDir+"/"+srcFile);
+							DocConvertUtil.checkFilePath(targetFile.getParentFile());
+							if(targetFile.exists()){
+								DocConvertUtil.pdf2Html(DocConvertUtil.documnt2Pdf(targetFile, null), onlineDir+"/html");
+							}
+						}catch (Exception e) {
+							e.printStackTrace();
+							setExceptionMesg("文档转换出错:"+e.getMessage());
+						}
+					}
+					viewFile = new File(onlineDir+"/html/"+fname,"index.html");
+					if(viewFile.exists()){
+						Map dataMap = new HashMap();
+						dataMap.put("viewUrl",viewUrlPath+"/"+"index.html");
+						dataMap.put("fileName", afInfo.getFileName());
+						dataMap.put("fileSize", afInfo.getFmortSize());
+						this.data = dataMap;
+					}else{
+						setErrorMesg("未找到对应转换的文件!");
+					}
+				}else{
+					setErrorMesg("此文件("+afInfo.getFileName()+")不支持在线查看!");
+				}
+			}else{
+				setErrorMesg("附件信息数据未完整，不允许在线查看!");
+			}
+		}else{
+			setErrorMesg("无文件信息!");
+		}
+		return ajaxModel();
 	}
 	
 	@RequestMapping(value="/down",produces= MediaType.APPLICATION_OCTET_STREAM_VALUE)

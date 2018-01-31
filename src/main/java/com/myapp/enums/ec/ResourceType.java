@@ -12,7 +12,7 @@ import com.myapp.core.base.enums.MyEnum;
  *-----------MySong---------------
  */
 public enum ResourceType implements MyEnum<ResourceType>{
-	AQJSYQYSML("AQJSYQYSML","安全技术要求及验收目录"),OTHER("OTHER","其他"),YCLJC("YCLJC","原材料检查");
+	AQJSYQYSML("AQJSYQYSML","安全技术要求及验收目录"),OTHER("OTHER","其他");
 
 	private String name;
 	private String value;
@@ -20,7 +20,6 @@ public enum ResourceType implements MyEnum<ResourceType>{
 	static {
         map.put(AQJSYQYSML.getValue(), AQJSYQYSML);
         map.put(OTHER.getValue(), OTHER);
-		map.put(YCLJC.getValue(), YCLJC);
     }
 
 	ResourceType(String value,String name){

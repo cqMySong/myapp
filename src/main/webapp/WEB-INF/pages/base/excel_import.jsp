@@ -53,9 +53,9 @@
     	}
     	$('#btnExportTemp').click(function(){
     		var url = $(this).attr('toUrl');
-    		if(!webUtil.isEmpty(uiCtx)){
-    			url+=(url.indexOf('?')>0?'&':'?')+'uiCtx='+uiCtx;
-    		}
+    		/*if(!webUtil.isEmpty(uiCtx)){
+    			url+=(url.indexOf('?')>0?'&':'?')+'uiCtx='+encodeURIComponent(uiCtx);
+    		}*/
     		$('#downWin').attr('src',url);
     	});
     });

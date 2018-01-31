@@ -150,7 +150,7 @@
     function initTable(){
         var height = top.getTopMainHeight()-105;
         var table_options = {height:height,striped:true,sortStable:false,showRefresh:false,selectModel:1
-            ,cache:false,showToggle:false,search:false,queryParams:searchPrams,toolbar:false,rowStyle:changeBgColor
+            ,cache:false,showToggle:false,search:false,queryParams:searchPrams,toolbar:false
             ,showColumns:false,idField:"id",mypagination:true,url:'ec/stock/leaseledger/query'};
         tblMain = $('#tblMain').myDataTable(table_options);
     }
@@ -173,16 +173,5 @@
             tblMain.refreshData();
         });
     });
-    function changeBgColor(row, index) {
-        var color = "";
-		if(row.diffRatio>2){
-			color="red";
-		}
-		if(!color){
-		    return false;
-		}
-        var style={css:{'background-color':color}};
-        return style;
-    }
 </script>
 </html>

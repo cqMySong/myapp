@@ -62,18 +62,18 @@
 		<div class="rightContainer" id="main_container">
 			<table id="tblMain">
 				<thead >
-					<tr>
-						<th data-field="paymentType">结算阶段</th>
-						<th data-field="contractNumber">合同编号</th>
-						<th data-field="contractName" >合同名称</th>
-						<th data-field="directorName">分包负责人</th>
-						<th data-field="contractAmount">合同金额(元)</th>
-						<th data-field="jobContent">工作内容</th>
-						<th data-field="settleAmount">结算金额</th>
-						<th data-field="payAmount">支付金额(元)</th>
-						<th data-field="payDate" data-type="date">支付日期</th>
-						<th data-field="contractRatio" data-formatter="contractRatioFormatter">合同约定比例</th>
-					</tr>
+				<tr>
+					<th data-field="paymentType">结算阶段</th>
+					<th data-field="contractNumber">合同编号</th>
+					<th data-field="contractName" >合同名称</th>
+					<th data-field="directorName">分包负责人</th>
+					<th data-field="contractAmount">合同金额(元)</th>
+					<th data-field="jobContent">工作内容</th>
+					<th data-field="settleAmount">结算金额</th>
+					<th data-field="payAmount">支付金额(元)</th>
+					<th data-field="payDate" data-type="date">支付日期</th>
+					<th data-field="contractRatio" data-formatter="contractRatioFormatter">合同约定比例</th>
+				</tr>
 				</thead>
 			</table>
 		</div>
@@ -119,7 +119,7 @@
     function initTable(){
         var height = top.getTopMainHeight()-105;
         var table_options = {height:height,striped:true,sortStable:false,showRefresh:false,selectModel:1
-            ,cache:false,showToggle:false,search:false,queryParams:searchPrams,toolbar:false
+            ,cache:false,showToggle:false,search:false,queryParams:searchPrams,toolbar:false,rowStyle:changeBgColor
             ,showColumns:false,idField:"id",mypagination:true,url:'ec/engineering/servicechargeledger/query'};
         tblMain = $('#tblMain').myDataTable(table_options);
     }
@@ -134,7 +134,7 @@
     function contractRatioFormatter(value, row, index){
         var txt = value;
         if(txt){
-			return txt+"%";
+            return txt+"%";
         }
         return txt;
     }
@@ -149,5 +149,16 @@
             tblMain.refreshData();
         });
     });
+    function changeBgColor(row, index){
+        var color = "";
+        if((row.payAmount/row.contractAmount*100)>row.contractRatio){
+            color="red";
+        }
+        if(!color){
+            return false;
+        }
+        var style={css:{'background-color':color}};
+        return style;
+    }
 </script>
 </html>

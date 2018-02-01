@@ -55,19 +55,11 @@
 				</div>
 				<div class="col-sm-6 mb15">
 					<div class="input-group">
-						<span class="input-group-addon lable">拼音码</span>
-						<input class="require input-item" name="pinyin" id="pinyin">
-					</div>
-				</div>
-
-			</div>
-			<div class="row">
-				<div class="col-sm-6">
-					<div class="input-group">
-						<span class="input-group-addon lable">启用</span> 
+						<span class="input-group-addon lable">启用</span>
 						<input class="require input-item" name="enabled" data-opt="{type:'checkbox'}" type="checkbox">
 					</div>
 				</div>
+
 			</div>
 			<div class="row mt10">
 				<div class="col-sm-12">
@@ -103,7 +95,7 @@
 		});
 		editUI.onLoad();
         $('#name').on('input',function(){
-            var pinyinCode = pinyinUtil.getFirstLetter($(this).val(),true);
+            /*var pinyinCode = pinyinUtil.getFirstLetter($(this).val(),true);
             if(pinyinCode&&pinyinCode.length>0){
                 pinyinCode = pinyinCode[0];
                 if(pinyinCode.length>10){
@@ -111,7 +103,7 @@
 				}
 			}
             $('#pinyin').val(pinyinCode);
-
+			*/
         });
 	})
 </script>

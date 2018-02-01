@@ -62,27 +62,27 @@
 		<div class="rightContainer" id="main_container">
 			<table id="tblMain">
 				<thead >
-					<tr>
-						<th data-field="fVisaDate" data-type="date" rowspan="2">时间</th>
-						<th data-field="fVisaUnit" rowspan="2">签证单位</th>
-						<th data-field="fWorkPart" rowspan="2">工作部位</th>
-						<th data-field="fJobContent" rowspan="2">工作内容</th>
-						<th data-field="fAmount" rowspan="2">金额(元)</th>
-						<th colspan="8">按实发生费用</th>
-						<th data-field="fChargingBasis" rowspan="2" data-formatter="chargingBasis">计费依据</th>
-						<th data-field="fcreateDate" data-type="datetime" rowspan="2">录入时间</th>
-						<th data-field="fChargingContent" rowspan="2">备注</th>
-					</tr>
-					<tr>
-						<th data-field="fTypeOfWork" data-formatter="typeOfWork">工种</th>
-						<th data-field="fWorkStartTime" data-type="datetime">开始时间</th>
-						<th data-field="fWorkEndTime" data-type="datetime">结束时间</th>
-						<th data-field="fMechanicalName">机械名称/型号</th>
-						<th data-field="fMechanicalStartTime" data-type="datetime">开始时间</th>
-						<th data-field="fMechanicalEndTime" data-type="datetime">结束时间</th>
-						<th data-field="fMaterialName">材料名称</th>
-						<th data-field="fUseCount">数量</th>
-					</tr>
+				<tr>
+					<th data-field="fVisaDate" data-type="date" rowspan="2">时间</th>
+					<th data-field="fVisaUnit" rowspan="2">签证单位</th>
+					<th data-field="fWorkPart" rowspan="2">工作部位</th>
+					<th data-field="fJobContent" rowspan="2">工作内容</th>
+					<th data-field="fAmount" rowspan="2">金额(元)</th>
+					<th colspan="8">按实发生费用</th>
+					<th data-field="fChargingBasis" rowspan="2" data-formatter="chargingBasis">计费依据</th>
+					<th data-field="fcreateDate" data-type="datetime" rowspan="2">录入时间</th>
+					<th data-field="fChargingContent" rowspan="2">备注</th>
+				</tr>
+				<tr>
+					<th data-field="fTypeOfWork" data-formatter="typeOfWork">工种</th>
+					<th data-field="fWorkStartTime" data-type="datetime">开始时间</th>
+					<th data-field="fWorkEndTime" data-type="datetime">结束时间</th>
+					<th data-field="fMechanicalName">机械名称/型号</th>
+					<th data-field="fMechanicalStartTime" data-type="datetime">开始时间</th>
+					<th data-field="fMechanicalEndTime" data-type="datetime">结束时间</th>
+					<th data-field="fMaterialName">材料名称</th>
+					<th data-field="fUseCount">数量</th>
+				</tr>
 				</thead>
 			</table>
 		</div>
@@ -125,7 +125,7 @@
             txt = '工程量增加';
         }else if(value=='OTHER'){
             txt = '其他';
-		}
+        }
         return txt;
     }
     function initOrgTree(){
@@ -154,7 +154,7 @@
     function initTable(){
         var height = top.getTopMainHeight()-105;
         var table_options = {height:height,striped:true,sortStable:false,showRefresh:false,selectModel:1
-            ,cache:false,showToggle:false,search:false,queryParams:searchPrams,toolbar:false
+            ,cache:false,showToggle:false,search:false,queryParams:searchPrams,toolbar:false,rowStyle:changeBgColor
             ,showColumns:false,idField:"id",mypagination:true,url:'ec/engineering/sitevisaoutledegers/query'};
         tblMain = $('#tblMain').myDataTable(table_options);
     }
@@ -177,5 +177,19 @@
             tblMain.refreshData();
         });
     });
+    function changeBgColor(row,index){
+        var color = "";
+        var days = webUtil.betweenDateDays(row.fVisaDate,row.fcreateDate);
+        if(days>2&&days<10){
+            color="yellow";
+        }else if(days>=10){
+            color="red";
+        }
+        if(!color){
+            return false;
+        }
+        var style={css:{'background-color':color}};
+        return style;
+    }
 </script>
 </html>

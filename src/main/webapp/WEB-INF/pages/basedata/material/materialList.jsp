@@ -19,7 +19,6 @@
 					<th data-field="name">名称</th>
 					<th data-field="specification">规格</th>
 					<th data-field="unit_name">单位</th>
-					<th data-field="pinyin" >拼音码</th>
 					<th data-field="materialType" data-type="select">类型</th>
 					<th data-field="enabled" data-type="checkbox">启用</th>
 					<th data-field="remark" >备注</th>

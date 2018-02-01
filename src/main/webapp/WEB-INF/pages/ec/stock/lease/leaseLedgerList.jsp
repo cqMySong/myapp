@@ -62,23 +62,23 @@
 		<div class="rightContainer" id="main_container">
 			<table id="tblMain">
 				<thead >
-					<tr>
-						<th data-field="materialNumber" rowspan="2">编号</th>
-						<th data-field="materialName" rowspan="2">材料、设备名称</th>
-						<th data-field="materialUnit" rowspan="2">单位</th>
-						<th data-field="leaseUnit" rowspan="2">出租单位</th>
-						<th colspan="2">租用</th>
-						<th colspan="2">归还</th>
-						<th colspan="2">现场损耗</th>
-					</tr>
-					<tr>
-						<th data-field="leaseDate" data-type="date">时间</th>
-						<th data-field="leaseCount">数量</th>
-						<th data-field="backDate" data-type="date">时间</th>
-						<th data-field="backCount">数量</th>
-						<th data-field="diffCount">数量</th>
-						<th data-field="diffRatio">比值（%）</th>
-					</tr>
+				<tr>
+					<th data-field="materialNumber" rowspan="2">编号</th>
+					<th data-field="materialName" rowspan="2">材料、设备名称</th>
+					<th data-field="materialUnit" rowspan="2">单位</th>
+					<th data-field="leaseUnit" rowspan="2">出租单位</th>
+					<th colspan="2">租用</th>
+					<th colspan="2">归还</th>
+					<th colspan="2">现场损耗</th>
+				</tr>
+				<tr>
+					<th data-field="leaseDate" data-type="date">时间</th>
+					<th data-field="leaseCount">数量</th>
+					<th data-field="backDate" data-type="date">时间</th>
+					<th data-field="backCount">数量</th>
+					<th data-field="diffCount">数量</th>
+					<th data-field="diffRatio">比值（%）</th>
+				</tr>
 				</thead>
 			</table>
 		</div>
@@ -121,7 +121,7 @@
             txt = '工程量增加';
         }else if(value=='OTHER'){
             txt = '其他';
-		}
+        }
         return txt;
     }
     function initOrgTree(){
@@ -150,7 +150,7 @@
     function initTable(){
         var height = top.getTopMainHeight()-105;
         var table_options = {height:height,striped:true,sortStable:false,showRefresh:false,selectModel:1
-            ,cache:false,showToggle:false,search:false,queryParams:searchPrams,toolbar:false
+            ,cache:false,showToggle:false,search:false,queryParams:searchPrams,toolbar:false,rowStyle:changeBgColor
             ,showColumns:false,idField:"id",mypagination:true,url:'ec/stock/leaseledger/query'};
         tblMain = $('#tblMain').myDataTable(table_options);
     }
@@ -173,5 +173,16 @@
             tblMain.refreshData();
         });
     });
+    function changeBgColor(row, index) {
+        var color = "";
+        if(row.diffRatio>2){
+            color="red";
+        }
+        if(!color){
+            return false;
+        }
+        var style={css:{'background-color':color}};
+        return style;
+    }
 </script>
 </html>

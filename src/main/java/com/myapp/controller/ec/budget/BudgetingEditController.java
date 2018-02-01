@@ -122,9 +122,11 @@ public class BudgetingEditController extends BaseBillEditImportController {
     @Override
     public String getFillRemark() {
     	StringBuffer sb = new StringBuffer();
-    	sb.append("\r\n\t 1:材料编码不能为空，切必须存在!");
-    	sb.append("\r\n\t 2:材料名称不能为空，切必须与对应编码相符!");
-    	sb.append("\r\n\t 3:预算单价和数量为数字类型!");
+    	sb.append("\r\n\t 1:材料编码不能为空!");
+    	sb.append("\r\n\t 2:材料名称不能为空!");
+        sb.append("\r\n\t 3:规格不能为空!");
+        sb.append("\r\n\t 4:单位不能为空!");
+    	sb.append("\r\n\t 5:预算单价和数量为数字类型!");
     	return sb.toString();
     }
     @Override
@@ -153,46 +155,58 @@ public class BudgetingEditController extends BaseBillEditImportController {
             StringBuffer msg = new StringBuffer();
             Object obj = rowMap.get("qty");
             if(obj==null){
-                msg.append("<br/>预算数量，不允许导入!");
+                msg.append("<br/>预算数量为空，不允许导入!");
             }else if(!BaseUtil.isNumeric(obj.toString())){
                 msg.append("<br/>预算数量，不是数字类型的不允许导入!");
             }
             obj = rowMap.get("price");
             if(obj==null){
-                msg.append("<br/>预算单价，不允许导入!");
+                msg.append("<br/>预算单价为空，不允许导入!");
             }else if(!BaseUtil.isNumeric(obj.toString())){
                 msg.append("<br/>预算单价，不是数字类型的不允许导入!");
             }
             obj = rowMap.get("matNumber");
             if(obj==null){
                 msg.append("<br/>材料编号为空，不允许导入!");
-            }else{
-                materialInfo = materialService.queryByCode(obj.toString());
-                if(materialInfo==null){
-                    msg.append("<br/>在物料基础信息中未找到，不允许导入!");
-                }
+            }
+            obj = rowMap.get("matName");
+            if(obj==null){
+                msg.append("<br/>材料名称为空，不允许导入!");
+            }
+            obj = rowMap.get("model");
+            if(obj==null){
+                msg.append("<br/>规格为空，不允许导入!");
+            }
+            obj = rowMap.get("unit");
+            if(obj==null){
+                msg.append("<br/>单位为空，不允许导入!");
             }
             if(!BaseUtil.isEmpty(msg.toString())){
                 rm.setResultType(ResultTypeEnum.ERROR);
                 rm.setMesg("第["+(rowIdx+5)+"]行中:"+msg.toString());
             }else{
-                budgetingDetailInfo = new JSONObject();
-                budgetingDetailInfo.put("quantity",rowMap.get("qty"));
-                budgetingDetailInfo.put("budgetaryPrice",rowMap.get("price"));
-                columnJson = new JSONObject();
-                columnJson.put("id",materialInfo.getId());
-                columnJson.put("name",materialInfo.getName());
-                budgetingDetailInfo.put("material",columnJson);
-                columnJson =  new JSONObject();
-                columnJson.put("id",materialInfo.getUnit().getId());
-                columnJson.put("name",materialInfo.getUnit().getName());
-                budgetingDetailInfo.put("measureUnitInfo",columnJson);
-                budgetingDetailInfo.put("specification",materialInfo.getSpecification());
-                columnJson =  new JSONObject();
-                columnJson.put("key",materialInfo.getMaterialType().getValue());
-                columnJson.put("val",materialInfo.getMaterialType().getName());
-                budgetingDetailInfo.put("materialType",columnJson);
-                rowMap.put("returnJson",budgetingDetailInfo);
+                try {
+                    materialInfo = materialService.saveOrUpdate(rowMap);
+                    budgetingDetailInfo = new JSONObject();
+                    budgetingDetailInfo.put("quantity",rowMap.get("qty"));
+                    budgetingDetailInfo.put("budgetaryPrice",rowMap.get("price"));
+                    columnJson = new JSONObject();
+                    columnJson.put("id",materialInfo.getId());
+                    columnJson.put("name",materialInfo.getName());
+                    budgetingDetailInfo.put("material",columnJson);
+                    columnJson =  new JSONObject();
+                    columnJson.put("id",materialInfo.getUnit().getId());
+                    columnJson.put("name",materialInfo.getUnit().getName());
+                    budgetingDetailInfo.put("measureUnitInfo",columnJson);
+                    budgetingDetailInfo.put("specification",materialInfo.getSpecification());
+                    columnJson =  new JSONObject();
+                    columnJson.put("key",materialInfo.getMaterialType().getValue());
+                    columnJson.put("val",materialInfo.getMaterialType().getName());
+                    budgetingDetailInfo.put("materialType",columnJson);
+                    rowMap.put("returnJson",budgetingDetailInfo);
+                }catch (Exception ex){
+                    rm.setMesg("第["+(rowIdx+5)+"]行导入信息失败");
+                }
             }
         }
         return rm;

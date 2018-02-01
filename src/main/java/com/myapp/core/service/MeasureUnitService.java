@@ -1,5 +1,6 @@
 package com.myapp.core.service;
 
+import com.myapp.core.entity.MaterialInfo;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -16,5 +17,9 @@ import com.myapp.core.service.base.BaseInterfaceService;
 @Service("measureUnitService")
 @Transactional
 public class MeasureUnitService extends BaseInterfaceService<MeasureUnitInfo> {
-	
+
+	public MeasureUnitInfo queryByName(String name){
+	    String hql = "select measureUnit from MeasureUnitInfo measureUnit where measureUnit.name=?";
+        return queryEntity(MeasureUnitInfo.class,hql,new Object[]{name});
+    }
 }

@@ -176,7 +176,7 @@
     function changeBgColor(row, index) {
         var color = "";
         if(row.diffRatio>2){
-            color="red";
+            color=EarlyWarning.danger;
         }
         if(!color){
             return false;

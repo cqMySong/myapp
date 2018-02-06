@@ -70,10 +70,20 @@
         var height = window.outerHeight-325;
         thisOrgList = $('body').treeListUI({tableEl:'#tblMain',treeUrl:'ec/basedata/projects/projectTree',baseUrl:'ec/basedata/testpieces',title:'项目工程',height:(height+42),
             treeContainer:"#tree_container",editWin:editWin,toolbar:"#table-toolbar",searchParams:{includeChild:true},treeOpt:treeOpt
-            ,treeNode2QueryProp:treeNode2QueryProp,extendTableOptions:{toolbar:'#tblMain_toolbar',height:height,sortStable:false}});
+            ,treeNode2QueryProp:treeNode2QueryProp,extendTableOptions:{toolbar:'#tblMain_toolbar',height:height,rowStyle:changeBgColor,sortStable:false}});
         thisOrgList.onLoad();
 
     });
-
+    function changeBgColor(row, index) {
+        var color = "";
+        if(row.inspectionResult==false){
+            color=EarlyWarning.danger;
+        }
+        if(!color){
+            return false;
+        }
+        var style={css:{'background-color':color}};
+        return style;
+    }
 </script>
 </html>

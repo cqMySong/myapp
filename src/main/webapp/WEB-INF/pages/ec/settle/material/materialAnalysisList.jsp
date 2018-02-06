@@ -121,7 +121,7 @@
     function initTable(){
         var height = top.getTopMainHeight()-105;
         var table_options = {height:height,striped:true,sortStable:false,showRefresh:false,selectModel:1
-            ,cache:false,showToggle:false,search:false,queryParams:searchPrams,toolbar:false
+            ,cache:false,showToggle:false,search:false,queryParams:searchPrams,toolbar:false,rowStyle:changeBgColor
             ,showColumns:false,idField:"id",mypagination:true,url:'ec/settle/materianalysis/query'};
         tblMain = $('#tblMain').myDataTable(table_options);
     }
@@ -144,5 +144,16 @@
             tblMain.refreshData();
 		});
 	});
+    function changeBgColor(row, index) {
+        var color = "";
+        if(row.fActualUseCount>row.fCalculationCount){
+            color=EarlyWarning.danger;
+        }
+        if(!color){
+            return false;
+        }
+        var style={css:{'background-color':color}};
+        return style;
+    }
 </script>
 </html>

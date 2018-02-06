@@ -88,6 +88,7 @@ public class PurchaseStockListController extends BaseListController {
         cols.add(new ColumnModel("billState", DataTypeEnum.ENUM,BillState.class));
         cols.add(new ColumnModel("remark"));
         cols.add(new ColumnModel("inStockDate",DataTypeEnum.DATE));
+        cols.add(new ColumnModel("createDate",DataTypeEnum.DATE));
 
         ColumnModel project = new ColumnModel("project",DataTypeEnum.F7,"id,name");
         project.setClaz(ProjectInfo.class);

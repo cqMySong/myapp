@@ -17,9 +17,22 @@
 			<div class="row">
 				<div class="col-sm-6">
 					<div class="input-group">
-						<span class="input-group-addon lable">工程项目</span> 
-						<input name="project" class="require input-item form-control" 
-							data-opt="{type:'f7',uiWin:{title:'工程项目',height:750,width:900,url:'ec/basedata/project'}}" />
+						<span class="input-group-addon lable">编号</span>
+						<input name="number" class="require input-item form-control"/>
+					</div>
+				</div>
+				<div class="col-sm-6 mb15">
+					<div class="input-group">
+						<span class="input-group-addon lable">名称</span>
+						<input name="name" class="require input-item form-control"/>
+					</div>
+				</div>
+			</div>
+			<div class="row">
+				<div class="col-sm-6">
+					<div class="input-group">
+						<span class="input-group-addon lable">方案类别</span>
+						<input name="schemeType" class="input-item form-control" data-opt="{type:'f7',uiWin:{title:'方案类别',height:700,width:900,url:'ec/basedata/schemeTypeF7'}}">
 					</div>
 				</div>
 				<div class="col-sm-6 mb15">
@@ -46,8 +59,9 @@
 			<div class="row">
 				<div class="col-sm-6">
 					<div class="input-group">
-						<span class="input-group-addon lable">方案类别</span> 
-						<input name="techUser" class="input-item form-control" data-opt="{type:'f7',uiWin:{title:'方案类别',height:750,width:900,url:'ec/basedata/schemeTypeF7'}}">
+						<span class="input-group-addon lable">工程项目</span>
+						<input name="project" class="require input-item form-control"
+							   data-opt="{type:'f7',uiWin:{title:'工程项目',height:750,width:900,url:'ec/basedata/project'}}" />
 					</div>
 				</div>
 				<div class="col-sm-6 mb15">
@@ -76,7 +90,6 @@
 			var uiCtx = getUICtx();
 			if(!webUtil.isEmpty(uiCtx)&&$.isPlainObject(uiCtx)
 					&&!webUtil.isEmpty(uiCtx.tree)){
-				alert(uiCtx.tree);
 				$('input[name="project"]').myF7().setData(uiCtx.tree);
 			}
 		}
@@ -84,8 +97,8 @@
 
 	$(document).ready(function() {
 		var editUI = $('#editPanel').editUI({
-			title : "质量交底",
-			baseUrl : "ec/quality/standard/qualityStandardEdit",
+			title : "施工方案",
+			baseUrl : "ec/basedata/schemeedit",
 			toolbar : "#table-toolbar",
 			billModel: 2,
 			form : {

@@ -24,6 +24,7 @@
 								<th data-field="outStockDate" data-type="date">出库时间</th>
 								<th data-field="picker">责任人</th>
 								<th data-field="billState" data-type="select">业务状态</th>
+								<th data-field="createDate" data-type="date">创建日期</th>
 								<th data-field="remark">备注</th>
 							</tr>
 						</thead>
@@ -66,10 +67,24 @@
 			var height = window.outerHeight-307;
 			thisOrgList = $('body').treeListUI({tableEl:'#tblMain',treeUrl:'ec/basedata/projects/projectTree',baseUrl:'ec/stock/stockouts',title:'项目工程',height:(height+42),
 							treeContainer:"#tree_container",editWin:editWin,toolbar:"#table-toolbar",searchParams:{includeChild:true},treeOpt:treeOpt
-							,treeNode2QueryProp:treeNode2QueryProp,extendTableOptions:{toolbar:'#tblMain_toolbar',height:height,sortStable:false}});
+							,treeNode2QueryProp:treeNode2QueryProp,extendTableOptions:{toolbar:'#tblMain_toolbar',height:height,sortStable:false,rowStyle:changeBgColor}});
 			thisOrgList.onLoad();
 
 	});
-
+    function changeBgColor(row,index){
+        var color = "";
+        var days = webUtil.betweenDateDays(row.outStockDate,row.createDate);
+        if(days>2&&days<10){
+            color=EarlyWarning.warning;
+        }else if(days>=10){
+            color=EarlyWarning.danger;
+        }
+        console.log(color);
+        if(!color){
+            return false;
+        }
+        var style={css:{'background-color':color}};
+        return style;
+    }
 </script>
 </html>

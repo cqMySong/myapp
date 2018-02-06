@@ -181,9 +181,9 @@
         var color = "";
         var days = webUtil.betweenDateDays(row.fVisaDate,row.fcreateDate);
         if(days>2&&days<10){
-            color="yellow";
+            color=EarlyWarning.warning;
         }else if(days>=10){
-            color="red";
+            color=EarlyWarning.danger;
         }
         if(!color){
             return false;

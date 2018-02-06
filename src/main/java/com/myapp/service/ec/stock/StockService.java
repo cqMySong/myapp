@@ -35,7 +35,7 @@ public class StockService  extends BaseInterfaceService<StockInfo> {
      */
     public StockInfo getByMaterialId(MaterialInfo materialInfo,ProjectInfo projectInfo){
         String hql = "select stockInfo from StockInfo stockInfo where stockInfo.materialInfo.id=? and " +
-                "stockInfo.project.id=?";
+                "stockInfo.projectInfo.id=?";
         return queryEntity(StockInfo.class,hql,new Object[]{materialInfo.getId(),projectInfo.getId()});
     }
 

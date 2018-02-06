@@ -17,18 +17,32 @@ if(typeof DataType == "undefined"){
 	DataType.attach = 'attach';
 }
 if(typeof OperateType == "undefined"){
-	var OperateType = {};
-	OperateType.addnew = 'addNew';
-	OperateType.edit = 'edit';
-	OperateType.view = 'view';
-	OperateType.save = 'save';
-	OperateType.submit = 'submit';
-	OperateType.remove = 'remove';
-	OperateType.audit = 'audit';
-	OperateType.unaudit = 'unAudit';
-	OperateType.attach = 'attach';
-	OperateType.refesh = 'refesh';
-	OperateType.flowAudit='flowAudit';
+    var OperateType = {};
+    OperateType.addnew = 'addNew';
+    OperateType.edit = 'edit';
+    OperateType.view = 'view';
+    OperateType.save = 'save';
+    OperateType.submit = 'submit';
+    OperateType.remove = 'remove';
+    OperateType.audit = 'audit';
+    OperateType.unaudit = 'unAudit';
+    OperateType.attach = 'attach';
+    OperateType.refesh = 'refesh';
+    OperateType.flowAudit='flowAudit';
+}
+if(typeof EarlyWarning == "undefined"){
+    var EarlyWarning = {};
+    EarlyWarning.danger="#f56c79";
+    EarlyWarning.warning="#f5e727";
+    EarlyWarning.normal="";
+    EarlyWarning.serious="";
+    EarlyWarning.danger_font="#";
+    EarlyWarning.warning_font="";
+    EarlyWarning.normal_font="";
+    EarlyWarning.serious_font="";
+}
+if(typeof BillState == "undefined"){
+    var BillState = {"ADDNEW":"编制中","SAVE":"已保存","SUBMIT":"已提交","AUDIT":"已审核","NOPASS":"审核不通过"};
 }
 //'yyyy-MM-dd h:m:s'
 //yyyy-MM-dd

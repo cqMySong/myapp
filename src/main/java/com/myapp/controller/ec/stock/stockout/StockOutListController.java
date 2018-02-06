@@ -91,6 +91,7 @@ public class StockOutListController extends BaseListController {
         cols.add(new ColumnModel("remark"));
         cols.add(new ColumnModel("outStockDate",DataTypeEnum.DATE));
         cols.add(new ColumnModel("picker",DataTypeEnum.STRING));
+        cols.add(new ColumnModel("createDate",DataTypeEnum.DATE));
         ColumnModel project = new ColumnModel("project",DataTypeEnum.F7,"id,name");
         project.setClaz(ProjectInfo.class);
         cols.add(project);

@@ -152,7 +152,7 @@
     function changeBgColor(row, index){
         var color = "";
         if((row.payAmount/row.contractAmount*100)>row.contractRatio){
-            color="red";
+            color=EarlyWarning.danger;
         }
         if(!color){
             return false;

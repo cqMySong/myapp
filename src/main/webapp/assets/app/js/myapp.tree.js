@@ -27,8 +27,8 @@ MyTreeViewer.prototype = {
 			_$panel_detail.push('<h3 class="panel-title">'+_opt.title+'</h3>');
 			_$panel_detail.push('<ul class="panel-options"></ul>');
 		_$panel_detail.push('</div>');
-		_$panel_detail.push('<div class="panel-body" style="padding: 0px 2px 2px 2px;">');
-			_$panel_detail.push('<ul class="ztree nomargin" style="width: 99%; height: '+(_opt.height-40)+'px; overflow: auto;"></ul>');
+		_$panel_detail.push('<div class="panel-body" style="padding: 0px 2px 2px 2px;border: 1px solid #259dab;">');
+			_$panel_detail.push('<ul class="ztree nomargin" style="width: 99%; height: '+(_opt.height-45)+'px; overflow: auto;"></ul>');
 		_$panel_detail.push('</div>');
 		this.treeViewer.html(_$panel_detail.join(''));
 		if(_opt.search){

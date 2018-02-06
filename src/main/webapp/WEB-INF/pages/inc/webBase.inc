@@ -62,7 +62,7 @@
 <script src="<%=appRoot%>/assets/app/js/myapp.util.js?v=111"></script>
 <script src="<%=appRoot%>/assets/app/js/myapp.main.js?v=14" type="text/javascript"></script>
 <script src="<%=appRoot%>/assets/app/js/myapp.component.js?v=1313" type="text/javascript"></script>
-<script src="<%=appRoot%>/assets/app/js/myapp.tree.js?v=3" type="text/javascript"></script>
+<script src="<%=appRoot%>/assets/app/js/myapp.tree.js?v=6" type="text/javascript"></script>
 <script src="<%=appRoot%>/assets/app/js/myapp.myF7.js" type="text/javascript"></script>
 <script src="<%=appRoot%>/assets/app/js/myapp.numberbox.js" type="text/javascript"></script>
 

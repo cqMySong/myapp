@@ -46,7 +46,7 @@ var ListUI = function(el,options){
 		var _def_btnG_opt = {owerObj:thisObj};
 		var btnSet = $.extend({},_def_btnG_opt, _btnOpt);
 		return btnSet;
-	}
+	};
 	
 	this.toolbar = $tb; 
 	if(this.options.hasDefToolbar&&this.options.listModel==listModel.baseData){
@@ -156,11 +156,11 @@ var ListUI = function(el,options){
 				}else{
 					webUtil.mesg('请选择对应的列!');
 				}
-			}
+			};
 			sear_btn_gp.addSearch(toDoBtnGroup({items:_searchItems,dataChange:search_Query}));
 		}
 	}
-}
+};
 ListUI.prototype = {
 	onLoad:function(){
 		if(this.actionBefore('onLoad')){
@@ -397,11 +397,11 @@ ListUI.prototype = {
 			}
 		}
 	}
-}
+};
 
 $.fn.listUI = function(options) {
      return new ListUI(this,options);
-}
+};
 
 })(jQuery, window, document);
 
@@ -416,10 +416,13 @@ function beforeAction(opt){
 function afterAction(opt){
 	
 }
+function initUIStyle(){
+}
 
 $(document).ready(function(){
 	$("#_tempIf").attr('src',"");
-})
+	initUIStyle();
+});
 function _openAttach(bid,title,operate){
 	if(webUtil.isEmpty(bid)) return;
 	if(webUtil.isEmpty(title)) title = '单据';
@@ -432,4 +435,4 @@ function _openAttach(bid,title,operate){
 	webUtil.openWin(_win);
 }
 </script>
-<iframe id="_tempIf" width=0 height=0 marginheight=0 marginwidth=0 scrolling=no src="" style="display: none;"></iframe>
+<iframe id="_tempIf" width=0 height=0  src="" style="display: none;"></iframe>

@@ -5,10 +5,10 @@
 <%@include file="../../../inc/webBase.inc"%>
 <title>施工现场检查项目</title>
 <style type="text/css">
-.panel { width: 100%;height: 100%; padding: 0px 2px 2px 2px;}
-.mainContrainer {  width: 100%;  height: 100%;  overflow:hidden;  padding: 0px 2px 2px 2px;}
-.leftContainer {  width: 230px;  height: 100%;  float: left;}
-.rightContainer {  height: 100%;  overflow:hidden;  padding-left: 5px;}
+.panel { width: 100%;padding: 0px 2px 2px 2px;}
+.mainContrainer {width: 100%; overflow:hidden;  padding: 0px 2px 2px 2px;}
+.leftContainer {width: 230px; float: left;}
+.rightContainer { overflow:hidden;  padding-left: 5px;}
 </style>
 </head>
 <script type="text/javascript">
@@ -16,7 +16,7 @@
 <body style="padding: 5px;overflow: hidden;" class="panel">
 	<div class="mainContrainer">
 		<div class="leftContainer" id="tree_container"></div>
-		<div class="rightContainer" id="tblMain_container">
+		<div class="rightContainer" id="tblMain_container" style="border: 1px solid #259dab;">
 			<div class="panel">
 				<div class="" id="tblMain_toolbar">
 					
@@ -111,10 +111,9 @@ function addRow(){
 			for(var i=0;i<selRowsData.length;i++){
 				var rowData =  $.extend(true,{},selRowsData[i]);
 				addToSelTable(rowData);
-				
 			}
 		}else{
-			webUtil.mesg("请先选中行!");
+			webUtil.mesg("请先选择行!");
 		}
 	}
 }
@@ -123,7 +122,7 @@ function addToSelTable(rowData){
 	var ok = true;
 	var datas = tblSelMain.getData();
 	if(!webUtil.isEmpty(datas)&&datas.length>0){
-		if(!mutil&&datas.length>1){
+		if(!mutil){
 			ok = false;
 			webUtil.mesg("不允许选择多个!");
 		}else{

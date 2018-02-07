@@ -2,7 +2,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-	<title>人工费（劳务费）结算、支付台帐</title>
+	<title>物料价格信息对比台帐</title>
 	<style type="text/css">
 		.mainContrainer {
 			width: 100%;
@@ -34,24 +34,12 @@
 	<div id="table-toolbar" style="height:40px;padding-top: 2px;">
 		<div class="col-sm-3">
 			<div class="input-group">
-				<span class="input-group-addon lable">支付开始时间</span>
-				<input name="startDate"  autocomplete="off" type="text" class="input-item form-control read" data-opt="{type:'date'}">
-			</div>
-		</div>
-		<div class="col-sm-3">
-			<div class="input-group">
-				<span class="input-group-addon lable">支付结束时间</span>
-				<input name="endDate"  autocomplete="off" type="text" class="input-item form-control read" data-opt="{type:'date'}">
-			</div>
-		</div>
-		<div class="col-sm-3">
-			<div class="input-group">
-				<span class="input-group-addon lable">合同名称</span>
-				<input type="text" class="input-item form-control" name="contractName">
+				<span class="input-group-addon lable">材料名称</span>
+				<input type="text" class="input-item form-control" name="materialName">
 			</div>
 		</div>
 		<div class="btn-group">
-			<button class="btn btn-success" type="button" id="queryAnalysis">
+			<button class="btn btn-success" type="button" id="queryStockLedger">
 				<span class="fa fa-search"></span>&nbsp;查询</button>
 		</div>
 	</div>
@@ -62,18 +50,16 @@
 		<div class="rightContainer" id="main_container">
 			<table id="tblMain">
 				<thead >
-				<tr>
-					<th data-field="paymentType">结算阶段</th>
-					<th data-field="contractNumber">合同编号</th>
-					<th data-field="contractName" >合同名称</th>
-					<th data-field="directorName">分包负责人</th>
-					<th data-field="contractAmount">合同金额(元)</th>
-					<th data-field="jobContent">工作内容</th>
-					<th data-field="settleAmount">结算金额</th>
-					<th data-field="payAmount">支付金额(元)</th>
-					<th data-field="payDate" data-type="date">支付日期</th>
-					<th data-field="contractRatio" data-formatter="contractRatioFormatter">合同约定比例</th>
-				</tr>
+					<tr>
+						<th data-field="budgetNumber" width="120">预算编号</th>
+						<th data-field="materialNumber" width="100">材料编号</th>
+						<th data-field="materialName" width="120">材料名称</th>
+						<th data-field="specification"  width="120">规格</th>
+						<th data-field="measureUnitName"  width="120">单位</th>
+						<th data-field="budgetaryPrice"  width="100">预算价格</th>
+						<th data-field="contractNo" width="100">采购合同</th>
+						<th data-field="purchasePrice" width="100">采购单价</th>
+					</tr>
 				</thead>
 			</table>
 		</div>
@@ -120,40 +106,38 @@
         var height = top.getTopMainHeight()-105;
         var table_options = {height:height,striped:true,sortStable:false,showRefresh:false,selectModel:1
             ,cache:false,showToggle:false,search:false,queryParams:searchPrams,toolbar:false,rowStyle:changeBgColor
-            ,showColumns:false,idField:"id",mypagination:true,url:'ec/engineering/servicechargeledger/query'};
+            ,showColumns:false,idField:"id",mypagination:true,url:'ec/purchase/materialprices/query'};
         tblMain = $('#tblMain').myDataTable(table_options);
     }
     function searchPrams(){
         var params = {};
         params.projectId = curSelOrg.id;
-        params.startDate = $("input[name='startDate']").val();
-        params.endDate = $("input[name='endDate']").val();
-        params.contractName = $("input[name='contractName']").val();
+        params.materialName = $("input[name='materialName']").val();
         return webUtil.json2Str(params);
-    }
-    function contractRatioFormatter(value, row, index){
-        var txt = value;
-        if(txt){
-            return txt+"%";
-        }
-        return txt;
     }
     $(function(){
         var height = top.getTopMainHeight()-40;
         $(".mainContrainer").height(height);
         initOrgTree(height);
         initTable();
-        $("input[name='startDate']").myComponet(DataType.date,{method:"init",opt:{}});
-        $("input[name='endDate']").myComponet(DataType.date,{method:"init",opt:{}});
-        $("#queryAnalysis").on('click',function(){
+        $("#queryStockLedger").on('click',function(){
             tblMain.refreshData();
         });
     });
-    function changeBgColor(row, index){
+    function changeBgColor(row, index) {
         var color = "";
-        if((row.payAmount/row.contractAmount*100)>row.contractRatio){
+        var purchasePrice = 0;
+        if(!isNaN(row.purchasePrice)){
+            purchasePrice = row.purchasePrice;
+		}
+		var ratio = parseFloat(purchasePrice/row.budgetaryPrice*100,10);
+        if(ratio>=parseFloat(90,10)&&ratio<=parseFloat(95,10)){
+            color=EarlyWarning.warning;
+        }else if(ratio>parseFloat(95,10)&&ratio<=parseFloat(100,10)){
             color=EarlyWarning.danger;
-        }
+		}else if(ratio>parseFloat(100,10)){
+            color=EarlyWarning.serious;
+		}
         if(!color){
             return false;
         }

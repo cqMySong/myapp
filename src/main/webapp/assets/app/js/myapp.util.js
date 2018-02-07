@@ -35,7 +35,7 @@ if(typeof EarlyWarning == "undefined"){
     EarlyWarning.danger="#f56c79";
     EarlyWarning.warning="#f5e727";
     EarlyWarning.normal="";
-    EarlyWarning.serious="";
+    EarlyWarning.serious="#FF0000";
     EarlyWarning.danger_font="#";
     EarlyWarning.warning_font="";
     EarlyWarning.normal_font="";

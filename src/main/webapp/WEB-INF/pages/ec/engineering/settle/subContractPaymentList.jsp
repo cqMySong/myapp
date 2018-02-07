@@ -2,7 +2,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<title>分包付款</title>
+<title>分包结算</title>
 </head>
 <script type="text/javascript">
 </script>
@@ -57,7 +57,7 @@
 
 	$(document).ready(function() {
 			var treeNode2QueryProp = ["id","name","number","longNumber","type"];
-			var editWin ={title:'分包付款',width:900,height:(window.outerHeight-160)};
+			var editWin ={title:'分包结算',width:900,height:(window.outerHeight-160)};
 			var treeOpt = {
 					setting:{
 						data: {

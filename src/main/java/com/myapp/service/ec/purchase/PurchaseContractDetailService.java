@@ -3,7 +3,9 @@ package com.myapp.service.ec.purchase;
 import com.myapp.core.entity.MaterialInfo;
 import com.myapp.core.enums.MaterialType;
 import com.myapp.core.exception.db.QueryException;
+import com.myapp.core.model.PageModel;
 import com.myapp.core.service.base.BaseInterfaceService;
+import com.myapp.core.util.BaseUtil;
 import com.myapp.entity.ec.purchase.PurchaseContractDetailInfo;
 import com.myapp.entity.ec.stock.StockInfo;
 import org.springframework.stereotype.Service;
@@ -48,5 +50,32 @@ public class PurchaseContractDetailService extends BaseInterfaceService<Purchase
             }
         }
         return purchaseContractDetailList;
+    }
+
+    /**
+     * 功能：查询物料价格信息
+     * @param curPage
+     * @param pageSize
+     * @param params
+     * @return
+     */
+    public PageModel queryMaterialPriceLedger(Integer curPage, Integer pageSize, Map<String,Object> params){
+        List<Object> paramList = new ArrayList<>();
+        StringBuffer sql = new StringBuffer();
+        sql.append("select c.fnumber as budgetNumber,b.fname as materialName,a.fSpecification as specification,b.fnumber as materialNumber,")
+            .append("a.fBudgetaryPrice as budgetaryPrice,e.fnumber as contractNo,contract.fPurchasePrice as purchasePrice,d.fname as measureUnitName")
+            .append(" from t_base_material b,t_ec_budgeting c,t_base_measureunit d,t_ec_budgeting_detail a")
+            .append(" left join t_ec_apply_material_detail apply on apply.fBudgetingDetailId = a.fid")
+            .append(" left join t_ec_purchase_contract_detail contract on contract.fApplyMaterialDetailId = apply.fid")
+            .append(" left join t_ec_purchase_contract e on contract.fprentid = e.fid ")
+            .append(" where a.fMaterialId = b.fid and a.fprentid = c.fid and a.fMeasureUnitId = d.fid ")
+            .append(" and c.fProjectId = ?");
+        paramList.add(params.get("projectId"));
+        if(!BaseUtil.isEmpty(params.get("materialName"))){
+            sql.append(" and b.fName like ? ");
+            paramList.add("%"+params.get("materialName")+"%");
+        }
+        sql.append("order by b.fname");
+        return  toPageSqlQuery(curPage,pageSize,sql.toString(),paramList.toArray());
     }
 }

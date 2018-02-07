@@ -67,7 +67,7 @@ public class SubContractPaymentService extends BaseInterfaceService<SubContractP
                 .append("case when b.fSubcontractExpenseType='ARTIFICIAL' then '人工费' else '其他' end expenseType,")
                 .append("case when a.fPaymentType='INTERIM' then '进度' else '结算' end paymentType ")
                 .append("from t_ec_subcontract_payment a,t_ec_subcontract b,t_ec_ecunit c ")
-                .append("where a.fEngineeringContractId = b.fid and b.fEcUnitId = c.fid and a.fProjectId=? ");
+                .append("where a.fSubcontracId = b.fid and b.fEcUnitId = c.fid and a.fProjectId=? ");
         paramList.add(params.get("projectId"));
         if(!BaseUtil.isEmpty(params.get("startDate"))){
             sql.append("and a.fStartDate>=? ");

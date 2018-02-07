@@ -3,7 +3,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-	<title>分包付款</title>
+	<title>分包结算</title>
 </head>
 <style type="text/css">
 </style>
@@ -211,7 +211,7 @@
     }
     $(document).ready(function() {
         editUI = $('#editPanel').editUI({
-            title : "分包付款",billModel:2,
+            title : "分包结算",billModel:2,
             baseUrl : "ec/engineering/subcontractpayment",
             toolbar : "#table-toolbar",
             form : {

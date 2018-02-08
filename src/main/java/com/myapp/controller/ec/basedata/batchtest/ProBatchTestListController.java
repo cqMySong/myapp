@@ -1,12 +1,13 @@
 package com.myapp.controller.ec.basedata.batchtest;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 import javax.annotation.Resource;
 
+import com.myapp.core.exception.db.QueryException;
+import com.myapp.core.model.PageModel;
+import com.myapp.core.util.WebUtil;
+import com.myapp.service.ec.plan.ProjectPlanReportService;
 import org.hibernate.Criteria;
 import org.hibernate.criterion.Restrictions;
 import org.springframework.stereotype.Controller;
@@ -43,6 +44,8 @@ public class ProBatchTestListController extends BaseListController {
 	
 	@Resource
 	public ProBatchTestService proBatchTestService;
+	@Resource
+	private ProjectPlanReportService projectPlanReportService;
 	public AbstractBaseService getService() {
 		return proBatchTestService;
 	}
@@ -54,12 +57,14 @@ public class ProBatchTestListController extends BaseListController {
 		cols.add(new ColumnModel("proBaseWbs",DataTypeEnum.F7,ProBaseWbsInfo.class,"id,name,displayName"));
 		cols.add(new ColumnModel("project",DataTypeEnum.F7,ProjectInfo.class));
 		cols.add(new ColumnModel("content"));
+		cols.add(new ColumnModel("attachs"));
 		return cols;
 	}
 	
 	public void executeQueryParams(Criteria query) {
 		super.executeQueryParams(query);
 		String serach = request.getParameter("search");
+		String projectId = "xyz";
 		if(!BaseUtil.isEmpty(serach)){
 			Map searchMap = JSONObject.parseObject(serach, new HashMap().getClass());
 			Object objTree = searchMap.get("tree");
@@ -67,10 +72,11 @@ public class ProBatchTestListController extends BaseListController {
 				Map treeMap = JSONObject.parseObject(objTree.toString(), new HashMap().getClass());
 				Object treeId = treeMap.get("id");
 				if(!BaseUtil.isEmpty(treeId)){
-					query.add(Restrictions.eq("project.id",treeId.toString()));
+					projectId = treeId.toString();
 				}
 			}
 		}
+		query.add(Restrictions.eq("project.id",projectId));
 	}
 	
 	public String getEditUrl() {
@@ -115,5 +121,27 @@ public class ProBatchTestListController extends BaseListController {
 		entitys.add(remark);
 		return entitys;
 	}
+	@Override
+	public void afterQuery(PageModel pm) throws QueryException {
+		super.afterQuery(pm);
+		String serach = request.getParameter("search");
+		if(!BaseUtil.isEmpty(serach)){
+			Map searchMap = JSONObject.parseObject(serach, new HashMap().getClass());
+			Object objTree = searchMap.get("tree");
+			if(objTree!=null){
+				Map treeMap = JSONObject.parseObject(objTree.toString(), new HashMap().getClass());
+				Object treeIdObj = treeMap.get("id");
+				if(treeIdObj!=null){
+					Date begDate = projectPlanReportService.getReportBeginTime(WebUtil.UUID_ReplaceID(treeIdObj.toString()));
+					List<Map<String,Object>> datas = pm.getDatas();
+					if(datas!=null){
+						for (Map<String,Object> map:datas){
+							map.put("projectStartTime",begDate);
+						}
+					}
+				}
+			}
+		}
 
+	}
 }

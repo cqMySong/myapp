@@ -2,6 +2,8 @@ package com.myapp.service.ec.plan;
 
 import java.math.BigDecimal;
 import java.util.Date;
+import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 import org.springframework.stereotype.Service;
@@ -57,5 +59,19 @@ public class ProjectPlanReportService extends BaseInterfaceService<ProjectPlanRe
 	public Object unauditEntity(Object entity, MyWebContext webCtx)
 			throws SaveException {
 		return super.unauditEntity(entity, webCtx);
+	}
+
+	/**
+	 * 功能：获取项目汇报最早开始时间
+	 * @param projectId
+	 * @return
+	 */
+	public Date getReportBeginTime(String projectId){
+		String hql = "select min(b.begDate) as begDate from ProjectPlanReportInfo b where b.project.id=?";
+		List<Map<String,Object>> result = findByHQL(hql,new Object[]{projectId});
+		if(result!=null&&result.size()>0){
+			return (Date) result.get(0).get("begDate");
+		}
+		return null;
 	}
 }

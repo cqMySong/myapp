@@ -31,6 +31,7 @@
 								<th data-field="acceptanceDate" data-type="date">验收时间</th>
 								<th data-field="billState" data-type="select">状态</th>
 								<th data-field="createUser_name">创建人</th>
+								<th data-field="attachs">附件数</th>
 							</tr>
 						</thead>
 					</table>
@@ -72,7 +73,7 @@
 			var height = window.outerHeight-305;
 			thisOrgList = $('body').treeListUI({tableEl:'#tblMain',treeUrl:'ec/basedata/projects/projectTree',baseUrl:'ec/safe/templates',title:'项目工程',height:(height+42),
 							treeContainer:"#tree_container",editWin:editWin,toolbar:"#table-toolbar",searchParams:{includeChild:true},treeOpt:treeOpt
-							,treeNode2QueryProp:treeNode2QueryProp,extendTableOptions:{toolbar:'#tblMain_toolbar',height:height,sortStable:false}});
+							,treeNode2QueryProp:treeNode2QueryProp,extendTableOptions:{toolbar:'#tblMain_toolbar',height:height,sortStable:false,rowStyle:changeBgColor}});
 			thisOrgList.onLoad();
 			$('#jobRequire').on('click',function(){
                 var _selRows = thisOrgList.listUI.getSelectRow();
@@ -88,6 +89,18 @@
                 }
 			});
 	});
-
+    function changeBgColor(row, index) {
+        var color = "";
+        var nowDate = new Date();
+        var days = webUtil.betweenDateDays(row.acceptanceDate,nowDate);
+        if(row.attachs==0&&days>0){
+            color=EarlyWarning.danger;
+        }
+        if(!color){
+            return false;
+        }
+        var style={css:{'background-color':color}};
+        return style;
+    }
 </script>
 </html>

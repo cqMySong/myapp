@@ -97,6 +97,8 @@ public class ProQualityTemplateListController extends BaseListController {
         cols.add(new ColumnModel("expectStartDate",DataTypeEnum.DATE));
         cols.add(new ColumnModel("acceptanceDate",DataTypeEnum.DATE));
         cols.add(new ColumnModel("billState", DataTypeEnum.ENUM,BillState.class));
+        cols.add(new ColumnModel("number"));
+        cols.add(new ColumnModel("attachs"));
 
         ColumnModel project = new ColumnModel("project",DataTypeEnum.F7,"id,name");
         project.setClaz(ProjectInfo.class);

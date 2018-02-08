@@ -1,11 +1,15 @@
 package com.myapp.controller.ec.basedata.skillitem;
 
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 import javax.annotation.Resource;
 
+import com.myapp.core.exception.db.QueryException;
+import com.myapp.core.model.PageModel;
+import com.myapp.service.ec.plan.ProjectPlanReportService;
 import org.hibernate.Criteria;
 import org.hibernate.criterion.Restrictions;
 import org.springframework.stereotype.Controller;
@@ -36,6 +40,8 @@ public class ProSkillDisclosureSMListController extends BaseListController {
 	
 	@Resource
 	public ProSkillDisclosureService proSkillDisclosureService;
+	@Resource
+	private ProjectPlanReportService projectPlanReportService;
 	public AbstractBaseService getService() {
 		return proSkillDisclosureService;
 	}
@@ -49,6 +55,7 @@ public class ProSkillDisclosureSMListController extends BaseListController {
 		cols.add(new ColumnModel("project",DataTypeEnum.F7,ProjectInfo.class));
 		cols.add(new ColumnModel("skillClass",DataTypeEnum.F7,SkillClassInfo.class));
 		cols.add(new ColumnModel("disclosurer",DataTypeEnum.F7,UserInfo.class));
+		cols.add(new ColumnModel("lastUpdateDate",DataTypeEnum.DATE));
 		return cols;
 	}
 	
@@ -56,6 +63,7 @@ public class ProSkillDisclosureSMListController extends BaseListController {
 		super.executeQueryParams(query);
 		query.add(Restrictions.eq("skillType",SkillType.SM));
 		String serach = request.getParameter("search");
+		String projectId = "xyz";
 		if(!BaseUtil.isEmpty(serach)){
 			Map searchMap = JSONObject.parseObject(serach, new HashMap().getClass());
 			Object objTree = searchMap.get("tree");
@@ -63,10 +71,11 @@ public class ProSkillDisclosureSMListController extends BaseListController {
 				Map treeMap = JSONObject.parseObject(objTree.toString(), new HashMap().getClass());
 				Object treeIdObj = treeMap.get("id");
 				if(treeIdObj!=null){
-					query.add(Restrictions.eq("project.id",WebUtil.UUID_ReplaceID(treeIdObj.toString())));
+					projectId = WebUtil.UUID_ReplaceID(treeIdObj.toString());
 				}
 			}
 		}
+		query.add(Restrictions.eq("project.id",projectId));
 	}
 	
 	public String getEditUrl() {
@@ -91,5 +100,27 @@ public class ProSkillDisclosureSMListController extends BaseListController {
 		return ajaxModel();
 	}
 
+	@Override
+	public void afterQuery(PageModel pm) throws QueryException {
+		super.afterQuery(pm);
+		String serach = request.getParameter("search");
+		if(!BaseUtil.isEmpty(serach)){
+			Map searchMap = JSONObject.parseObject(serach, new HashMap().getClass());
+			Object objTree = searchMap.get("tree");
+			if(objTree!=null){
+				Map treeMap = JSONObject.parseObject(objTree.toString(), new HashMap().getClass());
+				Object treeIdObj = treeMap.get("id");
+				if(treeIdObj!=null){
+					Date begDate = projectPlanReportService.getReportBeginTime(WebUtil.UUID_ReplaceID(treeIdObj.toString()));
+					List<Map<String,Object>> datas = pm.getDatas();
+					if(datas!=null){
+						for (Map<String,Object> map:datas){
+							map.put("projectStartTime",begDate);
+						}
+					}
+				}
+			}
+		}
 
+	}
 }

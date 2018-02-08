@@ -30,6 +30,7 @@
 								<th data-field="attachs">附件</th>
 								<th data-field="createDate" data-type="date">创建时间</th>
 								<th data-field="disclosurer_name">交底人</th>
+								<th data-field="projectStartTime" data-type="date">工程开始时间</th>
 							</tr>
 						</thead>
 					</table>
@@ -87,12 +88,22 @@ $(document).ready(function() {
      var height =  top.getTopMainHeight()-45;
      thisOrgList = $('body').treeListUI({tableEl:'#tblMain',treeUrl:'ec/basedata/projects/projectTree',baseUrl:'ec/skilldisclosure/proqmskills',title:'工程项目',height:height,
     	 treeContainer:"#tree_container",editWin:editWin,toolbar:"#table-toolbar",searchParams:{includeChild:true},treeOpt:treeOpt
-    	 ,treeNode2QueryProp:treeNode2QueryProp,extendTableOptions:{toolbar:'#tblMain_toolbar',height:height-53}});
+    	 ,treeNode2QueryProp:treeNode2QueryProp,extendTableOptions:{toolbar:'#tblMain_toolbar',height:height-53,rowStyle:changeBgColor}});
      thisOrgList.onLoad();
      $('#batchimp').click(function(){
     	 batchImpData();
      });
 });
-
+function changeBgColor(row, index) {
+    var color = "";
+    if(!row.disclosurer_name&&row.projectStartTime){
+        color=EarlyWarning.danger;
+    }
+    if(!color){
+        return false;
+    }
+    var style={css:{'background-color':color}};
+    return style;
+}
 </script>
 </html>

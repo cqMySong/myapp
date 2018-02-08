@@ -29,6 +29,8 @@
 								<th data-field="number">编码</th>
 								<th data-field="name">名称</th>
 								<th data-field="content" data-width="400" data-type="textarea">划分办法</th>
+								<th data-field="attachs">附件数</th>
+								<th data-field="projectStartTime" data-type="date">工程开始时间</th>
 							</tr>
 						</thead>
 					</table>
@@ -88,13 +90,23 @@ $(document).ready(function() {
      thisOrgList = $('body').treeListUI({tableEl:'#tblMain',treeUrl:'ec/basedata/projects/projectTree',baseUrl:'ec/basedata/probatchtests'
     	 ,title:'工程项目',height:height,
     	 treeContainer:"#tree_container",editWin:editWin,toolbar:"#table-toolbar",treeOpt:treeOpt
-    	 ,treeNode2QueryProp:treeNode2QueryProp,extendTableOptions:{toolbar:'#tblMain_toolbar',height:height-53,sortStable:false}});
+    	 ,treeNode2QueryProp:treeNode2QueryProp,extendTableOptions:{toolbar:'#tblMain_toolbar',height:height-53,sortStable:false,rowStyle:changeBgColor}});
      thisOrgList.onLoad();
      
      $('#batchimp').click(function(){
     	 batchImpData();
      });
 });
-
+function changeBgColor(row, index) {
+    var color = "";
+    if(!row.attachs&&row.projectStartTime){
+        color=EarlyWarning.danger;
+    }
+    if(!color){
+        return false;
+    }
+    var style={css:{'background-color':color}};
+    return style;
+}
 </script>
 </html>

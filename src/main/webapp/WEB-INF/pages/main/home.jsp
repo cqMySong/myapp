@@ -48,8 +48,9 @@
 					<div class="tab-content">
 						<div class="tab-pane active" id="workJobDuty">
 							<div class="row">
-							
-							<% List<Map<String, Object>> positions = webCtx.getPositions();
+								<div class="row panel-quick-page">
+							<% 
+								List<Map<String, Object>> positions = webCtx.getPositions();
 								if(positions!=null&&positions.size()>0){
 									for(Map<String,Object> pm:positions){
 										Object obj = pm.get("id");
@@ -58,29 +59,36 @@
 										String name = obj!=null?obj.toString():"";
 										obj = pm.get("isMain");
 										String theme = "panel-primary-full";
+										boolean isMain = true;
 										if(obj!=null&&obj instanceof Boolean){
 											if(!(Boolean)obj){
 												theme = "panel-warning-full";
+												isMain = false;
 											}
 										}
 										obj = pm.get("respible");//负责人职位
 										boolean isResp = false;
 										if(obj!=null&&obj instanceof Boolean){
-											if((Boolean)obj){
-												isResp = true;
-											}
+											isResp = (Boolean)obj;
 										}
+										String backtheem = isMain?"page-reports" :"page-statistics";
 							%>
-							<div class="col-md-12 col-lg-6">
-									<div class="panel <%=theme %>" style="padding: 10px 10px 0px 10px;margin-bottom: 10px;">
-										<div class="panel-heading">
+							
+								<div class="col-md-12 col-lg-6 <%=backtheem%>">
+									<div class="panel" style="margin-bottom: 0px;padding-bottom: 0px;">
+										<div class="panel-heading" style="padding: 15px 20px;">
+											<ul class="panel-options">
+								              <li><a><i class="fa fa-refresh"></i></a></li>
+								              <li><a class="panel-minimize"><i class="fa fa-chevron-down"></i></a></li>
+								              <li><a class="panel-remove"><i class="fa fa-remove"></i></a></li>
+								            </ul>
 											<h3 class="panel-title">
 												<%if(isResp){ %><i class="fa fa-star"></i><%}%>&nbsp;
 													<%=name %>
 											 </h3>
 										</div>
-										<div class="panel-body">
-											<div class="table-responsive">
+										<div class="panel-body" style="padding: 2px;">
+											<div class="table-responsive" >
 								                <table class="table table-bordered table-success table-striped nomargin">
 								                  <thead>
 								                    <tr>
@@ -134,7 +142,7 @@
 							
 								<%} 
 							}%>
-							
+							</div>
 							</div>
 						</div>
 						<div class="tab-pane" id="toDo">

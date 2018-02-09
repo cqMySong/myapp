@@ -35,9 +35,9 @@
               <div class="row mt10">
                 <div class="col-sm-6">
                   <div class="input-group">
-	                <span class="input-group-addon lable">所属组织</span>
+	                <span class="input-group-addon lable">所属公司</span>
 	                <input name="defOrg" class="input-item form-control require" 
-						data-opt="{type:'f7',uiWin:{title:'组织查询',height:550,width:800,url:'base/orgf7'}}" />
+						data-opt="{type:'f7',uiWin:{title:'组织查询',height:550,width:800,url:'base/orgf7',uiParams:{orgType:'COMPANYORG'}}}" />
 		
 	              </div>
                 </div>
@@ -86,7 +86,8 @@
 						<thead>
 							<tr>
 								<th data-field="position" data-type="f7"
-									data-editor="{uiWin:{title:'工作岗位',height:600,width:800,url:'base/positionf7',uiParams:getParams}}">
+									data-editor="{uiWin:{title:'工作岗位',height:600,width:800
+										,onShow:position_onShow,url:'base/positionf7',uiParams:getParams}}">
 									岗位</th>
 								<th data-field="main" data-type="checkbox">主要岗位</th>
 							</tr>
@@ -118,7 +119,17 @@ function afterAction(_opt){
 	}
 }
 function getParams(){
-	
+	var orgId = $('input[name="defOrg"]').myF7().getValue();
+	return {orgId:orgId};
+}
+function position_onShow(){
+	var orgId = $('input[name="defOrg"]').myF7().getValue();
+	var fg = true;
+	if(webUtil.isEmpty(orgId)){
+		webUtil.showMesg({title:'信息验证',content:'请先选择所属公司!',type:"info"});
+		fg = false;
+	}
+	return fg;
 }
 function position_addRow(){
 	return {main:true};

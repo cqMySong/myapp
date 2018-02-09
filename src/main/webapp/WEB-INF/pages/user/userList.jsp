@@ -32,7 +32,7 @@
 							<table id="tblMain">
 								<thead >
 									<tr>
-										<th data-field="defOrg_name" >所属组织</th>
+										<th data-field="defOrg_name" >所属公司</th>
 										<th data-field="name">姓名</th>
 										<th data-field="number">编码</th>
 										<th data-field="linkers" >联系方式</th>

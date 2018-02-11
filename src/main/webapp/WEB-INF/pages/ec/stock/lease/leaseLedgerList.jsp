@@ -65,6 +65,7 @@
 				<tr>
 					<th data-field="materialNumber" rowspan="2">编号</th>
 					<th data-field="materialName" rowspan="2">材料、设备名称</th>
+					<th data-field="materialType" rowspan="2" data-formatter="materialTypeFormatter">类型</th>
 					<th data-field="materialUnit" rowspan="2">单位</th>
 					<th data-field="leaseUnit" rowspan="2">出租单位</th>
 					<th colspan="2">租用</th>
@@ -98,29 +99,12 @@
             tblMain.refreshData();
         }
     }
-    function typeOfWork(value, row, index){
+    function materialTypeFormatter(value, row, index){
         var txt = value;
-        if(value=='GENERAL'){
-            txt = '普工';
-        }else if(value=='MECHANIC'){
-            txt = '技工';
-        }
-        return txt;
-    }
-    function chargingBasis(value, row, index) {
-        var txt = value;
-        if(value=='INCREASE_CONTRACT'){
-            txt = '合同外增加';
-        }else if(value=='EMERGENCY_INSPECTION'){
-            txt = '应急检查';
-        }else if(value=='OWNER_ORDER'){
-            txt = '业主指令';
-        }else if(value=='CONTRACT_STIPULATION'){
-            txt = '合同约定';
-        }else if(value=='INCREASE_QUANTITY'){
-            txt = '工程量增加';
-        }else if(value=='OTHER'){
-            txt = '其他';
+        if(value=='STRUCTURE'){
+            txt = '材料';
+        }else if(value=='APPARATUS'){
+            txt = '机械';
         }
         return txt;
     }
@@ -175,7 +159,7 @@
     });
     function changeBgColor(row, index) {
         var color = "";
-        if(row.diffRatio>2){
+        if((row.materialType=='STRUCTURE'&&row.diffRatio>2)||(row.materialType=='APPARATUS'&&row.diffRatio>0)){
             color=EarlyWarning.danger;
         }
         if(!color){

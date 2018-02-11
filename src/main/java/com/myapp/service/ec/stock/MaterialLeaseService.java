@@ -34,7 +34,7 @@ public class MaterialLeaseService extends BaseInterfaceService<MaterialLeaseInfo
         StringBuffer sql = new StringBuffer();
         sql.append("select a.fnumber as materialNumber,a.fname as materialName,b.fname as materialUnit,")
             .append("c.fLeaseUnit as leaseUnit,c.fLeaseDate as leaseDate,c.fLeaseCount as leaseCount,")
-            .append("d.fBackDate as backDate,d.fBackCount as backCount,")
+            .append("d.fBackDate as backDate,d.fBackCount as backCount,a.fMaterialType as materialType,")
             .append("case when d.fBackCount is null then '' else (c.fLeaseCount-d.fBackCount) end as diffCount,")
             .append("case when d.fBackCount is null then '' else ")
             .append("convert((c.fLeaseCount-d.fBackCount)*100/c.fLeaseCount,decimal(4,2)) end as diffRatio")

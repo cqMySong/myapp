@@ -22,7 +22,7 @@
 						 <thead >
 							<tr>
 								<th data-field="project_name">工程项目</th>
-								<th data-field="name">名称</th>
+								<th data-field="name">名称</th>=
 								<th data-field="number">单号</th>
 								<th data-field="branchBaseWbs_name">分部名称</th>
 								<th data-field="subentry_name">分项名称</th>

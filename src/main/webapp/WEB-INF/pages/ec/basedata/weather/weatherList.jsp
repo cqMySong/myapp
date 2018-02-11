@@ -124,13 +124,13 @@
             queryTableData();
         }
     }
-    function initOrgTree(){
+    function initOrgTree(height){
         var treeOpt = {view: {dblClickExpand: true,selectedMulti: false}
             ,data: {simpleData: {enable:true,idKey: "id", pIdKey: "parentId",rootPId: ''}}
             ,callback:{onClick:treeClick}
         };
         var treeViewer = $('#left_container').myTreeViewer(null);
-        treeViewer.init({theme:"panel-success",title:'<i class="fa fa-building-o" style="font-size: 12px;"></i>&nbsp;工程项目',search:true});
+        treeViewer.init({height:height-10,theme:"panel-success",title:'<i class="fa fa-building-o" style="font-size: 12px;"></i>&nbsp;工程项目',search:true});
         treeViewer.addTree(treeOpt,[]);
         orgTree = treeViewer.getTree();
         treeViewer.addRefreshBtn({clickFun:function(btn){
@@ -164,7 +164,7 @@
     $(function(){
         var height = top.getTopMainHeight();
         $(".mainContrainer").height(height);
-        initOrgTree();
+        initOrgTree(height);
         initTable();
         $('#preMonth').click(function(){
             setCurPeriod(curPeriod.addYears(-1),true);

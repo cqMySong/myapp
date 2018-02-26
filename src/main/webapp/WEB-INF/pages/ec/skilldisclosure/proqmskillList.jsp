@@ -10,7 +10,7 @@
 	<div id="table-toolbar" class="panel" style="height:40px;margin-bottom:5px;">
 		<div class="btn-group">
 			<button class="btn btn-success" type="button" id="batchimp">
-				<span class="fa fa-file-o"></span>&nbsp;施工技术交底批标准导入</button>
+				<span class="fa fa-file-o"></span>&nbsp;施工技术交底导入</button>
 		</div>
 	</div>
 	<div class="mainContrainer">
@@ -28,8 +28,9 @@
 								<th data-field="number">编码</th>
 								<th data-field="name">名称</th>
 								<th data-field="attachs">附件</th>
-								<th data-field="createDate" data-type="date">创建时间</th>
 								<th data-field="disclosurer_name">交底人</th>
+								<th data-field="finishTime" data-type="date">交底时间</th>
+								<th data-field="createDate" data-type="date">创建时间</th>
 								<th data-field="projectStartTime" data-type="date">工程开始时间</th>
 							</tr>
 						</thead>
@@ -81,22 +82,35 @@ function batchImpData(){
 }
 $(document).ready(function() {
      var treeNode2QueryProp = ["id","name","number","longNumber","type"];
-     var editWin ={title:'项目安全技术交底',width:620,height:280,id:"proqmskill_tab"};
+     var editWin ={title:'项目施工技术交底',width:620,height:340,id:"proqmskill_tab"};
      var treeOpt = {setting:{data: {
          	simpleData: {enable:true,idKey: "id", pIdKey: "parentId",rootPId: ''}
     	 }}};
      var height =  top.getTopMainHeight()-45;
-     thisOrgList = $('body').treeListUI({tableEl:'#tblMain',treeUrl:'ec/basedata/projects/projectTree',baseUrl:'ec/skilldisclosure/proqmskills',title:'工程项目',height:height,
+     thisOrgList = $('body').treeListUI({tableEl:'#tblMain',treeUrl:'ec/basedata/projects/projectTree',baseUrl:'ec/skilldisclosure/proqmskills',title:'工程项目',height:height-4,
     	 treeContainer:"#tree_container",editWin:editWin,toolbar:"#table-toolbar",searchParams:{includeChild:true},treeOpt:treeOpt
     	 ,treeNode2QueryProp:treeNode2QueryProp,extendTableOptions:{toolbar:'#tblMain_toolbar',height:height-53,rowStyle:changeBgColor}});
      thisOrgList.onLoad();
-     $('#batchimp').click(function(){
-    	 batchImpData();
-     });
+    //施工技术交底导入
+    $('#batchScheme').on('click',function(){
+        var tree = thisOrgList.getSelectNode();
+        if('project'!=tree.type){
+            webUtil.mesg('请先选择的工程项目组织，然后才能做新增操作!');
+            return false;
+        }
+        var _win = $.extend(true,{},{title:'施工技术交底导入',width:900,height:height+200,btns:[]});
+        _win.url =  webUtil.toUrl('ec/basedata/schemelist/batch/import');
+        _win.uiParams={project:{id:webUtil.uuIdReplaceID(tree.id),name:tree.name,number:tree.number}};
+        _win.colseCallBack =function(){
+            thisOrgList.listUI.executeQuery();
+        };
+        webUtil.openWin(_win);
+    });
 });
 function changeBgColor(row, index) {
     var color = "";
-    if(!row.disclosurer_name&&row.projectStartTime){
+    var diffDays = webUtil.betweenDateDays(row.finishTime,row.projectStartTime);
+    if(row.projectStartTime&&(diffDays<0||!row.finishTime)){
         color=EarlyWarning.danger;
     }
     if(!color){

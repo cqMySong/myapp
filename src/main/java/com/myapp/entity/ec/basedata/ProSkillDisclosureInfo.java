@@ -15,6 +15,8 @@ import com.myapp.core.base.entity.CoreBaseInfo;
 import com.myapp.core.entity.UserInfo;
 import com.myapp.enums.ec.SkillType;
 
+import java.util.Date;
+
 /**
  *-----------MySong---------------
  * ©MySong基础框架搭建
@@ -32,6 +34,7 @@ public class ProSkillDisclosureInfo extends CoreBaseInfo {
 	private SkillClassInfo skillClass;//分类
 	private UserInfo disclosurer;//交底人
 	private SkillItemInfo skillItem;//技术名称
+	private Date finishTime;//完成时间
 	
 	@Column(name="fskilltype",length=10)
 	@Type(type="myEnum",parameters={@Parameter(name="enumClass",value="com.myapp.enums.ec.SkillType")})
@@ -82,7 +85,13 @@ public class ProSkillDisclosureInfo extends CoreBaseInfo {
 	public void setSkillItem(SkillItemInfo skillItem) {
 		this.skillItem = skillItem;
 	}
-	
-	
-	
+
+	@Column(name="fFinishTime")
+	public Date getFinishTime() {
+		return finishTime;
+	}
+
+	public void setFinishTime(Date finishTime) {
+		this.finishTime = finishTime;
+	}
 }

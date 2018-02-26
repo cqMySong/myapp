@@ -1,5 +1,6 @@
 package com.myapp.controller.base.common;
 
+import com.myapp.core.annotation.AuthorAnn;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -24,6 +25,7 @@ import com.myapp.core.util.EnumUtil;
 public class WebCommonController extends BaseController {
 
 	@RequestMapping(value="/combox")
+	@AuthorAnn(doPermission=false)
 	@ResponseBody
 	public WebDataModel getItems() {
 		try {

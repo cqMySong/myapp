@@ -3,13 +3,16 @@ package com.myapp.controller.ec.basedata.scheme;
 import javax.annotation.Resource;
 
 import com.alibaba.fastjson.JSONObject;
+import com.myapp.core.annotation.PermissionItemAnn;
 import com.myapp.core.entity.UserInfo;
 import com.myapp.core.enums.BillState;
 import com.myapp.core.enums.DataTypeEnum;
+import com.myapp.core.enums.PermissionTypeEnum;
 import com.myapp.core.exception.db.QueryException;
 import com.myapp.core.model.ColumnModel;
 import com.myapp.core.model.WebDataModel;
 import com.myapp.core.util.BaseUtil;
+import com.myapp.core.util.WebUtil;
 import com.myapp.entity.ec.basedata.SchemeTypeInfo;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -18,6 +21,7 @@ import com.myapp.core.annotation.PermissionAnn;
 import com.myapp.core.base.service.impl.AbstractBaseService;
 import com.myapp.core.controller.BaseListController;
 import com.myapp.service.ec.basedata.ConstructionSchemeService;
+import org.springframework.web.servlet.ModelAndView;
 
 import java.util.HashMap;
 import java.util.List;
@@ -74,5 +78,15 @@ public class ConstructionSchemeListController extends BaseListController {
 			e.printStackTrace();
 		}
 		return ajaxModel();
+	}
+
+
+	@PermissionItemAnn(name="施工方案导入",number="onload",type= PermissionTypeEnum.FUNCTION)
+	@RequestMapping("/batch/import")
+	public ModelAndView forwardBatchImport(){
+		Map params = new HashMap();
+		toListUIParams(params);
+		params.put("uiCtx",WebUtil.UUID_ReplaceID(params.get("uiCtx").toString()));
+		return toPage("ec/basedata/scheme/constructionSchemeBatchImport", params);
 	}
 }

@@ -9,7 +9,12 @@
 <script type="text/javascript">
 </script>
 <body style="padding: 5px;" >
-    <div id="table-toolbar" class="panel" style="height:42px;padding-top:2px;"></div>
+    <div id="table-toolbar" class="panel" style="height:42px;padding-top:2px;">
+		<div class="btn-group">
+			<button class="btn btn-success" type="button" id="batchScheme">
+				<span class="fa fa-file-o"></span>&nbsp;施工方案导入</button>
+		</div>
+	</div>
 	<div class="mainContrainer">
 		<div class="leftContainer" id="tree_container"></div>
 		<div class="rightContainer" id="tblMain_container">
@@ -75,6 +80,21 @@ $(document).ready(function() {
    	 treeContainer:"#tree_container",editWin:editWin,toolbar:"#table-toolbar",searchParams:{includeChild:true},treeOpt:treeOpt
    	 ,treeNode2QueryProp:treeNode2QueryProp,extendTableOptions:{toolbar:'#tblMain_toolbar',height:height,sortStable:false,rowStyle:changeBgColor}});
     thisOrgList.onLoad();
+    //施工方案导入
+    $('#batchScheme').on('click',function(){
+        var tree = thisOrgList.getSelectNode();
+        if('project'!=tree.type){
+            webUtil.mesg('请先选择的工程项目组织，然后才能做新增操作!');
+            return false;
+        }
+        var _win = $.extend(true,{},{title:'施工方案导入',width:900,height:height+200,btns:[]});
+        _win.url =  webUtil.toUrl('ec/basedata/schemelist/batch/import');
+        _win.uiParams={project:{id:webUtil.uuIdReplaceID(tree.id),name:tree.name,number:tree.number}};
+        _win.colseCallBack =function(){
+            thisOrgList.listUI.executeQuery();
+        };
+        webUtil.openWin(_win);
+    });
 });
 function changeBgColor(row, index) {
     var color = "";

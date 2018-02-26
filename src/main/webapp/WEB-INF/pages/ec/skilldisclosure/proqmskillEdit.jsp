@@ -1,3 +1,4 @@
+
 <%@ page language="java" contentType="text/html; charset=UTF-8"
 	pageEncoding="UTF-8"%>
 <!DOCTYPE html>
@@ -17,17 +18,16 @@
 			<div class="row">
 				<div class="col-sm-6">
 					<div class="input-group">
-						<span class="input-group-addon lable">技术分类</span> 
-						<input name="skillClass" class="require input-item form-control" 
-							data-opt="{type:'f7',uiWin:{title:'施工技术分类',height:600,width:800,url:'ec/basedata/skillclassf7',uiParams:{type:'QM'}}}" />
+						<span class="input-group-addon lable">施工技术交底</span>
+						<input name="skillItem" class="require input-item form-control"
+							   data-opt="{type:'f7',dataChange:selectSkillItem,uiWin:{title:'施工技术交底名称',height:600,width:800,url:'ec/basedata/skillitemf7',uiParams:{type:'QM'}}}" />
 					</div>
 				</div>
 				<div class="col-sm-6">
 					<div class="input-group">
-						<span class="input-group-addon lable">工程项目</span> 
-						<input name="project" class="require input-item form-control read" 
-							data-opt="{type:'f7',uiWin:{title:'工程项目',height:600,width:300,url:'ec/basedata/project'}}" />
-						
+						<span class="input-group-addon lable">技术分类</span> 
+						<input name="skillClass" class="require input-item form-control read"
+							data-opt="{type:'f7',uiWin:{title:'施工技术分类',height:600,width:800,url:'ec/basedata/skillclassf7',uiParams:{type:'QM'}}}" />
 					</div>
 				</div>
 			</div>
@@ -48,16 +48,32 @@
 			<div class="row mt10">
 				<div class="col-sm-6">
 					<div class="input-group">
-						<span class="input-group-addon lable">技术类别</span> 
-						<select name="skillType" data-opt="{type:'select',url:'base/common/combox?enum=com.myapp.enums.ec.SkillType'}" class="form-control input-item require read">
-		                </select>
+						<span class="input-group-addon lable">交底人</span> 
+						<input name="disclosurer" class="require input-item form-control" 
+							data-opt="{type:'f7',uiWin:{title:'交底人',height:550,width:800,url:'base/userf7'}}" />
 					</div>
 				</div>
 				<div class="col-sm-6">
 					<div class="input-group">
-						<span class="input-group-addon lable">交底人</span> 
-						<input name="disclosurer" class="require input-item form-control" 
-							data-opt="{type:'f7',uiWin:{title:'交底人',height:550,width:800,url:'base/userf7'}}" />
+						<span class="input-group-addon lable">交底时间</span>
+						<input name="finishTime" class="require input-item form-control" data-opt="{type:'date'}" />
+					</div>
+				</div>
+			</div>
+			<div class="row mt10">
+				<div class="col-sm-6">
+					<div class="input-group">
+						<span class="input-group-addon lable">技术类别</span>
+						<select name="skillType" data-opt="{type:'select',url:'base/common/combox?enum=com.myapp.enums.ec.SkillType'}" class="form-control input-item require read">
+						</select>
+					</div>
+				</div>
+				<div class="col-sm-6">
+					<div class="input-group">
+						<span class="input-group-addon lable">工程项目</span>
+						<input name="project" class="require input-item form-control read"
+							   data-opt="{type:'f7',uiWin:{title:'工程项目',height:600,width:300,url:'ec/basedata/project'}}" />
+
 					</div>
 				</div>
 			</div>
@@ -75,6 +91,11 @@
 				$('input[name="project"]').myF7().setData(uiCtx.tree);
 			}
 		}
+	}
+	function selectSkillItem(oldData,newData){
+        if(newData){
+            $("input[name='skillClass']").myF7().setData({id:newData.skillClass_id,name:newData.skillClass_name});
+        }
 	}
 	$(document).ready(function() {
 		editUI = $('#editPanel').editUI({

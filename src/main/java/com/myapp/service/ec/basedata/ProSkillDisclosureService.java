@@ -1,8 +1,13 @@
 package com.myapp.service.ec.basedata;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
+import com.alibaba.fastjson.JSON;
+import com.myapp.core.entity.UserInfo;
+import com.myapp.entity.ec.basedata.ConstructionSchemeInfo;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Service;
 
 import com.myapp.core.exception.db.SaveException;
@@ -67,5 +72,24 @@ public class ProSkillDisclosureService extends
 		wdm.setStatusMesg(mesg);
 		return wdm;
 	}
-	
+
+	/**
+	 * 功能：项目施工技术交底
+	 * @param qmSkillBatch
+	 * @param userInfo
+	 */
+	public void batchSave(String qmSkillBatch,UserInfo userInfo) throws SaveException {
+		if(StringUtils.isEmpty(qmSkillBatch)){
+			throw new RuntimeException("请选择项目施工技术交底");
+		}
+		List<ProSkillDisclosureInfo> proSkillDisclosureInfoList =
+				JSON.parseArray(qmSkillBatch,ProSkillDisclosureInfo.class);
+		if(proSkillDisclosureInfoList==null||proSkillDisclosureInfoList.size()==0){
+			throw new RuntimeException("请选择项目施工技术交底");
+		}
+		for(ProSkillDisclosureInfo proSkillDisclosureInfo:proSkillDisclosureInfoList){
+			proSkillDisclosureInfo.setCreateDate(new Date());
+			saveEntity(proSkillDisclosureInfo);
+		}
+	}
 }

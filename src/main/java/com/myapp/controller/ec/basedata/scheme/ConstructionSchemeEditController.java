@@ -2,12 +2,11 @@ package com.myapp.controller.ec.basedata.scheme;
 
 import javax.annotation.Resource;
 
+import com.myapp.core.annotation.PermissionItemAnn;
 import com.myapp.core.entity.UserInfo;
-import com.myapp.core.enums.BillState;
-import com.myapp.core.enums.ChargingBasis;
-import com.myapp.core.enums.DataTypeEnum;
-import com.myapp.core.enums.TypeOfWork;
+import com.myapp.core.enums.*;
 import com.myapp.core.model.ColumnModel;
+import com.myapp.core.model.WebDataModel;
 import com.myapp.entity.ec.basedata.ProjectInfo;
 import com.myapp.entity.ec.basedata.SchemeTypeInfo;
 import com.myapp.entity.ec.engineering.SiteVisaOutDetailInfo;
@@ -20,6 +19,8 @@ import com.myapp.core.base.service.impl.AbstractBaseService;
 import com.myapp.core.controller.BaseBillEditController;
 import com.myapp.entity.ec.basedata.ConstructionSchemeInfo;
 import com.myapp.service.ec.basedata.ConstructionSchemeService;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.ResponseBody;
 
 import java.util.List;
 
@@ -62,5 +63,20 @@ public class ConstructionSchemeEditController extends BaseBillEditController {
 		cols.add(new ColumnModel("lastUpdateDate", DataTypeEnum.DATE));
 		cols.add(new ColumnModel("project",DataTypeEnum.F7,ProjectInfo.class));
 		return cols;
+	}
+
+	@PermissionItemAnn(name="导入保存",number="batchSave")
+	@ResponseBody
+	@RequestMapping(value="/batch/import",method= RequestMethod.POST)
+	public WebDataModel batchImportSave(String batchImport) {
+		WebDataModel webDataModel = new WebDataModel();
+		try{
+			constructionSchemeService.batchSave(batchImport,getCurUser());
+			webDataModel.setStatusCode(STATUSCODE_SUCCESS);
+		}catch (Exception e) {
+			e.printStackTrace();
+			setExceptionMesg(e.getMessage());
+		}
+		return webDataModel;
 	}
 }

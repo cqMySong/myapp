@@ -71,9 +71,9 @@
 						}
 					}};
 			var height = window.outerHeight-305;
-			thisOrgList = $('body').treeListUI({tableEl:'#tblMain',treeUrl:'ec/basedata/projects/projectTree',baseUrl:'ec/quality/templates',title:'项目工程',height:(height+42),
+			thisOrgList = $('body').treeListUI({tableEl:'#tblMain',treeUrl:'ec/basedata/projects/projectTree',baseUrl:'ec/quality/templates',title:'项目工程',height:(height+40),
 							treeContainer:"#tree_container",editWin:editWin,toolbar:"#table-toolbar",searchParams:{includeChild:true},treeOpt:treeOpt
-							,treeNode2QueryProp:treeNode2QueryProp,extendTableOptions:{toolbar:'#tblMain_toolbar',height:height,sortStable:false,rowStyle:changeBgColor}});
+							,treeNode2QueryProp:treeNode2QueryProp,extendTableOptions:{toolbar:'#tblMain_toolbar',height:height-25,sortStable:false,rowStyle:changeBgColor}});
 			thisOrgList.onLoad();
 			$('#jobRequire').on('click',function(){
                 var _selRows = thisOrgList.listUI.getSelectRow();

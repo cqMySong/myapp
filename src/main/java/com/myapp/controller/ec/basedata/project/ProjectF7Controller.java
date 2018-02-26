@@ -5,6 +5,7 @@ import java.util.Map;
 
 import javax.annotation.Resource;
 
+import com.myapp.core.annotation.AuthorAnn;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -32,6 +33,7 @@ public class ProjectF7Controller extends CoreBaseController{
 	}
 	
 	@RequestMapping("/f7show")
+	@AuthorAnn(doPermission=false)
 	public ModelAndView f7show(){
 		init();
 		Map params = new HashMap();
@@ -44,6 +46,7 @@ public class ProjectF7Controller extends CoreBaseController{
 	}
 	
 	@RequestMapping(value="/orgData")
+	@AuthorAnn(doPermission=false)
 	@ResponseBody
 	public WebDataModel treeData() {
 		try{

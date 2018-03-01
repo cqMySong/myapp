@@ -11,8 +11,10 @@ import org.hibernate.criterion.MatchMode;
 import org.hibernate.criterion.Restrictions;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.servlet.ModelAndView;
 
 import com.alibaba.fastjson.JSONObject;
+import com.myapp.core.annotation.AuthorAnn;
 import com.myapp.core.annotation.PermissionAnn;
 import com.myapp.core.base.service.impl.AbstractBaseService;
 import com.myapp.core.controller.BaseDataListController;
@@ -44,7 +46,7 @@ public class PositionListController extends BaseDataListController {
 	
 	public List<ColumnModel> getDataBinding() {
 		List<ColumnModel> cols = super.getDataBinding();
-		ColumnModel orgCol = new ColumnModel("org",DataTypeEnum.F7,"name");
+		ColumnModel orgCol = new ColumnModel("org",DataTypeEnum.F7,"id,name,displayName");
 		cols.add(orgCol);
 		ColumnModel parent = new ColumnModel("parent",DataTypeEnum.F7,"name");
 		cols.add(parent);
@@ -79,6 +81,14 @@ public class PositionListController extends BaseDataListController {
 
 	public String getListUrl() {
 		return "position/positionList";
+	}
+	
+	@AuthorAnn(doPermission=false,doLongin=true)
+	@RequestMapping("/treeShow")
+	public ModelAndView treeShow(){
+		init();
+		Map params = new HashMap();
+		return toPage("position/positionTreeQuery", params);
 	}
 
 }

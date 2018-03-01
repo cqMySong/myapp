@@ -1,12 +1,10 @@
 package com.myapp.controller.base.common;
 
-import com.myapp.core.annotation.AuthorAnn;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import com.myapp.core.annotation.AuthorAnn;
 import com.myapp.core.base.controller.BaseController;
 import com.myapp.core.model.WebDataModel;
 import com.myapp.core.util.BaseUtil;

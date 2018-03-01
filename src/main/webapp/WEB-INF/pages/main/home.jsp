@@ -66,6 +66,9 @@
 												isMain = false;
 											}
 										}
+										obj = pm.get("org");
+										String orgName = obj==null?"":obj.toString();
+										
 										obj = pm.get("respible");//负责人职位
 										boolean isResp = false;
 										if(obj!=null&&obj instanceof Boolean){
@@ -84,7 +87,7 @@
 								            </ul>
 											<h3 class="panel-title">
 												<%if(isResp){ %><i class="fa fa-star"></i><%}%>&nbsp;
-													<%=name %>
+													<%=orgName %>_<%=name %>
 											 </h3>
 										</div>
 										<div class="panel-body" style="padding: 2px;">

@@ -60,6 +60,7 @@ public class PermissionService extends BaseInterfaceService<PermissionInfo> {
 		                     Set<String> requestUrl = patternsCondition.getPatterns();
 		                     if(perann!=null&&perItem!=null&&requestUrl!=null&&requestUrl.size()>0){
 		                     	String thisUrl = requestUrl.iterator().next();
+		                     	thisUrl = thisUrl.substring(1);
 		                     	String thisName = perann.name()+"."+perItem.name();
 		                     	String thisNumber = perann.number()+"."+perItem.number();
 		                     	PermissionTypeEnum thisType = perItem.type();
@@ -156,6 +157,9 @@ public class PermissionService extends BaseInterfaceService<PermissionInfo> {
 		Map m = new TreeMap();
 		packageString(strs,m);
 		System.out.println(m.values());
+		
+		String url = "/ec/plan/projectplans/monthlist";
+		System.out.println(url.substring(1));
 	}
 	
 	

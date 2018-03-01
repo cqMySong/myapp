@@ -41,6 +41,8 @@ public class PositionF7QueryController extends BaseF7QueryController {
 
 	@Resource
 	public PositionService positionService;
+	@Resource
+	public OrgService orgService;
 	
 	public AbstractBaseService getService() {
 		return positionService;
@@ -49,8 +51,8 @@ public class PositionF7QueryController extends BaseF7QueryController {
 	public List<ColumnModel> getDataBinding() {
 		List<ColumnModel> cols = super.getDataBinding();
 		ColumnModel col = new ColumnModel("org",DataTypeEnum.F7,BaseOrgInfo.class);
-		col.setFormat("id,name");
-		col.setAlias_zh("id,所属组织");
+		col.setFormat("id,name,displayName");
+		col.setAlias_zh("id,所属组织,所属组织");
 		cols.add(col);
 		
 		col = new ColumnModel("number");
@@ -75,6 +77,10 @@ public class PositionF7QueryController extends BaseF7QueryController {
 		return cols;
 	}
 	
+	public boolean showCol(String colName) {
+		if("org_name".equals(colName)) return false;
+		return true;
+	}
 	public void executeQueryParams(Criteria query) {
 		super.executeQueryParams(query);
 		Map search = getSearchPrams();
@@ -82,7 +88,8 @@ public class PositionF7QueryController extends BaseF7QueryController {
 			Map uiCtx = JSONObject.parseObject(search.get("uiCtx").toString(), new HashMap().getClass());
 			Object orgIdObj = uiCtx.get("orgId");
 			if(orgIdObj!=null){
-				BaseOrgInfo orgInfo =  positionService.getEntity(BaseOrgInfo.class,WebUtil.UUID_ReplaceID(orgIdObj.toString()));
+				String orgId = WebUtil.UUID_ReplaceID(orgIdObj.toString());
+				BaseOrgInfo orgInfo =  orgService.getCurOrg(orgId, OrgTypeEnum.COMPANYORG);//同一个公司下的所有的岗位
 				if(orgInfo!=null){
 					query.add(Restrictions.like("org.longNumber",orgInfo.getLongNumber(),MatchMode.START));
 				}

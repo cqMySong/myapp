@@ -15,10 +15,12 @@ import org.springframework.web.servlet.ModelAndView;
 
 import com.alibaba.fastjson.JSONObject;
 import com.myapp.core.annotation.PermissionAnn;
+import com.myapp.core.annotation.PermissionItemAnn;
 import com.myapp.core.base.service.impl.AbstractBaseService;
 import com.myapp.core.controller.BasePageListController;
 import com.myapp.core.entity.UserInfo;
 import com.myapp.core.enums.DataTypeEnum;
+import com.myapp.core.enums.PermissionTypeEnum;
 import com.myapp.core.exception.db.QueryException;
 import com.myapp.core.model.ColumnModel;
 import com.myapp.core.model.PageModel;
@@ -35,7 +37,7 @@ import com.myapp.service.ec.plan.ProjectTotalPlanService;
  *
  *-----------MySong---------------
  */
-@PermissionAnn(name="系统管理.现场管理.计划管理.项目计划",number="app.ec.plan.projectplan")
+@PermissionAnn(name="系统管理.现场管理.计划管理.项目计划分解",number="app.ec.plan.projectplan")
 @Controller
 @RequestMapping("ec/plan/projectplans")
 public class ProjectPlanListController extends BasePageListController {
@@ -46,13 +48,13 @@ public class ProjectPlanListController extends BasePageListController {
 		return projectTotalPlanService;
 	}
 	
-	
+	@PermissionItemAnn(name="月计划查看",number="monthlist",type=PermissionTypeEnum.PAGE)
 	@RequestMapping("/monthlist")
 	public ModelAndView monthList(){
 		Map params = new HashMap();
 		return toPage(getMonthListUrl(), params);
 	}
-	
+	@PermissionItemAnn(name="周计划查看",number="weeklist",type=PermissionTypeEnum.PAGE)
 	@RequestMapping("/weeklist")
 	public ModelAndView weekList(){
 		Map params = new HashMap();
@@ -195,7 +197,4 @@ public class ProjectPlanListController extends BasePageListController {
 		}
 		return ajaxModel();
 	}
-	
-	
-
 }

@@ -9,7 +9,7 @@ var MyTreeViewer = function(el, opt){
      this.options = $.extend(true,{}, this.defaults, opt);
      this.treeViewer = undefined||this.options.treeViewer;
      this.tree = undefined||this.options.tree;
-}
+};
 MyTreeViewer.prototype = {
 	init:function(opt){
 		var _defViewer = {theme:"panel-success",title:"",height:200,search:true,refresh:true};
@@ -98,11 +98,11 @@ MyTreeViewer.prototype = {
 	getTree:function(){
 		return this.tree;
 	}
-}
+};
 $.fn.myTreeViewer = function(options) {
     var settings = $.extend({}, options);
     return new MyTreeViewer($(this),settings);
-}
+};
 })(jQuery, window, document);
 
 
@@ -121,7 +121,7 @@ var MyTree = function(el, opt,data){
 			 fg = opt.callback.beforeClick(treeId,treeNode);
 		 }
 		 return fg;
-	 }
+	 };
 	 var _def_setting = {
 		    view: {dblClickExpand: true,selectedMulti: false, showLine: true},
 		    data: {simpleData: {enable:true,idKey: "id",pIdKey: "parent_id",rootPId: ""}},
@@ -132,7 +132,7 @@ var MyTree = function(el, opt,data){
 	 }
 	 this.setting = $.extend(true,{}, _def_setting, opt);
 	 this.init(data);
-}
+};
 MyTree.prototype = {
 	init:function(data){
 		if(webUtil.isEmpty(data)) data = [];
@@ -170,9 +170,9 @@ MyTree.prototype = {
 		this.getTree().destroy();
 		this.init(nodes);
 	}
-}
+};
 $.fn.myTree = function(options,data) {
     var settings = $.extend(true,{}, options);
     return new MyTree($(this),settings,data);
-}
+};
 })(jQuery, window, document);

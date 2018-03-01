@@ -71,6 +71,9 @@ public class WebContextService extends AbstractBaseService{
 						pm.put("name",pInfo.getName());
 						pm.put("isMain",upInfo.getMain());//只要岗位
 						pm.put("respible",pInfo.getRespible());//负责人岗位
+						String orgName = "";
+						if(pInfo.getOrg()!=null) orgName = pInfo.getOrg().getDisplayName();
+						pm.put("org", orgName);//岗位对应的部门
 						if(upInfo.getMain()){
 							positions.add(0,pm);
 							myWebCtx.setMainPosition(pInfo.getName());

@@ -154,7 +154,7 @@ public class MainController extends BaseController {
 			setErrorMesg("系统功能菜单编码为空!");
 		}else{
 			try {
-				data = mainMenuService.getUserMenuJson(fln, getCurUser());
+				data = mainMenuService.getUserMenuJson(fln, getCurUserInfo());
 			} catch (QueryException e) {
 				e.printStackTrace();
 				setExceptionMesg("获取用户菜单异常!"+e.getMessage());

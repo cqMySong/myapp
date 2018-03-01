@@ -32,8 +32,7 @@
 				<div class="col-sm-6">
 					<div class="input-group">
 						<span class="input-group-addon lable">所属组织</span> 
-						<input name="org" class="input-item form-control read" 
-							data-opt="{type:'f7',enabled:false}" />
+						<input name="org" class="input-item form-control read" data-opt="{type:'f7',enabled:false}" />
 
 					</div>
 				</div>
@@ -41,7 +40,7 @@
 					<div class="input-group">
 						<span class="input-group-addon lable">上级岗位</span> 
 						<input name="parent" class="input-item form-control" 
-							data-opt="{type:'f7',uiWin:{title:'工作岗位',height:600,width:800,url:'base/positionf7'}}" />
+							data-opt="{type:'f7',uiWin:{title:'工作岗位',height:600,width:800,url:'base/positionf7',uiParams:getPostionParams}}" />
 							
 					</div>
 				</div>
@@ -103,6 +102,11 @@
 				$('input[name="org"]').myF7().setData(uiCtx.tree);
 			}
 		}
+	}
+	
+	function getPostionParams(){
+		var orgId = $('input[name="org"]').myF7().getValue();
+		return {orgId:orgId};
 	}
 	function getParams(){
 		

@@ -5,6 +5,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
@@ -25,6 +26,7 @@ import com.myapp.core.enums.BaseMethodEnum;
 import com.myapp.core.enums.FileType;
 import com.myapp.core.model.MyWebContext;
 import com.myapp.core.model.WebDataModel;
+import com.myapp.core.service.base.BaseService;
 import com.myapp.core.util.BaseUtil;
 import com.myapp.core.util.DateUtil;
 
@@ -54,9 +56,10 @@ public class BaseController {
     protected Object otherData;
     @Autowired
     public HttpServletRequest request;
-    
     @Autowired
     public HttpServletResponse response;
+    @Resource
+    public BaseService baseService;
     
     private void initModelAndViewParams(Map params){
     	if(params==null) params = new HashMap();
@@ -168,6 +171,13 @@ public class BaseController {
     	MyWebContext webCtx = getCurWebContext();
     	if(webCtx!=null) return webCtx.getCurUserInfo();
     	return null;
+    }
+    public UserInfo getCurUserInfo(){
+    	UserInfo uInfo = getCurUser();
+    	if(uInfo!=null){
+    		uInfo = (UserInfo) baseService.newServicInstance(UserInfo.class).getEntity(uInfo.getId());
+    	}
+    	return uInfo;
     }
     
     public FileType getExportType(){

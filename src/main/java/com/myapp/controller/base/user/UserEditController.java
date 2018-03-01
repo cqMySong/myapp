@@ -88,6 +88,11 @@ public class UserEditController extends BaseEditController{
 		
 		ColumnModel positionItems = new ColumnModel("positionItems",DataTypeEnum.ENTRY,UserPositionInfo.class);
 		positionItems.getCols().add(new ColumnModel("id",DataTypeEnum.PK));
+		
+		ColumnModel org = new ColumnModel("org",DataTypeEnum.F7,"id,name,displayName");
+		org.setClaz(BaseOrgInfo.class);
+		positionItems.getCols().add(org);
+		
 		ColumnModel position = new ColumnModel("position",DataTypeEnum.F7,"id,name");
 		position.setClaz(PositionInfo.class);
 		positionItems.getCols().add(position);

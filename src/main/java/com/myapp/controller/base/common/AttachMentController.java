@@ -80,7 +80,7 @@ public class AttachMentController extends BaseController {
 		}
 		return attachDir;
 	}
-	
+	@AuthorAnn(doPermission=false)
 	@RequestMapping(value = "/upload", method = RequestMethod.POST)  
 	public String upload(@RequestBody MultipartFile file
             ,@RequestParam String fileName,@RequestParam String md5
@@ -159,7 +159,7 @@ public class AttachMentController extends BaseController {
 		}
 		return "view";
 	}
-	
+	@AuthorAnn(doPermission=false)
 	@RequestMapping("/toAttach")
 	public ModelAndView toAttach(){
 		Map params = new HashMap();
@@ -169,6 +169,7 @@ public class AttachMentController extends BaseController {
 		return toPage("base/attach", params);
 	}
 	
+	@AuthorAnn(doPermission=false)
 	@RequestMapping(value="/list")
 	@ResponseBody
 	public WebDataModel toList() {
@@ -241,6 +242,7 @@ public class AttachMentController extends BaseController {
 		return WebUtil.UUID_ReplaceID(getParamterByRequest("id"));
 	}
 	
+	@AuthorAnn(doPermission=false)
 	@ResponseBody
 	@RequestMapping(value="/remove",method=RequestMethod.POST)
 	public WebDataModel toRemove() {
@@ -413,6 +415,7 @@ public class AttachMentController extends BaseController {
 		return ajaxModel();
 	}
 	
+	@AuthorAnn(doPermission=false)
 	@RequestMapping(value="/down",produces= MediaType.APPLICATION_OCTET_STREAM_VALUE)
 	public void downFile(HttpServletRequest request,HttpServletResponse response){
 		String id = (String)request.getParameter("id");
@@ -466,6 +469,8 @@ public class AttachMentController extends BaseController {
 			}
 		}
 	}
+	
+	@AuthorAnn(doPermission=false)
 	@ResponseBody
 	@RequestMapping(value="/initFile",method=RequestMethod.POST)
 	public Map initFileInfo(String md5,String sourceId){

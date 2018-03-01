@@ -37,6 +37,10 @@ public class BaseInterfaceService<T> extends AbstractBaseService {
 		}
 	}
 	
+	public T getEntityInfo(String id) {
+		return (T)super.getEntity(id);
+	}
+	
 	protected Class getEntityClass() {
 		return this.claz;
 	}

@@ -11,6 +11,7 @@ import com.alibaba.fastjson.JSONObject;
 import com.myapp.core.entity.MainMenuInfo;
 import com.myapp.core.entity.UserInfo;
 import com.myapp.core.enums.MenuOpenType;
+import com.myapp.core.enums.PermissionTypeEnum;
 import com.myapp.core.exception.db.QueryException;
 import com.myapp.core.service.base.BaseInterfaceService;
 import com.myapp.core.util.BaseUtil;
@@ -32,14 +33,22 @@ public class MainMenuService extends BaseInterfaceService<MainMenuInfo> {
 	 */
 	public List getTopMainMenu(UserInfo uInfo) throws QueryException{
 		StringBuffer sb = new StringBuffer();
+		List params = new ArrayList();
 		sb.append("select m.fid as id,m.fname as name,m.ficonCodeType as iconCodeType");
 		sb.append(",m.flongnumber as fln,m.ficonType as iconType,m.ficon as icon");
 		sb.append(" from t_pm_mainmenu as m");
 		sb.append(" where m.fid is not null and m.flevel =? and m.fonshow=?");
-		sb.append(" order by m.fnumber");
-		List params = new ArrayList();
 		params.add(2);
 		params.add(Boolean.TRUE);
+		if(!uInfo.getAdmin()){//非系统管理员用户，只能获取功能性菜单，但是系统管理管理员可以查看功能性菜单
+			sb.append(" and m.fsysMenu =?");
+			params.add(Boolean.FALSE);
+		}
+		if(uInfo.getAdmin()&&uInfo.getSysUser()){//是系统管理员且系统用户的 只能查看系统菜单下面的所有功能
+			sb.append(" and m.fsysMenu =?");
+			params.add(Boolean.TRUE);
+		}
+		sb.append(" order by m.fnumber");
 		return executeSQLQuery(sb.toString(), params.toArray());
 	}
 	/**
@@ -76,7 +85,7 @@ public class MainMenuService extends BaseInterfaceService<MainMenuInfo> {
 	public JSONObject getUserMenuJson(String modelLongNumber,UserInfo uInfo) throws QueryException{
 		List<Map<String,Object>> menus = new ArrayList<Map<String,Object>>();
 		if(!BaseUtil.isEmpty(modelLongNumber)){
-			List<Map> dbmenus = getModelMenu(modelLongNumber,uInfo);
+			List<Map> dbmenus = getUserMenusData(modelLongNumber,uInfo);
 			if(dbmenus!=null&&dbmenus.size()>0){
 				Map<String,Map> item = new HashMap<String,Map>();
 				for(Map dbmenu:dbmenus){
@@ -136,6 +145,52 @@ public class MainMenuService extends BaseInterfaceService<MainMenuInfo> {
 		jsonObj.put("skin", "");
 		return jsonObj;
 	}
+	//根据用户去获取对应的菜单范围
+	public List getUserMenusData(String mln,UserInfo uInfo) throws QueryException{
+		if(uInfo.getAdmin()&&uInfo.getSysUser()){
+			return getModelMenu(mln,uInfo);
+		}
+		
+		String userId = uInfo.getId();
+		List params = new ArrayList();
+		StringBuffer sb = new StringBuffer();
+		sb.append("select m.* from (");
+		//权限分配到人的菜单
+		sb.append(" select a.fid as id,a.fname as name,a.ficonCodeType as iconCodeType");
+		sb.append(" ,a.ficonType as iconType,a.ficon as icon,a.furl as url,a.flongnumber as fln");
+		sb.append(" ,a.fparams as params,a.fprentid as pid,a.fmenuOpenType as openType");
+		sb.append(" from t_pm_mainmenu as a");
+		sb.append(" where a.fonshow =? and exists(");params.add(Boolean.TRUE);
+			sb.append(" select b.fid from t_pm_permission as b where b.furl = a.furl and b.ftype=?");params.add(PermissionTypeEnum.PAGE.getValue());
+				sb.append("	and exists(select fid from t_pm_permissionassign as c where c.fpermissionId=b.fid and c.ftargetId=?)");params.add(userId);
+		sb.append(" )");
+		if(!BaseUtil.isEmpty(mln)){
+			sb.append(" and a.flongnumber like ? ");
+			params.add(mln+"%");
+		}
+		sb.append(" union all ");
+		//权限分配到人对应的上级菜单
+		sb.append(" select t.fid as id,t.fname as name,t.ficonCodeType as iconCodeType");
+		sb.append(" ,t.ficonType as iconType,t.ficon as icon,t.furl as url,t.flongnumber as fln");
+		sb.append(" ,t.fparams as params,t.fprentid as pid,t.fmenuOpenType as openType");
+		sb.append(" from t_pm_mainmenu as t");
+		sb.append(" where t.flevel=3 and exists(");
+		sb.append(" select a.fid from t_pm_mainmenu as a where a.fonshow =? and exists(");params.add(Boolean.TRUE);
+			sb.append(" select b.fid from t_pm_permission as b where b.furl = a.furl and b.ftype=?");params.add(PermissionTypeEnum.PAGE.getValue());
+				sb.append("	and exists(select fid from t_pm_permissionassign as c where c.fpermissionId=b.fid and c.ftargetId=?)");params.add(userId);
+		sb.append(" ) and t.fid = a.fprentid");
+		if(!BaseUtil.isEmpty(mln)){
+			sb.append(" and a.flongnumber like ? ");
+			params.add(mln+"%");
+		}
+		sb.append(") and t.fonshow=?");params.add(Boolean.TRUE);
+		sb.append(") as m ");
+		sb.append(" order by m.fln");
+		System.out.println("执行用户查询菜单权限sql：  "+ sb.toString());
+		System.out.println("执行用户查询菜单权限参数：  "+ params.toArray());
+		return executeSQLQuery(sb.toString(), params.toArray());
+	}
+	
 	
 	public static void main(String[] args){
 		String id = "tJBa++D2SG+Qk2m/lk9jo=qYE5FAKZA=";

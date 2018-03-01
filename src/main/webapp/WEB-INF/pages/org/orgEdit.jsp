@@ -36,7 +36,7 @@
 				<div class="col-sm-6">
 					<div class="input-group">
 						<span class="input-group-addon lable">上级组织</span> 
-						<input name="parent" class="input-item form-control" 
+						<input name="parent" class="input-item form-control read" 
 							data-opt="{type:'f7',dataChange:parent_dataChange,uiWin:{title:'组织查询',height:550,width:800,url:'base/orgf7',params:'key=124&val=1344'}}" />
 						
 					</div>

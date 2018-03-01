@@ -119,7 +119,7 @@ TreeListUI.prototype = {
 				webUtil.ajaxData({url:tree_url,async:false,data:_data,success:function(data){
 					var treeDatas = data.data;
 					if (!webUtil.isEmpty(treeDatas)&&!webUtil.isEmpty(thisTreeList.tree)) {
-						thisTreeList.tree.reLoadTree(treeDatas)
+						thisTreeList.tree.reLoadTree(treeDatas);
 						if(!webUtil.isEmpty(hasSelnode)){
 							thisTreeList.tree.selectNode(hasSelnode);
 						}else{

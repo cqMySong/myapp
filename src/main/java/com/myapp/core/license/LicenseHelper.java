@@ -46,8 +46,8 @@ public class LicenseHelper  {
 		ltInfo.setType(LicenseType.RELEASE);
 		ltInfo.setAppName("现场施工项目");
 		ltInfo.setMachineCode(machineCode);
-		ltInfo.addModels(new ModelItemInfo(UserInfo.class.getName(), "用户", 5,"系统允许建立最大的用户数"));
-		ltInfo.addModels(new ModelItemInfo(ProjectInfo.class.getName(), "工程项目", 5,"系统允许建立的最大工程项目数"));
+		ltInfo.addModels(new ModelItemInfo(UserInfo.class.getName(), "用户", 50,"系统允许建立最大的用户数"));
+		ltInfo.addModels(new ModelItemInfo(ProjectInfo.class.getName(), "工程项目", 10,"系统允许建立的最大工程项目数"));
 		return ltInfo;
 	}
 	
@@ -116,7 +116,7 @@ public class LicenseHelper  {
 	
 	public static void main(String[] args)  {
 		try{
-			String marchCode = "TCMxmdeuuyHGCogzk9m26Q==";//人和电脑机器码
+			String marchCode = SystemTool.getMachineCode();//"TCMxmdeuuyHGCogzk9m26Q==";//人和电脑机器码
 			genLicenseFile("d:/lic/license.data",marchCode);
 //			decryptLicense(new File("d:/lic/license.data"));
 		}catch(Exception e){

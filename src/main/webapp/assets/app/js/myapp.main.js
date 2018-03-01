@@ -352,7 +352,7 @@ var def_tab_item = {id:"",title:"主页",icon:"",enColse:true,url:"",content:"",
 			_tab_conten_pane.append(_content);
 			return _tab_conten_pane;
 		}
-	}
+	};
 	$.fn.myTab = function(method,options) {
 	    var settings = $.extend({}, options);
 	    var myTab = new MyTab($(this),settings);
@@ -365,7 +365,7 @@ var def_tab_item = {id:"",title:"主页",icon:"",enColse:true,url:"",content:"",
 	 	   }
 	    }
 	    return myTab;
-	}
+	};
 })(jQuery, window, document);
 
 /**
@@ -377,7 +377,7 @@ var MyBtnGroups = function(ele, opt){
 	 this.$element = ele;
 	 this.defaults = {};
      this.options = $.extend(true,{}, this.defaults, opt);
-}
+};
 MyBtnGroups.prototype = {
 	addBtn:function(opt,index){
 		var _idx = -1;
@@ -431,7 +431,7 @@ MyBtnGroups.prototype = {
 			var _ul = $('<ul class="dropdown-menu"></div');
 			for(var i=0;i<_items.length;i++){
 				var _item = $.extend({}, _def_searchItem, _items[i]); 
-				var _li = $('<li><a href="#">'+_item.text+'</a></li>')
+				var _li = $('<li><a href="#">'+_item.text+'</a></li>');
 				_li.data('item',_item);
 				_ul.append(_li);
 			}

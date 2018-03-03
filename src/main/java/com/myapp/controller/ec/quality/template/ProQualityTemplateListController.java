@@ -5,7 +5,9 @@ import com.myapp.core.annotation.PermissionAnn;
 import com.myapp.core.annotation.PermissionItemAnn;
 import com.myapp.core.base.service.impl.AbstractBaseService;
 import com.myapp.core.controller.BaseListController;
+import com.myapp.core.entity.PositionInfo;
 import com.myapp.core.entity.UserInfo;
+import com.myapp.core.entity.UserPositionInfo;
 import com.myapp.core.enums.*;
 import com.myapp.core.model.ColumnModel;
 import com.myapp.core.service.UserService;
@@ -13,6 +15,7 @@ import com.myapp.core.util.BaseUtil;
 import com.myapp.core.util.WebUtil;
 import com.myapp.entity.ec.basedata.ProjectInfo;
 import com.myapp.entity.ec.basedata.ProjectWbsInfo;
+import com.myapp.entity.ec.basedata.QualityTemplateInfo;
 import com.myapp.service.ec.quality.ProQualityTemplateDetailService;
 import com.myapp.service.ec.quality.ProQualityTemplateService;
 import org.hibernate.Criteria;
@@ -26,10 +29,11 @@ import javax.annotation.Resource;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 /**
  * @path：com.myapp.controller.ec.engineering.contract
- * @description：分包合同
+ * @description：项目质量样板
  * @author ： ly
  * @date: 2017-08-28 21:02
  */
@@ -41,6 +45,8 @@ public class ProQualityTemplateListController extends BaseListController {
     private ProQualityTemplateService proQualityTemplateService;
     @Resource
     private ProQualityTemplateDetailService proQualityTemplateDetailService;
+    @Resource
+    private UserService userService;
 
     @Override
     public String getEditUrl() {
@@ -93,10 +99,10 @@ public class ProQualityTemplateListController extends BaseListController {
         List<ColumnModel> cols = super.getDataBinding();
         cols.add(new ColumnModel("name"));
         cols.add(new ColumnModel("number"));
-        cols.add(new ColumnModel("operationPoint"));
         cols.add(new ColumnModel("expectStartDate",DataTypeEnum.DATE));
         cols.add(new ColumnModel("acceptanceDate",DataTypeEnum.DATE));
         cols.add(new ColumnModel("billState", DataTypeEnum.ENUM,BillState.class));
+        cols.add(new ColumnModel("qualityTemplateInfo", DataTypeEnum.F7,QualityTemplateInfo.class));
         cols.add(new ColumnModel("number"));
         cols.add(new ColumnModel("attachs"));
 
@@ -123,8 +129,16 @@ public class ProQualityTemplateListController extends BaseListController {
     public String forwardRequire(Model model){
         Map<String,String> params =  getUiCtx();
         model.addAttribute("jobRequire",
-                proQualityTemplateDetailService.queryByChecker(getCurUser().getId(),params.get("proQualityTemplateId")));
-        model.addAttribute("parentId",params.get("proQualityTemplateId"));
+                proQualityTemplateDetailService.queryJobRequireByProQualityTemplateId(WebUtil.UUID_ReplaceID(params.get("proQualityTemplateId"))));
+        model.addAttribute("parentId",WebUtil.UUID_ReplaceID(params.get("proQualityTemplateId")));
+        List<PositionInfo> userPositionInfoSet = userService.queryPositionByMain(getCurUser().getId());
+        Map<String,Boolean> mainPosition = new HashMap<>();
+        if(userPositionInfoSet!=null){
+            for(PositionInfo userPositionInfo:userPositionInfoSet){
+                mainPosition.put(userPositionInfo.getId(),true);
+            }
+        }
+        model.addAttribute("mainPosition",mainPosition);
         return "ec/quality/template/proQualityJobRequireEdit";
     }
 }

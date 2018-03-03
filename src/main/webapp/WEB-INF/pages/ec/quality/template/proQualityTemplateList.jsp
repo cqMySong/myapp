@@ -22,11 +22,10 @@
 						 <thead >
 							<tr>
 								<th data-field="project_name">工程项目</th>
-								<th data-field="name">名称</th>=
+								<th data-field="name">名称</th>
 								<th data-field="number">单号</th>
 								<th data-field="branchBaseWbs_name">分部名称</th>
 								<th data-field="subentry_name">分项名称</th>
-								<th data-field="operationPoint" data-type="textarea">操作要点</th>
 								<th data-field="expectStartDate" data-type="date">预计实施时间</th>
 								<th data-field="acceptanceDate" data-type="date">验收时间</th>
 								<th data-field="billState" data-type="select">状态</th>
@@ -63,7 +62,7 @@
 
 	$(document).ready(function() {
 			var treeNode2QueryProp = ["id","name","number","longNumber","type"];
-			var editWin ={title:'项目质量样板',width:900,height:(window.outerHeight-260)};
+			var editWin ={title:'项目质量样板',width:1200,height:(window.outerHeight-260)};
 			var treeOpt = {
 					setting:{
 						data: {
@@ -79,10 +78,10 @@
                 var _selRows = thisOrgList.listUI.getSelectRow();
                 if(!webUtil.isEmpty(_selRows)&&_selRows.length>0){
                     var _thisRowData = _selRows[0];
-                    var _win = $.extend(true,{},{title:'工作要求',width:900,height:500,btns:[]});
+                    var _win = $.extend(true,{},{title:'工作要求',width:1200,height:500,btns:[]});
                     _win.title = _win.title+'-确认';
                     _win.url =  webUtil.toUrl('ec/quality/templates/job/require');
-                    _win.uiParams = {proQualityTemplateId:_thisRowData.id};
+                    _win.uiParams = {proQualityTemplateId:webUtil.uuIdReplaceID(_thisRowData.id)};
                     webUtil.openWin(_win);
                 }else{
                     webUtil.mesg('请先选中对应的数据行，方可进行工作要求操作!');

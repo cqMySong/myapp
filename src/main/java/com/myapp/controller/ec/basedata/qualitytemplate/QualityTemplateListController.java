@@ -6,10 +6,15 @@ import com.myapp.core.controller.BaseDataListController;
 import com.myapp.core.entity.PositionInfo;
 import com.myapp.core.enums.DataTypeEnum;
 import com.myapp.core.model.ColumnModel;
+import com.myapp.core.model.WebDataModel;
 import com.myapp.entity.ec.basedata.ProBaseWbsInfo;
+import com.myapp.service.ec.basedata.QualityTemplateDetailService;
 import com.myapp.service.ec.basedata.QualityTemplateService;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.annotation.Resource;
 import java.util.List;
@@ -29,6 +34,8 @@ public class QualityTemplateListController extends BaseDataListController {
 	
 	@Resource
 	public QualityTemplateService qualityTemplateService;
+	@Resource
+	private QualityTemplateDetailService qualityTemplateDetailService;
 	@Override
 	public AbstractBaseService getService() {
 		return qualityTemplateService;
@@ -49,4 +56,12 @@ public class QualityTemplateListController extends BaseDataListController {
 		return "ec/basedata/qualitytemplate/qualityTemplateList";
 	}
 
+	@RequestMapping("/jobrequire")
+	@ResponseBody
+	public WebDataModel showQualityTemplateJobRequire(String qualityTemplateId) {
+		if(!StringUtils.isEmpty(qualityTemplateId)){
+			this.data = qualityTemplateDetailService.queryByQualityTemplateId(qualityTemplateId);
+		}
+		return super.ajaxModel();
+	}
 }

@@ -26,36 +26,33 @@
 			<div class="col-sm-6">
 				<div class="panel panel-success">
 					<div class="panel-heading">
-						<h3 class="panel-title">${job.key}</h3>
+						<h3 class="panel-title">${job['positionName']}</h3>
 					</div>
 					<div class="panel-body">
 						<div class="row">
-							<c:forEach items="${job.value}" var="jobRequireItem">
-								<div data-name="jobRequireItem" class="col-sm-12 mt5"
-									 data-value="${jobRequireItem.checkItem}" data-position="${jobRequireItem.position.id}"
-									 data-id="${jobRequireItem.id}">
+							<c:forEach items="${job['jobRequire']}" var="jobRequireItem">
+								<div data-name="jobRequireItem" class="col-sm-5 mt5"
+									 data-disabled="${(jobRequireItem.checked||!mainPosition[jobRequireItem.positionId])?'disabled':'selected'}"
+									 data-value="${jobRequireItem.checkItem}" data-id="${jobRequireItem.id}">
 									<div class="input-group">
 										<input name="checked" class="input-item form-control" style="width: 10%;"
-											   data-opt="{type:'checkbox',checked:${jobRequireItem.checked}}" type="checkbox">
+											   data-opt="{type:'checkbox',checked:${jobRequireItem.checked},disabled:'${(jobRequireItem.checked||!mainPosition[jobRequireItem.positionId])?'disabled':''}'}" type="checkbox">
 										<span class="input-group-addon lable" style="width: 90%;text-align: left;">${jobRequireItem.checkItem}</span>
 									</div>
 								</div>
-								<c:set var="checker" value="${jobRequireItem.checker}"></c:set>
-								<c:set var="lastUpdateDate" value="${jobRequireItem.lastUpdateDate}"></c:set>
+								<div class="col-sm-3 mt5">
+									<div class="input-group">
+										<span class="input-group-addon lable" style="min-width: 55px;padding-left: 5px;padding-right: 5px;">确认人</span>
+										<input type="text" name="checkerName" value="${jobRequireItem.checkName}" readonly="readonly" class="form-control input-item read">
+									</div>
+								</div>
+								<div class="col-sm-4 mt5">
+									<div class="input-group">
+										<span class="input-group-addon lable" style="min-width: 55px;padding-left: 5px;padding-right: 5px;">确认时间</span>
+										<input type="text" name="checkTime"  value="${jobRequireItem.lastUpdate}" readonly="readonly" class="form-control input-item read">
+									</div>
+								</div>
 							</c:forEach>
-							<div class="col-sm-6 mt10 ">
-								<div class="input-group">
-									<span class="input-group-addon lable" style="min-width: 60px;">确认人</span>
-									<input class="input-item read" name="number" readonly="readonly" value="${checker.name}">
-								</div>
-							</div>
-							<div class="col-sm-6 mt10">
-								<div class="input-group">
-									<span class="input-group-addon lable" style="min-width: 60px;">确认时间</span>
-									<fmt:formatDate value="${lastUpdateDate}" pattern="yyyy-MM-dd HH:mm:ss" var="d" />
-									<input class="input-item read" readonly="readonly" name="name" value="${d}">
-								</div>
-							</div>
 						</div>
 					</div>
 				</div>
@@ -74,15 +71,13 @@
         myForm.init();
         $('#saveJobRequire').on('click',function(e){
             var jobRequireItemArr = [];
-			$("div[data-name='jobRequireItem']").each(function(i,v){
-				var jobRequireItem = {};
-				jobRequireItem['id'] = $(this).attr("data-id");
-                jobRequireItem["position"] = {id:$(this).attr("data-position")};
-                jobRequireItem["checkItem"] = $(this).attr("data-value");
-                jobRequireItem["checked"] = $(this).find("input[name='checked']").is(':checked');
-                jobRequireItem["parent"] = {id:$("input[name='parentId']").val()};
-                jobRequireItem["seq"] = i;
-                jobRequireItemArr.push(jobRequireItem);
+			$("div[data-disabled='selected']").each(function(i,v){
+			    if($(this).find("input[name='checked']").is(':checked')){
+                    var jobRequireItem = {};
+                    jobRequireItem['id'] = $(this).attr("data-id");
+                    jobRequireItem["checked"] = $(this).find("input[name='checked']").is(':checked');
+                    jobRequireItemArr.push(jobRequireItem);
+				}
 			});
             var _thisUrl = "ec/quality/template/job/require/save";
             webUtil.ajaxData({url:_thisUrl,async:false,data:{jobRequireItems:JSON.stringify(jobRequireItemArr)},

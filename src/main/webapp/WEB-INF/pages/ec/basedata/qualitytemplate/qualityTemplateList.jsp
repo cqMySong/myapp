@@ -37,12 +37,12 @@ function beforeAction(opt){
 }
 
 function enableClick(btn){
-	alert(btn.text);
+
 }
 
 $(document).ready(function() {
     var height = top.getTopMainHeight()-45;
-	var editWin ={title:'质量样板工作要点',width:1000,height:height+90};
+	var editWin ={title:'质量样板工作要点',width:1000,height:height+120};
 	listUI = $('#listPanel').listUI({tableEl:'#tblMain',listModel:1,baseUrl:'ec/basedata/qualitytemplates'
 		,editWin:editWin,toolbar:"#table-toolbar",extendTableOptions:{height:height-40}});
 	listUI.onLoad();

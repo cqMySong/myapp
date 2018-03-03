@@ -165,7 +165,7 @@
 					}
 					$thisDom.wrap($parentContainer);
 					var _div = $('<div></div>');
-					_div.addClass('my'+_type+" "+_ckrad_opt.theme);
+					_div.addClass('my'+_type+" "+_ckrad_opt.theme+" "+(_ckrad_opt.disabled?"disabled":""));
 					if(_ckrad_opt.checked){
 						_div.addClass('checked');
 						$thisDom.prop("checked",true);

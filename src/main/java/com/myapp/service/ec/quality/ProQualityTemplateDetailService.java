@@ -99,6 +99,44 @@ public class ProQualityTemplateDetailService extends BaseInterfaceService<ProQua
         return result;
     }
 
+    /**
+     * 功能：根据项目样板id查询工作要求情况
+     * @param proQualityTemplateId
+     * @return
+     */
+    public List<Map<String,Object>> queryJobRequireByProQualityTemplateId(String proQualityTemplateId){
+        String hql = "select pqtd.checked as checked,pqtd.checkItem as checkItem,pqtd.lastUpdateDate as lastUpdate," +
+                "po.name as positionName,po.id as positionId,pqtd.id as id,ui.name as checkerName " +
+                " from PositionInfo po,ProQualityTemplateDetailInfo pqtd " +
+                " left join UserInfo ui on ui.id = pqtd.checker.id " +
+                " where pqtd.position.id = po.id and pqtd.parent.id = ? order by po.id";
+        List<Map<String,Object>> result = findByHQL(hql,new Object[]{proQualityTemplateId});
+        List<Map<String,Object>> returnResult = new ArrayList<>();
+        List<Map<String,Object>> jobRequireList = null;
+        Map<String,Object> returnObj = null;
+        Map<String,Object> jobRequireObj = null;
+        String lastPositionId = null;
+        for(Map<String,Object> map:result){
+            if(lastPositionId==null||!lastPositionId.equals(map.get("positionId").toString())){
+                returnObj = new HashMap<>();
+                jobRequireList = new ArrayList<>();
+                returnObj.put("positionName",map.get("positionName").toString());
+                returnObj.put("jobRequire",jobRequireList);
+                returnResult.add(returnObj);
+            }
+            jobRequireObj = new HashMap<>();
+            jobRequireObj.put("checked",map.get("checked"));
+            jobRequireObj.put("checkItem",map.get("checkItem"));
+            jobRequireObj.put("lastUpdate",map.get("lastUpdate"));
+            jobRequireObj.put("id",map.get("id"));
+            jobRequireObj.put("positionId",map.get("positionId"));
+            jobRequireObj.put("checkName",map.get("checkerName"));
+            jobRequireList.add(jobRequireObj);
+
+            lastPositionId = map.get("positionId").toString();
+        }
+        return returnResult;
+    }
 
     public void saveJobRequire(String jobRequireItems,UserInfo userInfo) throws SaveException {
         if(StringUtils.isEmpty(jobRequireItems)){
@@ -107,6 +145,8 @@ public class ProQualityTemplateDetailService extends BaseInterfaceService<ProQua
         List<ProQualityTemplateDetailInfo> proQualityTemplateDetailInfos = JSON.parseArray(jobRequireItems,
                 ProQualityTemplateDetailInfo.class);
         for(ProQualityTemplateDetailInfo proQualityTemplateDetailInfo:proQualityTemplateDetailInfos){
+            proQualityTemplateDetailInfo = getEntityInfo(proQualityTemplateDetailInfo.getId());
+            proQualityTemplateDetailInfo.setChecked(Boolean.TRUE);
             proQualityTemplateDetailInfo.setChecker(userInfo);
             proQualityTemplateDetailInfo.setLastUpdateDate(new Date());
             saveEntity(proQualityTemplateDetailInfo);

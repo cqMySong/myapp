@@ -11,10 +11,8 @@ import com.myapp.core.model.ColumnModel;
 import com.myapp.core.model.WebDataModel;
 import com.myapp.entity.ec.basedata.ProjectInfo;
 import com.myapp.entity.ec.basedata.ProjectWbsInfo;
-import com.myapp.entity.ec.quality.ProQualityTemplateInfo;
+import com.myapp.entity.ec.basedata.SafeTemplateInfo;
 import com.myapp.entity.ec.safty.ProSafeTemplateInfo;
-import com.myapp.service.ec.quality.ProQualityTemplateDetailService;
-import com.myapp.service.ec.quality.ProQualityTemplateService;
 import com.myapp.service.ec.safty.ProSafeTemplateDetailService;
 import com.myapp.service.ec.safty.ProSafeTemplateService;
 import org.springframework.stereotype.Controller;
@@ -59,7 +57,6 @@ public class ProSafeTemplateEditController extends BaseBillEditController {
         List<ColumnModel> cols = super.getDataBinding();
         cols.add(new ColumnModel("name"));
         cols.add(new ColumnModel("number"));
-        cols.add(new ColumnModel("operationPoint"));
         cols.add(new ColumnModel("expectStartDate",DataTypeEnum.DATE));
         cols.add(new ColumnModel("acceptanceDate",DataTypeEnum.DATE));
         cols.add(new ColumnModel("billState",DataTypeEnum.ENUM, BillState.class));
@@ -69,6 +66,7 @@ public class ProSafeTemplateEditController extends BaseBillEditController {
         cols.add(new ColumnModel("createDate", DataTypeEnum.DATE));
         cols.add(new ColumnModel("auditDate", DataTypeEnum.DATE));
         cols.add(new ColumnModel("lastUpdateDate", DataTypeEnum.DATE));
+        cols.add(new ColumnModel("safeTemplateInfo", DataTypeEnum.F7,SafeTemplateInfo.class));
         ColumnModel project = new ColumnModel("project",DataTypeEnum.F7,"id,name");
         project.setClaz(ProjectInfo.class);
         cols.add(project);
@@ -96,5 +94,12 @@ public class ProSafeTemplateEditController extends BaseBillEditController {
             webDataModel.setStatusCode(STATUSCODE_ERROR);
         }
         return webDataModel;
+    }
+
+    @RequestMapping("/query/job")
+    @ResponseBody
+    public WebDataModel queryJobRequire(String proSafeTemplateId) {
+        this.data = proSafeTemplateDetailService.queryJobRequireByProSafeTemplateId(proSafeTemplateId);
+        return ajaxModel();
     }
 }

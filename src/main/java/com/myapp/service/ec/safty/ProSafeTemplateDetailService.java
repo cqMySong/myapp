@@ -29,76 +29,43 @@ public class ProSafeTemplateDetailService extends BaseInterfaceService<ProSafeTe
     @Resource
     private ProSafeTemplateService proSafeTemplateService;
     /**
-     * 功能：根据检查人查询工作要求数据
-     * @param checkerId
+     * 功能：根据项目样板id查询工作要求情况
      * @param proSafeTemplateId
      * @return
      */
-    public Map<String,List<ProSafeTemplateDetailInfo>> queryByChecker(String checkerId,
-                                                                         String proSafeTemplateId){
-        String hql = "select p.name as positionName,pqtd.checker as checker,pqtd.position as position,pqtd.id as id," +
-                "pqtd.checkItem  as checkItem,pqtd.lastUpdateDate as lastUpdateDate,pqtd.checked as checked " +
-                " from ProSafeTemplateDetailInfo pqtd,PositionInfo p" +
-                " where pqtd.position.id = p.id and pqtd.parent.id=? and " +
-                "pqtd.checker.id = ? order by p.name,pqtd.checker.id,pqtd.checkItem desc";
-        List<Map<String,Object>> list = findByHQL(hql,new Object[]{proSafeTemplateId,checkerId});
-        Map<String,List<ProSafeTemplateDetailInfo>> result= new HashMap<>();
-        List<ProSafeTemplateDetailInfo> proSafeTemplateDetailInfos = null;
-        ProSafeTemplateDetailInfo proSafeTemplateDetailInfo = null;
-        if(list!=null&&list.size()!=0){
-            for(Map<String,Object> map:list){
-                proSafeTemplateDetailInfo = new ProSafeTemplateDetailInfo();
-                proSafeTemplateDetailInfo.setChecker((UserInfo) map.get("checker"));
-                proSafeTemplateDetailInfo.setPosition((PositionInfo) map.get("position"));
-                proSafeTemplateDetailInfo.setCheckItem((String) map.get("checkItem"));
-                proSafeTemplateDetailInfo.setLastUpdateDate((Date) map.get("lastUpdateDate"));
-                proSafeTemplateDetailInfo.setChecked((Boolean) map.get("checked"));
-                proSafeTemplateDetailInfo.setId((String) map.get("id"));
-                if(result.get(map.get("positionName").toString())==null){
-                    proSafeTemplateDetailInfos = new ArrayList<>();
-                }
-                proSafeTemplateDetailInfos.add(proSafeTemplateDetailInfo);
-                result.put(map.get("positionName").toString(),proSafeTemplateDetailInfos);
+    public List<Map<String,Object>> queryJobRequireByProSafeTemplateId(String proSafeTemplateId){
+        String hql = "select pqtd.checked as checked,pqtd.checkItem as checkItem,pqtd.lastUpdateDate as lastUpdate," +
+                "po.name as positionName,po.id as positionId,pqtd.id as id,ui.name as checkerName " +
+                " from PositionInfo po,ProSafeTemplateDetailInfo pqtd " +
+                " left join UserInfo ui on ui.id = pqtd.checker.id " +
+                " where pqtd.position.id = po.id and pqtd.parent.id = ? order by po.id";
+        List<Map<String,Object>> result = findByHQL(hql,new Object[]{proSafeTemplateId});
+        List<Map<String,Object>> returnResult = new ArrayList<>();
+        List<Map<String,Object>> jobRequireList = null;
+        Map<String,Object> returnObj = null;
+        Map<String,Object> jobRequireObj = null;
+        String lastPositionId = null;
+        for(Map<String,Object> map:result){
+            if(lastPositionId==null||!lastPositionId.equals(map.get("positionId").toString())){
+                returnObj = new HashMap<>();
+                jobRequireList = new ArrayList<>();
+                returnObj.put("positionName",map.get("positionName").toString());
+                returnObj.put("jobRequire",jobRequireList);
+                returnResult.add(returnObj);
             }
-        }else{
-            //查询登录人主要岗位信息
-            List<PositionInfo> userMainPosition = userService.queryPositionByMain(checkerId);
-            if(userMainPosition!=null){
-                ProSafeTemplateInfo proSafeTemplateInfo = proSafeTemplateService.loadEntity(proSafeTemplateId);
-                String jobRequirement = null;
-                String[] jobRequirementArr = null;
-                List<String> jobRequirementList = null;
-                for(PositionInfo positionInfo:userMainPosition){
-                    jobRequirement = safeTemplateService.queryByPositionAndSubEntry(
-                            proSafeTemplateInfo.getBranchBaseWbs().getBaseWbs().getId(),
-                            proSafeTemplateInfo.getSubentry().getBaseWbs().getId(),positionInfo.getId());
-                    if(!StringUtils.isEmpty(jobRequirement)){
-                        jobRequirementArr = jobRequirement.split("\n");
-                        jobRequirementList = new ArrayList<>();
-                        for(String jobStr:jobRequirementArr){
-                            if(!StringUtils.isEmpty(jobStr)){
-                                jobRequirementList.add(jobStr);
-                            }
-                        }
-                        Collator collator = Collator.getInstance(Locale.CHINESE);
-                        Collections.sort(jobRequirementList,collator);
-                        proSafeTemplateDetailInfos = new ArrayList<>();
-                        for(String jobStr:jobRequirementList){
-                            proSafeTemplateDetailInfo = new ProSafeTemplateDetailInfo();
-                            proSafeTemplateDetailInfo.setCheckItem(jobStr);
-                            proSafeTemplateDetailInfo.setChecked(false);
-                            proSafeTemplateDetailInfo.setPosition(positionInfo);
-                            proSafeTemplateDetailInfo.setLastUpdateDate(new Date());
-                            proSafeTemplateDetailInfos.add(proSafeTemplateDetailInfo);
-                        }
-                        result.put(positionInfo.getName(),proSafeTemplateDetailInfos);
-                    }
-                }
-            }
-        }
-        return result;
-    }
+            jobRequireObj = new HashMap<>();
+            jobRequireObj.put("checked",map.get("checked"));
+            jobRequireObj.put("checkItem",map.get("checkItem"));
+            jobRequireObj.put("lastUpdate",map.get("lastUpdate"));
+            jobRequireObj.put("id",map.get("id"));
+            jobRequireObj.put("positionId",map.get("positionId"));
+            jobRequireObj.put("checkName",map.get("checkerName"));
+            jobRequireList.add(jobRequireObj);
 
+            lastPositionId = map.get("positionId").toString();
+        }
+        return returnResult;
+    }
 
     public void saveJobRequire(String jobRequireItems,UserInfo userInfo) throws SaveException {
         if(StringUtils.isEmpty(jobRequireItems)){
@@ -107,6 +74,8 @@ public class ProSafeTemplateDetailService extends BaseInterfaceService<ProSafeTe
         List<ProSafeTemplateDetailInfo> proSafeTemplateDetailInfos = JSON.parseArray(jobRequireItems,
                 ProSafeTemplateDetailInfo.class);
         for(ProSafeTemplateDetailInfo proSafeTemplateDetailInfo:proSafeTemplateDetailInfos){
+            proSafeTemplateDetailInfo = getEntityInfo(proSafeTemplateDetailInfo.getId());
+            proSafeTemplateDetailInfo.setChecked(Boolean.TRUE);
             proSafeTemplateDetailInfo.setChecker(userInfo);
             proSafeTemplateDetailInfo.setLastUpdateDate(new Date());
             saveEntity(proSafeTemplateDetailInfo);

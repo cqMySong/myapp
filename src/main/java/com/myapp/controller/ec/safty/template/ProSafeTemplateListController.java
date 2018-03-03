@@ -5,12 +5,14 @@ import com.myapp.core.annotation.PermissionAnn;
 import com.myapp.core.annotation.PermissionItemAnn;
 import com.myapp.core.base.service.impl.AbstractBaseService;
 import com.myapp.core.controller.BaseListController;
+import com.myapp.core.entity.PositionInfo;
 import com.myapp.core.entity.UserInfo;
 import com.myapp.core.enums.BaseMethodEnum;
 import com.myapp.core.enums.BillState;
 import com.myapp.core.enums.DataTypeEnum;
 import com.myapp.core.enums.PermissionTypeEnum;
 import com.myapp.core.model.ColumnModel;
+import com.myapp.core.service.UserService;
 import com.myapp.core.util.BaseUtil;
 import com.myapp.core.util.WebUtil;
 import com.myapp.entity.ec.basedata.ProjectInfo;
@@ -44,6 +46,8 @@ public class ProSafeTemplateListController extends BaseListController {
     private ProSafeTemplateService proSafeTemplateService;
     @Resource
     private ProSafeTemplateDetailService proSafeTemplateDetailService;
+    @Resource
+    private UserService userService;
 
     @Override
     public String getEditUrl() {
@@ -96,7 +100,6 @@ public class ProSafeTemplateListController extends BaseListController {
         List<ColumnModel> cols = super.getDataBinding();
         cols.add(new ColumnModel("name"));
         cols.add(new ColumnModel("number"));
-        cols.add(new ColumnModel("operationPoint"));
         cols.add(new ColumnModel("expectStartDate",DataTypeEnum.DATE));
         cols.add(new ColumnModel("acceptanceDate",DataTypeEnum.DATE));
         cols.add(new ColumnModel("billState", DataTypeEnum.ENUM,BillState.class));
@@ -125,8 +128,16 @@ public class ProSafeTemplateListController extends BaseListController {
     public String forwardRequire(Model model){
         Map<String,String> params =  getUiCtx();
         model.addAttribute("jobRequire",
-                proSafeTemplateDetailService.queryByChecker(getCurUser().getId(),params.get("proQualityTemplateId")));
-        model.addAttribute("parentId",params.get("proQualityTemplateId"));
+                proSafeTemplateDetailService.queryJobRequireByProSafeTemplateId(WebUtil.UUID_ReplaceID(params.get("proSafeTemplateId"))));
+        model.addAttribute("parentId",WebUtil.UUID_ReplaceID(params.get("proSafeTemplateId")));
+        List<PositionInfo> userPositionInfoSet = userService.queryPositionByMain(getCurUser().getId());
+        Map<String,Boolean> mainPosition = new HashMap<>();
+        if(userPositionInfoSet!=null){
+            for(PositionInfo userPositionInfo:userPositionInfoSet){
+                mainPosition.put(userPositionInfo.getId(),true);
+            }
+        }
+        model.addAttribute("mainPosition",mainPosition);
         return "ec/safty/template/proSafeJobRequireEdit";
     }
 }

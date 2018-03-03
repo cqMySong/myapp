@@ -26,10 +26,6 @@ public class ProQualityTemplateInfo extends CoreBaseBillInfo {
 	 */
 	private ProjectWbsInfo subentry;
 	/**
-	 * 操作要点
-	 */
-	private String operationPoint;
-	/**
 	 * 预计实施时间
 	 */
 	private Date expectStartDate;
@@ -38,9 +34,15 @@ public class ProQualityTemplateInfo extends CoreBaseBillInfo {
 	 */
 	private Date acceptanceDate;
 	/**
+	 * 质量样板
+	 */
+	private QualityTemplateInfo qualityTemplateInfo;
+	/**
 	 * 质量样板职责明细
 	 */
 	private Set<ProQualityTemplateDetailInfo> proQualityTemplateDetailInfoSet;
+
+	private QualityTemplateInfo oldQualityTemplateInfo;
 
 	@OneToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "fProjectId")
@@ -72,14 +74,6 @@ public class ProQualityTemplateInfo extends CoreBaseBillInfo {
 		this.subentry = subentry;
 	}
 
-	@Column(name = "fOperationPoint")
-	public String getOperationPoint() {
-		return operationPoint;
-	}
-
-	public void setOperationPoint(String operationPoint) {
-		this.operationPoint = operationPoint;
-	}
 	@Column(name = "fExpectStartDate")
 	public Date getExpectStartDate() {
 		return expectStartDate;
@@ -104,5 +98,24 @@ public class ProQualityTemplateInfo extends CoreBaseBillInfo {
 
 	public void setProQualityTemplateDetailInfoSet(Set<ProQualityTemplateDetailInfo> proQualityTemplateDetailInfoSet) {
 		this.proQualityTemplateDetailInfoSet = proQualityTemplateDetailInfoSet;
+	}
+
+	@OneToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "fQualityTemplateId")
+	public QualityTemplateInfo getQualityTemplateInfo() {
+		return qualityTemplateInfo;
+	}
+
+	public void setQualityTemplateInfo(QualityTemplateInfo qualityTemplateInfo) {
+		this.qualityTemplateInfo = qualityTemplateInfo;
+	}
+
+	@Transient
+	public QualityTemplateInfo getOldQualityTemplateInfo() {
+		return oldQualityTemplateInfo;
+	}
+
+	public void setOldQualityTemplateInfo(QualityTemplateInfo oldQualityTemplateInfo) {
+		this.oldQualityTemplateInfo = oldQualityTemplateInfo;
 	}
 }

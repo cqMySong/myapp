@@ -4,6 +4,8 @@ import com.myapp.core.annotation.PermissionAnn;
 import com.myapp.core.base.entity.CoreBaseInfo;
 import com.myapp.core.base.service.impl.AbstractBaseService;
 import com.myapp.core.controller.BaseBillEditController;
+import com.myapp.core.entity.MeasureUnitInfo;
+import com.myapp.core.entity.PositionInfo;
 import com.myapp.core.entity.UserInfo;
 import com.myapp.core.enums.BillState;
 import com.myapp.core.enums.DataTypeEnum;
@@ -11,11 +13,10 @@ import com.myapp.core.enums.PaymentMethod;
 import com.myapp.core.enums.SubcontractExpenseType;
 import com.myapp.core.model.ColumnModel;
 import com.myapp.core.model.WebDataModel;
-import com.myapp.entity.ec.basedata.ECUnitInfo;
-import com.myapp.entity.ec.basedata.ProBaseWbsInfo;
-import com.myapp.entity.ec.basedata.ProjectInfo;
-import com.myapp.entity.ec.basedata.ProjectWbsInfo;
+import com.myapp.entity.ec.basedata.*;
+import com.myapp.entity.ec.budget.BudgetingDetailInfo;
 import com.myapp.entity.ec.engineering.SubcontractInfo;
+import com.myapp.entity.ec.quality.ProQualityTemplateDetailInfo;
 import com.myapp.entity.ec.quality.ProQualityTemplateInfo;
 import com.myapp.service.ec.engineering.SubcontractService;
 import com.myapp.service.ec.quality.ProQualityTemplateDetailService;
@@ -62,7 +63,6 @@ public class ProQualityTemplateEditController extends BaseBillEditController {
         List<ColumnModel> cols = super.getDataBinding();
         cols.add(new ColumnModel("name"));
         cols.add(new ColumnModel("number"));
-        cols.add(new ColumnModel("operationPoint"));
         cols.add(new ColumnModel("expectStartDate",DataTypeEnum.DATE));
         cols.add(new ColumnModel("acceptanceDate",DataTypeEnum.DATE));
         cols.add(new ColumnModel("billState",DataTypeEnum.ENUM, BillState.class));
@@ -71,6 +71,7 @@ public class ProQualityTemplateEditController extends BaseBillEditController {
         cols.add(new ColumnModel("auditor",DataTypeEnum.F7,UserInfo.class));
         cols.add(new ColumnModel("createDate", DataTypeEnum.DATE));
         cols.add(new ColumnModel("auditDate", DataTypeEnum.DATE));
+        cols.add(new ColumnModel("qualityTemplateInfo", DataTypeEnum.F7,QualityTemplateInfo.class));
         cols.add(new ColumnModel("lastUpdateDate", DataTypeEnum.DATE));
         ColumnModel project = new ColumnModel("project",DataTypeEnum.F7,"id,name");
         project.setClaz(ProjectInfo.class);
@@ -99,5 +100,11 @@ public class ProQualityTemplateEditController extends BaseBillEditController {
             webDataModel.setStatusCode(STATUSCODE_ERROR);
         }
         return webDataModel;
+    }
+    @RequestMapping("/query/job")
+    @ResponseBody
+    public WebDataModel queryJobRequire(String proQualityTemplateId) {
+        this.data = proQualityTemplateDetailService.queryJobRequireByProQualityTemplateId(proQualityTemplateId);
+        return ajaxModel();
     }
 }

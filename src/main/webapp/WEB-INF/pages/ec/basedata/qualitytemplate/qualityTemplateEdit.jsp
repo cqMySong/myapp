@@ -136,7 +136,7 @@
         }
     }
     $(document).ready(function() {
-        var height = window.outerHeight-470
+        var height = window.outerHeight-450;
         var entryOption = "{type:'entry',height:"+height+",tableOpt:{editDataChanged:qualityTemplateDetailInfos_dataChanged}"+
             ",toolbar:{title:'工作要点明细'}}";
         $("table.input-entry").attr("data-opt",entryOption);

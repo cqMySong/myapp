@@ -4,6 +4,8 @@ import com.myapp.core.annotation.MyEntityAnn;
 import com.myapp.core.base.entity.CoreBaseBillInfo;
 import com.myapp.entity.ec.basedata.ProjectInfo;
 import com.myapp.entity.ec.basedata.ProjectWbsInfo;
+import com.myapp.entity.ec.basedata.QualityTemplateInfo;
+import com.myapp.entity.ec.basedata.SafeTemplateInfo;
 
 import javax.persistence.*;
 import java.util.Date;
@@ -25,10 +27,7 @@ public class ProSafeTemplateInfo extends CoreBaseBillInfo {
 	 * 分项
 	 */
 	private ProjectWbsInfo subentry;
-	/**
-	 * 操作要点
-	 */
-	private String operationPoint;
+
 	/**
 	 * 预计实施时间
 	 */
@@ -37,10 +36,21 @@ public class ProSafeTemplateInfo extends CoreBaseBillInfo {
 	 * 验收时间
 	 */
 	private Date acceptanceDate;
+
+	/**
+	 * 安全样板
+	 */
+	private SafeTemplateInfo safeTemplateInfo;
+
 	/**
 	 * 质量样板职责明细
 	 */
-	private Set<ProSafeTemplateDetailInfo> proQualityTemplateDetailInfoSet;
+	private Set<ProSafeTemplateDetailInfo> proSafeTemplateDetailInfoSet;
+
+	/**
+	 * 安全样板
+	 */
+	private SafeTemplateInfo oldSafeTemplateInfo;
 
 	@OneToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "fProjectId")
@@ -72,14 +82,6 @@ public class ProSafeTemplateInfo extends CoreBaseBillInfo {
 		this.subentry = subentry;
 	}
 
-	@Column(name = "fOperationPoint")
-	public String getOperationPoint() {
-		return operationPoint;
-	}
-
-	public void setOperationPoint(String operationPoint) {
-		this.operationPoint = operationPoint;
-	}
 	@Column(name = "fExpectStartDate")
 	public Date getExpectStartDate() {
 		return expectStartDate;
@@ -96,13 +98,33 @@ public class ProSafeTemplateInfo extends CoreBaseBillInfo {
 	public void setAcceptanceDate(Date acceptanceDate) {
 		this.acceptanceDate = acceptanceDate;
 	}
+
 	@OneToMany(cascade={CascadeType.ALL},mappedBy="parent")
 	@OrderBy("seq ASC")
-	public Set<ProSafeTemplateDetailInfo> getProQualityTemplateDetailInfoSet() {
-		return proQualityTemplateDetailInfoSet;
+	public Set<ProSafeTemplateDetailInfo> getProSafeTemplateDetailInfoSet() {
+		return proSafeTemplateDetailInfoSet;
 	}
 
-	public void setProQualityTemplateDetailInfoSet(Set<ProSafeTemplateDetailInfo> proQualityTemplateDetailInfoSet) {
-		this.proQualityTemplateDetailInfoSet = proQualityTemplateDetailInfoSet;
+	public void setProSafeTemplateDetailInfoSet(Set<ProSafeTemplateDetailInfo> proSafeTemplateDetailInfoSet) {
+		this.proSafeTemplateDetailInfoSet = proSafeTemplateDetailInfoSet;
+	}
+
+	@OneToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "fSafeTemplateId")
+	public SafeTemplateInfo getSafeTemplateInfo() {
+		return safeTemplateInfo;
+	}
+
+	public void setSafeTemplateInfo(SafeTemplateInfo safeTemplateInfo) {
+		this.safeTemplateInfo = safeTemplateInfo;
+	}
+
+	@Transient
+	public SafeTemplateInfo getOldSafeTemplateInfo() {
+		return oldSafeTemplateInfo;
+	}
+
+	public void setOldSafeTemplateInfo(SafeTemplateInfo oldSafeTemplateInfo) {
+		this.oldSafeTemplateInfo = oldSafeTemplateInfo;
 	}
 }

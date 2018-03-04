@@ -3,6 +3,7 @@ package com.myapp.controller.ec.basedata.scheme;
 import javax.annotation.Resource;
 
 import com.alibaba.fastjson.JSONObject;
+import com.myapp.core.annotation.AuthorAnn;
 import com.myapp.core.annotation.PermissionItemAnn;
 import com.myapp.core.entity.UserInfo;
 import com.myapp.core.enums.BillState;
@@ -14,6 +15,7 @@ import com.myapp.core.model.WebDataModel;
 import com.myapp.core.util.BaseUtil;
 import com.myapp.core.util.WebUtil;
 import com.myapp.entity.ec.basedata.SchemeTypeInfo;
+
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 
@@ -21,6 +23,7 @@ import com.myapp.core.annotation.PermissionAnn;
 import com.myapp.core.base.service.impl.AbstractBaseService;
 import com.myapp.core.controller.BaseListController;
 import com.myapp.service.ec.basedata.ConstructionSchemeService;
+
 import org.springframework.web.servlet.ModelAndView;
 
 import java.util.HashMap;
@@ -47,7 +50,7 @@ public class ConstructionSchemeListController extends BaseListController {
 		return "ec/basedata/scheme/constructionSchemeList";
 	}
 
-	@Override
+	@AuthorAnn(doLongin=false,doPermission=false)
 	public WebDataModel toList() {
 		init();
 		String search = request.getParameter("search");
@@ -81,7 +84,7 @@ public class ConstructionSchemeListController extends BaseListController {
 	}
 
 
-	@PermissionItemAnn(name="施工方案导入",number="onload",type= PermissionTypeEnum.FUNCTION)
+	@PermissionItemAnn(name="施工方案导入",number="btnImport",type= PermissionTypeEnum.FUNCTION)
 	@RequestMapping("/batch/import")
 	public ModelAndView forwardBatchImport(){
 		Map params = new HashMap();

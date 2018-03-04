@@ -78,6 +78,16 @@ function batchImpData(){
 		webUtil.mesg('请先选择的工程项目的单位工程结构，然后才能做导入操作!');
 	}
 }
+function getAllChildrenNodes(treeNode,result){
+    result.push(treeNode.id);
+	var childrenNodes = treeNode.children;
+	if (childrenNodes) {
+		for (var i = 0; i < childrenNodes.length; i++) {
+            result = getAllChildrenNodes(childrenNodes[i], result);
+		}
+	}
+    return result;
+}
 $(document).ready(function() {
      var treeNode2QueryProp = ["id","name","number","longNumber","type"];
      var editWin ={title:'工程项目分解结构',width:620,height:450};
@@ -91,7 +101,42 @@ $(document).ready(function() {
      thisOrgList.onLoad();
      
      $('#batchimp').click(function(){
-    	 batchImpData();
+    	 //batchImpData();
+         var tree = thisOrgList.getSelectNode();
+         if(webUtil.isEmpty(tree)||'proStructure'!=tree.type){
+             webUtil.mesg('请先选择的工程项目的单位工程结构，然后才能做导入操作!');
+             return false;
+         }
+         var _win = $.extend(true,{},{title:'工程分解结构标准导入',width:900,height:570,
+			 btns:['确定','取消'],btnCallBack:function(index,layerIndex,layero){
+             if(layero){
+                 if(index==1){
+                     var iframe_win = $(layero).parent().find('#layui-layer-iframe'+layerIndex)[0].contentWindow;
+                     var datas = iframe_win.getData();
+                     if(!webUtil.isEmpty(datas)&&datas.length>0){
+                         var wbsIds = [];
+                         $.each(datas,function(i,val){
+                           getAllChildrenNodes(val,wbsIds);
+						 });
+                         var pams = {structId:tree.id,structCode:tree.number,wbsIds:wbsIds.join(",")};
+                         webUtil.ajaxData({url:"ec/basedata/prowbs/import",data:pams,async:true,success:function(data){
+                             thisOrgList.listUI.executeQuery();
+                         }});
+                         return true;
+                     }else{
+                         webUtil.mesg("未选择任何数据!");
+                         return false;
+                     }
+                 }
+             }
+             return true;
+         }});
+         _win.url =  webUtil.toUrl('ec/basedata/prowbss/forward/batchimp');
+         _win.uiParams={project:{id:webUtil.uuIdReplaceID(tree.id),name:tree.name,number:tree.number}};
+         _win.colseCallBack =function(){
+             thisOrgList.listUI.executeQuery();
+         };
+         webUtil.openWin(_win);
      });
 });
 

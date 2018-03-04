@@ -7,6 +7,9 @@ import java.util.Map;
 
 import javax.annotation.Resource;
 
+import com.myapp.core.annotation.PermissionItemAnn;
+import com.myapp.core.enums.PermissionTypeEnum;
+import com.myapp.core.util.WebUtil;
 import org.hibernate.Criteria;
 import org.hibernate.criterion.Order;
 import org.hibernate.criterion.Restrictions;
@@ -29,6 +32,7 @@ import com.myapp.entity.ec.basedata.ProjectWbsInfo;
 import com.myapp.enums.ec.ProWbsType;
 import com.myapp.service.ec.basedata.ProjectService;
 import com.myapp.service.ec.basedata.ProjectWbsService;
+import org.springframework.web.servlet.ModelAndView;
 
 /**
  *-----------MySong---------------
@@ -136,5 +140,14 @@ public class ProjectWbsListController extends BaseDataListController {
 			setErrorMesg(e.getMessage());
 		}
 		return ajaxModel();
+	}
+
+	@PermissionItemAnn(name="项目分解标准结构导入",number="import",type= PermissionTypeEnum.FUNCTION)
+	@RequestMapping("/forward/batchimp")
+	public ModelAndView forwardBatchImport(){
+		Map params = new HashMap();
+		toListUIParams(params);
+		params.put("uiCtx", WebUtil.UUID_ReplaceID(params.get("uiCtx").toString()));
+		return toPage("ec/basedata/projectwbs/proWbsImport", params);
 	}
 }

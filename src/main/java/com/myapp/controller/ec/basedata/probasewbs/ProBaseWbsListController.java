@@ -121,7 +121,7 @@ public class ProBaseWbsListController extends BaseTreeListController {
 		}
 		return ajaxModel();
 	}
-	
+
 	public String getHeadTitle() {
 		return "工程基础分解结构";
 	}

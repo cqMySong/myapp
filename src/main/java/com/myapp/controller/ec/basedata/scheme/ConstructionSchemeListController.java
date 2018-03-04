@@ -81,7 +81,7 @@ public class ConstructionSchemeListController extends BaseListController {
 	}
 
 
-	@PermissionItemAnn(name="施工方案导入",number="onload",type= PermissionTypeEnum.FUNCTION)
+	@PermissionItemAnn(name="施工方案导入",number="import",type= PermissionTypeEnum.FUNCTION)
 	@RequestMapping("/batch/import")
 	public ModelAndView forwardBatchImport(){
 		Map params = new HashMap();

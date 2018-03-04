@@ -124,7 +124,7 @@ public class BaseInterceptor implements HandlerInterceptor {
 						Map<String, Map<String, String>> perms =  myContext.getPermission();
 						// 	uri = /myapp/base/permissionAssign/hasAssign
 						if(perms!=null&&perms.size()>0&&!BaseUtil.isEmpty(uri)&&uri.length()>appRoot.length()){
-							uri = uri.substring(appRoot.length());
+							uri = uri.substring(appRoot.length()+1);
 							System.out.println("URI = "+uri);
 							toGo = perms.containsKey(uri)&&isNeedLogin;
 						}

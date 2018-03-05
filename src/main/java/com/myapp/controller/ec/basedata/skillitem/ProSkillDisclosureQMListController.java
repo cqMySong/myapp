@@ -129,7 +129,7 @@ public class ProSkillDisclosureQMListController extends BaseListController {
 
 	}
 
-	@PermissionItemAnn(name="项目施工技术交底导入",number="onload",type= PermissionTypeEnum.FUNCTION)
+	@PermissionItemAnn(name="项目施工技术交底导入",number="import",type= PermissionTypeEnum.FUNCTION)
 	@RequestMapping("/batch/import")
 	public ModelAndView forwardBatchImport(){
 		Map params = new HashMap();

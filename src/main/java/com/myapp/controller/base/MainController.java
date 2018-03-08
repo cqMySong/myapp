@@ -1,6 +1,7 @@
 package com.myapp.controller.base;
 
 import java.security.NoSuchAlgorithmException;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -23,6 +24,8 @@ import com.myapp.core.service.MainMenuService;
 import com.myapp.core.service.UserService;
 import com.myapp.core.service.base.WebContextService;
 import com.myapp.core.util.BaseUtil;
+import com.myapp.core.util.DateUtil;
+import com.myapp.core.util.WebSocketSessionUtil;
 
 /**
  *-----------MySong---------------
@@ -149,6 +152,13 @@ public class MainController extends BaseController {
 	@RequestMapping("/menu")
 	public WebDataModel getMainMenu(){
 		init();
+		
+		try {
+			WebSocketSessionUtil.broadcast("a", "还原光临!"+getCurUser().getName()+"("+DateUtil.formatDateByFormat(new Date(),DateUtil.DATEFORMT_YMDHMS)+")");
+		} catch (Exception e1) {
+			e1.printStackTrace();
+		}
+		
 		String fln = request.getParameter("fln");
 		if(BaseUtil.isEmpty(fln)){
 			setErrorMesg("系统功能菜单编码为空!");
@@ -162,5 +172,13 @@ public class MainController extends BaseController {
 		}
 		return ajaxModel();
 	}
+	
+	@AuthorAnn(doLongin=false,doPermission=false)
+	@RequestMapping("/toWebSocketTest")
+	public ModelAndView webSocket(){
+		Map params = new HashMap();
+		return toPage("main/websocket", params);
+	}
+	
 	
 }

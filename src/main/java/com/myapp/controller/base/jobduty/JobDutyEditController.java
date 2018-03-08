@@ -14,6 +14,7 @@ import com.myapp.core.base.entity.CoreBaseInfo;
 import com.myapp.core.base.service.impl.AbstractBaseService;
 import com.myapp.core.controller.BaseDataEditController;
 import com.myapp.core.controller.BaseEditController;
+import com.myapp.core.entity.JobDutyGroupInfo;
 import com.myapp.core.entity.JobDutyInfo;
 import com.myapp.core.entity.PermissionInfo;
 import com.myapp.core.entity.RoleInfo;
@@ -50,6 +51,7 @@ public class JobDutyEditController extends BaseDataEditController{
 		ColumnModel shortCutMenu = new ColumnModel("shortCutMenu",DataTypeEnum.F7,"id,name,displayName");
 		shortCutMenu.setClaz(PermissionInfo.class);
 		cols.add(shortCutMenu);
+		cols.add(new ColumnModel("group",DataTypeEnum.F7,JobDutyGroupInfo.class,"id,name,displayName"));
 		return cols;
 	}
 	public Object createNewData() {

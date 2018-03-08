@@ -26,6 +26,7 @@ import com.myapp.core.model.MyWebContext;
 import com.myapp.core.service.MainMenuService;
 import com.myapp.core.service.PermissionAssignService;
 import com.myapp.core.util.BaseUtil;
+import com.myapp.core.util.MyWebContextUtil;
 
 
 /**
@@ -45,7 +46,6 @@ public class WebContextService extends AbstractBaseService{
 	public MainMenuService mainMenuService;
 	
 	public void initWebContext(HttpServletRequest request,UserInfo uInfo) throws QueryException{
-		clearWebContext(request);
 		if(uInfo!=null){
 			MyWebContext myWebCtx = new MyWebContext();
 			myWebCtx.setUserId(uInfo.getId());
@@ -116,7 +116,7 @@ public class WebContextService extends AbstractBaseService{
 			}
 			List menus = mainMenuService.getTopMainMenu(uInfo);
 			myWebCtx.setMainMenu(menus);
-			request.getSession().setAttribute(SystemConstant.WEBCONTEXT_NAME, myWebCtx);
+			MyWebContextUtil.initWebContext(request, myWebCtx);
 		}
 	}
 	
@@ -167,10 +167,6 @@ public class WebContextService extends AbstractBaseService{
 		}
 		
 		return curItem;
-	}
-	
-	public void clearWebContext(HttpServletRequest request){
-		request.getSession().removeAttribute(SystemConstant.WEBCONTEXT_NAME);
 	}
 	
 	public static void main(String[] args){

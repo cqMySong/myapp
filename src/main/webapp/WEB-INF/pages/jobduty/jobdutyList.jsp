@@ -10,12 +10,14 @@
 <body style="padding: 5px;" >
 	<div id="table-toolbar" class="panel" style="height:40px;margin-bottom:5px;"></div>
 	<div class="mainContrainer">
-		<div class="container panel">
-			<div class="row">
+		<div class="leftContainer" id="tree_container"></div>
+		<div class="rightContainer" id="tblMain_container">
+			<div class="row panel">
 				<div class="col-md-7" style="padding: 2px;">
 					<table id="tblMain" style="width: 100%;border: 1px solid #bdc3d1;">
 						 <thead >
 							<tr>
+								<th data-field="group_displayName" data-width="150">分组</th>
 								<th data-field="number" >编码</th>
 								<th data-field="name" >名称</th>
 								<th data-field="shortCutMenu_displayName" data-width="200">快捷菜单</th>
@@ -42,11 +44,14 @@
 					</table>
 				</div>
 			</div>
+			
 		</div>
+		
+		
 	</div>
 </body>
 
-<%@include file="../base/base_list.jsp"%>
+<%@include file="../base/base_treelist.jsp"%>
 <style type="text/css">
 
 </style>
@@ -100,6 +105,14 @@ function getAllChildrenNodes(treeNode,result){
 }
 
 function beforeAction(opt){
+	if(opt=='addnew'){
+		var params = listUI.uiParams(opt);
+		var tree = listUI.tree;
+		if(webUtil.isEmpty(params)&&tree&&tree.getNodes().length>0){
+			webUtil.mesg('请先选择的分组，然后才能做新增操作!');
+			return false;
+		}
+	}
 	return true;
 }
 
@@ -109,9 +122,8 @@ function afterAction(opt){
 	}
 }
 
-
 function getSelectedId(){
-	var _selRows = listUI.getSelectRow();
+	var _selRows = listUI.listUI.getSelectRow();
 	if(!webUtil.isEmpty(_selRows)&&_selRows.length>0){
 		return _selRows[0].id;
 	}
@@ -164,19 +176,23 @@ function unAssignPermission(){
 }
 $(document).ready(function() {
 	var editWin ={title:'工作职责',width:620,height:360};
-	var height = top.getTopMainHeight()-100;
+	var height = top.getTopMainHeight()-46;
 	
-	var itemTable_opt = {height:height+40,striped:true,sortStable:true,showRefresh:false,clickToSelect:true
+	var itemTable_opt = {height:height,striped:true,sortStable:true,showRefresh:false,clickToSelect:true
 	 			,cache:false,showToggle:true,search:false,toolbar:'#tblMain2_toolbar'
 	 			,showColumns:true,idField:"id",mypagination:false,selectModel:2};
 	tblMain2 = $('#tblMain2').myDataTable(itemTable_opt);
 	$('#toAssignPermission').click(function(){
 		toAssignPermission();
 	});
-	listUI = $('body').listUI({tableEl:'#tblMain',height:height,listModel:1,baseUrl:'base/jobdutys'
-		,editWin:editWin,toolbar:"#table-toolbar"
-		,extendTableOptions:{height:height,selectChanaged:tblMain_selectChange}})
+	
+	listUI = $('body').treeListUI({tableEl:'#tblMain',treeUrl:'base/jobdutygroups/tree'
+		,treeNode2QueryProp:["id","name","number","longNumber","displayName"],
+		listModel:1,baseUrl:'base/jobdutys',title:'工作职责分组',height:height,
+   		 treeContainer:"#tree_container",editWin:editWin,toolbar:"#table-toolbar"
+   		 ,extendTableOptions:{toolbar:'#tblMain_toolbar',height:height-52,selectChanaged:tblMain_selectChange}});
 	listUI.onLoad();
+	
 	$('#unAssignPermission').click(function(){
 		unAssignPermission();
 	});

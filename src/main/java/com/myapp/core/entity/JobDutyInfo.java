@@ -1,7 +1,9 @@
 package com.myapp.core.entity;
 
+import javax.persistence.ConstraintMode;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
+import javax.persistence.ForeignKey;
 import javax.persistence.JoinColumn;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
@@ -22,6 +24,8 @@ public class JobDutyInfo extends CoreBaseDataInfo {
 	
 	private PermissionInfo shortCutMenu;//快捷菜单
 
+	private JobDutyGroupInfo group;//分组
+	
 	@OneToOne(fetch=FetchType.LAZY)
 	@JoinColumn(name = "fshortCutMenu")
 	public PermissionInfo getShortCutMenu() {
@@ -31,5 +35,18 @@ public class JobDutyInfo extends CoreBaseDataInfo {
 	public void setShortCutMenu(PermissionInfo shortCutMenu) {
 		this.shortCutMenu = shortCutMenu;
 	}
+
+	@OneToOne(fetch=FetchType.LAZY)
+	@JoinColumn(name = "fgroupId",foreignKey=@ForeignKey(value=ConstraintMode.NO_CONSTRAINT))
+	public JobDutyGroupInfo getGroup() {
+		return group;
+	}
+
+	public void setGroup(JobDutyGroupInfo group) {
+		this.group = group;
+	}
+	
+	
+	
 	
 }

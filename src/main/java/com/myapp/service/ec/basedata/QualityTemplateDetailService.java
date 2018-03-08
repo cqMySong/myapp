@@ -66,4 +66,15 @@ public class QualityTemplateDetailService extends  BaseInterfaceService<QualityT
         }
         return result;
     }
+
+    /**
+     * 功能：获取所有的
+     * @return
+     */
+    public List queryPosition(){
+        String hql = "select distinct pi.id as positionId,pi.name as positionName " +
+                " from QualityTemplateDetailInfo qtd,PositionInfo pi " +
+                " where pi.id = qtd.position.id order by pi.name";
+        return findByHQL(hql,null);
+    }
 }

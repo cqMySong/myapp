@@ -1,16 +1,15 @@
-package com.myapp.controller.ec.quality.template;
+package com.myapp.controller.ec.safty.template;
 
 import com.alibaba.fastjson.JSONObject;
 import com.myapp.core.annotation.PermissionAnn;
 import com.myapp.core.base.service.impl.AbstractBaseService;
 import com.myapp.core.controller.BasePageListController;
-import com.myapp.core.exception.db.QueryException;
 import com.myapp.core.model.WebDataModel;
 import com.myapp.core.util.BaseUtil;
 import com.myapp.service.ec.basedata.QualityTemplateDetailService;
-import com.myapp.service.ec.basedata.QualityTemplateService;
-import com.myapp.service.ec.budget.EnquiryPriceDetailService;
+import com.myapp.service.ec.basedata.SafeTemplateDetailService;
 import com.myapp.service.ec.quality.ProQualityTemplateService;
+import com.myapp.service.ec.safty.ProSafeTemplateService;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -26,24 +25,24 @@ import java.util.Map;
  * @author ： ly
  * @date: 2017-08-28 21:02
  */
-@PermissionAnn(name="系统管理.现场管理.质量管理.项目质量样板一览表",number="app.ec.quality.template")
+@PermissionAnn(name="系统管理.现场管理.安全管理.项目安全样板一览表",number="app.ec.safe.template")
 @Controller
-@RequestMapping("ec/quality/template/ledger")
-public class ProQualityTemplateLedgerListController extends BasePageListController {
+@RequestMapping("ec/safe/template/ledger")
+public class ProSafeTemplateLedgerListController extends BasePageListController {
     @Resource
-    private ProQualityTemplateService proQualityTemplateService;
+    private ProSafeTemplateService proSafeTemplateService;
     @Resource
-    private QualityTemplateDetailService qualityTemplateDetailService;
+    private SafeTemplateDetailService safeTemplateDetailService;
 
     @RequestMapping("/list")
     public ModelAndView analysisList(){
         Map params = new HashMap();
-        params.put("positionHeader",qualityTemplateDetailService.queryPosition());
-        return toPage("ec/quality/template/proQualityTemplateLedger", params);
+        params.put("positionHeader",safeTemplateDetailService.queryPosition());
+        return toPage("ec/safty/template/proSafeTemplateLedger", params);
     }
     @Override
     public AbstractBaseService getService() {
-        return this.proQualityTemplateService;
+        return this.proSafeTemplateService;
     }
 
     @RequestMapping(value="/query")
@@ -67,7 +66,7 @@ public class ProQualityTemplateLedgerListController extends BasePageListControll
         }
         params.put("projectId",projectId);
         try {
-            this.data = proQualityTemplateService.queryProQualityTemplateLedger(getCurPage(),getPageSize(),params);
+            this.data = proSafeTemplateService.queryProSafeTemplateLedger(getCurPage(),getPageSize(),params);
         } catch (Exception e) {
             e.printStackTrace();
         }

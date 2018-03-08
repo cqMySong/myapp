@@ -6,6 +6,9 @@ import java.util.Map;
 
 import javax.annotation.Resource;
 
+import com.myapp.core.annotation.AuthorAnn;
+import com.myapp.core.exception.db.SaveException;
+import com.myapp.core.model.WebDataModel;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 
@@ -23,6 +26,7 @@ import com.myapp.entity.ec.basedata.ProjectInfo;
 import com.myapp.entity.ec.basedata.ProjectWbsInfo;
 import com.myapp.enums.ec.ProWbsType;
 import com.myapp.service.ec.basedata.ProjectWbsService;
+import org.springframework.web.bind.annotation.ResponseBody;
 
 /**
  *-----------MySong---------------
@@ -135,5 +139,18 @@ public class ProjectWbsEditController extends BaseEditController{
 
 	public CoreBaseInfo getEntityInfo() {
 		return new ProjectWbsInfo();
+	}
+
+	@AuthorAnn(doPermission=false)
+	@RequestMapping("/import")
+	@ResponseBody
+	public WebDataModel batchImp(String structId,String structCode,String wbsIds){
+		try {
+			return projectWbsService.importProjectWbs(structId,structCode,wbsIds);
+		} catch (SaveException e) {
+			e.printStackTrace();
+			setErrorMesg(e.getMessage());
+		}
+		return ajaxModel();
 	}
 }

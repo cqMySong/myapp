@@ -2,8 +2,11 @@ package com.myapp.service.ec.quality;
 
 import com.myapp.core.entity.PositionInfo;
 import com.myapp.core.exception.db.DeleteException;
+import com.myapp.core.exception.db.QueryException;
 import com.myapp.core.exception.db.SaveException;
+import com.myapp.core.model.PageModel;
 import com.myapp.core.service.base.BaseInterfaceService;
+import com.myapp.core.util.BaseUtil;
 import com.myapp.entity.ec.basedata.QualityTemplateInfo;
 import com.myapp.entity.ec.quality.ProQualityTemplateDetailInfo;
 import com.myapp.entity.ec.quality.ProQualityTemplateInfo;
@@ -12,10 +15,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
 /**
  * @author ly
@@ -77,5 +77,57 @@ public class ProQualityTemplateService extends BaseInterfaceService<ProQualityTe
         }
 
         return super.saveEntity(entity);
+    }
+
+    /**
+     * 功能：项目质量样板一览表
+     * @param curPage
+     * @param pageSize
+     * @param params
+     * @return
+     * @throws QueryException
+     */
+    public PageModel queryProQualityTemplateLedger(Integer curPage, Integer pageSize, Map<String,Object> params)
+            throws QueryException {
+        StringBuffer sql = new StringBuffer();
+        sql.append("select a.fid,a.wbsName,a.wbsxName,a.fExpectStartDate,a.fAcceptanceDate,")
+            .append("group_concat(a.fCheckItem separator ';') as checkItem from (")
+            .append(" select pqt.fid,wbs.fname as wbsName,wbsx.fname as wbsxName,pqt.fExpectStartDate,")
+            .append(" pqt.fAcceptanceDate,concat(pqtd.fPositionId,'::',group_concat(concat(CAST(pqtd.fChecked as signed),'_',pqtd.fCheckItem) separator '!')) as fCheckItem")
+            .append(" from t_ec_pro_quality_template pqt")
+            .append(" left join t_ec_projectwbs wbs on pqt.fBranchBaseWbsId = wbs.fId")
+            .append(" left join t_ec_projectwbs wbsx on pqt.fSubentryId = wbsx.fId")
+            .append(" left join t_ec_pro_quality_template_detail pqtd on pqtd.fprentid = pqt.fid")
+            .append(" where pqt.fProjectId = ? ");
+        List<Object> paramList = new ArrayList<>();
+        paramList.add(params.get("projectId"));
+        if(!BaseUtil.isEmpty(params.get("startDate"))){
+            sql.append("and pqt.fAcceptanceDate>=? ");
+            paramList.add(params.get("startDate"));
+        }
+        if(!BaseUtil.isEmpty(params.get("endDate"))){
+            sql.append("and pqt.fAcceptanceDate<=? ");
+            paramList.add(params.get("endDate"));
+        }
+        sql.append(" group by pqtd.fPositionId")
+            .append(") a group by a.fid");
+
+        PageModel pageModel =  toPageSqlQuery(curPage,pageSize,sql.toString(),paramList.toArray());
+        List<Map<String,Object>> dataList = pageModel.getDatas();
+        if(dataList!=null){
+            String checkItem = null;
+            String[] positionArr = null;
+            String[] jobRequireArr = null;
+            for(Map<String,Object> map:dataList){
+                checkItem = map.get("checkItem").toString();
+                positionArr = checkItem.split(";");
+                for(String position:positionArr){
+                    jobRequireArr = position.split("::");
+                    map.put(jobRequireArr[0],jobRequireArr[1]);
+                }
+
+            }
+        }
+        return pageModel;
     }
 }

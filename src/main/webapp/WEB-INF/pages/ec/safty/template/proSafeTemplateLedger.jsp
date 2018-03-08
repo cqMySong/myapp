@@ -3,7 +3,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-	<title>项目质量样板一览表</title>
+	<title>项目安全样板一览表</title>
 	<style type="text/css">
 		.mainContrainer {
 			width: 100%;
@@ -112,7 +112,7 @@
         var height = top.getTopMainHeight()-105;
         var table_options = {height:height,striped:true,sortStable:false,showRefresh:false,selectModel:1
             ,cache:false,showToggle:false,search:false,queryParams:searchPrams,toolbar:false
-            ,showColumns:false,idField:"id",mypagination:true,url:'ec/quality/template/ledger/query'};
+            ,showColumns:false,idField:"id",mypagination:true,url:'ec/safe/template/ledger/query'};
         tblMain = $('#tblMain').myDataTable(table_options);
     }
     function searchPrams(){

@@ -2,8 +2,10 @@ package com.myapp.controller.ec.safty.template;
 
 import com.alibaba.fastjson.JSONObject;
 import com.myapp.core.annotation.PermissionAnn;
+import com.myapp.core.annotation.PermissionItemAnn;
 import com.myapp.core.base.service.impl.AbstractBaseService;
 import com.myapp.core.controller.BasePageListController;
+import com.myapp.core.enums.PermissionTypeEnum;
 import com.myapp.core.model.WebDataModel;
 import com.myapp.core.util.BaseUtil;
 import com.myapp.service.ec.basedata.QualityTemplateDetailService;
@@ -34,6 +36,7 @@ public class ProSafeTemplateLedgerListController extends BasePageListController 
     @Resource
     private SafeTemplateDetailService safeTemplateDetailService;
 
+    @PermissionItemAnn(name="查看",number="onload",type= PermissionTypeEnum.PAGE)
     @RequestMapping("/list")
     public ModelAndView analysisList(){
         Map params = new HashMap();

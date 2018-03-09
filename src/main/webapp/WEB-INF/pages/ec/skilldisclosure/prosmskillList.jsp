@@ -90,9 +90,21 @@ $(document).ready(function() {
     	 treeContainer:"#tree_container",editWin:editWin,toolbar:"#table-toolbar",searchParams:{includeChild:true},treeOpt:treeOpt
     	 ,treeNode2QueryProp:treeNode2QueryProp,extendTableOptions:{toolbar:'#tblMain_toolbar',height:height-53,rowStyle:changeBgColor}});
      thisOrgList.onLoad();
-     $('#batchimp').click(function(){
-    	 batchImpData();
-     });
+    //施工技术交底导入
+    $('#batchimp').on('click',function(){
+        var tree = thisOrgList.getSelectNode();
+        if('project'!=tree.type){
+            webUtil.mesg('请先选择的工程项目组织，然后才能做新增操作!');
+            return false;
+        }
+        var _win = $.extend(true,{},{title:'安全技术交底导入',width:900,height:height+200,btns:[]});
+        _win.url =  webUtil.toUrl('ec/skilldisclosure/prosmskills/batch/import');
+        _win.uiParams={project:{id:webUtil.uuIdReplaceID(tree.id),name:tree.name,number:tree.number}};
+        _win.colseCallBack =function(){
+            thisOrgList.listUI.executeQuery();
+        };
+        webUtil.openWin(_win);
+    });
 });
 function changeBgColor(row, index) {
     var color = "";

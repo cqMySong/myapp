@@ -4,7 +4,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-	<title>项目施工技术交底导入</title>
+	<title>项目安全技术交底导入</title>
 </head>
 <style type="text/css">
 </style>
@@ -33,18 +33,18 @@
 			<div class="col-sm-6">
 				<div class="input-group">
 					<span class="input-group-addon lable">技术类别</span>
-					<select name="skillType" data-opt="{type:'select',selected:'QM',url:'base/common/combox?enum=com.myapp.enums.ec.SkillType'}" class="form-control input-item require read">
+					<select name="skillType" data-opt="{type:'select',selected:'SM',url:'base/common/combox?enum=com.myapp.enums.ec.SkillType'}" class="form-control input-item require read">
 					</select>
 				</div>
 			</div>
 		</div>
 		<div class="row mt10">
 			<div class="col-sm-12 " style="border: 1px solid #ddd;">
-				<table name="batchQmSkillImport" class="input-entry" >
+				<table name="batchSmSkillImport" class="input-entry" >
 					<thead>
 						<tr>
 							<th data-field="skillItem" data-type="f7"
-								data-editor="{mutil:true,uiWin:{title:'施工技术交底名称',height:600,width:800,url:'ec/basedata/skillitemf7',uiParams:{type:'QM'}}}">施工技术交底</th>
+								data-editor="{mutil:true,uiWin:{title:'安全技术交底名称',height:600,width:800,url:'ec/basedata/skillitemf7',uiParams:{type:'SM'}}}">安全技术交底</th>
 							<th data-field="skillClass" data-width="150" data-type="f7" data-locked="true">技术分类</th>
 							<th data-field="number" data-width="200" data-type="text">编号</th>
 							<th data-field="name" data-type="text" data-width="240">名称</th>
@@ -59,38 +59,38 @@
 <%@include file="../../base/base_edit.jsp"%>
 <script type="text/javascript">
     var editUI;
-    var batchQmSkillImportEntry;
-    var batchQmSkillImportEntryObj;
+    var batchSmSkillImportEntry;
+    var batchSmSkillImportEntryObj;
     var prefix = "";
     var importData = {};
     function proSubItem_dataChange(oldData,newData){
 
     }
-    function batchQmSkillImport_dataChanged($cell,obj){
-        if(webUtil.isEmpty(batchQmSkillImportEntry)) return;
+    function batchSmSkillImport_dataChanged($cell,obj){
+        if(webUtil.isEmpty(batchSmSkillImportEntry)) return;
         if(obj.field=='skillItem'){
-            if(!webUtil.isEmpty(batchQmSkillImportEntry)){
+            if(!webUtil.isEmpty(batchSmSkillImportEntry)){
                 var skillItemArr = obj.rowData[obj.field];
                 var skillItemFirst = null;
                 console.log(skillItemArr);
                 if(skillItemArr&&skillItemArr.length>0){
                     $.each(skillItemArr,function(i,skillItemObj){
                         if(i==0){
-                            batchQmSkillImportEntry.setTableCellValue(obj.rowIndex,'skillItem',skillItemObj);
-                            batchQmSkillImportEntry.setTableCellValue(obj.rowIndex,'skillClass',
+                            batchSmSkillImportEntry.setTableCellValue(obj.rowIndex,'skillItem',skillItemObj);
+                            batchSmSkillImportEntry.setTableCellValue(obj.rowIndex,'skillClass',
 								{id:skillItemObj.skillClass_id,name:skillItemObj.skillClass_name});
-                            batchQmSkillImportEntry.setTableCellValue(obj.rowIndex,'name',skillItemObj.name);
-                            batchQmSkillImportEntry.setTableCellValue(obj.rowIndex,'number',prefix+skillItemObj.number);
+                            batchSmSkillImportEntry.setTableCellValue(obj.rowIndex,'name',skillItemObj.name);
+                            batchSmSkillImportEntry.setTableCellValue(obj.rowIndex,'number',prefix+skillItemObj.number);
                             skillItemFirst = skillItemObj;
                         }else{
                             var rowData = {name:skillItemObj.name,
                                 number:prefix+skillItemObj.number,
 								skillClass:{id:skillItemObj.skillClass_id,name:skillItemObj.skillClass_name},
                                 skillItem:{id:skillItemObj.id,name:skillItemObj.name}};
-                            batchQmSkillImportEntry.insertRow(obj.rowIndex+i,rowData);
+                            batchSmSkillImportEntry.insertRow(obj.rowIndex+i,rowData);
                         }
                     });
-                    batchQmSkillImportEntry.setTableCellValue(obj.rowIndex,'skillItem',{id:skillItemFirst.id,name:skillItemFirst.name});
+                    batchSmSkillImportEntry.setTableCellValue(obj.rowIndex,'skillItem',{id:skillItemFirst.id,name:skillItemFirst.name});
                 }
 
             }
@@ -116,12 +116,12 @@
     }
     $(document).ready(function() {
         var height = window.outerHeight-330;
-        var entryOption = "{type:'entry',height:"+height+",tableOpt:{editDataChanged:batchQmSkillImport_dataChanged}"+
-            ",toolbar:{title:'施工技术交底清单'}}";
+        var entryOption = "{type:'entry',height:"+height+",tableOpt:{editDataChanged:batchSmSkillImport_dataChanged}"+
+            ",toolbar:{title:'安全技术交底清单'}}";
         $("table.input-entry").attr("data-opt",entryOption);
         editUI = $('#editPanel').editUI({
-            title : "施工技术交底导入",billModel:1,
-            baseUrl : "ec/skilldisclosure/proqmskill/batch/import",
+            title : "安全技术交底导入",billModel:1,
+            baseUrl : "ec/skilldisclosure/prosmskill/batch/import",
             toolbar : "#table-toolbar",
             hasDefToolbar:false,
             form : {
@@ -134,24 +134,24 @@
         treeNode = JSON.parse(treeNode);
         $("input[name='project']").myF7().setData(treeNode.project);
         prefix = treeNode.project.number;
-        batchQmSkillImportEntryObj = editUI.getEntryObj('batchQmSkillImport');
-        if(!webUtil.isEmpty(batchQmSkillImportEntryObj)) {
-            batchQmSkillImportEntry = batchQmSkillImportEntryObj.entry;
+        batchSmSkillImportEntryObj = editUI.getEntryObj('batchSmSkillImport');
+        if(!webUtil.isEmpty(batchSmSkillImportEntryObj)) {
+            batchSmSkillImportEntry = batchSmSkillImportEntryObj.entry;
         }
          webUtil.initMainPanel('#editPanel');
-        $("select[name='skillType']").myComponet(DataType.select,{method:'setdata',opt:"QM"});
+        $("select[name='skillType']").myComponet(DataType.select,{method:'setdata',opt:"SM"});
         //批量保存
         $('#saveBatchImport').on('click',function(){
-            var entryData = batchQmSkillImportEntry.getData();
+            var entryData = batchSmSkillImportEntry.getData();
             $.each(entryData,function(i,v){
                	v.project=$("input[name='project']").myF7().getData();
                 v.skillType = $("select[name='skillType']").myComponet(DataType.select,{method:'getdata'});
             });
-            var _thisUrl = "ec/skilldisclosure/proqmskill/batch/import";
+            var _thisUrl = "ec/skilldisclosure/prosmskill/batch/import";
             webUtil.ajaxData({url:_thisUrl,async:false,data:{batchImport:JSON.stringify(entryData)},
                 success:function(data){
                     if(data.statusCode=='0'){
-                        webUtil.mesg('导入施工技术交底成功!');
+                        webUtil.mesg('导入安全技术交底成功!');
                         $(parent.document).find(".layui-layer-close").trigger(e);
                     }
                 }

@@ -80,12 +80,12 @@ public class ProSkillDisclosureService extends
 	 */
 	public void batchSave(String qmSkillBatch,UserInfo userInfo) throws SaveException {
 		if(StringUtils.isEmpty(qmSkillBatch)){
-			throw new RuntimeException("请选择项目施工技术交底");
+			throw new RuntimeException("请选择项目技术交底");
 		}
 		List<ProSkillDisclosureInfo> proSkillDisclosureInfoList =
 				JSON.parseArray(qmSkillBatch,ProSkillDisclosureInfo.class);
 		if(proSkillDisclosureInfoList==null||proSkillDisclosureInfoList.size()==0){
-			throw new RuntimeException("请选择项目施工技术交底");
+			throw new RuntimeException("请选择项目技术交底");
 		}
 		for(ProSkillDisclosureInfo proSkillDisclosureInfo:proSkillDisclosureInfoList){
 			proSkillDisclosureInfo.setCreateDate(new Date());

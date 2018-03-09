@@ -7,6 +7,8 @@ import java.util.Map;
 
 import javax.annotation.Resource;
 
+import com.myapp.core.annotation.PermissionItemAnn;
+import com.myapp.core.enums.PermissionTypeEnum;
 import com.myapp.core.exception.db.QueryException;
 import com.myapp.core.model.PageModel;
 import com.myapp.service.ec.plan.ProjectPlanReportService;
@@ -32,6 +34,7 @@ import com.myapp.entity.ec.basedata.ProjectInfo;
 import com.myapp.entity.ec.basedata.SkillClassInfo;
 import com.myapp.enums.ec.SkillType;
 import com.myapp.service.ec.basedata.ProSkillDisclosureService;
+import org.springframework.web.servlet.ModelAndView;
 
 @PermissionAnn(name="系统管理.现场管理.技术交底.项目安全技术交底",number="app.ec.skilldisclosure.prosmskill")
 @Controller
@@ -122,5 +125,13 @@ public class ProSkillDisclosureSMListController extends BaseListController {
 			}
 		}
 
+	}
+	@PermissionItemAnn(name="项目安全技术交底导入",number="import",type= PermissionTypeEnum.FUNCTION)
+	@RequestMapping("/batch/import")
+	public ModelAndView forwardBatchImport(){
+		Map params = new HashMap();
+		toListUIParams(params);
+		params.put("uiCtx",WebUtil.UUID_ReplaceID(params.get("uiCtx").toString()));
+		return toPage("ec/skilldisclosure/proSmSkillBatchImport", params);
 	}
 }

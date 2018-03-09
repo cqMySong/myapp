@@ -2,12 +2,14 @@ package com.myapp.controller.ec.purchase.stockin;
 
 import com.alibaba.fastjson.JSONObject;
 import com.myapp.core.annotation.PermissionAnn;
+import com.myapp.core.annotation.PermissionItemAnn;
 import com.myapp.core.base.service.impl.AbstractBaseService;
 import com.myapp.core.controller.BaseListController;
 import com.myapp.core.controller.BasePageListController;
 import com.myapp.core.entity.UserInfo;
 import com.myapp.core.enums.BaseMethodEnum;
 import com.myapp.core.enums.DataTypeEnum;
+import com.myapp.core.enums.PermissionTypeEnum;
 import com.myapp.core.exception.db.QueryException;
 import com.myapp.core.model.ColumnModel;
 import com.myapp.core.model.WebDataModel;
@@ -44,6 +46,7 @@ public class StockLedgerListController extends BasePageListController {
     private PurchaseStockDetailService purchaseStockDetailService;
 
     @RequestMapping("/list")
+    @PermissionItemAnn(name="查看",number="onload",type= PermissionTypeEnum.PAGE)
     public ModelAndView analysisList(){
         Map params = new HashMap();
         return toPage("ec/purchase/instock/stockLedgerList", params);

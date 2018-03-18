@@ -13,7 +13,7 @@ import com.myapp.enums.ec.ResourceType;
  * @system: 项目级资料目录 -安全技术要求及验收目录
  *-----------MySong---------------
  */
-@PermissionAnn(name="系统管理.现场管理.项目资料目录.安全技术要求及验收目录",number="app.ec.proresourceitem.skillresourceitem")
+@PermissionAnn(name="系统管理.现场管理.项目资料目录.安全技术要求及验收目录",number="app.ec.proresourcedata.skillresourceitem")
 @Controller
 @RequestMapping("ec/proresourceitem/skillresourceitems")
 public class ProSkillResourceItemListController extends ProResourceItemBaseListController {

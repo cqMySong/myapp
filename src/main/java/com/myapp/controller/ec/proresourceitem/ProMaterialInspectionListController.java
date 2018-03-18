@@ -12,7 +12,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
  * @system: 项目级资料目录 -原材料检查
  *-----------MySong---------------
  */
-@PermissionAnn(name="系统管理.现场管理.项目资料目录.原材料检查",number="app.ec.proresourceitem.materialinspection")
+@PermissionAnn(name="系统管理.现场管理.项目资料目录.原材料检查",number="app.ec.proresourcedata.materialinspection")
 @Controller
 @RequestMapping("ec/proresourceitem/materialinspections")
 public class ProMaterialInspectionListController extends ProResourceItemBaseListController {

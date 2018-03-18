@@ -23,7 +23,7 @@ import java.util.List;
 
 /**
  * @path：com.myapp.controller.ec.sengineering.contract
- * @description：分包合同
+ * @description：业主合同
  * @author ： ly
  * @date: 2017-07-30 14:49
  */

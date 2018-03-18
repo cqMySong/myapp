@@ -23,7 +23,7 @@ import java.util.List;
  * @author ： ly
  * @date: 2017-07-30 14:49
  */
-@PermissionAnn(name="系统管理.现场管理.工程合同.分包合同",number="app.ec.engineering.contract")
+@PermissionAnn(name="系统管理.现场管理.工程合同.分包合同",number="app.ec.engineering.subcontract")
 @Controller
 @RequestMapping("ec/engineering/subcontract")
 public class SubcontractEditController extends BaseBillEditController {

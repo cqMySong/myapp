@@ -17,7 +17,7 @@ import com.myapp.core.model.ColumnModel;
 import com.myapp.entity.ec.safty.SaftyEduBookInfo;
 import com.myapp.service.ec.safty.SaftyEduBookService;
 
-@PermissionAnn(name="系统管理.现场管理.安全管理.三级安全教育花名册",number="app.ec.safty.saftyedubook")
+@PermissionAnn(name="系统管理.现场管理.安全管理.三级安全教育花名册",number="app.ec.safe.saftyedubook")
 @Controller
 @RequestMapping("ec/safty/saftyedubook")
 public class SaftyEduBookEditController extends BaseBillEditController{

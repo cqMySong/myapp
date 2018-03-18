@@ -31,7 +31,7 @@ import java.util.Map;
  * @author ： ly
  * @date: 2017-08-28 21:02
  */
-@PermissionAnn(name="系统管理.现场管理.工程合同.业主合同",number="app.ec.engineering.proprietors")
+@PermissionAnn(name="系统管理.现场管理.工程合同.业主合同",number="app.ec.engineering.proprietor")
 @Controller
 @RequestMapping("ec/engineering/proprietorcontracts")
 public class ProprietorContractListController extends BaseListController {

@@ -148,6 +148,7 @@
 							</div>
 							</div>
 						</div>
+						
 						<div class="tab-pane" id="toDo">
 								<div>
 									<i class="fa" style="color: red;">
@@ -199,6 +200,7 @@
 		</div>
 		<!-- row -->
 	</div>
+	<br>
 </body>
 <script type="text/javascript">
 function toSimpleUid(billId){

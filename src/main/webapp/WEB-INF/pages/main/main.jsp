@@ -106,7 +106,7 @@
 							<a class="pull-right"> <i class="fa fa-angle-down"></i></a>
 						</h4>
 						<h5 class="media-heading"><%=webCtx.getMainPosition()%>
-							<a class="pull-right" style="cursor:pointer;"> <i class="fa fa-lock tooltips" title="锁定"></i></a>
+							<a id="_lockUser" class="pull-right" style="cursor:pointer;"> <i class="fa fa-lock tooltips" title="锁定"></i></a>
 						</h5>
 					</div>
 				</div>
@@ -286,7 +286,42 @@
 			</div>
 		</div>
 	</body>
-
+<div id="lockDiv" style="display: none;width: 330px;background-color:#3b4354;overflow: hidden; padding:15px;border-radius：4px;">
+	<div class="media" style="background-color: #3b4354;padding: 0px;">
+		<div class="media-left">
+			<a href="#">
+				<img src="<%=appRoot%>/assets/images/photos/loggeduser.png" 
+					class="media-object img-circle"
+					style="width:100px;padding:3px;border: 2px solid #657390;">
+			</a>
+		</div>
+		<div class="media-body">
+			<div class="media-heading" style="cursor:pointer;overflow: hidden;">
+				<div class="leftpanel-userinfo" style="left: 120px;right: 10px;
+					font-size: 12px;border-radius：4px;height: 115px;padding-top: 0px;">
+					<ul class="list-group">
+						<li class="list-group-item" id="toUser" userNumber= "<%=webCtx.getUserNumber()%>">
+							<label class="pull-left">用户:</label>
+							<span class="pull-right"><%=webCtx.getUserName()%></span>
+						</li>
+						<li class="list-group-item">
+							<label class="pull-left">职位:</label>
+							<span class="pull-right"><%=webCtx.getMainPosition()%></span>
+						</li>
+						<li class="list-group-item" style="padding: 0px;">
+							<div class="form-group">
+								<div class="input-group">
+									<input id="reLogName" type="password" style="background-color:#dddddd; " class="form-control" placeholder="登录密码">
+						            <span id="btnLogin" class="input-group-addon"><i class="glyphicon glyphicon-lock"></i></span>
+						        </div>
+							</div>
+						</li>
+					</ul>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
 <script type="text/javascript">
 
 function openUserSetUI(){
@@ -301,28 +336,105 @@ function getTopMainHeight(){
 	$('#mainTab').find('div.tab-content').css({"padding-top":$('#mainTab>ul.nav-tabs').height()+'px'});
 	return $(top.document).height()-($('#headPanel').innerHeight()+$('#mainTab>ul.nav-tabs').height())-10;
 }
+var lockWinIndex  ;
+function _lockUser() {
+	$('#reLogName').val('');
+	lockWinIndex = layer.open({
+		type : 1,
+		title : false,
+		closeBtn : 0,
+		shadeClose : false,
+		shade:0.9,
+		content :$('#lockDiv')
+	});
+	$('#layui-layer-shade'+lockWinIndex).css({"background-color":'#262b36'});
+	$('#layui-layer'+lockWinIndex+' .layui-layer-content').css({"overflow":'hidden'});
+	$('#layui-layer-shade'+lockWinIndex).click(function(){
+		$('#reLogName').focus();
+	});
+}
+function closeLockWin(){
+	layer.close(lockWinIndex);
+}
+
 $(document).ready(function() {
-	var initTabs = {items:[{id:'homeIdex',title:'主页',icon:'fa fa-home',enColse:false,url:'main/home'}]};
-	mainTab = $('#mainTab').myTab('init',initTabs);
-	var mainTabW = $(document).width()-280;
-	$('#mainTab').find('ul.nav-tabs').css({"position":'fixed',"width":mainTabW+'px'});
-	$('#mainTab').find('div.tab-content').css({"padding-top":'45px'});
-	$('#userSet').click(function(){
+	var initTabs = {
+		items : [ {
+			id : 'homeIdex',
+			title : '主页',
+			icon : 'fa fa-home',
+			enColse : false,
+			url : 'main/home'
+		} ]
+	};
+	mainTab = $('#mainTab').myTab('init', initTabs);
+	var mainTabW = $(document).width() - 280;
+	$('#mainTab').find('ul.nav-tabs').css({
+		"position" : 'fixed',
+		"width" : mainTabW + 'px'
+	});
+	$('#mainTab').find('div.tab-content').css({
+		"padding-top" : '45px'
+	});
+	$('#userSet').click(function() {
 		openUserSetUI();
 	});
 	var menuUrl = "/main/menu";
-	$('._menus').each(function(){
+	$('._menus').each(function() {
 		var _fln = $(this).data('fln');
 		var target = $(this).data('target');
-		if(!webUtil.isEmpty(_fln)&&!webUtil.isEmpty(target)){
-			var params ={fln:_fln};
-			webUtil.ajaxData({url:menuUrl,data:params,success:function(data){
-				var menusData = data.data;
-				if(!webUtil.isEmpty(menusData)){
-					$(target).html('');
-					$(target).myPillTreeMenu('init',menusData);
+		if (!webUtil.isEmpty(_fln) && !webUtil.isEmpty(target)) {
+			var params = {
+				fln : _fln
+			};
+			webUtil.ajaxData({
+				url : menuUrl,
+				data : params,
+				success : function(data) {
+					var menusData = data.data;
+					if (!webUtil.isEmpty(menusData)) {
+						$(target).html('');
+						$(target).myPillTreeMenu('init', menusData);
+					}
 				}
-			}});
+			});
+		}
+	});
+	$('#_lockUser').click(function() {
+		_lockUser();
+	});
+	$('#reLogName').keydown(function(e){
+		if(e.which == "13"){//回车事件
+			$("#btnLogin").trigger('click');
+		} 
+	});
+	$('#btnLogin').click(function() {
+		var un = $('#toUser').attr('userNumber');
+		if(un&&un.length>0){
+			var pd = $('#reLogName').val();
+			if(!webUtil.isEmpty(pd)){
+				var logUrl = app.root+'/main/tologin';
+				var logData = {};
+				logData.un = un;
+				logData.pd = pd;
+				$.ajax({type:"POST",url:logUrl,async:false,data:logData,dataType:'json',success:function(data){
+					var code = data.statusCode;
+					if(code==0){
+						webUtil.mesg("解锁成功!");
+						closeLockWin();
+					}else{
+						var mesg = data.statusMesg;
+						if(!webUtil.isEmpty(mesg)){
+							webUtil.mesg(mesg);
+						}
+					}
+				  },complete:function(){
+					  
+					}
+				});
+			}else{
+				//
+			}
 		}
 	});
 })

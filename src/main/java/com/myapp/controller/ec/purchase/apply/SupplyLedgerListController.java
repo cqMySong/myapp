@@ -31,7 +31,7 @@ public class SupplyLedgerListController extends BasePageListController {
     @Resource
     private ApplyMaterialService applyMaterialService;
 
-    @PermissionItemAnn(name="查看",number="onload",type= PermissionTypeEnum.PAGE)
+    @PermissionItemAnn(name="查看",number="queryLedger",type= PermissionTypeEnum.PAGE)
     @RequestMapping("/list")
     public ModelAndView analysisList(){
         Map params = new HashMap();

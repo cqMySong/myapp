@@ -124,7 +124,7 @@ public class ProQualityTemplateListController extends BaseListController {
         return cols;
     }
 
-    @PermissionItemAnn(name="工作要求",number="onload",type= PermissionTypeEnum.PAGE)
+    @PermissionItemAnn(name="工作要求",number="jobRequire",type= PermissionTypeEnum.PAGE)
     @RequestMapping("/job/require")
     public String forwardRequire(Model model){
         Map<String,String> params =  getUiCtx();

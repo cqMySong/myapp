@@ -38,7 +38,7 @@ import java.util.Map;
  * @author ： ly
  * @date: 2017-08-28 21:02
  */
-@PermissionAnn(name="系统管理.现场管理.安全管理.项目安全样板",number="app.ec.quality.template")
+@PermissionAnn(name="系统管理.现场管理.安全管理.项目安全样板",number="app.ec.safe.template")
 @Controller
 @RequestMapping("ec/safe/templates")
 public class ProSafeTemplateListController extends BaseListController {

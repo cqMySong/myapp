@@ -27,7 +27,7 @@ import java.util.Map;
  * @author ： ly
  * @date: 2017-08-28 21:02
  */
-@PermissionAnn(name="系统管理.现场管理.安全管理.项目安全样板一览表",number="app.ec.safe.template")
+@PermissionAnn(name="系统管理.现场管理.安全管理.项目安全样板一览表",number="app.ec.safe.templateledger")
 @Controller
 @RequestMapping("ec/safe/template/ledger")
 public class ProSafeTemplateLedgerListController extends BasePageListController {

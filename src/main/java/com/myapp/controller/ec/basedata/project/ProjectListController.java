@@ -119,7 +119,7 @@ public class ProjectListController extends BaseListController {
 				includeProOrg = inPro.toLowerCase().equals("true")||inPro.equals("1");
 			}
 			params.put("includeProOrg", includeProOrg);
-			data = projectService.getProjectTreeData(params);
+			data = projectService.getProjectTreeData(params,getCurWebContext());
 		}catch(Exception e){
 			setErrorMesg(e.getMessage());
 		}

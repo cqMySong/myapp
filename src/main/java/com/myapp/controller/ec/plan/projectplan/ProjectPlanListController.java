@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
 import com.alibaba.fastjson.JSONObject;
+import com.myapp.core.annotation.AuthorAnn;
 import com.myapp.core.annotation.PermissionAnn;
 import com.myapp.core.annotation.PermissionItemAnn;
 import com.myapp.core.base.service.impl.AbstractBaseService;
@@ -83,6 +84,7 @@ public class ProjectPlanListController extends BasePageListController {
 		return hql.toString();
 	}
 	
+	@AuthorAnn(doLongin=true,doPermission=false)
 	@RequestMapping(value="/month")
 	@ResponseBody
 	public WebDataModel toMonthList() {
@@ -106,6 +108,7 @@ public class ProjectPlanListController extends BasePageListController {
 		return ajaxModel();
 	}
 	
+	@AuthorAnn(doLongin=true,doPermission=false)
 	@RequestMapping(value="/week")
 	@ResponseBody
 	public WebDataModel toWeekList() {
@@ -180,6 +183,8 @@ public class ProjectPlanListController extends BasePageListController {
 	public String getListUrl() {
 		return "ec/plan/projectplan/projectPlanList";
 	}
+	
+	@AuthorAnn(doLongin=true,doPermission=false)
 	@RequestMapping(value="/planRpt")
 	@ResponseBody
 	public WebDataModel getPlanCompareRpt(){

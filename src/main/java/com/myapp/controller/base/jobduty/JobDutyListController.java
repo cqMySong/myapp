@@ -13,8 +13,10 @@ import org.hibernate.criterion.Order;
 import org.hibernate.criterion.Restrictions;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.servlet.ModelAndView;
 
 import com.alibaba.fastjson.JSONObject;
+import com.myapp.core.annotation.AuthorAnn;
 import com.myapp.core.annotation.PermissionAnn;
 import com.myapp.core.base.service.impl.AbstractBaseService;
 import com.myapp.core.controller.BaseDataListController;
@@ -85,4 +87,13 @@ public class JobDutyListController extends BaseDataListController{
 		orders.add(Order.asc("number"));
 		return orders;
 	}
+	
+	@AuthorAnn(doPermission=false,doLongin=true)
+	@RequestMapping("/treeShow")
+	public ModelAndView treeShow(){
+		init();
+		Map params = new HashMap();
+		return toPage("jobduty/jobdutyTreeQuery", params);
+	}
+	
 }

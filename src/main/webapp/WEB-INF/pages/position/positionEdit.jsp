@@ -70,11 +70,12 @@
 			</div>
 			<div class="row mt10">
 				<div class="col-sm-12 " style="border: 1px solid #ddd;">
-					<table name="jobDutyItems" class="input-entry" data-opt="{type:'entry',height:170,toolbar:{title:'岗位职责'}}">
+					<table name="jobDutyItems" class="input-entry" data-opt="{type:'entry',height:170
+						,toolbar:{title:'岗位职责'},addRow:jobduty_addRow}">
 						<thead>
 							<tr>
-								<th data-field="jobDuty" data-type="f7"
-									data-editor="{uiWin:{title:'工作职责',height:600,width:800,url:'base/jobDutyf7',uiParams:getParams}}">
+								<th data-field="jobDuty" data-type="f7" data-locked="true"
+									data-editor="{uiWin:{title:'工作职责',height:600,width:800,url:'base/jobDutyf7'}}">
 									工作职责</th>
 								<th data-field="remark" data-width="250" data-type="textarea">备注</th>
 							</tr>
@@ -90,6 +91,8 @@
 	/**
 	 * 一切操作前的接口函数
 	 */
+	 
+	var jobdutyEntry ;
 	function beforeAction(opt) {
 		return true;
 	}
@@ -108,8 +111,22 @@
 		var orgId = $('input[name="org"]').myF7().getValue();
 		return {orgId:orgId};
 	}
-	function getParams(){
-		
+	var addRowUrl = webUtil.toUrl('base/jobdutys/treeShow'); 
+	var addRowTitle = '<i class="fa fa-windows"></i>&nbsp;工作职责选择';
+	function jobduty_addRow(tbl){
+		webUtil.openWin({title:addRowTitle,url:addRowUrl,width:800,height:600
+			,btns:['确定','取消'],maxmin:false,btnCallBack:function(index,layerIndex,layero){
+				if(layero){
+					var iframe_win = $(layero).parent().find('#layui-layer-iframe'+layerIndex)[0].contentWindow;
+					var data = iframe_win.getData();
+					
+					var rowData = {};
+					var _jobduty = {id:data.id,name:data.name};
+					rowData.jobDuty = _jobduty;
+					tbl.addRow(rowData);
+				}
+				return true;
+			}});
 	}
 	$(document).ready(function() {
 		var editUI = $('#editPanel').editUI({
@@ -121,6 +138,10 @@
 			}
 		});
 		editUI.onLoad();
+		var jobdutyEntryObj = editUI.getEntryObj('jobDutyItems');
+		if (!webUtil.isEmpty(jobdutyEntryObj)) {
+			jobdutyEntry = jobdutyEntryObj.entry;
+		}
 	})
 </script>
 </html>

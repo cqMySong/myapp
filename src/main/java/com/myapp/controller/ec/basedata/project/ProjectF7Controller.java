@@ -38,7 +38,7 @@ public class ProjectF7Controller extends CoreBaseController{
 		init();
 		Map params = new HashMap();
 		try{
-			params.put("treeData", projectService.getProjectTreeData(null));
+			params.put("treeData", projectService.getProjectTreeData(null,getCurWebContext()));
 		}catch(Exception e){
 			setErrorMesg(e.getMessage());
 		}

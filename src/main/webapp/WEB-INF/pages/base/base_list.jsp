@@ -90,7 +90,7 @@ var ListUI = function(el,options){
 	};
 	var def_listTable_options = {height:730,striped:true,sortStable:true,showRefresh:false,clickToSelect:true
 			,cache:false,pageSize:this.options.pageSize,showToggle:true,search:true,queryParams:serachPrams
-			,showColumns:true,idField:"id",mypagination:true,url:this.options.baseUrl+'/query'};
+			,selectModel:2,showColumns:true,idField:"id",mypagination:true,url:this.options.baseUrl+'/query'};
 
 	var tbl_opts = $.extend(true,{}, def_listTable_options, this.options.extendTableOptions);
 	this.tblMain =  $(this.options.tableEl).myDataTable(tbl_opts);

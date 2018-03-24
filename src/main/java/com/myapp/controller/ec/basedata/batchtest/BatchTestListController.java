@@ -6,6 +6,7 @@ import java.util.Map;
 
 import javax.annotation.Resource;
 
+import com.myapp.core.annotation.AuthorAnn;
 import org.hibernate.Criteria;
 import org.hibernate.criterion.MatchMode;
 import org.hibernate.criterion.Restrictions;
@@ -110,4 +111,18 @@ public class BatchTestListController extends BaseDataListController {
 		return entitys;
 	}
 
+	//检验批划分树
+	@AuthorAnn(doPermission=false)
+	@RequestMapping(value="/tree")
+	@ResponseBody
+	public WebDataModel treeData() {
+		try{
+			Map params = new HashMap();
+			data = batchTestService.getTreeData(params);//项目组织树
+		}catch(Exception e){
+			e.printStackTrace();
+			setErrorMesg(e.getMessage());
+		}
+		return ajaxModel();
+	}
 }

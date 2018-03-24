@@ -67,8 +67,8 @@
 				<div class="col-sm-6 mb15">
 					<div class="input-group">
 						<span class="input-group-addon lable">状态</span> 
-						<select name="billState" data-opt="{type:'select',selected:'ADDNEW',url:'base/common/combox?enum=com.myapp.core.enums.BillState'}" 
-		                	class="form-control input-item require read">
+						<select name="schemeState" data-opt="{type:'select',selected:'COMPANY',url:'base/common/combox?enum=com.myapp.core.enums.SchemeState'}"
+		                	class="form-control input-item require">
 		                </select>
 					</div>
 				</div>

@@ -11,6 +11,9 @@ import javax.persistence.Table;
 
 import com.myapp.core.base.entity.CoreBaseBillInfo;
 import com.myapp.core.entity.UserInfo;
+import com.myapp.core.enums.SchemeState;
+import org.hibernate.annotations.Parameter;
+import org.hibernate.annotations.Type;
 
 /**
  * 施工方案
@@ -35,6 +38,8 @@ public class ConstructionSchemeInfo extends CoreBaseBillInfo {
 	private Date lastFinishDate;//最迟完成日期
 	
 	private UserInfo compiler;//编制人
+
+	private SchemeState schemeState;//施工方案状态
 
 	@OneToOne(fetch=FetchType.LAZY)
 	@JoinColumn(name = "fschemeTypeId")
@@ -83,5 +88,14 @@ public class ConstructionSchemeInfo extends CoreBaseBillInfo {
 	public void setCompiler(UserInfo compiler) {
 		this.compiler = compiler;
 	}
-	
+
+	@Column(name="fSchemeState",length = 20)
+	@Type(type="myEnum",parameters={@org.hibernate.annotations.Parameter(name="enumClass",value="com.myapp.core.enums.SchemeState")})
+	public SchemeState getSchemeState() {
+		return schemeState;
+	}
+
+	public void setSchemeState(SchemeState schemeState) {
+		this.schemeState = schemeState;
+	}
 }

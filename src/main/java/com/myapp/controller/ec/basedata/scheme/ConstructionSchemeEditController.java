@@ -38,6 +38,7 @@ public class ConstructionSchemeEditController extends BaseBillEditController {
 	@Override
 	public Object createNewData() {
 		ConstructionSchemeInfo info = new ConstructionSchemeInfo();
+		info.setSchemeState(SchemeState.COMPANY);
 		return info;
 	}
 	@Override
@@ -54,7 +55,7 @@ public class ConstructionSchemeEditController extends BaseBillEditController {
 		cols.add(new ColumnModel("lastFinishDate",DataTypeEnum.DATE));
 		cols.add(new ColumnModel("schemeType", DataTypeEnum.F7,SchemeTypeInfo.class));
 		cols.add(new ColumnModel("compiler", DataTypeEnum.F7,UserInfo.class));
-		cols.add(new ColumnModel("billState",DataTypeEnum.ENUM, BillState.class));
+		cols.add(new ColumnModel("schemeState",DataTypeEnum.ENUM, SchemeState.class));
 		cols.add(new ColumnModel("createUser",DataTypeEnum.F7,UserInfo.class));
 		cols.add(new ColumnModel("lastUpdateUser",DataTypeEnum.F7,UserInfo.class));
 		cols.add(new ColumnModel("auditor",DataTypeEnum.F7,UserInfo.class));

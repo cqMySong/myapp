@@ -43,6 +43,8 @@ if(typeof EarlyWarning == "undefined"){
 }
 if(typeof BillState == "undefined"){
     var BillState = {"ADDNEW":"编制中","SAVE":"已保存","SUBMIT":"已提交","AUDIT":"已审核","NOPASS":"审核不通过"};
+    var SchemeState = {"COMPANY":"公司内审中","SUPERVISION":"监理审批中","PROPRIETOR":"业主审核中",
+		"FINISH":"审批完成"};
 }
 //'yyyy-MM-dd h:m:s'
 //yyyy-MM-dd

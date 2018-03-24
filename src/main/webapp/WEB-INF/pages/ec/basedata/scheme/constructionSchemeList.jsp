@@ -64,7 +64,7 @@ function beforeAction(opt){
 	return true;
 }
 function billState_formatter(value, row, index){
-	return BillState[value];
+	return SchemeState[value];
 }
 function enableClick(btn){
 

@@ -3,6 +3,7 @@ package com.myapp.service.ec.basedata;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
 import com.myapp.core.entity.UserInfo;
+import com.myapp.core.enums.SchemeState;
 import com.myapp.core.exception.db.QueryException;
 import com.myapp.core.exception.db.SaveException;
 import com.myapp.core.model.PageModel;
@@ -34,7 +35,7 @@ public class ConstructionSchemeService extends BaseInterfaceService<Construction
         List<Object> paramList = new ArrayList<>();
         StringBuffer sql = new StringBuffer();
         sql.append("select a.fnumber as number,a.fname as name,c.fname as schemeTypeName, d.fname as compilerName,a.fid as id,")
-        .append("a.fcompileDate as complileDate,a.flastFinishDate as lastFinishDate,a.fBillState as billState,b.fname as projectName,")
+        .append("a.fcompileDate as complileDate,a.flastFinishDate as lastFinishDate,a.fSchemeState as billState,b.fname as projectName,")
         .append("(select min(e.fbegdate) from t_ec_proWorkPlanReport e where e.fprojectId = a.fprojectId) as projectBegDate ")
         .append(" from t_ec_project b,t_ec_schemeType c,t_ec_constructionScheme a left join t_pm_user d on a.fcompilerId = d.fid ")
         .append("where a.fprojectId = b.fid and a.fschemeTypeId = c.fid ")
@@ -75,6 +76,7 @@ public class ConstructionSchemeService extends BaseInterfaceService<Construction
             constructionSchemeInfo.setCreateUser(userInfo);
             constructionSchemeInfo.setCreateDate(new Date());
             constructionSchemeInfo.setCompiler(userInfo);
+            constructionSchemeInfo.setSchemeState(SchemeState.COMPANY);
             saveEntity(constructionSchemeInfo);
         }
     }

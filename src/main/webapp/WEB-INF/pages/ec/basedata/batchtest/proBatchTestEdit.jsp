@@ -50,7 +50,7 @@
 				<div class="col-sm-12">
 					<div class="input-group">
 						<span class="input-group-addon lable">划分办法</span>
-						<textarea name="content" class="input-item form-control" rows="2"></textarea>
+						<textarea name="content" class="input-item form-control" rows="3"></textarea>
 					</div>
 				</div>
 			</div>
@@ -58,7 +58,7 @@
 				<div class="col-sm-12">
 					<div class="input-group">
 						<span class="input-group-addon lable">划分标准</span>
-						<textarea name="remark" class="input-item form-control read" rows="1"></textarea>
+						<textarea name="remark" class="input-item form-control read" rows="3"></textarea>
 					</div>
 				</div>
 			</div>

@@ -4,6 +4,8 @@ import java.util.*;
 
 import javax.annotation.Resource;
 
+import com.myapp.core.annotation.PermissionItemAnn;
+import com.myapp.core.enums.PermissionTypeEnum;
 import com.myapp.core.exception.db.QueryException;
 import com.myapp.core.model.PageModel;
 import com.myapp.core.util.WebUtil;
@@ -29,6 +31,8 @@ import com.myapp.core.util.BaseUtil;
 import com.myapp.entity.ec.basedata.ProBaseWbsInfo;
 import com.myapp.entity.ec.basedata.ProjectInfo;
 import com.myapp.service.ec.basedata.ProBatchTestService;
+import org.springframework.web.servlet.ModelAndView;
+
 /**
  *-----------MySong---------------
  * ©MySong基础框架搭建
@@ -46,9 +50,11 @@ public class ProBatchTestListController extends BaseListController {
 	public ProBatchTestService proBatchTestService;
 	@Resource
 	private ProjectPlanReportService projectPlanReportService;
+	@Override
 	public AbstractBaseService getService() {
 		return proBatchTestService;
 	}
+	@Override
 	public List<ColumnModel> getDataBinding() {
 		List<ColumnModel> cols = super.getDataBinding();
 		cols.add(new ColumnModel("number"));
@@ -60,7 +66,7 @@ public class ProBatchTestListController extends BaseListController {
 		cols.add(new ColumnModel("attachs"));
 		return cols;
 	}
-	
+	@Override
 	public void executeQueryParams(Criteria query) {
 		super.executeQueryParams(query);
 		String serach = request.getParameter("search");
@@ -78,11 +84,11 @@ public class ProBatchTestListController extends BaseListController {
 		}
 		query.add(Restrictions.eq("project.id",projectId));
 	}
-	
+	@Override
 	public String getEditUrl() {
 		return "ec/basedata/batchtest/proBatchTestEdit";
 	}
-
+	@Override
 	public String getListUrl() {
 		return "ec/basedata/batchtest/proBatchTestList";
 	}
@@ -100,10 +106,11 @@ public class ProBatchTestListController extends BaseListController {
 		}
 		return ajaxModel();
 	}
-	
+	@Override
 	public String getHeadTitle() {
 		return "项目检验批划分";
 	}
+	@Override
 	public List<ExcelExportEntity> getExportHeader() {
 		List<ExcelExportEntity> entitys = new ArrayList<ExcelExportEntity>();
 		entitys.add(new ExcelExportEntity("工程项目", "project_name"));
@@ -143,5 +150,14 @@ public class ProBatchTestListController extends BaseListController {
 			}
 		}
 
+	}
+
+	@PermissionItemAnn(name="项目检验批划分导入",number="import",type= PermissionTypeEnum.FUNCTION)
+	@RequestMapping("/batch/import")
+	public ModelAndView forwardBatchImport(){
+		Map params = new HashMap();
+		toListUIParams(params);
+		params.put("uiCtx",WebUtil.UUID_ReplaceID(params.get("uiCtx").toString()));
+		return toPage("ec/basedata/batchtest/proBatchTestImport", params);
 	}
 }

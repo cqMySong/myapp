@@ -7,6 +7,9 @@ import java.util.Map;
 
 import javax.annotation.Resource;
 
+import com.myapp.core.annotation.PermissionItemAnn;
+import com.myapp.core.enums.PermissionTypeEnum;
+import com.myapp.core.util.WebUtil;
 import org.hibernate.Criteria;
 import org.hibernate.criterion.Restrictions;
 import org.springframework.stereotype.Controller;
@@ -28,6 +31,8 @@ import com.myapp.core.model.WebDataModel;
 import com.myapp.core.util.BaseUtil;
 import com.myapp.entity.ec.basedata.ProjectInfo;
 import com.myapp.service.ec.basedata.ProEcDrawService;
+import org.springframework.web.servlet.ModelAndView;
+
 /**
  *-----------MySong---------------
  * ©MySong基础框架搭建
@@ -104,5 +109,14 @@ public class ProEcDrawListController extends BaseListController {
 		entitys.add(new ExcelExportEntity("编码", "number"));
 		entitys.add(new ExcelExportEntity("名称", "name"));
 		return entitys;
+	}
+
+	@PermissionItemAnn(name="项目施工图导入",number="import",type= PermissionTypeEnum.FUNCTION)
+	@RequestMapping("/batch/import")
+	public ModelAndView forwardBatchImport(){
+		Map params = new HashMap();
+		toListUIParams(params);
+		params.put("uiCtx", WebUtil.UUID_ReplaceID(params.get("uiCtx").toString()));
+		return toPage("ec/basedata/ecdraw/proEcDrawImport", params);
 	}
 }

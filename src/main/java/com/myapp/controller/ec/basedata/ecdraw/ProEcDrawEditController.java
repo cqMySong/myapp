@@ -4,6 +4,8 @@ import java.util.List;
 
 import javax.annotation.Resource;
 
+import com.myapp.core.annotation.PermissionItemAnn;
+import com.myapp.core.model.WebDataModel;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 
@@ -17,6 +19,9 @@ import com.myapp.core.model.ColumnModel;
 import com.myapp.entity.ec.basedata.ProEcDrawInfo;
 import com.myapp.entity.ec.basedata.ProjectInfo;
 import com.myapp.service.ec.basedata.ProEcDrawService;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.ResponseBody;
+
 /**
  *-----------MySong---------------
  * ©MySong基础框架搭建
@@ -51,6 +56,21 @@ public class ProEcDrawEditController extends BaseEditController {
 
 	public CoreBaseInfo getEntityInfo() {
 		return new ProEcDrawInfo();
+	}
+
+	@PermissionItemAnn(name="导入保存",number="batchSave")
+	@ResponseBody
+	@RequestMapping(value="/batch/import",method= RequestMethod.POST)
+	public WebDataModel batchImportSave(String structId, String structCode, String wbsIds) {
+		WebDataModel webDataModel = new WebDataModel();
+		try{
+			proEcDrawService.batchSave(structId,structCode,wbsIds,getCurUser());
+			webDataModel.setStatusCode(STATUSCODE_SUCCESS);
+		}catch (Exception e) {
+			e.printStackTrace();
+			setExceptionMesg(e.getMessage());
+		}
+		return webDataModel;
 	}
 
 }

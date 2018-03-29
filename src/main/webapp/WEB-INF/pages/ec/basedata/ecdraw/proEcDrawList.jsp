@@ -122,7 +122,14 @@ $(document).ready(function() {
                              });
                              var pams = {structId:tree.id,structCode:tree.number,wbsIds:wbsIds.join(",")};
                              webUtil.ajaxData({url:"ec/ecdraw/proecdraw/batch/import",data:pams,async:true,success:function(data){
-                                 thisOrgList.listUI.executeQuery();
+                                 var statusCode = $(data).attr('statusCode');
+                                 if(0==statusCode){
+                                     var msg = $(data).attr('statusMesg');
+                                     if(!webUtil.isEmpty(msg)){
+                                         webUtil.mesg(msg);
+                                     }
+                                     thisOrgList.listUI.executeQuery();
+                                 }
                              }});
                              return true;
                          }else{

@@ -6,7 +6,8 @@ import java.util.List;
 
 import com.alibaba.fastjson.JSON;
 import com.myapp.core.entity.UserInfo;
-import com.myapp.entity.ec.basedata.ConstructionSchemeInfo;
+import com.myapp.core.enums.SchemeState;
+import com.myapp.entity.ec.basedata.*;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Service;
 
@@ -14,9 +15,6 @@ import com.myapp.core.exception.db.SaveException;
 import com.myapp.core.model.WebDataModel;
 import com.myapp.core.service.base.BaseInterfaceService;
 import com.myapp.core.util.BaseUtil;
-import com.myapp.entity.ec.basedata.ProSkillDisclosureInfo;
-import com.myapp.entity.ec.basedata.ProjectInfo;
-import com.myapp.entity.ec.basedata.SkillItemInfo;
 import com.myapp.enums.ec.SkillType;
 
 /**
@@ -73,23 +71,59 @@ public class ProSkillDisclosureService extends
 		return wdm;
 	}
 
+
 	/**
-	 * 功能：项目施工技术交底
-	 * @param qmSkillBatch
+	 * 功能：项目技术交底
+	 * @param projectId
 	 * @param userInfo
+	 * @param wbsIds
 	 */
-	public void batchSave(String qmSkillBatch,UserInfo userInfo) throws SaveException {
-		if(StringUtils.isEmpty(qmSkillBatch)){
-			throw new RuntimeException("请选择项目技术交底");
+	public WebDataModel batchSave(String projectId, UserInfo userInfo, String wbsIds,SkillType st) throws SaveException {
+		WebDataModel wdm = new WebDataModel();
+		wdm.setData(null);
+		int code = 0;
+		String mesg = "";
+		if(BaseUtil.isEmpty(projectId)){
+			wdm.setStatusCode(-1);
+			wdm.setStatusMesg("对应的工程项目单位工程为空，无法完成对应项目工程下的数据导入!");
+			return wdm;
 		}
-		List<ProSkillDisclosureInfo> proSkillDisclosureInfoList =
-				JSON.parseArray(qmSkillBatch,ProSkillDisclosureInfo.class);
-		if(proSkillDisclosureInfoList==null||proSkillDisclosureInfoList.size()==0){
-			throw new RuntimeException("请选择项目技术交底");
+		if(BaseUtil.isEmpty(wbsIds)){
+			wdm.setStatusCode(-1);
+			wdm.setStatusMesg("未选择对应的标准信息!");
+			return wdm;
 		}
-		for(ProSkillDisclosureInfo proSkillDisclosureInfo:proSkillDisclosureInfoList){
-			proSkillDisclosureInfo.setCreateDate(new Date());
-			saveEntity(proSkillDisclosureInfo);
+
+		String hql = " from SkillItemInfo as si where si.enabled=? and si.skillType=?"
+				+ " and si.id in('"+wbsIds.replaceAll(",","','")+"') "
+				+ " and not exists(from ProSkillDisclosureInfo as pds where pds.skillItem.id = si.id and pds.project.id=?)";
+		List params = new ArrayList();
+		params.add(Boolean.TRUE);
+		params.add(st);
+		params.add(projectId);
+		List<SkillItemInfo> datas = findByHQL(hql, params.toArray());
+		if(datas!=null&&datas.size()>0){
+			code = 0;
+			mesg = st.getName()+"标准数据成功导入["+datas.size()+"]个!";
+			for(SkillItemInfo siInfo:datas){
+				ProSkillDisclosureInfo psdInfo = new ProSkillDisclosureInfo();
+				ProjectInfo pinfo = new ProjectInfo();
+				pinfo.setId(projectId);
+				psdInfo.setProject(pinfo);
+				psdInfo.setSkillClass(siInfo.getSkillClass());
+				psdInfo.setSkillType(st);
+				psdInfo.setSkillItem(siInfo);
+				psdInfo.setName(siInfo.getName());
+				psdInfo.setNumber(siInfo.getNumber());
+				psdInfo.setCreateDate(new Date());
+				addNewEntity(psdInfo);
+			}
+		}else{
+			code = 1;
+			mesg = "没有对应的"+st.getName()+"标准数据可供导入!";
 		}
+		wdm.setStatusCode(code);
+		wdm.setStatusMesg(mesg);
+		return wdm;
 	}
 }

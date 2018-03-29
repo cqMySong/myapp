@@ -90,6 +90,6 @@ public class ConstructionSchemeListController extends BaseListController {
 		Map params = new HashMap();
 		toListUIParams(params);
 		params.put("uiCtx",WebUtil.UUID_ReplaceID(params.get("uiCtx").toString()));
-		return toPage("ec/basedata/scheme/constructionSchemeBatchImport", params);
+		return toPage("ec/basedata/scheme/constructionSchemeTreeBatchImport", params);
 	}
 }

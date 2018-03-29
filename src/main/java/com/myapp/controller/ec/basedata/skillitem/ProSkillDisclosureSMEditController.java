@@ -60,10 +60,10 @@ public class ProSkillDisclosureSMEditController extends BaseEditController {
 	@PermissionItemAnn(name="导入保存",number="batchSave")
 	@ResponseBody
 	@RequestMapping(value="/batch/import",method= RequestMethod.POST)
-	public WebDataModel batchImportSave(String batchImport) {
+	public WebDataModel batchImportSave(String structId,String structCode,String wbsIds) {
 		WebDataModel webDataModel = new WebDataModel();
 		try{
-			proSkillDisclosureService.batchSave(batchImport,getCurUser());
+			proSkillDisclosureService.batchSave(structId,getCurUser(),wbsIds,SkillType.SM);
 			webDataModel.setStatusCode(STATUSCODE_SUCCESS);
 		}catch (Exception e) {
 			e.printStackTrace();

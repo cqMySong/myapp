@@ -132,6 +132,6 @@ public class ProSkillDisclosureSMListController extends BaseListController {
 		Map params = new HashMap();
 		toListUIParams(params);
 		params.put("uiCtx",WebUtil.UUID_ReplaceID(params.get("uiCtx").toString()));
-		return toPage("ec/skilldisclosure/proSmSkillBatchImport", params);
+		return toPage("ec/skilldisclosure/proSmSkillBatchTreeImport", params);
 	}
 }

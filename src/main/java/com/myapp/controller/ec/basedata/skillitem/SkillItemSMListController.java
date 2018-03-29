@@ -1,11 +1,17 @@
 package com.myapp.controller.ec.basedata.skillitem;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 import javax.annotation.Resource;
 
+import com.myapp.core.annotation.AuthorAnn;
+import com.myapp.core.model.WebDataModel;
+import com.myapp.core.util.EnumUtil;
+import com.myapp.enums.ec.WorkSchemeGroup;
+import com.myapp.service.ec.basedata.SkillClassService;
 import org.hibernate.Criteria;
 import org.hibernate.criterion.Restrictions;
 import org.springframework.stereotype.Controller;
@@ -22,6 +28,7 @@ import com.myapp.core.util.WebUtil;
 import com.myapp.entity.ec.basedata.SkillClassInfo;
 import com.myapp.enums.ec.SkillType;
 import com.myapp.service.ec.basedata.SkillItemService;
+import org.springframework.web.bind.annotation.ResponseBody;
 
 @PermissionAnn(name="系统管理.现场管理.基础数据.安全技术交底",number="app.ec.basedata.smskillitem")
 @Controller
@@ -30,6 +37,8 @@ public class SkillItemSMListController extends BaseDataListController {
 	
 	@Resource
 	public SkillItemService skillItemService;
+	@Resource
+	public SkillClassService skillClassService;
 
 	public AbstractBaseService getService() {
 		return skillItemService;
@@ -64,6 +73,42 @@ public class SkillItemSMListController extends BaseDataListController {
 
 	public String getListUrl() {
 		return "ec/basedata/skillitem/smskillItemList";
+	}
+
+	@AuthorAnn(doPermission=false)
+	@RequestMapping(value="/show/tree")
+	@ResponseBody
+	public WebDataModel showTree() {
+		try{
+			List<Map<String,Object>> result = skillItemService.showTree("SM");
+			Map<String,List<Map<String,Object>>> typeResult = new HashMap<>();
+			List<Map<String,Object>> children = null;
+			for (Map<String,Object> schemeType:result){
+				if(typeResult.get(schemeType.get("parent"))==null){
+					children = new ArrayList<>();
+					typeResult.put(schemeType.get("parent").toString(),children);
+				}else{
+					children = typeResult.get(schemeType.get("parent").toString());
+				}
+				children.add(schemeType);
+			}
+			List<Map<String,Object>> skillTypeList =
+					skillClassService.getSkillItems(EnumUtil.getEnum(SkillType.class.getName(),"SM"));
+			for(Map<String,Object> skillType:skillTypeList){
+				skillType.put("children",typeResult.get(skillType.get("id")));
+			}
+			List<Map<String,Object>> rootList = new ArrayList<>();
+			Map root = new HashMap();
+			root.put("id", "");
+			root.put("name", "安全技术交底标准");
+			root.put("children", skillTypeList);
+			rootList.add(root);
+			data = rootList;
+		}catch(Exception e){
+			e.printStackTrace();
+			setErrorMesg(e.getMessage());
+		}
+		return ajaxModel();
 	}
 
 }

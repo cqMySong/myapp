@@ -2,9 +2,11 @@ package com.myapp.controller.ec.basedata.scheme;
 
 import javax.annotation.Resource;
 
+import com.myapp.core.annotation.AuthorAnn;
 import com.myapp.core.annotation.PermissionItemAnn;
 import com.myapp.core.entity.UserInfo;
 import com.myapp.core.enums.*;
+import com.myapp.core.exception.db.SaveException;
 import com.myapp.core.model.ColumnModel;
 import com.myapp.core.model.WebDataModel;
 import com.myapp.entity.ec.basedata.ProjectInfo;
@@ -66,13 +68,28 @@ public class ConstructionSchemeEditController extends BaseBillEditController {
 		return cols;
 	}
 
-	@PermissionItemAnn(name="导入保存",number="batchSave")
+	/*@PermissionItemAnn(name="导入保存",number="batchSave")
 	@ResponseBody
 	@RequestMapping(value="/batch/import",method= RequestMethod.POST)
 	public WebDataModel batchImportSave(String batchImport) {
 		WebDataModel webDataModel = new WebDataModel();
 		try{
 			constructionSchemeService.batchSave(batchImport,getCurUser());
+			webDataModel.setStatusCode(STATUSCODE_SUCCESS);
+		}catch (Exception e) {
+			e.printStackTrace();
+			setExceptionMesg(e.getMessage());
+		}
+		return webDataModel;
+	}*/
+
+	@PermissionItemAnn(name="导入保存",number="batchSave")
+	@ResponseBody
+	@RequestMapping(value="/batch/import",method= RequestMethod.POST)
+	public WebDataModel batchImp(String structId,String structCode,String wbsIds){
+		WebDataModel webDataModel = new WebDataModel();
+		try{
+			webDataModel = constructionSchemeService.batchSave(structId,getCurUser(),wbsIds);
 			webDataModel.setStatusCode(STATUSCODE_SUCCESS);
 		}catch (Exception e) {
 			e.printStackTrace();

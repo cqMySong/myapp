@@ -99,4 +99,43 @@ public class SchemeTypeListController extends BaseDataListController {
 		return "ec/basedata/schemetype/schemeTypeList";
 	}
 
+	@AuthorAnn(doPermission=false)
+	@RequestMapping(value="/show/tree")
+	@ResponseBody
+	public WebDataModel showTree() {
+		try{
+			List<Map> items = new ArrayList<Map>();
+			List<Map<String,Object>> result = schemeTypeService.showTree();
+			Map<String,List<Map<String,Object>>> typeResult = new HashMap<>();
+			List<Map<String,Object>> children = null;
+			for (Map<String,Object> schemeType:result){
+				if(typeResult.get(schemeType.get("parent"))==null){
+					children = new ArrayList<>();
+					typeResult.put(schemeType.get("parent").toString(),children);
+				}else{
+					children = typeResult.get(schemeType.get("parent").toString());
+				}
+				children.add(schemeType);
+			}
+			for(WorkSchemeGroup tg:WorkSchemeGroup.values()){
+				Map item = new HashMap();
+				item.put("id", tg.getValue());
+				item.put("name",tg.getName());
+				item.put("children",typeResult.get(tg.getValue()));
+				items.add(item);
+			}
+			List<Map<String,Object>> rootList = new ArrayList<>();
+			Map root = new HashMap();
+			root.put("id", "");
+			root.put("name", "施工方案标准");
+			root.put("children", items);
+			rootList.add(root);
+			data = rootList;
+		}catch(Exception e){
+			e.printStackTrace();
+			setErrorMesg(e.getMessage());
+		}
+		return ajaxModel();
+	}
+
 }

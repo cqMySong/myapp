@@ -2,7 +2,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-	<title>项目施工图导入</title>
+	<title>施工技术交底导入</title>
 </head>
 <style type="text/css">
 	.mainContrainer {
@@ -48,7 +48,7 @@
 		<div>
 			<div class="panel panel-success">
 				<div class="panel-heading" style="padding: 13px;">
-					<h3 class="panel-title">选择施工图标准</h3>
+					<h3 class="panel-title">选择施工技术交底标准</h3>
 					<ul class="panel-options">
 						<i style="cursor: pointer; font-size: 12px; color: rgb(255, 255, 255);"
 						   class="fa fa-search">&nbsp;</i>
@@ -64,7 +64,7 @@
 </div>
 
 </body>
-<%@include file="../../../inc/webBase.inc"%>
+<%@include file="../../inc/webBase.inc"%>
 <script type="text/javascript">
     var setting = {
         check: {enable: true},
@@ -79,10 +79,10 @@
     var rightTreeViewer;
     var rightTree;
     var targetId = '${targetId}';
-    var treeUrl = 'base/datagroups/tree?code=ecdrawing';
+    var treeUrl = 'ec/basedata/qmskillitems/show/tree';
     $(document).ready(function(){
         leftTreeViewer = $('#allTreeItems').myTreeViewer(null);
-        leftTreeViewer.init({title:'施工图标准',height:470});
+        leftTreeViewer.init({title:'施工技术交底标准',height:470});
         leftTreeViewer.addRefreshBtn({clickFun:function(){
             loadLeftTreeData();
         }});
@@ -101,7 +101,7 @@
         webUtil.ajaxData({url:url,async:false,success:function(data){
             treeDatas = data.data;
             if (treeDatas.length>0&&!webUtil.isEmpty(leftTree)) {
-               leftTree.reLoadTree(treeDatas)
+                leftTree.reLoadTree(treeDatas)
             }
         }});
     }

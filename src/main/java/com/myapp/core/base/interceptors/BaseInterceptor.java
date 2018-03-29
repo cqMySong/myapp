@@ -50,7 +50,7 @@ public class BaseInterceptor implements HandlerInterceptor {
 		response.setContentType("text/html;charset=UTF-8"); 
 		boolean toGo = true;
 		if(object instanceof HandlerMethod){
-			String appRoot = request.getContextPath();
+			String appRoot = request.getContextPath();//   /myapp
 			HandlerMethod hm = (HandlerMethod) object;
 			Method method = hm.getMethod();
 			String toUrl = "";
@@ -63,7 +63,7 @@ public class BaseInterceptor implements HandlerInterceptor {
 			boolean licCheck = true;
 			ServletContext serverContext = request.getServletContext();
 			
-			if(serverContext!=null&&!uri.equals("/myapp/license/show")){
+			if(serverContext!=null&&!uri.equals(appRoot+"/license/show")){
 				Object licObj = serverContext.getAttribute(SystemConstant.LICENSE_KEY);
 				if(licObj!=null&&licObj instanceof LicenseInfo){
 					LicenseInfo licInfo = (LicenseInfo) licObj;

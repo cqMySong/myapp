@@ -1,6 +1,7 @@
 package com.myapp.controller.ec.settle;
 
 import com.alibaba.fastjson.JSONObject;
+import com.myapp.core.annotation.AuthorAnn;
 import com.myapp.core.annotation.PermissionAnn;
 import com.myapp.core.annotation.PermissionItemAnn;
 import com.myapp.core.base.service.impl.AbstractBaseService;
@@ -53,7 +54,7 @@ public class MaterialAnalysisListController extends BasePageListController {
     public AbstractBaseService getService() {
         return this.materialSettleService;
     }
-
+    @AuthorAnn(doLongin=true,doPermission=false)
     @RequestMapping(value="/query")
     @ResponseBody
     public WebDataModel materialAnalysis(){

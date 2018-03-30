@@ -1,6 +1,7 @@
 package com.myapp.controller.ec.purchase.contract;
 
 import com.alibaba.fastjson.JSONObject;
+import com.myapp.core.annotation.AuthorAnn;
 import com.myapp.core.annotation.PermissionAnn;
 import com.myapp.core.base.service.impl.AbstractBaseService;
 import com.myapp.core.controller.BasePageListController;
@@ -38,7 +39,7 @@ public class MaterialPriceListController extends BasePageListController {
     public AbstractBaseService getService() {
         return this.purchaseContractDetailService;
     }
-
+    @AuthorAnn(doLongin=true,doPermission=false)
     @RequestMapping(value="/query")
     @ResponseBody
     public WebDataModel materialAnalysis(){

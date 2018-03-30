@@ -1,5 +1,6 @@
 package com.myapp.controller.ec.basedata.qualitytemplate;
 
+import com.myapp.core.annotation.AuthorAnn;
 import com.myapp.core.annotation.PermissionAnn;
 import com.myapp.core.base.service.impl.AbstractBaseService;
 import com.myapp.core.controller.BaseDataListController;
@@ -56,6 +57,7 @@ public class QualityTemplateListController extends BaseDataListController {
 		return "ec/basedata/qualitytemplate/qualityTemplateList";
 	}
 
+	@AuthorAnn(doLongin=true,doPermission=false)
 	@RequestMapping("/jobrequire")
 	@ResponseBody
 	public WebDataModel showQualityTemplateJobRequire(String qualityTemplateId) {

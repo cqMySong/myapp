@@ -1,6 +1,7 @@
 package com.myapp.controller.ec.engineering.payment;
 
 import com.alibaba.fastjson.JSONObject;
+import com.myapp.core.annotation.AuthorAnn;
 import com.myapp.core.annotation.PermissionAnn;
 import com.myapp.core.annotation.PermissionItemAnn;
 import com.myapp.core.base.service.impl.AbstractBaseService;
@@ -51,6 +52,7 @@ public class ProprietorLedgerListController extends BasePageListController {
         return this.proprietorContractService;
     }
 
+    @AuthorAnn(doLongin=true,doPermission=false)
     @RequestMapping(value="/query")
     @ResponseBody
     public WebDataModel proprietorLedger(String projectId){

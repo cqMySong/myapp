@@ -1,6 +1,7 @@
 package com.myapp.controller.ec.engineering.servicecharge;
 
 import com.alibaba.fastjson.JSONObject;
+import com.myapp.core.annotation.AuthorAnn;
 import com.myapp.core.annotation.PermissionAnn;
 import com.myapp.core.annotation.PermissionItemAnn;
 import com.myapp.core.base.service.impl.AbstractBaseService;
@@ -43,7 +44,7 @@ public class ServiceChargeLedgerListController extends BasePageListController {
     public AbstractBaseService getService() {
         return this.serviceChargeService;
     }
-
+    @AuthorAnn(doLongin=true,doPermission=false)
     @RequestMapping(value="/query")
     @ResponseBody
     public WebDataModel materialAnalysis(){

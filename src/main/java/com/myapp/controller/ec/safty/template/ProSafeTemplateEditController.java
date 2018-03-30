@@ -1,5 +1,6 @@
 package com.myapp.controller.ec.safty.template;
 
+import com.myapp.core.annotation.AuthorAnn;
 import com.myapp.core.annotation.PermissionAnn;
 import com.myapp.core.base.entity.CoreBaseInfo;
 import com.myapp.core.base.service.impl.AbstractBaseService;
@@ -81,6 +82,7 @@ public class ProSafeTemplateEditController extends BaseBillEditController {
         return cols;
     }
 
+    @AuthorAnn(doLongin=true,doPermission=false)
     @RequestMapping("/job/require/save")
     @ResponseBody
     public WebDataModel saveJobRequire(String jobRequireItems) {
@@ -96,6 +98,7 @@ public class ProSafeTemplateEditController extends BaseBillEditController {
         return webDataModel;
     }
 
+    @AuthorAnn(doLongin=true,doPermission=false)
     @RequestMapping("/query/job")
     @ResponseBody
     public WebDataModel queryJobRequire(String proSafeTemplateId) {

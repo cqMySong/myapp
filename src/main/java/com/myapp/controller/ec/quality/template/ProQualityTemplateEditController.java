@@ -1,5 +1,6 @@
 package com.myapp.controller.ec.quality.template;
 
+import com.myapp.core.annotation.AuthorAnn;
 import com.myapp.core.annotation.PermissionAnn;
 import com.myapp.core.base.entity.CoreBaseInfo;
 import com.myapp.core.base.service.impl.AbstractBaseService;
@@ -101,6 +102,7 @@ public class ProQualityTemplateEditController extends BaseBillEditController {
         }
         return webDataModel;
     }
+    @AuthorAnn(doLongin=true,doPermission=false)
     @RequestMapping("/query/job")
     @ResponseBody
     public WebDataModel queryJobRequire(String proQualityTemplateId) {

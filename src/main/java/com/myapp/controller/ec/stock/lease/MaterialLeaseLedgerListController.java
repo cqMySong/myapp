@@ -1,6 +1,7 @@
 package com.myapp.controller.ec.stock.lease;
 
 import com.alibaba.fastjson.JSONObject;
+import com.myapp.core.annotation.AuthorAnn;
 import com.myapp.core.annotation.PermissionAnn;
 import com.myapp.core.annotation.PermissionItemAnn;
 import com.myapp.core.base.service.impl.AbstractBaseService;
@@ -42,7 +43,7 @@ public class MaterialLeaseLedgerListController extends BasePageListController {
     public AbstractBaseService getService() {
         return this.materialLeaseService;
     }
-
+    @AuthorAnn(doLongin=true,doPermission=false)
     @RequestMapping(value="/query")
     @ResponseBody
     public WebDataModel materialAnalysis(){

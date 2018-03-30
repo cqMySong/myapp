@@ -1,5 +1,6 @@
 package com.myapp.controller.ec.basedata.safetemplate;
 
+import com.myapp.core.annotation.AuthorAnn;
 import com.myapp.core.annotation.PermissionAnn;
 import com.myapp.core.base.service.impl.AbstractBaseService;
 import com.myapp.core.controller.BaseDataListController;
@@ -55,6 +56,7 @@ public class SafeTemplateListController extends BaseDataListController {
 		return "ec/basedata/safetemplate/safeTemplateList";
 	}
 
+	@AuthorAnn(doLongin=true,doPermission=false)
 	@RequestMapping("/jobrequire")
 	@ResponseBody
 	public WebDataModel showQualityTemplateJobRequire(String safeTemplateId) {

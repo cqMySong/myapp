@@ -212,6 +212,9 @@
                         "<th colspan='2'></th>" +
                         "</tr>";
                 }
+                if(!strContent){
+                    strContent+="<tr><th colspan='9' style='text-align: center;font-weight: 800;'>未找到工程预结相关信息</th></tr>";
+				}
 				$("#content").html(strContent);
         	}
         });

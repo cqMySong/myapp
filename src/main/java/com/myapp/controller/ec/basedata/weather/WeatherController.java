@@ -1,6 +1,7 @@
 package com.myapp.controller.ec.basedata.weather;
 
 import com.alibaba.fastjson.JSON;
+import com.myapp.core.annotation.AuthorAnn;
 import com.myapp.core.annotation.PermissionAnn;
 import com.myapp.core.annotation.PermissionItemAnn;
 import com.myapp.core.base.service.impl.AbstractBaseService;
@@ -45,6 +46,7 @@ public class WeatherController extends BasePageListController {
         return this.weatherService;
     }
 
+    @AuthorAnn(doLongin=true,doPermission=false)
     @RequestMapping("/query")
     @ResponseBody
     public WebDataModel queryYearWeather(int year,String projectId) throws QueryException {
@@ -53,6 +55,7 @@ public class WeatherController extends BasePageListController {
         return ajaxModel();
     }
 
+    @AuthorAnn(doLongin=true,doPermission=false)
     @RequestMapping("/add/year")
     @ResponseBody
     public WebDataModel addYearWeather(int year,String projectId){
@@ -66,6 +69,7 @@ public class WeatherController extends BasePageListController {
         return ajaxModel();
     }
 
+    @AuthorAnn(doLongin=true,doPermission=false)
     @RequestMapping("/save")
     @ResponseBody
     public WebDataModel saveYearWeather(String weatherDetail) throws QueryException {

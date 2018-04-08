@@ -175,7 +175,7 @@ public class PermissionAssignController extends CoreBaseController {
 	@ResponseBody
 	public WebDataModel getHasAssignData(){
 		init();
-		data = permissionAssignService.getHasAssignPermissions(getTargetId());
+		data = permissionAssignService.getHasAssignPermissions(getTargetId(),getPermName());
 		return ajaxModel();
 	}
 	/**
@@ -202,6 +202,9 @@ public class PermissionAssignController extends CoreBaseController {
 
 	public String getTargetId() {
 		return WebUtil.UUID_ReplaceID(request.getParameter("targetId"));
+	}
+	public String getPermName() {
+		return WebUtil.UUID_ReplaceID(request.getParameter("permName"));
 	}
 
 	public String getPermissionIds() {

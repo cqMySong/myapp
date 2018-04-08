@@ -31,6 +31,9 @@ public class PermissionAssignService extends BaseInterfaceService<PermissionAssi
 	public PermissionService permissionService;
 	
 	public List getHasAssignPermissions(String targetId){
+		return getHasAssignPermissions(targetId,null);
+	}
+	public List getHasAssignPermissions(String targetId,String permName){
 		StringBuffer sb = new StringBuffer();
 		sb.append("select pa.id as id,p.id as pid,p.longNumber as pln,p.displayName as pdn");
 		sb.append(",p.url as url");
@@ -41,6 +44,10 @@ public class PermissionAssignService extends BaseInterfaceService<PermissionAssi
 		if(!BaseUtil.isEmpty(targetId)){
 			sb.append(" and pa.targetId=?");
 			params.add(targetId);
+		}
+		if(!BaseUtil.isEmpty(permName)){
+			sb.append(" and p.displayName like ?");
+			params.add("%"+permName+"%");
 		}
 		return findByHQL(sb.toString(), params.toArray());
 	}

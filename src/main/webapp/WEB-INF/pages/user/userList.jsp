@@ -20,7 +20,7 @@
 		
 		
 		<div class="row">
-			<div class="col-md-8" style="padding: 2px;">
+			<div class="col-md-7" style="padding: 2px;">
 				<div class="panel-body" style="padding: 0px">
 					<table id="tblMain">
 						<thead>
@@ -34,13 +34,21 @@
 					</table>
 				</div>
 			</div>
-			<div class="col-md-4" style="padding: 2px;">
+			<div class="col-md-5" style="padding: 2px;">
 				<div class="" id="tblMain2_toolbar">
 					<div class="btn-group">
-		                <button class="btn btn-success" id="toAssignPermission"><span class="fa fa-tag"></span>&nbsp;分配权限项</button>
-		                <button class="btn btn-success" id="unAssignPermission"><span class="fa fa-trash"></span>&nbsp;清除权限项</button>
-		                <button class="btn btn-success" id="importPositionPermission"><span class="fa fa-tags"></span>&nbsp;导入岗位权限</button>
-	              	</div>
+		                <button class="btn btn-success" id="toAssignPermission" title="分配权限项"><span class="fa fa-tag"></span>&nbsp;分配</button>
+		                <button class="btn btn-success" id="unAssignPermission" title="清除权限项"><span class="fa fa-trash"></span>&nbsp;清除</button>
+		                <button class="btn btn-success" id="importPositionPermission" title="导入权限项"><span class="fa fa-tags"></span>&nbsp;导入</button>
+					</div>
+					<div class="btn-group">
+						<div class="input-group" style="width: 250px;">
+							<input class="form-control" id="queryPermissionVal" type="text" placeholder="快速查询(名称)">
+							<span class="input-group-btn">
+								<button class="btn btn-success" id="quickQueryPermission" type="button"><i class="fa fa-search"></i></button>
+							</span>
+						</div>
+					</div>
 				</div>
 				<table id="tblMain2" style="width: 100%;border: 1px solid #bdc3d1;">
 					 <thead >
@@ -142,7 +150,11 @@ function tblMain_selectChange(ridx,row,rowDom){
 function load_tblMain2Data(){
 	var sourceId = getSelectedId();
 	if(!webUtil.isEmpty(sourceId)){
+		var _queryName = $('#queryPermissionVal').val();
 		var url = hasAssignUrl+'?targetId='+webUtil.uuIdReplaceID(sourceId);
+		if(!webUtil.isEmpty(_queryName)){
+			url+='&permName='+_queryName;
+		}
 		webUtil.ajaxData({url:url,async:true,success:function(data){
 			var tbDatas = data.data;
 			tblMain2.loadData(tbDatas);
@@ -204,6 +216,15 @@ $(document).ready(function() {
 	
 	$('#resetEncrypt').click(function(){
 		reSetUserEncrypt();
+	});
+	
+	$('#quickQueryPermission').click(function(){
+		load_tblMain2Data();
+	});
+	$('#queryPermissionVal').keydown(function(e){
+		if(e.which == "13"){//回车事件
+			$("#quickQueryPermission").trigger('click');
+		} 
 	});
 })
 </script>

@@ -7,6 +7,7 @@ import java.util.Map;
 
 import javax.annotation.Resource;
 
+import com.myapp.core.annotation.AuthorAnn;
 import com.myapp.core.annotation.PermissionItemAnn;
 import com.myapp.core.enums.PermissionTypeEnum;
 import com.myapp.core.util.WebUtil;
@@ -105,6 +106,7 @@ public class ProjectWbsListController extends BaseDataListController {
 	}
 
 	//工程项目》单位工程》分解结构（分部，子分部，分项）
+	@AuthorAnn(doLongin=true,doPermission=false)
 	@RequestMapping(value="/projectWbsTree")
 	@ResponseBody
 	public WebDataModel treeData() {

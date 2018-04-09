@@ -6,6 +6,7 @@ import java.util.Map;
 
 import javax.annotation.Resource;
 
+import com.myapp.core.annotation.AuthorAnn;
 import org.hibernate.Criteria;
 import org.hibernate.criterion.Restrictions;
 import org.springframework.stereotype.Controller;
@@ -80,6 +81,7 @@ public class ProStructureListController extends BaseDataListController {
 	}
 	
 	//项目单位工程结构树
+	@AuthorAnn(doLongin=true,doPermission=false)
 	@RequestMapping(value="/proStructureTree")
 	@ResponseBody
 	public WebDataModel treeData() {

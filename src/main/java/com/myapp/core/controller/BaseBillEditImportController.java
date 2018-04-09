@@ -9,6 +9,7 @@ import java.util.Map;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import com.myapp.core.annotation.PermissionItemAnn;
 import org.apache.poi.hssf.usermodel.HSSFDataFormat;
 import org.apache.poi.hssf.usermodel.HSSFRichTextString;
 import org.apache.poi.ss.usermodel.BorderStyle;
@@ -66,6 +67,7 @@ public abstract class BaseBillEditImportController extends BaseBillEditControlle
      * 功能：跳转到导入操作界面
      * @return
      */
+	@PermissionItemAnn(name="导入",number="baseimport")
     @RequestMapping(value = "/import/view")
     public String forwardImportView(Model model, HttpServletRequest request){
         model.addAttribute("uploadPath",request.getRequestURI().replace("/import/view","/importData"));

@@ -16,6 +16,7 @@ import com.myapp.core.base.service.impl.AbstractBaseService;
 import com.myapp.core.controller.BaseF7QueryController;
 import com.myapp.core.enums.DataTypeEnum;
 import com.myapp.core.model.ColumnModel;
+import com.myapp.core.util.WebUtil;
 import com.myapp.entity.ec.basedata.ProBaseWbsInfo;
 import com.myapp.entity.ec.basedata.ProStructureInfo;
 import com.myapp.enums.ec.ProWbsType;
@@ -89,7 +90,7 @@ public class ProjectWbsF7QueryController extends BaseF7QueryController {
 		if(uiCtx!=null){
 			Object projectIdObj = uiCtx.get("projectId");
 			if(projectIdObj!=null){
-				query.add(Restrictions.eq("project.id",projectIdObj.toString()));
+				query.add(Restrictions.eq("project.id",WebUtil.UUID_ReplaceID(projectIdObj.toString())));
 			}
 			Object proStructIdObj = uiCtx.get("structId");
 			if(proStructIdObj!=null){

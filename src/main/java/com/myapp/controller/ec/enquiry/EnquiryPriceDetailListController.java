@@ -3,12 +3,14 @@ package com.myapp.controller.ec.enquiry;
 import com.alibaba.fastjson.JSONObject;
 import com.myapp.core.annotation.AuthorAnn;
 import com.myapp.core.annotation.PermissionAnn;
+import com.myapp.core.annotation.PermissionItemAnn;
 import com.myapp.core.base.service.impl.AbstractBaseService;
 import com.myapp.core.controller.BaseListController;
 import com.myapp.core.controller.BasePageListController;
 import com.myapp.core.enums.BaseMethodEnum;
 import com.myapp.core.enums.ContractSignMethod;
 import com.myapp.core.enums.DataTypeEnum;
+import com.myapp.core.enums.PermissionTypeEnum;
 import com.myapp.core.exception.db.QueryException;
 import com.myapp.core.model.ColumnModel;
 import com.myapp.core.model.WebDataModel;
@@ -41,6 +43,7 @@ public class EnquiryPriceDetailListController extends BasePageListController {
     @Resource
     private EnquiryPriceDetailService enquiryPriceDetailService;
 
+    @PermissionItemAnn(name="查看",number="queryLedger",type= PermissionTypeEnum.PAGE)
     @RequestMapping("/list")
     public ModelAndView analysisList(){
         Map params = new HashMap();

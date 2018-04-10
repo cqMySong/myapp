@@ -29,7 +29,7 @@ import java.util.Map;
  * @author ： ly
  * @date: 2017-08-28 21:02
  */
-@PermissionAnn(name="系统管理.现场管理.预算.预算询价",number="app.ec.purchase.procurementplan")
+@PermissionAnn(name="系统管理.现场管理.预算.预算询价",number="app.ec.purchase.enquiry")
 @Controller
 @RequestMapping("ec/budget/enquiryprices")
 public class EnquiryPriceListController extends BaseListController {

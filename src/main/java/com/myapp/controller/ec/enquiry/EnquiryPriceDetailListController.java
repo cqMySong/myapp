@@ -34,7 +34,7 @@ import java.util.Map;
  * @author ： ly
  * @date: 2017-08-28 21:02
  */
-@PermissionAnn(name="系统管理.现场管理.预算.材设采购准备",number="app.ec.budget.enquiryprice")
+@PermissionAnn(name="系统管理.现场管理.预算.材设准备一览表",number="app.ec.budget.enquiryprice")
 @Controller
 @RequestMapping("ec/budget/enquirypricedetail")
 public class EnquiryPriceDetailListController extends BasePageListController {

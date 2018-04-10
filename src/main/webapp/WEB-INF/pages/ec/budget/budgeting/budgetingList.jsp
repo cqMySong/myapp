@@ -2,7 +2,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<title>预算编制</title>
+<title>材料设备预算清单</title>
 </head>
 <script type="text/javascript">
 </script>
@@ -56,7 +56,7 @@
 
 	$(document).ready(function() {
 			var treeNode2QueryProp = ["id","name","number","longNumber","type"];
-			var editWin ={title:'预算编制',width:(window.outerWidth-50),height:(window.outerHeight-100)};
+			var editWin ={title:'材料设备预算清单',width:(window.outerWidth-50),height:(window.outerHeight-100)};
 			var treeOpt = {
 					setting:{
 						data: {

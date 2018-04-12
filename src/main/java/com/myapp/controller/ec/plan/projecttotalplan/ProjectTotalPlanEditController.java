@@ -211,10 +211,10 @@ public class ProjectTotalPlanEditController extends BaseBillEditImportController
     	headers.add(stringEntity("名称", "projectWbs_name","工程分解结构"));
     	headers.add(stringEntity("工作内容", "content"));
     	headers.add(stringEntity("施工人数", "proPersons"));
+    	headers.add(stringEntity("工程量", "proQty"));
     	headers.add(stringEntity("开始日期", "planBegDate","计划"));
     	headers.add(stringEntity("截止日期", "planEndDate","计划"));
     	headers.add(stringEntity("责任人", "dutyers"));
-    	headers.add(stringEntity("工程量", "proQty"));
     	headers.add(stringEntity("处理办法", "remark"));
     	return headers;
     }

@@ -39,7 +39,7 @@ import java.util.Map;
  * @author： ly
  * @date: 2017-11-19 14:58
  */
-@PermissionAnn(name="系统管理.现场管理.采购管理.材设出入库台账",number="app.ec.purchase.stockledger")
+@PermissionAnn(name="系统管理.现场管理.采购管理.材设出入库台账",number="app.ec.stock.stockledger")
 @Controller
 @RequestMapping("ec/purchase/stockledger")
 public class StockLedgerListController extends BasePageListController {

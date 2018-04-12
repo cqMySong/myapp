@@ -34,11 +34,11 @@ import java.util.Map;
 
 /**
  * 包路径：com.myapp.controller.ec.budget
- * 功能说明：预算编制列表信息
+ * 功能说明：材料设备预算清单列表信息
  * 创建人： ly
  * 创建时间: 2017-07-30 14:49
  */
-@PermissionAnn(name="系统管理.现场管理.预算.预算编制",number="app.ec.budget.budgeting")
+@PermissionAnn(name="系统管理.现场管理.预算.材料设备预算清单",number="app.ec.budget.budgeting")
 @Controller
 @RequestMapping("ec/budget/budgetings")
 public class BudgetingListController extends BaseListController {

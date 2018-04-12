@@ -13,12 +13,12 @@ import java.util.Set;
 
 /**
  * @path：com.myapp.entity.ec.budget
- * @description：预算编制
+ * @description：材料设备预算清单
  * @author ： ly
  * @date: 2017-08-25 15:21
  */
 @Entity
-@MyEntityAnn(name="预算编制明细")
+@MyEntityAnn(name="材料设备预算清单明细")
 @Table(name="t_ec_budgeting_detail")
 public class BudgetingDetailInfo extends CoreBaseEntryInfo<BudgetingInfo> {
     /**

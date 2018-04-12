@@ -41,11 +41,11 @@ import java.util.Map;
 
 /**
  * @path：com.myapp.controller.ec.budget
- * @description：预算编制
+ * @description：材料设备预算清单
  * @author ： ly
  * @date: 2017-07-30 14:49
  */
-@PermissionAnn(name="系统管理.现场管理.预算.预算编制",number="app.ec.budget.budgeting")
+@PermissionAnn(name="系统管理.现场管理.预算.材料设备预算清单",number="app.ec.budget.budgeting")
 @Controller
 @RequestMapping("ec/budget/budgeting")
 public class BudgetingEditController extends BaseBillEditImportController {
@@ -113,7 +113,7 @@ public class BudgetingEditController extends BaseBillEditImportController {
     }
     @Override
     public String getHeadTitle() {
-    	return "预算编制";
+    	return "材料设备预算清单";
     }
     @Override
     public int[] getHeadRows() {

@@ -3,7 +3,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-	<title>预算编制</title>
+	<title>材料设备预算清单</title>
 </head>
 <style type="text/css">
 </style>
@@ -214,7 +214,7 @@
             ",toolbar:{title:'预算清单'}}";
 		$("table.input-entry").attr("data-opt",entryOption);
         editUI = $('#editPanel').editUI({
-            title : "预算编制",billModel:2,
+            title : "材料设备预算清单",billModel:2,
             baseUrl : "ec/budget/budgeting",
             toolbar : "#table-toolbar",
             form : {

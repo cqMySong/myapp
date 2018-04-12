@@ -67,6 +67,7 @@ public abstract class BaseBillEditImportController extends BaseBillEditControlle
      * 功能：跳转到导入操作界面
      * @return
      */
+	@AuthorAnn(doLongin=false,doPermission=false)
 	@PermissionItemAnn(name="导入",number="baseimport")
     @RequestMapping(value = "/import/view")
     public String forwardImportView(Model model, HttpServletRequest request){

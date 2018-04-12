@@ -31,6 +31,7 @@ import com.myapp.core.model.ResultModel;
 import com.myapp.core.model.WebDataModel;
 import com.myapp.core.util.BaseUtil;
 import com.myapp.core.util.DateUtil;
+import com.myapp.core.util.WebUtil;
 import com.myapp.entity.ec.basedata.ProStructureInfo;
 import com.myapp.entity.ec.basedata.ProSubInfo;
 import com.myapp.entity.ec.basedata.ProSubItemInfo;
@@ -104,6 +105,7 @@ public class ProjectTotalPlanEditController extends BaseBillEditImportController
 		planItems.getCols().add(new ColumnModel("progress",DataTypeEnum.NUMBER));
 		planItems.getCols().add(new ColumnModel("content"));
 		planItems.getCols().add(new ColumnModel("proQty"));
+		planItems.getCols().add(new ColumnModel("proPersons",DataTypeEnum.STRING));
 		planItems.getCols().add(new ColumnModel("remark",DataTypeEnum.STRING));
 		cols.add(planItems);
 		return cols;
@@ -207,12 +209,13 @@ public class ProjectTotalPlanEditController extends BaseBillEditImportController
     	headers.add(stringEntity("名称", "proStructure_name","单位工程"));
     	headers.add(stringEntity("编码", "projectWbs_number","工程分解结构"));
     	headers.add(stringEntity("名称", "projectWbs_name","工程分解结构"));
+    	headers.add(stringEntity("工作内容", "content"));
+    	headers.add(stringEntity("施工人数", "proPersons"));
     	headers.add(stringEntity("开始日期", "planBegDate","计划"));
     	headers.add(stringEntity("截止日期", "planEndDate","计划"));
     	headers.add(stringEntity("责任人", "dutyers"));
     	headers.add(stringEntity("工程量", "proQty"));
-    	headers.add(stringEntity("工作内容", "content"));
-    	headers.add(stringEntity("备注", "remark"));
+    	headers.add(stringEntity("处理办法", "remark"));
     	return headers;
     }
     
@@ -240,7 +243,7 @@ public class ProjectTotalPlanEditController extends BaseBillEditImportController
     	if(BaseUtil.isEmpty(proId)){
     		Map params = getParams();
     		if(params!=null&&params.size()>0)
-    			proId = (String)params.get("proId");
+    			proId = WebUtil.UUID_ReplaceID((String)params.get("proId"));
     	}
     	return proId;
    }
@@ -276,18 +279,18 @@ public class ProjectTotalPlanEditController extends BaseBillEditImportController
         		}else{
         			String hql = "from ProjectWbsInfo where number=? and project.id=?";
         			ProjectWbsInfo pwsInfo = getService().getEntity(ProjectWbsInfo.class, hql, new String[]{obj.toString(),proId});
-        			if(psInfo==null){
+        			if(pwsInfo==null){
         				mesg +="<br/>未找到编码为["+obj.toString()+"]的工程分解结构，不允许导入!"; 
         			}else{
         				obj = rowMap.get("projectWbs_name");
-        				if(obj!=null&&!obj.toString().equals(psInfo.getName())){
-        					mesg +="<br/>工程分解结构编码["+psInfo.getNumber()+"]与工程分解结构名称["+obj.toString()+"]不一致，不允许导入!"; 
+        				if(obj!=null&&!obj.toString().equals(pwsInfo.getName())){
+        					mesg +="<br/>工程分解结构编码["+pwsInfo.getNumber()+"]与工程分解结构名称["+obj.toString()+"]不一致，不允许导入!"; 
         				}else{
         					ProStructureInfo wbs2struct = pwsInfo.getProStruct();
         					if(psInfo!=null&&wbs2struct!=null&&!psInfo.getId().equals(wbs2struct.getId())){
         						mesg +="<br/>单位工程编码["+psInfo.getNumber()+"]与工程分解结构对应的单位工程编码["+wbs2struct.getNumber()+"]不一致，不允许导入!"; 
         					}
-        					rowMap.put("projectWbs", getF7Map(psInfo,"id,name,displayName"));
+        					rowMap.put("projectWbs", getF7Map(pwsInfo,"id,name,displayName"));
         				}
         			}
         		}

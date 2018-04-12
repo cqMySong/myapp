@@ -81,13 +81,15 @@
 										data-editor="{uiWin:{title:'项目分部工程',height:550,width:680,url:'ec/basedata/proSubF7',uiParams:getParams}}">项目分部工程</th>
 								<th data-field="proSubItem" rowspan="2" data-type="f7" data-visible="false"
 										data-editor="{uiWin:{title:'项目分项工程',height:550,width:680,url:'ec/basedata/proSubItemF7',uiParams:getParams}}">项目分项结构</th>
+								
+								<th data-field="content" rowspan="2" data-width="220"  data-type="textarea">工作内容</th>		
+								<th data-field="proPersons" rowspan="2">施工人数</th>		
+								<th data-field="proQty" rowspan="2" >工程量</th>
 								<th colspan="3">计划</th>
 								<th data-field="progress" rowspan="2"  data-type="number" data-locked="true">当前进度</th>
-								<th data-field="content" rowspan="2" data-width="220"  data-type="textarea">工作内容</th>
-								<th data-field="proQty" rowspan="2" >工程量</th>
 								<th data-field="dutyers" rowspan="2" data-type="f7"
 										data-editor="{mutil:true,uiWin:{title:'责任人',height:750,width:900,url:'base/userf7',uiParams:getParams}}">责任人</th>
-								<th data-field="remark" rowspan="2" data-width="250" data-type="textarea">备注</th>
+								<th data-field="remark" rowspan="2" data-width="250" data-type="textarea">处理办法</th>
 							</tr>
 							<tr>
 								<th data-field="planBegDate" class="_myMerge" data-type="date">开始日期</th>
@@ -286,6 +288,7 @@ var itemRemoveUrl = "ec/plan/projecttotalplan/checkRemoveItem";
 		                    		var resultData = winUI.getData(false);//true 代表为全部返回结果，false代表只是返回对应的数据结果
 		                    		if(!webUtil.isEmpty(resultData)){
 		                    			 $.each(resultData,function(i,_rdata){
+		                    				 console.log(_rdata);
 		                    				 btn.entry.addRow(_rdata);
 		                    			 });
 		                    		}

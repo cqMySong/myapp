@@ -184,6 +184,7 @@ public abstract class BaseBillEditImportController extends BaseBillEditControlle
 				if(!BaseUtil.isEmpty(uiCtx)){
 					uiParams = JSONObject.parseObject(uiCtx, new HashMap().getClass());
 				}
+				rowIdx = getTitleRows()+getHeadRows()[1];
 				ExcelImportResult eir = toDoImportData(file.getInputStream());
 				List<Map<String,Object>> importDatas = eir.getList();
 				if(importDatas!=null&&importDatas.size()>0){

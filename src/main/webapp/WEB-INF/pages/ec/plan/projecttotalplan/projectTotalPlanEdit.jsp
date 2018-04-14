@@ -303,6 +303,24 @@ var itemRemoveUrl = "ec/plan/projecttotalplan/checkRemoveItem";
 	        
 		}
 	
+	function hideShowView(cols){
+		var viewer = [];
+		viewer.push('<div class="keep-open btn-group" title="列操作">');
+			viewer.push('<div aria-label="columns" style="border:0px;padding:8px;" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-expanded="false">');
+				viewer.push('<i class="glyphicon glyphicon-th icon-th"></i> <span class="caret"></span>');
+			viewer.push('</div>');
+		viewer.push('<ul class="dropdown-menu" role="menu">');
+			for(var i=0;i<cols.length;i++){
+				var fobj = cols[i];
+				var f = fobj.field;
+				if('_seq' == f||'planBegDate'==f||'planEndDate'==f) continue;
+				viewer.push('<li role="menuitem"><label><input data-field="'+f+'" class="toDoField" value="'+i+'" checked="checked" type="checkbox"> '+fobj.title+'</label></li>');
+			}
+		viewer.push('</ul>');
+		viewer.push('</div>');
+		return viewer.join('');
+	}
+
 	$(document).ready(function() {
 		editUI = $('#editPanel').editUI({
 			title : "项目总计划",billModel:2,
@@ -321,6 +339,17 @@ var itemRemoveUrl = "ec/plan/projecttotalplan/checkRemoveItem";
 			rightBtnGroup.addBtn({entry:planItemsEntry,css:'btn-sm',text:'复制插入',icon:"fa fa-edit",clickFun:btnCopyInsertRow});
 			rightBtnGroup.addBtn({entry:planItemsEntry,css:'btn-sm',text:'导入',icon:"fa fa-file-excel-o",clickFun:showImportWin});
 			planItemsEntry.resetView();
+			
+			var viewHider = hideShowView(planItemsEntry.getVisibleColumns());
+			$('div.bs-bar.pull-left').append(viewHider);
+			$('.toDoField').each(function(){
+				$(this).change(function(){
+					var isSelect = $(this).is(':checked');
+					var todo = isSelect?"showColumn":"hideColumn";
+					$("table[name='planItems']").bootstrapTable(todo,$(this).data('field'));
+					planItemsEntry.resetView();
+				});
+			});
 		}
 		var height = top.getTopMainHeight();
 		$('#editPanel').height(height+15);

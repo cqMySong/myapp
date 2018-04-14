@@ -205,10 +205,10 @@ public class ProjectTotalPlanEditController extends BaseBillEditImportController
     
     public List<ExcelExportEntity> getExportHeader() {
     	List<ExcelExportEntity> headers = new ArrayList<ExcelExportEntity>();
-    	headers.add(stringEntity("编码", "proStructure_number","单位工程"));
     	headers.add(stringEntity("名称", "proStructure_name","单位工程"));
-    	headers.add(stringEntity("编码", "projectWbs_number","工程分解结构"));
+    	headers.add(stringEntity("编码", "proStructure_number","单位工程"));
     	headers.add(stringEntity("名称", "projectWbs_name","工程分解结构"));
+    	headers.add(stringEntity("编码", "projectWbs_number","工程分解结构"));
     	headers.add(stringEntity("工作内容", "content"));
     	headers.add(stringEntity("施工人数", "proPersons"));
     	headers.add(stringEntity("工程量", "proQty"));
@@ -256,42 +256,48 @@ public class ProjectTotalPlanEditController extends BaseBillEditImportController
     			mesg +="<br/>当前工程项目为空，不允许导入!";
     		}else{
     			ProStructureInfo psInfo = null;
-    			Object obj = rowMap.get("proStructure_number");
+    			Object obj = rowMap.get("proStructure_name");
     			if(obj==null){
-        			mesg +="<br/>单位工程编码为空，不允许导入!"; 
+        			mesg +="<br/>单位工程名称为空，不允许导入!"; 
         		}else{
-        			String hql = "from ProStructureInfo where number=? and project.id=?";
-        			psInfo = getService().getEntity(ProStructureInfo.class, hql, new String[]{obj.toString(),proId});
+        			String hql = "from ProStructureInfo where name=? and project.id=?";
+        			List pms = new ArrayList();
+        			pms.add(obj.toString());
+        			pms.add(proId);
+        			Object obj_number = rowMap.get("proStructure_number");
+        			if(obj_number!=null){
+        				hql +=" and number=?";
+        				pms.add(obj_number.toString());
+        			}
+        			psInfo = getService().getEntity(ProStructureInfo.class, hql, pms.toArray());
         			if(psInfo==null){
-        				mesg +="<br/>未找到编码为["+obj.toString()+"]的单位工程，不允许导入!"; 
+        				mesg +="<br/>未找到名称为["+obj.toString()+"]的单位工程，不允许导入!"; 
         			}else{
-        				obj = rowMap.get("proStructure_name");
-        				if(obj!=null&&!obj.toString().equals(psInfo.getName())){
-        					mesg +="<br/>单位工程编码["+psInfo.getNumber()+"]与单位工程名称["+obj.toString()+"]不一致，不允许导入!"; 
-        				}else{
-        					rowMap.put("proStructure", getF7Map(psInfo,"id,name,displayName"));
-        				}
+        				rowMap.put("proStructure", getF7Map(psInfo,"id,name,displayName"));
         			}
         		}
-        		obj = rowMap.get("projectWbs_number");
+        		obj = rowMap.get("projectWbs_name");
         		if(obj==null){
-        			mesg +="<br/>工程分解结构编码为空，不允许导入!"; 
+        			mesg +="<br/>工程分解结构名称为空，不允许导入!"; 
         		}else{
-        			String hql = "from ProjectWbsInfo where number=? and project.id=?";
-        			ProjectWbsInfo pwsInfo = getService().getEntity(ProjectWbsInfo.class, hql, new String[]{obj.toString(),proId});
+        			String hql = "from ProjectWbsInfo where name=? and project.id=?";
+        			List pms = new ArrayList();
+        			pms.add(obj.toString());
+        			pms.add(proId);
+        			Object obj_number = rowMap.get("projectWbs_number");
+        			if(obj_number!=null){
+        				hql +=" and number=?";
+        				pms.add(obj_number.toString());
+        			}
+        			if(psInfo!=null){
+        				hql +=" and proStruct.id=?";
+        				pms.add(psInfo.getId());
+        			}
+        			ProjectWbsInfo pwsInfo = getService().getEntity(ProjectWbsInfo.class, hql,pms.toArray());
         			if(pwsInfo==null){
-        				mesg +="<br/>未找到编码为["+obj.toString()+"]的工程分解结构，不允许导入!"; 
+        				mesg +="<br/>未找到名称为["+obj.toString()+"]的工程分解结构，不允许导入!"; 
         			}else{
-        				obj = rowMap.get("projectWbs_name");
-        				if(obj!=null&&!obj.toString().equals(pwsInfo.getName())){
-        					mesg +="<br/>工程分解结构编码["+pwsInfo.getNumber()+"]与工程分解结构名称["+obj.toString()+"]不一致，不允许导入!"; 
-        				}else{
-        					ProStructureInfo wbs2struct = pwsInfo.getProStruct();
-        					if(psInfo!=null&&wbs2struct!=null&&!psInfo.getId().equals(wbs2struct.getId())){
-        						mesg +="<br/>单位工程编码["+psInfo.getNumber()+"]与工程分解结构对应的单位工程编码["+wbs2struct.getNumber()+"]不一致，不允许导入!"; 
-        					}
-        					rowMap.put("projectWbs", getF7Map(pwsInfo,"id,name,displayName"));
-        				}
+        				rowMap.put("projectWbs", getF7Map(pwsInfo,"id,name,displayName"));
         			}
         		}
         		Object begDateobj = rowMap.get("planBegDate");

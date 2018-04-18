@@ -125,7 +125,7 @@ public class ProjectService extends BaseInterfaceService<ProjectInfo> {
 		if(!includeProOrg){
 			sql.append(" left join t_base_Org as t2 on t2.fid = t1.fprentid");
 		}
-		
+		sql.append(" where t.fid is not null");
 		if(!BaseUtil.isEmpty(flns)){
 			sql.append(" and "+(includeProOrg?"t1":"t2")+".flongnumber in("+flns+")");
 		}

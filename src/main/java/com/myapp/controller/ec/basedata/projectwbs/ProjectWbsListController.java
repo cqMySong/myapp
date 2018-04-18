@@ -7,10 +7,6 @@ import java.util.Map;
 
 import javax.annotation.Resource;
 
-import com.myapp.core.annotation.AuthorAnn;
-import com.myapp.core.annotation.PermissionItemAnn;
-import com.myapp.core.enums.PermissionTypeEnum;
-import com.myapp.core.util.WebUtil;
 import org.hibernate.Criteria;
 import org.hibernate.criterion.Order;
 import org.hibernate.criterion.Restrictions;
@@ -18,22 +14,26 @@ import org.hibernate.criterion.SimpleExpression;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.servlet.ModelAndView;
 
 import com.alibaba.fastjson.JSONObject;
+import com.myapp.core.annotation.AuthorAnn;
 import com.myapp.core.annotation.PermissionAnn;
+import com.myapp.core.annotation.PermissionItemAnn;
 import com.myapp.core.base.service.impl.AbstractBaseService;
 import com.myapp.core.controller.BaseDataListController;
 import com.myapp.core.enums.DataTypeEnum;
+import com.myapp.core.enums.PermissionTypeEnum;
 import com.myapp.core.model.ColumnModel;
 import com.myapp.core.model.WebDataModel;
 import com.myapp.core.util.BaseUtil;
+import com.myapp.core.util.WebUtil;
 import com.myapp.entity.ec.basedata.ProStructureInfo;
 import com.myapp.entity.ec.basedata.ProjectInfo;
 import com.myapp.entity.ec.basedata.ProjectWbsInfo;
 import com.myapp.enums.ec.ProWbsType;
 import com.myapp.service.ec.basedata.ProjectService;
 import com.myapp.service.ec.basedata.ProjectWbsService;
-import org.springframework.web.servlet.ModelAndView;
 
 /**
  *-----------MySong---------------

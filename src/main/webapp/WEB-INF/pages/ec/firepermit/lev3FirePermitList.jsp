@@ -24,6 +24,7 @@
 								<th data-field="bizDate" data-type="date">申请日期</th>
 								<th data-field="billState" data-type="select">业务状态</th>
 								<th data-field="firePart">动火部位</th>
+								<th data-field="remark">防火措施</th>
 								<th data-field="fireDate" data-type="date">动火日期</th>
 								<th data-field="welder">焊工</th>
 								<th data-field="guarder">监护人</th>
@@ -62,7 +63,7 @@ function openUIParams(operate,params){
 }
 $(document).ready(function() {
      var treeNode2QueryProp = ["id","name","number","longNumber","type"];
-     var editWin ={title:'三级动火许可申请',openType:'MAINTAB',id:"lev3firepermit_tab"};
+     var editWin ={title:'三级动火许可申请',width:980,height:590};
      var treeOpt = {setting:{data: {
          	simpleData: {enable:true,idKey: "id", pIdKey: "parentId",rootPId: ''}
     	 }}};

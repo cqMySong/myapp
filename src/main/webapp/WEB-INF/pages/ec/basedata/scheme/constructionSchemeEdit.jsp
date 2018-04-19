@@ -2,7 +2,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<title>施工方案</title>
+<title>施工方案编写规划</title>
 </head>
 <style type="text/css">
 </style>
@@ -97,7 +97,7 @@
 
 	$(document).ready(function() {
 		var editUI = $('#editPanel').editUI({
-			title : "施工方案",
+			title : "施工方案编写规划",
 			baseUrl : "ec/basedata/schemeedit",
 			toolbar : "#table-toolbar",
 			billModel: 2,

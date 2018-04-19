@@ -60,7 +60,7 @@ function openUIParams(operate,params){
 }
 $(document).ready(function() {
      var treeNode2QueryProp = ["id","name","number","longNumber","type"];
-     var editWin ={title:'施工现场实体安全隐患日检记录',width:980,height:730,openType:'MAINTAB',id:"prodayCheck_tab"};
+     var editWin ={title:'施工现场实体安全隐患日检记录',width:980,height:630};
      var treeOpt = {setting:{data: {
          	simpleData: {enable:true,idKey: "id", pIdKey: "parentId",rootPId: ''}
     	 }}};

@@ -10,7 +10,7 @@
 <script type="text/javascript">
 	
 </script>
-<body style="padding: 5px;">
+<body style="padding: 5px;" class="panel">
 		<div id="editPanel" class="myMainContent panel">
 		<div id="table-toolbar"></div>
 		<form id="editForm">
@@ -53,7 +53,7 @@
 				<div class="col-sm-4">
 					<div class="input-group">
 						<span class="input-group-addon lable">动火日期</span>
-						<input type="text" name="bizDate" class="form-control input-item" data-rule="notEmpty" data-opt="{type:'date'}">
+						<input type="text" name="fireDate" class="form-control input-item" data-rule="notEmpty" data-opt="{type:'date'}">
 					</div>
 				</div>
 			</div>
@@ -197,9 +197,6 @@
 			}
 		});
 		editUI.onLoad();
-		var height = top.getTopMainHeight();
-		if($('#editPanel').height()<height+10)
-			$('#editPanel').height(height);
 	})
 </script>
 </html>

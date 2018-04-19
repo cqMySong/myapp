@@ -30,7 +30,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-@PermissionAnn(name="系统管理.现场管理.基础数据.施工方案",number="app.ec.basedata.scheme")
+@PermissionAnn(name="系统管理.现场管理.基础数据.施工方案编写规划",number="app.ec.basedata.scheme")
 @Controller
 @RequestMapping("ec/basedata/schemelist")
 public class ConstructionSchemeListController extends BaseListController {

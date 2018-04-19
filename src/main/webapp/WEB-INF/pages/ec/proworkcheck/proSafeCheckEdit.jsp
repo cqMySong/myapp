@@ -10,7 +10,7 @@
 <script type="text/javascript">
 	
 </script>
-<body style="padding: 5px;">
+<body style="padding: 5px;" class="panel">
 		<div id="editPanel" class="myMainContent panel">
 		<div id="table-toolbar"></div>
 		<form id="editForm">
@@ -49,7 +49,6 @@
 					<div class="input-group">
 						<span class="input-group-addon lable">检查日期</span>
 						<input type="text" name="bizDate" class="form-control input-item" data-rule="notEmpty" data-opt="{type:'date'}">
-						
 					</div>
 				</div>
 				<div class="col-sm-4">
@@ -58,6 +57,32 @@
 						<select name="billState" data-opt="{type:'select',selected:'ADDNEW',url:'base/common/combox?enum=com.myapp.core.enums.BillState'}" 
 		                	class="form-control input-item require read">
 		                </select>
+					</div>
+				</div>
+			</div>
+			<div class="row mt10">
+				<div class="col-sm-3">
+					<div class="input-group">
+						<span class="input-group-addon lable">项目经理</span>
+						<input name="proManager" class="input-item form-control" data-opt="{type:'f7',uiWin:{title:'用户信息',height:600,width:800,url:'base/userf7'}}">
+					</div>
+				</div>
+				<div class="col-sm-3">
+					<div class="input-group">
+						<span class="input-group-addon lable">技术负责人</span>
+						<input name="proSkiller" class="input-item form-control" data-opt="{type:'f7',uiWin:{title:'用户信息',height:600,width:800,url:'base/userf7'}}">
+					</div>
+				</div>
+				<div class="col-sm-3">
+					<div class="input-group">
+						<span class="input-group-addon lable">施工检查员</span>
+						<input class="require input-item" name="partAChecker" data-rule="notEmpty" />
+					</div>
+				</div>
+				<div class="col-sm-3">
+					<div class="input-group">
+						<span class="input-group-addon lable">监理检查员</span>
+						<input class="require input-item" name="partBChecker" data-rule="notEmpty" />
 					</div>
 				</div>
 			</div>
@@ -72,8 +97,7 @@
 			
 			<div class="row mt10">
 				<div class="col-sm-12 " style="border: 1px solid #ddd;">
-					<table name="checkItems" class="input-entry" data-opt="{type:'entry',height:420
-							,toolbar:{title:'检查记录清单'}}">
+					<table name="checkItems" class="input-entry" data-opt="{type:'entry',height:220,toolbar:{title:'检查记录清单'}}">
 						<thead>
 							<tr>
 								<th data-field="workCheckItem" data-visible="false" data-width="100" data-type="f7">检验项目</th>
@@ -90,33 +114,7 @@
 					</table>
 				</div>
 			</div>
-			<div class="row mt10">
-				<div class="col-sm-3">
-					<div class="input-group">
-						<span class="input-group-addon lable">项目经理</span> 
-						<input name="proManager" class="input-item form-control" data-opt="{type:'f7',uiWin:{title:'用户信息',height:600,width:800,url:'base/userf7'}}">
-					</div>
-				</div>
-				<div class="col-sm-3">
-					<div class="input-group">
-						<span class="input-group-addon lable">技术负责人</span> 
-						<input name="proSkiller" class="input-item form-control" data-opt="{type:'f7',uiWin:{title:'用户信息',height:600,width:800,url:'base/userf7'}}">
-					</div>
-				</div>
-				<div class="col-sm-3">
-					<div class="input-group">
-						<span class="input-group-addon lable">施工检查员</span> 
-						<input class="require input-item" name="partAChecker" data-rule="notEmpty" />
-					</div>
-				</div>
-				<div class="col-sm-3">
-					<div class="input-group">
-						<span class="input-group-addon lable">监理检查员</span> 
-						<input class="require input-item" name="partBChecker" data-rule="notEmpty" />
-					</div>
-				</div>
-			</div>
-			
+
 			<div class="row mt10">
 				<div class="col-sm-4">
 					<div class="input-group">
@@ -190,7 +188,7 @@
 		var entry = btn.entry;
 		if(!webUtil.isEmpty(entry)){
 			var _win = {width:950,height:750,maxmin:false
-					,url:webUtil.toUrl("ec/basedata/workcheckitemquery/f7show")
+					,url:webUtil.toUrl("ec/basedata/workcheckitemquery/f7show?mutil=true&checkgroup=WEEKMONTH")
 					,title:'检查项目导入',btns:['确定','取消']
 				,btnCallBack:function(index,layerIndex,layero){
 					if(layero){
@@ -235,8 +233,8 @@
 			rightBtnGroup.addBtn({entry:checkItems,css:'btn-sm',text:'检查标准导入',icon:"fa fa-edit",clickFun:btnImpData});
 			checkItems.resetView();
 		}
-		var height = top.getTopMainHeight();
-		$('#editPanel').height(height+15);
+		//var height = top.getTopMainHeight();
+		//$('#editPanel').height(height+15);
 	})
 </script>
 </html>

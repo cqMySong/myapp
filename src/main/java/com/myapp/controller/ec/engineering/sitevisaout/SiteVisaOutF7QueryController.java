@@ -80,7 +80,7 @@ public class SiteVisaOutF7QueryController extends BaseF7QueryController {
 	public void executeQueryParams(Criteria query) {
 		super.executeQueryParams(query);
 		query.createAlias("siteVisaInInfo","a", JoinType.LEFT_OUTER_JOIN);
-		query.createAlias("siteVisaInInfo.project","pro", JoinType.INNER_JOIN);
+		query.createAlias("project","pro", JoinType.LEFT_OUTER_JOIN);
 		query.add(Restrictions.isNull("a.id"));
 		String search = request.getParameter("search");
 		String projectId = "-1";

@@ -23,11 +23,11 @@ import java.util.List;
 
 /**
  * @path：com.myapp.controller.ec.sengineering.contract
- * @description：业主合同
+ * @description：工程预结
  * @author ： ly
  * @date: 2017-07-30 14:49
  */
-@PermissionAnn(name="系统管理.现场管理.工程合同.业主合同",number="app.ec.engineering.proprietor")
+@PermissionAnn(name="系统管理.现场管理.工程合同.工程预结",number="app.ec.engineering.proprietor")
 @Controller
 @RequestMapping("ec/engineering/proprietorcontract")
 public class ProprietorContractEditController extends BaseBillEditController {

@@ -7,7 +7,7 @@
 <script type="text/javascript">
 </script>
 <body style="padding: 5px;">
-	<div id="table-toolbar" class="panel" style="height:42px;padding-top:2px;"></div>
+	<div id="table-toolbar" class="panel" style="height:40px;padding-top: 1px;margin-bottom: 5px;"></div>
 	<div class="mainContrainer">
 		<div class="leftContainer" id="tree_container"></div>
 		<div class="rightContainer" id="tblMain_container">
@@ -57,17 +57,18 @@
 
 	$(document).ready(function() {
 			var treeNode2QueryProp = ["id","name","number","longNumber","type"];
-			var editWin ={title:'库存盘存',width:(window.outerWidth-50),height:(window.outerHeight-100)};
+			var height = top.getTopMainHeight()-50;
+			var winHeight = height+150;
+			var editWin ={title:'库存盘存',width:1200,height:winHeight>800?800:winHeight};
 			var treeOpt = {
 					setting:{
 						data: {
 							simpleData: {enable:true,idKey: "id", pIdKey: "parentId",rootPId: ''}
 						}
 					}};
-			var height = window.outerHeight-307;
-			thisOrgList = $('body').treeListUI({tableEl:'#tblMain',treeUrl:'ec/basedata/projects/projectTree',baseUrl:'ec/stock/inventories',title:'项目工程',height:(height+42),
+			thisOrgList = $('body').treeListUI({tableEl:'#tblMain',treeUrl:'ec/basedata/projects/projectTree',baseUrl:'ec/stock/inventories',title:'项目工程',height:height,
 							treeContainer:"#tree_container",editWin:editWin,toolbar:"#table-toolbar",searchParams:{includeChild:true},treeOpt:treeOpt
-							,treeNode2QueryProp:treeNode2QueryProp,extendTableOptions:{toolbar:'#tblMain_toolbar',height:height,sortStable:false}});
+							,treeNode2QueryProp:treeNode2QueryProp,extendTableOptions:{toolbar:'#tblMain_toolbar',height:height-45,sortStable:false}});
 			thisOrgList.onLoad();
 
 	});

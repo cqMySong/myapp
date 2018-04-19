@@ -10,8 +10,8 @@
 <script type="text/javascript">
 
 </script>
-<body style="padding: 5px;">
-<div id="editPanel" class="myMainContent panel">
+<body style="padding: 5px;margin-bottom: 0px;" class="panel">
+<div id="editPanel" class="myMainContent panel" style="margin-bottom: 2px;">
 	<div id="table-toolbar"></div>
 	<form id="editForm">
 		<div class="row">
@@ -186,8 +186,10 @@
         }
     }
     $(document).ready(function() {
-        var height = window.outerHeight-530;
-        var entryOption = "{type:'entry',height:"+height+",tableOpt:{editDataChanged:siteVisaOutDetailInfos_dataChanged}"+
+        var height = top.getTopMainHeight()+100;
+        height = height>760?760:height;
+        var winHeight = height-480;
+        var entryOption = "{type:'entry',height:"+(winHeight<190?190:winHeight)+",tableOpt:{editDataChanged:siteVisaOutDetailInfos_dataChanged}"+
             ",toolbar:{title:'现场签证(支出)清单'}}";
         $("table.input-entry").attr("data-opt",entryOption);
         editUI = $('#editPanel').editUI({
@@ -198,14 +200,15 @@
                 el : "#editForm"
             }
         });
-        editUI.onLoad();
 
+        editUI.onLoad();
         siteVisaOutDetailInfosEntryObj = editUI.getEntryObj('siteVisaOutDetailInfos');
         if(!webUtil.isEmpty(siteVisaOutDetailInfosEntryObj)){
             siteVisaOutDetailInfosEntry = siteVisaOutDetailInfosEntryObj.entry;
             siteVisaOutDetailInfosEntry.resetView();
         }
-        webUtil.initMainPanel('#editPanel');
+        //webUtil.initMainPanel('#editPanel');
+        //$('#editPanel').height(100);
     })
 </script>
 </html>

@@ -2,7 +2,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<title>施工方案</title>
+<title>施工方案编写规划</title>
 </head>
 <style type="text/css">
 </style>
@@ -82,7 +82,7 @@ function getAllChildrenNodes(treeNode,result){
 }
 $(document).ready(function() {
     var treeNode2QueryProp = ["id","name","number","longNumber","type"];
-    var editWin ={title:'施工方案',width:680,height:430};
+    var editWin ={title:'施工方案编写规划',width:680,height:430};
     var treeOpt = {setting:{data: {
         	simpleData: {enable:true,idKey: "id", pIdKey: "parentId",rootPId: ''}
    	 }}};

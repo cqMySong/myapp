@@ -83,7 +83,7 @@ function tree_clickChange(event, treeId, treeNode){
 	loadTableData();
 }
 function getMyQueryParams(){
-	return webUtil.json2Str({type:curTreeNode.id});
+	return webUtil.json2Str({type:curTreeNode.id,group:'${checkGroup}'});
 }
 
 function loadTableData(){

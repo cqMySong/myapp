@@ -10,7 +10,7 @@
 <script type="text/javascript">
 	
 </script>
-<body style="padding: 5px;">
+<body style="padding: 5px;" class="panel">
 		<div id="editPanel" class="myMainContent panel">
 		<div id="table-toolbar"></div>
 		<form id="editForm">
@@ -29,7 +29,7 @@
 				</div>
 				<div class="col-sm-4">
 					<div class="input-group">
-						<span class="input-group-addon lable">业务日期</span>
+						<span class="input-group-addon lable">检查日期</span>
 						 <input type="text" name="bizDate" class="form-control input-item" data-rule="notEmpty" data-opt="{type:'date'}">
 					</div>
 				</div>
@@ -37,25 +37,34 @@
 			<div class="row mt10">
 				<div class="col-sm-4">
 					<div class="input-group">
+						<span class="input-group-addon lable">专职安全员</span>
+						<input name="proSafer" class="input-item form-control" data-opt="{type:'f7',uiWin:{title:'用户信息',height:600,width:800,url:'base/userf7'}}">
+					</div>
+				</div>
+				<div class="col-sm-4">
+					<div class="input-group">
+						<span class="input-group-addon lable">监理检查员</span>
+						<input name="partBChecker" class="input-item form-control" data-rule="notEmpty">
+					</div>
+				</div>
+				<div class="col-sm-4">
+					<div class="input-group">
 						<span class="input-group-addon lable">工程项目</span> 
 						<input name="project" class="require input-item form-control read" 
 							data-opt="{type:'f7',uiWin:{title:'工程项目',height:600,width:300,url:'ec/basedata/project'}}" />
 					</div>
 				</div>
+			</div>
+			<div class="row mt10">
 				<div class="col-sm-4">
 					<div class="input-group">
 						<span class="input-group-addon lable">业务状态</span>
-						<select name="billState" data-opt="{type:'select',selected:'ADDNEW',url:'base/common/combox?enum=com.myapp.core.enums.BillState'}" 
-		                	class="form-control input-item require read">
-		                </select>
+						<select name="billState" data-opt="{type:'select',selected:'ADDNEW',url:'base/common/combox?enum=com.myapp.core.enums.BillState'}"
+								class="form-control input-item require read">
+						</select>
 					</div>
 				</div>
-				<div class="col-sm-4">
-					<div class="input-group">&nbsp;</div>
-				</div>
-			</div>
-			<div class="row mt10">
-				<div class="col-sm-12">
+				<div class="col-sm-8">
 					<div class="input-group">
 						<span class="input-group-addon lable">备注</span>
 						<textarea name="remark" style="height:40px;" class="input-item form-control"></textarea>
@@ -65,7 +74,7 @@
 			
 			<div class="row mt10">
 				<div class="col-sm-12 " style="border: 1px solid #ddd;">
-					<table name="dayCheckItems" class="input-entry" data-opt="{type:'entry',height:430,tableOpt:{editDataChanged:dayCheckItems_dataChanged}
+					<table name="dayCheckItems" class="input-entry" data-opt="{type:'entry',height:230,tableOpt:{editDataChanged:dayCheckItems_dataChanged}
 							,toolbar:{title:'检查记录清单'}}">
 						<thead>
 							<tr>
@@ -85,24 +94,6 @@
 					</table>
 				</div>
 			</div>
-			<div class="row mt10">
-				<div class="col-sm-4">
-					<div class="input-group">
-						<span class="input-group-addon lable">专职安全员</span> 
-						<input name="proSafer" class="input-item form-control" data-opt="{type:'f7',uiWin:{title:'用户信息',height:600,width:800,url:'base/userf7'}}">
-					</div>
-				</div>
-				<div class="col-sm-4">
-					<div class="input-group">
-						<span class="input-group-addon lable">监理检查员</span>
-						<input name="partBChecker" class="input-item form-control" data-rule="notEmpty">
-					</div>
-				</div>
-				<div class="col-sm-4">
-					<div class="input-group">&nbsp;</div>
-				</div>
-			</div>
-			
 			<div class="row mt10">
 				<div class="col-sm-4">
 					<div class="input-group">
@@ -217,7 +208,7 @@ function removePeril_formatter(value, row, index){
 		var entry = btn.entry;
 		if(!webUtil.isEmpty(entry)){
 			var _win = {width:950,height:750,maxmin:false
-					,url:webUtil.toUrl("ec/basedata/workcheckitemquery/f7show")
+					,url:webUtil.toUrl("ec/basedata/workcheckitemquery/f7show?mutil=true&checkgroup=DAY")
 					,title:'检查项目导入',btns:['确定','取消']
 				,btnCallBack:function(index,layerIndex,layero){
 					if(layero){
@@ -265,8 +256,8 @@ function removePeril_formatter(value, row, index){
 			rightBtnGroup.addBtn({entry:dayCheckItems,css:'btn-sm',text:'检查标准导入',icon:"fa fa-edit",clickFun:btnImpData});
 			dayCheckItems.resetView();
 		}
-		var height = top.getTopMainHeight();
-		$('#editPanel').height(height+15);
+		//var height = top.getTopMainHeight();
+		//$('#editPanel').height(height+15);
 	})
 </script>
 </html>

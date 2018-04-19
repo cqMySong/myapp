@@ -1,9 +1,8 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
-<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <!DOCTYPE html>
 <html lang="en">
 <head>
-	<title>项目安全样板一览表</title>
+	<title>现场签证台账(支出)</title>
 	<style type="text/css">
 		.mainContrainer {
 			width: 100%;
@@ -35,14 +34,20 @@
 	<div id="table-toolbar" style="height:40px;padding-top: 2px;">
 		<div class="col-sm-3">
 			<div class="input-group">
-				<span class="input-group-addon lable">样板验收开始时间</span>
+				<span class="input-group-addon lable">签证开始时间</span>
 				<input name="startDate"  autocomplete="off" type="text" class="input-item form-control read" data-opt="{type:'date'}">
 			</div>
 		</div>
 		<div class="col-sm-3">
 			<div class="input-group">
-				<span class="input-group-addon lable">样板验收结束时间</span>
+				<span class="input-group-addon lable">签证结束时间</span>
 				<input name="endDate"  autocomplete="off" type="text" class="input-item form-control read" data-opt="{type:'date'}">
+			</div>
+		</div>
+		<div class="col-sm-3">
+			<div class="input-group">
+				<span class="input-group-addon lable">签证单位</span>
+				<input type="text" class="input-item form-control" name="visaUnit">
 			</div>
 		</div>
 		<div class="btn-group">
@@ -57,15 +62,20 @@
 		<div class="rightContainer" id="main_container">
 			<table id="tblMain">
 				<thead >
-					<tr>
-						<th data-field="wbsName"   width="120">分部工程名称</th>
-						<th data-field="wbsxName"   width="120">分项工程名称</th>
-						<th data-field="fExpectStartDate" data-type="date"  width="100">预计实施时间</th>
-						<c:forEach items="${positionHeader}" var="position">
-							<th data-field="${position.positionId}" width="100" data-formatter="demo">${position.positionName}工作要求</th>
-						</c:forEach>
-						<th data-field="fAcceptanceDate"  data-type="date" width="100">样板验收时间</th>
-					</tr>
+				<tr>
+					<th data-field="fVisaDate" data-type="date">时间</th>
+					<th data-field="fVisaUnit" >签证单位</th>
+					<th data-field="fWorkPart" >工作部位</th>
+					<th data-field="fJobContent" >工作内容</th>
+					<th data-field="fChargingBasis"  data-formatter="chargingBasis">计费依据</th>
+					<th data-field="fAmount" >金额(元)</th>
+					<th data-field="outAttachs" >签证计费附件</th>
+					<th data-field="fChargingBasisIn" data-formatter="chargingBasis">向第三方办理签证的依据</th>
+					<th data-field="fVisaUnitIn" >第三方单位名称</th>
+					<th data-field="fHandleType" data-formatter="handleType">是否办理</th>
+					<th data-field="fAmountIn" >金额(元)</th>
+					<th data-field="outAttachsIn" >附件</th>
+				</tr>
 				</thead>
 			</table>
 		</div>
@@ -84,6 +94,15 @@
             curSelOrg = treeNode;
             tblMain.refreshData();
         }
+    }
+    function typeOfWork(value, row, index){
+        return TypeOfWork[value];
+    }
+    function chargingBasis(value, row, index) {
+        return ChargingBasis[value];
+    }
+    function handleType(value, row, index) {
+        return HandleType[value];
     }
     function initOrgTree(height){
         var treeOpt = {view: {dblClickExpand: true,selectedMulti: false}
@@ -111,8 +130,8 @@
     function initTable(){
         var height = top.getTopMainHeight()-105;
         var table_options = {height:height,striped:true,sortStable:false,showRefresh:false,selectModel:1
-            ,cache:false,showToggle:false,search:false,queryParams:searchPrams,toolbar:false
-            ,showColumns:false,idField:"id",mypagination:true,url:'ec/safe/template/ledger/query'};
+            ,cache:false,showToggle:false,search:false,queryParams:searchPrams,toolbar:false,rowStyle:changeBgColor
+            ,showColumns:false,idField:"id",mypagination:true,url:'ec/engineering/sitevisainledegers/query'};
         tblMain = $('#tblMain').myDataTable(table_options);
     }
     function searchPrams(){
@@ -120,7 +139,7 @@
         params.projectId = curSelOrg.id;
         params.startDate = $("input[name='startDate']").val();
         params.endDate = $("input[name='endDate']").val();
-        params.materialName = $("input[name='materialName']").val();
+        params.visaUnit = $("input[name='visaUnit']").val();
         return webUtil.json2Str(params);
     }
     $(function(){
@@ -134,17 +153,19 @@
             tblMain.refreshData();
         });
     });
-    function demo(value, row, index) {
-        if(value){
-            var jobRequire = value.split("!");
-            var table= "";
-            $.each(jobRequire,function(i,val){
-                var job = val.split("_");
-                table+="<div style='width: 100%;float: left;'><div style='width: 15px;float: left;height:15px;border: solid 1px;'>"+(job[0]=='1'?"√":"")+"</div><div style='width: calc(100% - 20px);float: left;padding-left: 5px;text-align: left;'>"+job[1]+"</div></div>";
-			});
-            return table;
-		}
-		return value;
+    function changeBgColor(row,index){
+        var color = "";
+        var days = webUtil.betweenDateDays(row.fVisaDate,row.fcreateDate);
+        if(days>2&&days<10){
+            color=EarlyWarning.warning;
+        }else if(days>=10){
+            color=EarlyWarning.danger;
+        }
+        if(!color){
+            return false;
+        }
+        var style={css:{'background-color':color}};
+        return style;
     }
 </script>
 </html>

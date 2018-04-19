@@ -1,11 +1,13 @@
 package com.myapp.controller.ec.firepermit;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 import javax.annotation.Resource;
 
+import cn.afterturn.easypoi.excel.entity.params.ExcelExportEntity;
 import org.hibernate.Criteria;
 import org.hibernate.criterion.Restrictions;
 import org.springframework.stereotype.Controller;
@@ -88,5 +90,30 @@ public class Lev3FirePermitListController extends BaseListController {
 
 	public String getListUrl() {
 		return "ec/firepermit/lev3FirePermitList";
+	}
+	@Override
+	public String getHeadTitle() {
+		return "三级动火许可";
+	}
+	@Override
+	public List<ExcelExportEntity> getExportHeader() {
+		List<ExcelExportEntity> entity = new ArrayList<ExcelExportEntity>();
+		entity.add(new ExcelExportEntity("申请编码", "number"));
+		entity.add(new ExcelExportEntity("单位名称", "name"));
+		entity.add(new ExcelExportEntity("申请日期", "bizDate"));
+		entity.add(new ExcelExportEntity("动火部位", "firePart"));
+		ExcelExportEntity remark = new ExcelExportEntity("防火措施", "remark");
+		remark.setWidth(80);
+		remark.setWrap(true);
+		entity.add(remark);
+		entity.add(new ExcelExportEntity("动火日期", "fireDate"));
+		entity.add(new ExcelExportEntity("焊工", "welder"));
+		entity.add(new ExcelExportEntity("监护人", "guarder"));
+		entity.add(new ExcelExportEntity("申请动火人", "proposer"));
+		entity.add(new ExcelExportEntity("焊工班长", "welderbz"));
+		entity.add(new ExcelExportEntity("批准人", "pzUser_name"));
+		entity.add(new ExcelExportEntity("技术科", "jsUser_name"));
+		entity.add(new ExcelExportEntity("安全科", "aqUser_name"));
+		return entity;
 	}
 }

@@ -1,32 +1,31 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
-<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <!DOCTYPE html>
 <html lang="en">
 <head>
-	<title>项目安全样板一览表</title>
-	<style type="text/css">
-		.mainContrainer {
-			width: 100%;
-			height: 100%;
-			overflow:hidden;
-			padding: 0px 2px 2px 2px;
-		}
-		.leftContainer {
-			width: 260px;
-			height: 100%;
-			float: left;
-		}
-		.rightContainer {
-			height: 100%;
-			overflow:hidden;
-			padding-left: 5px;
-		}
-		.panel {
-			width: 100%;
-			height: 100%;
-			padding: 0px 2px 2px 2px;
-		}
-	</style>
+<title>材设采购一览表</title>
+<style type="text/css">
+.mainContrainer {
+	width: 100%;
+	height: 100%;
+	overflow:hidden;
+	padding: 0px 2px 2px 2px;
+}
+.leftContainer {
+	width: 260px;
+	height: 100%;
+	float: left;
+}
+.rightContainer {
+	height: 100%;
+	overflow:hidden;
+	padding-left: 5px;
+}
+.panel {
+	width: 100%;
+	height: 100%;
+	padding: 0px 2px 2px 2px;
+}
+</style>
 </head>
 <script type="text/javascript">
 </script>
@@ -35,14 +34,20 @@
 	<div id="table-toolbar" style="height:40px;padding-top: 2px;">
 		<div class="col-sm-3">
 			<div class="input-group">
-				<span class="input-group-addon lable">样板验收开始时间</span>
+				<span class="input-group-addon lable">开始时间</span>
 				<input name="startDate"  autocomplete="off" type="text" class="input-item form-control read" data-opt="{type:'date'}">
 			</div>
 		</div>
 		<div class="col-sm-3">
 			<div class="input-group">
-				<span class="input-group-addon lable">样板验收结束时间</span>
+				<span class="input-group-addon lable">结束时间</span>
 				<input name="endDate"  autocomplete="off" type="text" class="input-item form-control read" data-opt="{type:'date'}">
+			</div>
+		</div>
+		<div class="col-sm-3">
+			<div class="input-group">
+				<span class="input-group-addon lable">材料名称</span>
+				<input type="text" class="input-item form-control" name="materialName">
 			</div>
 		</div>
 		<div class="btn-group">
@@ -58,13 +63,18 @@
 			<table id="tblMain">
 				<thead >
 					<tr>
-						<th data-field="wbsName"   width="120">分部工程名称</th>
-						<th data-field="wbsxName"   width="120">分项工程名称</th>
-						<th data-field="fExpectStartDate" data-type="date"  width="100">预计实施时间</th>
-						<c:forEach items="${positionHeader}" var="position">
-							<th data-field="${position.positionId}" width="100" data-formatter="demo">${position.positionName}工作要求</th>
-						</c:forEach>
-						<th data-field="fAcceptanceDate"  data-type="date" width="100">样板验收时间</th>
+						<th data-field="fnumber"  width="150">编码</th>
+						<th data-field="fname" width="100">材料名称</th>
+						<th data-field="fSpecification" width="100">规格</th>
+						<th data-field="unitName" width="60">单位</th>
+						<th data-field="quantity"width="100" >预算数量</th>
+						<th data-field="purchaseCount"  width="100">当期入库数量</th>
+						<th data-field="settleCount"  width="100">当期结算数量</th>
+						<th data-field="fCalculationCount"  width="100">当期图算用量</th>
+						<th data-field="fActualUseCount"  width="100">当期实际用量</th>
+						<th data-field="fstartdate"  data-type="date" width="120">开始时间</th>
+						<th data-field="fenddate" data-type="date" width="120">结束时间</th>
+						<th data-field="remark" width="200">预警</th>
 					</tr>
 				</thead>
 			</table>
@@ -111,8 +121,8 @@
     function initTable(){
         var height = top.getTopMainHeight()-105;
         var table_options = {height:height,striped:true,sortStable:false,showRefresh:false,selectModel:1
-            ,cache:false,showToggle:false,search:false,queryParams:searchPrams,toolbar:false
-            ,showColumns:false,idField:"id",mypagination:true,url:'ec/safe/template/ledger/query'};
+            ,cache:false,showToggle:false,search:false,queryParams:searchPrams,toolbar:false,rowStyle:changeBgColor
+            ,showColumns:false,idField:"id",mypagination:true,url:'ec/settle/materialpurchasesettle/query'};
         tblMain = $('#tblMain').myDataTable(table_options);
     }
     function searchPrams(){
@@ -132,19 +142,18 @@
         $("input[name='endDate']").myComponet(DataType.date,{method:"init",opt:{}});
         $("#queryAnalysis").on('click',function(){
             tblMain.refreshData();
-        });
-    });
-    function demo(value, row, index) {
-        if(value){
-            var jobRequire = value.split("!");
-            var table= "";
-            $.each(jobRequire,function(i,val){
-                var job = val.split("_");
-                table+="<div style='width: 100%;float: left;'><div style='width: 15px;float: left;height:15px;border: solid 1px;'>"+(job[0]=='1'?"√":"")+"</div><div style='width: calc(100% - 20px);float: left;padding-left: 5px;text-align: left;'>"+job[1]+"</div></div>";
-			});
-            return table;
-		}
-		return value;
+		});
+	});
+    function changeBgColor(row, index) {
+        var color = "";
+        if(row.fActualUseCount>row.fCalculationCount){
+            color=EarlyWarning.danger;
+        }
+        if(!color){
+            return false;
+        }
+        var style={css:{'background-color':color}};
+        return style;
     }
 </script>
 </html>

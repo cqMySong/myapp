@@ -7,6 +7,7 @@ import java.util.Map;
 
 import javax.annotation.Resource;
 
+import com.myapp.enums.ec.WorkCheckGroup;
 import org.hibernate.Criteria;
 import org.hibernate.criterion.MatchMode;
 import org.hibernate.criterion.Order;
@@ -66,10 +67,12 @@ public class WorkCheckItemF7QueryController extends BasePageListController {
 		Map params = new HashMap();
 		boolean toMutil = true;
 		String isMut_ = request.getParameter("mutil");
+		String group_ = request.getParameter("checkgroup");
 		if(!BaseUtil.isEmpty(isMut_)){
 			toMutil = "true".equals(isMut_)||"1".equals(isMut_);
 		}
 		params.put("mutil", isMut_);
+		params.put("checkGroup",group_);
 		return toPage(getF7URL(),params);
 	}
 	
@@ -82,6 +85,11 @@ public class WorkCheckItemF7QueryController extends BasePageListController {
 			if(!BaseUtil.isEmpty(type)){
 				WorkCheckType uc = EnumUtil.getEnum(WorkCheckType.class.getName(), type);
 				query.add(Restrictions.eq("workCheckType",uc));
+			}
+			Object group = searchMap.get("group");
+			if(!BaseUtil.isEmpty(group)){
+				WorkCheckGroup workCheckGroup = EnumUtil.getEnum(WorkCheckGroup.class.getName(), group);
+				query.add(Restrictions.eq("workCheckGroup",workCheckGroup));
 			}
 			Object name = searchMap.get("name");//项目名称
 			if(!BaseUtil.isEmpty(name)){

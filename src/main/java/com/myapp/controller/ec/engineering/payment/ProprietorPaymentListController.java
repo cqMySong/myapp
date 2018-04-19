@@ -27,11 +27,11 @@ import java.util.Map;
 
 /**
  * @path：com.myapp.controller.ec.engineering.progressfund
- * @description：业主付款
+ * @description：工程付款
  * @author ： ly
  * @date: 2017-08-28 21:02
  */
-@PermissionAnn(name="系统管理.现场管理.工程合同.业主付款",number="app.ec.engineering.proprietorpayment")
+@PermissionAnn(name="系统管理.现场管理.工程合同.工程付款",number="app.ec.engineering.proprietorpayment")
 @Controller
 @RequestMapping("ec/engineering/proprietorpayments")
 public class ProprietorPaymentListController extends BaseListController {

@@ -10,7 +10,7 @@
 <script type="text/javascript">
 
 </script>
-<body style="padding: 5px;">
+<body style="padding: 5px;" class="panel">
 <div id="editPanel" class="myMainContent panel">
 	<div id="table-toolbar"></div>
 	<form id="editForm">
@@ -39,7 +39,7 @@
 				<div class="input-group">
 					<span class="input-group-addon lable">支出签证</span>
 					<input class="input-item form-control" name="siteVisaOutInfo"
-						   data-opt="{type:'f7',dataChange:selectVisaOut,uiWin:{title:'现场签证(支出)',height:600,width:800,url:'ec/engineering/siteVisaOutF7'}}" />
+						   data-opt="{type:'f7',dataChange:selectVisaOut,uiWin:{title:'现场签证(支出)',height:600,width:800,url:'ec/engineering/siteVisaOutF7',uiParams:getParams}}" />
 				</div>
 			</div>
 			<div class="col-sm-4">

@@ -45,6 +45,10 @@ if(typeof BillState == "undefined"){
     var BillState = {"ADDNEW":"编制中","SAVE":"已保存","SUBMIT":"已提交","AUDIT":"已审核","NOPASS":"审核不通过"};
     var SchemeState = {"COMPANY":"公司内审中","SUPERVISION":"监理审批中","PROPRIETOR":"业主审核中",
 		"FINISH":"审批完成"};
+    var HandleType = {"NOT_HANDLE":"未办理","IN_PROCESS":"办理中","ALREADY_HANDLE":"已办理"};
+    var ChargingBasis  = {"INCREASE_CONTRACT":"合同外增加","EMERGENCY_INSPECTION":"应急检查","OWNER_ORDER":"业主指令",
+	"CONTRACT_STIPULATION":"合同约定","INCREASE_QUANTITY":"工程量增加","OTHER":"其他"};
+    var TypeOfWork = {"GENERAL":"普工","MECHANIC":"技工"};
 }
 //'yyyy-MM-dd h:m:s'
 //yyyy-MM-dd

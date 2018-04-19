@@ -140,7 +140,7 @@
             var table= "";
             $.each(jobRequire,function(i,val){
                 var job = val.split("_");
-                table+="<div style='width: 100%;float: left;'><div style='width: 15px;float: left;height:15px;border: solid 1px;'>"+(job[0]=='1'?"√":"")+"</div><div style='width: calc(100% -20px);float: left;padding-left: 5px;'>"+job[1]+"</div></div>";
+                table+="<div style='width: 100%;float: left;'><div style='width: 15px;float: left;height:15px;border: solid 1px;'>"+(job[0]=='1'?"√":"")+"</div><div style='width: calc(100% - 20px);float: left;padding-left: 5px;text-align: left;'>"+job[1]+"</div></div>";
 			});
             return table;
 		}

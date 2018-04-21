@@ -75,9 +75,9 @@ public class SiteVisaInEditController extends BaseBillEditController {
         cols.add(new ColumnModel("createUser",DataTypeEnum.F7,UserInfo.class));
         cols.add(new ColumnModel("lastUpdateUser",DataTypeEnum.F7,UserInfo.class));
         cols.add(new ColumnModel("auditor",DataTypeEnum.F7,UserInfo.class));
-        cols.add(new ColumnModel("createDate", DataTypeEnum.DATE));
-        cols.add(new ColumnModel("auditDate", DataTypeEnum.DATE));
-        cols.add(new ColumnModel("lastUpdateDate", DataTypeEnum.DATE));
+        cols.add(new ColumnModel("createDate", DataTypeEnum.DATETIME));
+        cols.add(new ColumnModel("auditDate", DataTypeEnum.DATETIME));
+        cols.add(new ColumnModel("lastUpdateDate", DataTypeEnum.DATETIME));
 
         ColumnModel siteVisaOutInfo = new ColumnModel("siteVisaOutInfo",DataTypeEnum.F7,"id,name,number");
         siteVisaOutInfo.setClaz(SiteVisaOutInfo.class);

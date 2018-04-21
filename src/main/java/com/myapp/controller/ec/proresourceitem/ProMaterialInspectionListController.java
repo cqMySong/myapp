@@ -1,9 +1,16 @@
 package com.myapp.controller.ec.proresourceitem;
 
 import com.myapp.core.annotation.PermissionAnn;
+import com.myapp.core.annotation.PermissionItemAnn;
+import com.myapp.core.enums.PermissionTypeEnum;
+import com.myapp.core.util.WebUtil;
 import com.myapp.enums.ec.ResourceType;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.servlet.ModelAndView;
+
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  *-----------MySong---------------
@@ -29,7 +36,14 @@ public class ProMaterialInspectionListController extends ProResourceItemBaseList
 	public ResourceType getResourceType() {
 		return ResourceType.YCLJC;
 	}
-	
-	
+
+	@PermissionItemAnn(name="原材料检查导入",number="import",type= PermissionTypeEnum.FUNCTION)
+	@RequestMapping("/batch/import")
+	public ModelAndView forwardBatchImport(){
+		Map params = new HashMap();
+		toListUIParams(params);
+		params.put("uiCtx", WebUtil.UUID_ReplaceID(params.get("uiCtx").toString()));
+		return toPage("ec/proresourceitem/materialInspectionBatchTreeImport", params);
+	}
 	
 }

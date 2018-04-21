@@ -65,6 +65,7 @@ public class InventoryEditController extends BaseBillEditController {
                 for(Map stockMap:stockInfoList){
                     stockInventoryDetailInfo = new StockInventoryDetailInfo();
                     stockInventoryDetailInfo.setStockCount(new BigDecimal(stockMap.get("count").toString()));
+                    stockInventoryDetailInfo.setQuantity(stockMap.get("quantity")==null?BigDecimal.ZERO:new BigDecimal(stockMap.get("quantity").toString()));
                     stockInfo = new StockInfo();
                     stockInfo.setId((String) stockMap.get("id"));
                     stockInfo.setSpecification((String) stockMap.get("specification"));
@@ -136,9 +137,9 @@ public class InventoryEditController extends BaseBillEditController {
         cols.add(new ColumnModel("createUser",DataTypeEnum.F7,UserInfo.class));
         cols.add(new ColumnModel("lastUpdateUser",DataTypeEnum.F7,UserInfo.class));
         cols.add(new ColumnModel("auditor",DataTypeEnum.F7,UserInfo.class));
-        cols.add(new ColumnModel("createDate", DataTypeEnum.DATE));
-        cols.add(new ColumnModel("auditDate", DataTypeEnum.DATE));
-        cols.add(new ColumnModel("lastUpdateDate", DataTypeEnum.DATE));
+        cols.add(new ColumnModel("createDate", DataTypeEnum.DATETIME));
+        cols.add(new ColumnModel("auditDate", DataTypeEnum.DATETIME));
+        cols.add(new ColumnModel("lastUpdateDate", DataTypeEnum.DATETIME));
         ColumnModel project = new ColumnModel("project",DataTypeEnum.F7,"id,name");
         project.setClaz(ProjectInfo.class);
         cols.add(project);
@@ -157,6 +158,7 @@ public class InventoryEditController extends BaseBillEditController {
         stockInventoryDetailInfos.getCols().add(new ColumnModel("id",DataTypeEnum.PK));
         stockInventoryDetailInfos.getCols().add(new ColumnModel("stockCount",DataTypeEnum.NUMBER));
         stockInventoryDetailInfos.getCols().add(new ColumnModel("inventoryCount",DataTypeEnum.NUMBER));
+        stockInventoryDetailInfos.getCols().add(new ColumnModel("quantity",DataTypeEnum.NUMBER));
         stockInventoryDetailInfos.getCols().add(new ColumnModel("remark"));
         cols.add(stockInventoryDetailInfos);
 

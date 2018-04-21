@@ -73,7 +73,11 @@ public class StockService  extends BaseInterfaceService<StockInfo> {
     public List<Map> queryStockByProjectId(String projectId){
         String hql = "select stock.id as id,stock.count as count," +
                 "stock.specification as specification,stock.measureUnit as measureUnit," +
-                "stock.materialInfo as materialInfo from StockInfo stock where stock.projectInfo.id=?";
+                "stock.materialInfo as materialInfo," +
+                "(select sum(bdi.quantity) from BudgetingInfo bi,BudgetingDetailInfo bdi where bdi.parent.id = bi.id" +
+                " and bi.project.id = stock.projectInfo.id and bdi.material.id = stock.materialInfo.id ) as quantity" +
+                " from StockInfo stock " +
+                "where stock.projectInfo.id=?";
         return findByHQL(hql,new String[]{projectId});
     }
 

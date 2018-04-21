@@ -35,7 +35,14 @@ public class ServiceChargeService extends BaseInterfaceService<ServiceChargeInfo
         sql.append("select case when b.fPaymentType='INTERIM' then '进度款' else '结算' end as paymentType,")
             .append("a.fnumber as contractNumber,a.fname as contractName,a.fDirectorName as directorName,")
             .append("a.fAmount as contractAmount,b.fJobContent as jobContent,b.fSettleAmount as settleAmount,")
-            .append("c.fPayAmount as payAmount,c.fPayDate as payDate,c.fContractRatio as contractRatio ")
+            .append("c.fPayAmount as payAmount,c.fPayDate as payDate,c.fContractRatio as contractRatio,")
+            .append("(select sum(sp.fSettleAmount) from t_ec_subcontract_payment sp where sp.fProjectId = b.fProjectId ")
+            .append("and sp.fSubcontracId = b.fSubcontracId and sp.fcreateDate<=b.fcreateDate and ")
+            .append("sp.fPaymentType = b.fPaymentType) as totalSettleAmount,")
+            .append("(select sum(sc.fPayAmount) from t_ec_service_charge sc,t_ec_subcontract_payment sp ")
+            .append(" where sc.fSubContractPaymentId = sp.fid  and ")
+            .append("sp.fSubcontracId = b.fSubcontracId and sp.fcreateDate<=b.fcreateDate and ")
+            .append("sp.fPaymentType = b.fPaymentType) as totalPayAmount ")
             .append("from t_ec_subcontract a,t_ec_subcontract_payment b ")
             .append("left join t_ec_service_charge c on c.fSubContractPaymentId = b.fid ")
             .append("where a.fid = b.fSubcontracId and a.fProjectId = ? ");
@@ -52,7 +59,7 @@ public class ServiceChargeService extends BaseInterfaceService<ServiceChargeInfo
             sql.append("and a.fname like ? ");
             paramList.add("%"+params.get("contractName")+"%");
         }
-        sql.append(" order by b.fPaymentType,a.fnumber,b.fcreateDate,c.fPayDate");
+        sql.append(" order by b.fPaymentType,a.fnumber,b.fcreateDate,c.fcreateDate");
         return toPageSqlQuery(curPage,pageSize,sql.toString(),paramList.toArray());
     }
 }

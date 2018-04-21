@@ -89,7 +89,7 @@ public class MaterialLeaseListController extends BaseListController {
         List<ColumnModel> cols = super.getDataBinding();
         cols.add(new ColumnModel("name"));
         cols.add(new ColumnModel("number"));
-        cols.add(new ColumnModel("createDate", DataTypeEnum.DATE));
+        cols.add(new ColumnModel("createDate", DataTypeEnum.DATETIME));
         cols.add(new ColumnModel("leaseUnit",DataTypeEnum.STRING));
         cols.add(new ColumnModel("leaseDate",DataTypeEnum.DATE));
         cols.add(new ColumnModel("leaseCount",DataTypeEnum.NUMBER));

@@ -2,7 +2,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-	<title>分包进度款（结算）</title>
+	<title>工、器具出入库台账</title>
 	<style type="text/css">
 		.mainContrainer {
 			width: 100%;
@@ -34,24 +34,12 @@
 	<div id="table-toolbar" style="height:40px;padding-top: 2px;">
 		<div class="col-sm-3">
 			<div class="input-group">
-				<span class="input-group-addon lable">开始时间</span>
-				<input name="startDate"  autocomplete="off" type="text" class="input-item form-control read" data-opt="{type:'date'}">
-			</div>
-		</div>
-		<div class="col-sm-3">
-			<div class="input-group">
-				<span class="input-group-addon lable">结束时间</span>
-				<input name="endDate"  autocomplete="off" type="text" class="input-item form-control read" data-opt="{type:'date'}">
-			</div>
-		</div>
-		<div class="col-sm-3">
-			<div class="input-group">
-				<span class="input-group-addon lable">合同名称</span>
-				<input type="text" class="input-item form-control" name="contractName">
+				<span class="input-group-addon lable">材料名称</span>
+				<input type="text" class="input-item form-control" name="materialName">
 			</div>
 		</div>
 		<div class="btn-group">
-			<button class="btn btn-success" type="button" id="queryAnalysis">
+			<button class="btn btn-success" type="button" id="queryStockLedger">
 				<span class="fa fa-search"></span>&nbsp;查询</button>
 		</div>
 	</div>
@@ -63,18 +51,15 @@
 			<table id="tblMain">
 				<thead >
 					<tr>
-						<th data-field="expenseType" data-formatter="paymentTypeFormatter">合同类型</th>
-						<th data-field="fnumber">合同编号</th>
-						<th data-field="fname" >合同名称</th>
-						<th data-field="unitName">合同单位</th>
-						<th data-field="fJobContent">工作内容</th>
-						<th data-field="fStartDate" data-type="date">开始时间</th>
-						<th data-field="fEndDate" data-type="date">结束时间</th>
-						<th data-field="fSettleAmount">金额(元)</th>
-						<th data-field="fAmount">合同金额(元)</th>
-						<th data-field="contrac">计价依据</th>
-						<th data-field="fOperator">经办人</th>
-						<th data-field="fRemark">备注</th>
+						<th data-field="fnumber" width="120">编号</th>
+						<th data-field="fMaterialName" width="120">材料名称</th>
+						<th data-field="fSpecification"  width="120">规格</th>
+						<th data-field="unitName"  width="120">单位</th>
+						<th data-field="fQuantity"  width="100">预算数量</th>
+						<th data-field="inStockCount" width="100">入库数量</th>
+						<th data-field="outStockCount" width="100">出库数量</th>
+						<th data-field="revertCount" width="100">归还情况</th>
+						<th data-field = "stockCount" width="100">库存量</th>
 					</tr>
 				</thead>
 			</table>
@@ -122,33 +107,24 @@
         var height = top.getTopMainHeight()-105;
         var table_options = {height:height,striped:true,sortStable:false,showRefresh:false,selectModel:1
             ,cache:false,showToggle:false,search:false,queryParams:searchPrams,toolbar:false
-            ,showColumns:false,idField:"id",mypagination:true,url:'ec/engineering/subcontractledgers/query'};
+            ,showColumns:false,idField:"id",mypagination:true,url:'ec/purchase/toolsstockledger/query'};
         tblMain = $('#tblMain').myDataTable(table_options);
     }
     function searchPrams(){
         var params = {};
         params.projectId = curSelOrg.id;
-        params.startDate = $("input[name='startDate']").val();
-        params.endDate = $("input[name='endDate']").val();
-        params.contractName = $("input[name='contractName']").val();
+        params.materialName = $("input[name='materialName']").val();
         return webUtil.json2Str(params);
-    }
-    function paymentTypeFormatter(value, row, index) {
-		if(value=='人工费'){
-			return value+"_"+row.paymentType;
-		}
-		return value;
     }
     $(function(){
         var height = top.getTopMainHeight()-40;
         $(".mainContrainer").height(height);
         initOrgTree(height);
         initTable();
-        $("input[name='startDate']").myComponet(DataType.date,{method:"init",opt:{}});
-        $("input[name='endDate']").myComponet(DataType.date,{method:"init",opt:{}});
-        $("#queryAnalysis").on('click',function(){
+        $("#queryStockLedger").on('click',function(){
             tblMain.refreshData();
         });
     });
+
 </script>
 </html>

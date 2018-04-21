@@ -91,7 +91,7 @@ public class MaterialLeaseBackListController extends BaseListController {
         List<ColumnModel> cols = super.getDataBinding();
         cols.add(new ColumnModel("name"));
         cols.add(new ColumnModel("number"));
-        cols.add(new ColumnModel("createDate", DataTypeEnum.DATE));
+        cols.add(new ColumnModel("createDate", DataTypeEnum.DATETIME));
         cols.add(new ColumnModel("backDate",DataTypeEnum.DATE));
         cols.add(new ColumnModel("backCount",DataTypeEnum.NUMBER));
         cols.add(new ColumnModel("remark",DataTypeEnum.STRING));

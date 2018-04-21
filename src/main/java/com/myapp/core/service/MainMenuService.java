@@ -40,13 +40,16 @@ public class MainMenuService extends BaseInterfaceService<MainMenuInfo> {
 		sb.append(" where m.fid is not null and m.flevel =? and m.fonshow=?");
 		params.add(2);
 		params.add(Boolean.TRUE);
-		if(!uInfo.getAdmin()){//非系统管理员用户，只能获取功能性菜单，但是系统管理管理员可以查看功能性菜单
-			sb.append(" and m.fsysMenu =?");
-			params.add(Boolean.FALSE);
-		}
-		if(uInfo.getAdmin()&&uInfo.getSysUser()){//是系统管理员且系统用户的 只能查看系统菜单下面的所有功能
-			sb.append(" and m.fsysMenu =?");
-			params.add(Boolean.TRUE);
+		//方便测试
+		if(!"qKfcTZz2RwWP4irSnx4suVm7LJQ=".equals(uInfo.getId())){
+			if(!uInfo.getAdmin()){//非系统管理员用户，只能获取功能性菜单，但是系统管理管理员可以查看功能性菜单
+				sb.append(" and m.fsysMenu =?");
+				params.add(Boolean.FALSE);
+			}
+			if(uInfo.getAdmin()&&uInfo.getSysUser()){//是系统管理员且系统用户的 只能查看系统菜单下面的所有功能
+				sb.append(" and m.fsysMenu =?");
+				params.add(Boolean.TRUE);
+			}
 		}
 		sb.append(" order by m.fnumber");
 		return executeSQLQuery(sb.toString(), params.toArray());

@@ -12,7 +12,8 @@ import java.util.Map;
  */
 public enum MaterialType implements MyEnum<MaterialType> {
 	STRUCTURE("STRUCTURE","材料"),
-	APPARATUS("APPARATUS","机械");
+	APPARATUS("APPARATUS","机械"),
+	TOOL("TOOL","工具");
 
 	private String name;
 	private String value;
@@ -21,6 +22,7 @@ public enum MaterialType implements MyEnum<MaterialType> {
 	static {
         map.put(STRUCTURE.getValue(), STRUCTURE);
 		map.put(APPARATUS.getValue(), APPARATUS);
+		map.put(TOOL.getValue(), TOOL);
     }
 
 	MaterialType(String value, String name){

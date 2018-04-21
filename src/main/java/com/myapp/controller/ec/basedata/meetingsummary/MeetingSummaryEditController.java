@@ -58,9 +58,9 @@ public class MeetingSummaryEditController extends BaseBillEditController {
 		cols.add(new ColumnModel("createUser",DataTypeEnum.F7,UserInfo.class));
 		cols.add(new ColumnModel("lastUpdateUser",DataTypeEnum.F7,UserInfo.class));
 		cols.add(new ColumnModel("auditor",DataTypeEnum.F7,UserInfo.class));
-		cols.add(new ColumnModel("createDate", DataTypeEnum.DATE));
-		cols.add(new ColumnModel("auditDate", DataTypeEnum.DATE));
-		cols.add(new ColumnModel("lastUpdateDate", DataTypeEnum.DATE));
+		cols.add(new ColumnModel("createDate", DataTypeEnum.DATETIME));
+		cols.add(new ColumnModel("auditDate", DataTypeEnum.DATETIME));
+		cols.add(new ColumnModel("lastUpdateDate", DataTypeEnum.DATETIME));
 		ColumnModel columnModel = new ColumnModel("project",DataTypeEnum.F7,"id,name");
 		columnModel.setClaz(ProjectInfo.class);
 		cols.add(columnModel);

@@ -40,6 +40,10 @@ public class StockInventoryDetailInfo extends CoreBaseEntryInfo<StockInventoryIn
      */
     private BigDecimal actualUseCount;
     /**
+     * 预算数量
+     */
+    private BigDecimal quantity;
+    /**
      * 备注
      */
     private String remark;
@@ -98,5 +102,13 @@ public class StockInventoryDetailInfo extends CoreBaseEntryInfo<StockInventoryIn
 
     public void setActualUseCount(BigDecimal actualUseCount) {
         this.actualUseCount = actualUseCount;
+    }
+    @Column(name = "fQuantity")
+    public BigDecimal getQuantity() {
+        return quantity;
+    }
+
+    public void setQuantity(BigDecimal quantity) {
+        this.quantity = quantity;
     }
 }

@@ -5,44 +5,30 @@ import com.myapp.core.annotation.AuthorAnn;
 import com.myapp.core.annotation.PermissionAnn;
 import com.myapp.core.annotation.PermissionItemAnn;
 import com.myapp.core.base.service.impl.AbstractBaseService;
-import com.myapp.core.controller.BaseListController;
 import com.myapp.core.controller.BasePageListController;
-import com.myapp.core.entity.UserInfo;
-import com.myapp.core.enums.BaseMethodEnum;
-import com.myapp.core.enums.DataTypeEnum;
 import com.myapp.core.enums.PermissionTypeEnum;
-import com.myapp.core.exception.db.QueryException;
-import com.myapp.core.model.ColumnModel;
 import com.myapp.core.model.WebDataModel;
 import com.myapp.core.util.BaseUtil;
-import com.myapp.core.util.WebUtil;
-import com.myapp.service.ec.purchase.ApplyMaterialDetailService;
 import com.myapp.service.ec.purchase.PurchaseStockDetailService;
-import org.hibernate.Criteria;
-import org.hibernate.criterion.Order;
-import org.hibernate.criterion.Restrictions;
-import org.hibernate.sql.JoinType;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
 import javax.annotation.Resource;
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 /**
  * @path：com.myapp.controller.ec.purchase.stockin
- * @description：材设出入库台账
+ * @description：工、器具出入库台账
  * @author： ly
  * @date: 2017-11-19 14:58
  */
-@PermissionAnn(name="系统管理.现场管理.采购管理.材设出入库台账",number="app.ec.stock.stockledger")
+@PermissionAnn(name="系统管理.现场管理.采购管理.工、器具出入库台账",number="app.ec.stock.toolsstockledger")
 @Controller
-@RequestMapping("ec/purchase/stockledger")
-public class StockLedgerListController extends BasePageListController {
+@RequestMapping("ec/purchase/toolsstockledger")
+public class ToolsStockLedgerListController extends BasePageListController {
     @Resource
     private PurchaseStockDetailService purchaseStockDetailService;
 
@@ -50,7 +36,7 @@ public class StockLedgerListController extends BasePageListController {
     @PermissionItemAnn(name="查看",number="stockLoedger",type= PermissionTypeEnum.PAGE)
     public ModelAndView analysisList(){
         Map params = new HashMap();
-        return toPage("ec/purchase/instock/stockLedgerList", params);
+        return toPage("ec/purchase/instock/toolsStockLedgerList", params);
     }
     @Override
     public AbstractBaseService getService() {
@@ -75,7 +61,7 @@ public class StockLedgerListController extends BasePageListController {
         }
         params.put("projectId",projectId);
         try {
-            this.data = purchaseStockDetailService.queryMaterialStockLedger(getCurPage(),getPageSize(),params,"'STRUCTURE','APPARATUS'");
+            this.data = purchaseStockDetailService.queryMaterialStockLedger(getCurPage(),getPageSize(),params,"'TOOL'");
         } catch (Exception e) {
             e.printStackTrace();
         }

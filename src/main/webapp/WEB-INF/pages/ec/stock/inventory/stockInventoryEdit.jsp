@@ -76,6 +76,7 @@
 							<th data-field="specification" data-type="text" data-locked="true" data-width="120">规格</th>
 							<th data-field="measureUnit" data-type="text" data-locked="true" data-width="100">单位</th>
 							<th data-field="stockCount" data-type="number" data-locked="true" data-width="100">库存数量</th>
+							<th data-field="quantity" data-type="number" data-locked="true" data-width="100">预算数量</th>
 							<th data-field="inventoryCount" data-type="number" data-width="100">盘存数量</th>
 							<th data-field="remark" data-type="text" data-width="100">备注</th>
 						</tr>
@@ -107,7 +108,7 @@
 			<div class="col-sm-4">
 				<div class="input-group">
 					<span class="input-group-addon lable">创建日期</span>
-					<input name="createDate" class="input-item form-control read" data-opt="{type:'date'}">
+					<input name="createDate" class="input-item form-control read" data-opt="{type:'datetime'}">
 				</div>
 			</div>
 			<div class="col-sm-4">

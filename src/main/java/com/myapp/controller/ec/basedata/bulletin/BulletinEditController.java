@@ -59,8 +59,8 @@ public class BulletinEditController extends BaseBillEditController {
         cols.add(new ColumnModel("dispatchUnit",DataTypeEnum.STRING));
         cols.add(new ColumnModel("content",DataTypeEnum.STRING));
         cols.add(new ColumnModel("bulletinDate",DataTypeEnum.DATE));
-        cols.add(new ColumnModel("createDate", DataTypeEnum.DATE));
-        cols.add(new ColumnModel("lastUpdateDate", DataTypeEnum.DATE));
+        cols.add(new ColumnModel("createDate", DataTypeEnum.DATETIME));
+        cols.add(new ColumnModel("lastUpdateDate", DataTypeEnum.DATETIME));
 
         ColumnModel project = new ColumnModel("project",DataTypeEnum.F7,"id,name");
         project.setClaz(ProjectInfo.class);

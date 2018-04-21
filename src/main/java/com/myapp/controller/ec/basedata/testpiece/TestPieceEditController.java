@@ -57,8 +57,8 @@ public class TestPieceEditController extends BaseEditController {
 		cols.add(new ColumnModel("inspectionResult",DataTypeEnum.BOOLEAN));
 		cols.add(new ColumnModel("evidentialTesting",DataTypeEnum.BOOLEAN));
 		cols.add(new ColumnModel("remark",DataTypeEnum.STRING));
-		cols.add(new ColumnModel("createDate", DataTypeEnum.DATE));;
-		cols.add(new ColumnModel("lastUpdateDate", DataTypeEnum.DATE));
+		cols.add(new ColumnModel("createDate", DataTypeEnum.DATETIME));;
+		cols.add(new ColumnModel("lastUpdateDate", DataTypeEnum.DATETIME));
 		ColumnModel columnModel = new ColumnModel("projectInfo",DataTypeEnum.F7,"id,name");
 		columnModel.setClaz(ProjectInfo.class);
 		cols.add(columnModel);

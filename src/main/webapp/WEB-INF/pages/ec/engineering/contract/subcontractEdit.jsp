@@ -10,7 +10,7 @@
 <script type="text/javascript">
 
 </script>
-<body style="padding: 5px;">
+<body style="padding: 5px;" class="panel">
 <div id="editPanel" class="myMainContent panel">
 	<div id="table-toolbar"></div>
 	<form id="editForm">
@@ -107,7 +107,7 @@
 			<div class="col-sm-12">
 				<div class="input-group">
 					<span class="input-group-addon lable">合同内容</span>
-					<textarea name="treatyContents" style="height:40px;" class="input-item form-control"></textarea>
+					<textarea name="treatyContents" rows="3" class="input-item form-control"></textarea>
 				</div>
 			</div>
 		</div>
@@ -135,7 +135,7 @@
 			<div class="col-sm-4">
 				<div class="input-group">
 					<span class="input-group-addon lable">创建日期</span>
-					<input name="createDate" class="input-item form-control read" data-opt="{type:'date'}">
+					<input name="createDate" class="input-item form-control read" data-opt="{type:'datetime'}">
 				</div>
 			</div>
 			<div class="col-sm-4">

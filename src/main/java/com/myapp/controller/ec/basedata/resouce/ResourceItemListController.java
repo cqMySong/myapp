@@ -11,6 +11,7 @@ import javax.persistence.EnumType;
 import org.hibernate.Criteria;
 import org.hibernate.criterion.Restrictions;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
@@ -105,6 +106,26 @@ public class ResourceItemListController extends BaseDataListController {
 
 	public String getListUrl() {
 		return "ec/basedata/resource/resourceItemList";
+	}
+
+	@AuthorAnn(doPermission=false)
+	@RequestMapping(value="/showitemtree/{resourceType}")
+	@ResponseBody
+	public WebDataModel showItemTree(@PathVariable String resourceType) {
+		try{
+			List<Map<String,Object>> rootList = new ArrayList<>();
+			Map root = new HashMap();
+			root.put("id", "");
+			root.put("name", ResourceType.valueOf(ResourceType.class,resourceType).getName());
+			root.put("open", true);
+			root.put("children", resourceItemService.queryByResourceType(resourceType));
+			rootList.add(root);
+			data = rootList;
+		}catch(Exception e){
+			e.printStackTrace();
+			setErrorMesg(e.getMessage());
+		}
+		return ajaxModel();
 	}
 
 }

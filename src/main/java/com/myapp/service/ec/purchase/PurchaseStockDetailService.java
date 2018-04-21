@@ -1,5 +1,6 @@
 package com.myapp.service.ec.purchase;
 
+import com.aspose.slides.p2cbca448.and;
 import com.myapp.core.exception.db.QueryException;
 import com.myapp.core.exception.db.SaveException;
 import com.myapp.core.model.PageModel;
@@ -102,7 +103,7 @@ public class PurchaseStockDetailService extends BaseInterfaceService<PurchaseSto
      * @param params
      * @return
      */
-    public PageModel queryMaterialStockLedger(Integer curPage,Integer pageSize,Map<String,Object> params){
+    public PageModel queryMaterialStockLedger(Integer curPage,Integer pageSize,Map<String,Object> params,String materialType){
         List<Object> paramList = new ArrayList<>();
         StringBuffer sql = new StringBuffer();
         sql.append("select budget.fnumber,budget.fMaterialName,budget.fSpecification, budget.unitName,budget.fQuantity,")
@@ -113,7 +114,7 @@ public class PurchaseStockDetailService extends BaseInterfaceService<PurchaseSto
         .append("(select a.fMaterialId,b.fnumber,a.fMaterialName,a.fSpecification, c.fname as unitName,")
         .append("sum(a.fQuantity) as fQuantity from t_ec_budgeting_detail a,t_base_material b,t_base_measureunit c ")
         .append(",t_ec_budgeting d where a.fMaterialId = b.fid and a.fMeasureUnitId = c.fid and d.fid = a.fprentid ")
-        .append(" and d.fProjectId = ?");
+        .append(" and b.fMaterialType in ("+materialType+") and  d.fProjectId = ?");
         paramList.add(params.get("projectId"));
         if(!BaseUtil.isEmpty(params.get("materialName"))){
             sql.append(" and a.fMaterialName like ? ");
@@ -121,7 +122,7 @@ public class PurchaseStockDetailService extends BaseInterfaceService<PurchaseSto
         }
         sql.append("group by a.fMaterialId)  budget left join ")
         .append("(select a.fMaterialId,sum(a.fCount) as inStockCount from t_ec_purchase_stock_detail a,t_ec_purchase_stock b,")
-        .append("t_base_material c where b.fid = a.fprentid and c.fid = a.fMaterialId and b.fProjectId = ? ");
+        .append("t_base_material c where b.fid = a.fprentid and c.fid = a.fMaterialId and c.fMaterialType in ("+materialType+") and b.fProjectId = ? ");
         paramList.add(params.get("projectId"));
         if(!BaseUtil.isEmpty(params.get("materialName"))){
             sql.append(" and c.fname like ? ");
@@ -130,7 +131,7 @@ public class PurchaseStockDetailService extends BaseInterfaceService<PurchaseSto
         sql.append(" group by a.fMaterialId) inStock on inStock.fMaterialId = budget.fMaterialId left join")
         .append("(select a.fMaterialId,sum(a.fCount) as outStockCount from t_ec_stock_out_detail a,")
         .append("t_ec_stock_out b,t_base_material c where a.fprentid = b.fid and c.fid = a.fMaterialId ")
-        .append(" and b.fprojectId = ? ");
+        .append(" and c.fMaterialType in ("+materialType+") and b.fprojectId = ? ");
         paramList.add(params.get("projectId"));
         if(!BaseUtil.isEmpty(params.get("materialName"))){
             sql.append(" and c.fname like ? ");
@@ -139,7 +140,7 @@ public class PurchaseStockDetailService extends BaseInterfaceService<PurchaseSto
         sql.append(" group by  a.fMaterialId) outStock on outStock.fMaterialId = budget.fMaterialId left join")
         .append("(select a.fMaterialId,sum(a.fCount) as revertCount from t_ec_stock_revert_detail a,")
         .append("t_ec_stock_revert b,t_base_material c where a.fprentid = b.fid and c.fid = a.fMaterialId ")
-        .append("and b.fprojectId = ? ");
+        .append(" and c.fMaterialType in ("+materialType+") and b.fprojectId = ? ");
         paramList.add(params.get("projectId"));
         if(!BaseUtil.isEmpty(params.get("materialName"))){
             sql.append(" and c.fname like ? ");

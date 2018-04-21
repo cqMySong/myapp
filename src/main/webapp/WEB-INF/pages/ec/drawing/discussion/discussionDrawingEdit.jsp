@@ -86,7 +86,7 @@
 			<div class="col-lg-3 col-sm-6 mb5">
 				<div class="input-group">
 					<span class="input-group-addon lable">创建日期</span>
-					<input name="createDate" class="input-item form-control read" data-opt="{type:'date'}">
+					<input name="createDate" class="input-item form-control read" data-opt="{type:'datetime'}">
 				</div>
 			</div>
 			<div class="col-lg-3 col-sm-6 mb5">

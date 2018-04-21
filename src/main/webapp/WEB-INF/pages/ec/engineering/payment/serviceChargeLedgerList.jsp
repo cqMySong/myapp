@@ -69,9 +69,12 @@
 					<th data-field="directorName">分包负责人</th>
 					<th data-field="contractAmount">合同金额(元)</th>
 					<th data-field="jobContent">工作内容</th>
-					<th data-field="settleAmount">结算金额</th>
+					<th data-field="settleAmount">金额（元）</th>
+					<th data-field="totalSettleAmount">累计金额（元）</th>
 					<th data-field="payAmount">支付金额(元)</th>
+					<th data-field="totalPayAmount">累计劳务费支付金额（元）</th>
 					<th data-field="payDate" data-type="date">支付日期</th>
+					<th data-field="payAmountRatio" data-formatter="payAmountRatioFormatter">劳务费支付比例</th>
 					<th data-field="contractRatio" data-formatter="contractRatioFormatter">合同约定比例</th>
 				</tr>
 				</thead>
@@ -137,6 +140,15 @@
             return txt+"%";
         }
         return txt;
+    }
+    function payAmountRatioFormatter(value, row, index) {
+        var totalPayAmount = row.totalPayAmount;
+        if(!totalPayAmount){
+            totalPayAmount = 0;
+        }
+        var totalSettleAmount = row.totalSettleAmount;
+
+        return Number(totalPayAmount/totalSettleAmount*100).toFixed(2)+"%";
     }
     $(function(){
         var height = top.getTopMainHeight()-40;

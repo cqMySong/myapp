@@ -39,7 +39,7 @@ public class PermissionAssignService extends BaseInterfaceService<PermissionAssi
 		sb.append(",p.url as url");
 		sb.append(" from PermissionAssignInfo pa");
 		sb.append(" left join pa.permission p");
-		sb.append(" where p.id is not null");
+		sb.append(" where p.id is not null and p.url is not null");
 		List params = new ArrayList();
 		if(!BaseUtil.isEmpty(targetId)){
 			sb.append(" and pa.targetId=?");

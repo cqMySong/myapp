@@ -129,6 +129,7 @@ public class WebContextService extends AbstractBaseService{
 				Map permItem = (Map)perms.get(i);
 				if(permItem!=null&&permItem.size()>0){
 					String url = (String)permItem.get("url");
+					if(BaseUtil.isEmpty(url)) continue;
 					Map item = new HashMap();
 					if(url.indexOf(",")>0){
 						String[] urls = url.split(",");

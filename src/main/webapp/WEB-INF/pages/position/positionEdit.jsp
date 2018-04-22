@@ -114,16 +114,27 @@
 	var addRowUrl = webUtil.toUrl('base/jobdutys/treeShow'); 
 	var addRowTitle = '<i class="fa fa-windows"></i>&nbsp;工作职责选择';
 	function jobduty_addRow(tbl){
-		webUtil.openWin({title:addRowTitle,url:addRowUrl,width:800,height:600
+		webUtil.openWin({title:addRowTitle,url:addRowUrl,width:900,height:750
 			,btns:['确定','取消'],maxmin:false,btnCallBack:function(index,layerIndex,layero){
 				if(layero){
 					var iframe_win = $(layero).parent().find('#layui-layer-iframe'+layerIndex)[0].contentWindow;
 					var data = iframe_win.getData();
-					
-					var rowData = {};
-					var _jobduty = {id:data.id,name:data.name};
-					rowData.jobDuty = _jobduty;
-					tbl.addRow(rowData);
+					if(data){
+						if($.isArray(data)){
+							for(var i=0;i<data.length;i++){
+								var thisData = data[i];
+								var rowData = {};
+								var _jobduty = {id:thisData.id,name:thisData.name};
+								rowData.jobDuty = _jobduty;
+								tbl.addRow(rowData);
+							}
+						}else if($.isPlainObject(data)){
+							var rowData = {};
+							var _jobduty = {id:data.id,name:data.name};
+							rowData.jobDuty = _jobduty;
+							tbl.addRow(rowData);
+						}
+					}
 				}
 				return true;
 			}});

@@ -321,7 +321,7 @@ public class ProjectTotalPlanEditController extends BaseBillEditImportController
         			if(begDate.after(endDate)){
         				mesg +="<br/>计划开始必须小于计划结束日期，不允许导入!"; 
         			}else{
-        				rowMap.put("planDays", DateUtil.betweenDays(endDate, begDate));
+        				rowMap.put("planDays", DateUtil.betweenDays(endDate, begDate)+1);
         			}
         		}
         		

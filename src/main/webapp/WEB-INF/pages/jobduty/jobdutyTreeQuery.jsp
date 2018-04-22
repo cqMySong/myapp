@@ -20,9 +20,7 @@
   overflow:hidden;
   padding-left: 5px;
 }
-.fixed-table-pagination .pagination-detail{
-	width: 220px;
-}
+
 </style>
 
 </head>
@@ -49,13 +47,28 @@
 					</table>
 				</div>
 			</div>
+			<div class="panel" style="margin-bottom: 5px;">
+				<div class="panel-body" style="padding: 0px 2px 2px 2px;">
+					<table id="tblData">
+						 <thead>
+							<tr>
+								<th data-field="group_displayName" data-width="150">分组</th>
+								<th data-field="number" >编码</th>
+								<th data-field="name" >名称</th>
+								<th data-field="enabled" data-type="checkbox" data-width="80">启用</th>
+								<th data-field="remark" data-type="textarea" data-width="300">职责描述</th>
+							</tr>
+						</thead>
+					</table>
+				</div>
+			</div>
 		</div>
 	</div>
 </body>
 <%@include file="../inc/webBase.inc"%>
 <script type="text/javascript">
 var includeChild;
-var _height = 500;
+var _height = 650;
 function initHeadStyle(){
 	
 }
@@ -74,18 +87,23 @@ var tblMain;
 function tableParams(){
 	return JSON.stringify({tree:curTreeNode});
 }
-var def_table_options = {height:_height-80,striped:true,sortStable:true,showRefresh:false,clickToSelect:true
-		,cache:false,pageSize:20,showToggle:true,search:false,queryParams:tableParams
+var def_table_options = {height:_height-300,striped:true,sortStable:true,showRefresh:false,clickToSelect:true
+		,cache:false,pageSize:20,showToggle:false,search:false,queryParams:tableParams
 		,showColumns:false,idField:"id",mypagination:true,url:'base/jobdutys/query'};
+		
+var def_datatable_options = {height:225,striped:true,sortStable:true,showRefresh:false,clickToSelect:true
+		,cache:false,pageSize:20,showToggle:false,search:false
+		,showColumns:false,idField:"id",mypagination:false};
+		
 function loadTableData(){
 	tblMain.refreshData();
 }
 function getData(){
-	var selRows = tblMain.getSelections();
-	if(selRows&&selRows.length>0){
-		return selRows[0];
+	if(tblData){
+		return tblData.getData();
+	}else{
+		return [];
 	}
-	return {};
 }
 function initTree(){
 	var treeViewer = $('#tree_container').myTreeViewer(null);
@@ -106,15 +124,55 @@ function initTree(){
 		}
 	}});
 }
+var tblData ;
 function initTable(){
 	tblMain = $('#tblMain').myDataTable(def_table_options);
 	loadTableData();
+	tblData = $('#tblData').myDataTable(def_datatable_options);
+	
+	
+}
+function hasSel(key){
+	var hasSel = false;
+	if(tblData){
+		var datas = tblData.getData();
+		if(datas&&$.isArray(datas)){
+			for(var i=0;i<datas.length;i++){
+				var data = datas[i];
+				if(data.id === key){
+					hasSel = true;
+					break;
+				}
+			}
+		}
+	}
+	return hasSel;
+}
+function __addRow(row, $element, field){
+	 if(tblData){
+     	var id = row.id;
+     	if(!webUtil.isEmpty(id)&&hasSel(id)){
+     		webUtil.mesg('此数据['+row.name+']已经选择了，不允许重复选择!');
+     	}else{
+     		tblData.addRow(row);
+     	}
+     }
+}
+function __removeRow(row, $element, field){
+	 if(tblData){
+		 tblData.removeRow( $element);
+     }
 }
 $(document).ready(function() {
 	initHeadStyle();
     initTree();
     initTable();
-    
+    $('#tblMain').on('dbl-click-row.bs.table', function (e, row, $element, field) {
+    	__addRow(row, $element, field);
+    });
+    $('#tblData').on('dbl-click-row.bs.table', function (e, row, $element, field) {
+    	__removeRow(row, $element, field);
+    });
 });
 
 </script>

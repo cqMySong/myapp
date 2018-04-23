@@ -1,5 +1,7 @@
 package com.myapp.core.controller;
 
+import java.io.PrintWriter;
+import java.io.StringWriter;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -9,6 +11,7 @@ import java.util.Map;
 import org.hibernate.Criteria;
 import org.hibernate.criterion.Order;
 import org.hibernate.criterion.Restrictions;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -146,19 +149,25 @@ public abstract class BaseListController extends BasePageListController {
 			if(!BaseUtil.isEmpty(billId)){
 				if(billId.indexOf(",")<0){
 					getService().deleteEntity(billId);
+					setInfoMesg("数据删除成功!");
 				}else{
 					String[] billIds = billId.split(",");
 					for(int i=0;i<billIds.length;i++){
 						getService().deleteEntity(billIds[i]);
 					}
 				}
-				setInfoMesg("数据删除成功!");
 			}else{
 				setErrorMesg("单据id为空，无法完成删除操作!");
 			}
 		} catch (Exception e) {
-			e.printStackTrace();
-			setExceptionMesg(e.getMessage());
+			 StringWriter out = new StringWriter();
+			 e.printStackTrace(new PrintWriter(out));
+			 String msg = out.toString();
+			 log.error(msg);
+			 if(msg.length()>100){
+				 msg = msg.substring(0, 100)+"...(详细错误请参加系统后台日志)";
+			 }
+			 setExceptionMesg("删除异常:"+msg);
 		}
 		return ajaxModel();
 	}

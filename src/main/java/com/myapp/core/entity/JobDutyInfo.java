@@ -27,7 +27,7 @@ public class JobDutyInfo extends CoreBaseDataInfo {
 	private JobDutyGroupInfo group;//分组
 	
 	@OneToOne(fetch=FetchType.LAZY)
-	@JoinColumn(name = "fshortCutMenu")
+	@JoinColumn(name = "fshortCutMenu",foreignKey=@ForeignKey(value=ConstraintMode.NO_CONSTRAINT))
 	public PermissionInfo getShortCutMenu() {
 		return shortCutMenu;
 	}

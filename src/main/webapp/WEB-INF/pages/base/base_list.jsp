@@ -277,19 +277,20 @@ ListUI.prototype = {
 			if(!webUtil.isEmpty(_selRows)&&_selRows.length>0){
 				webUtil.showConfirm({title:"删除提醒",content:"你将删除["+_selRows.length+"]条记录信息，是否继续?",callBack:function(ok){
 					if(ok){
-						var seleIds = "";
+						var _thisURL = $thisList.baseUrl+'/remove';
+						var rt = 0;
 						for(var i=0;i<_selRows.length;i++){
 							var _thisRowData = _selRows[i];
-							if(i>0) seleIds+=',';
-							seleIds+= _thisRowData[$thisList.pkCol];
+							webUtil.ajaxData({url:_thisURL,async:false,data:{id:_thisRowData[$thisList.pkCol]},success:function(data){
+								rt+=1;
+							}});
 						}
-						var _thisURL = $thisList.baseUrl+'/remove';
-						var _data = {};
-						_data.id = seleIds;
-						//同步删除操作
-						webUtil.ajaxData({url:_thisURL,async:false,data:_data,success:function(data){
+						if(rt>0){
+							if(_selRows.length>1){
+								webUtil.mesg('成功删除['+rt+']条记录信息!');
+							}
 							$thisList.executeQuery();
-						}});
+						}
 					}
 				}});
 			}else{

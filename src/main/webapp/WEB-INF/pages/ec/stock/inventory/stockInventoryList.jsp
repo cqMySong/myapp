@@ -2,7 +2,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<title>库存盘存</title>
+<title>盘存记录</title>
 </head>
 <script type="text/javascript">
 </script>
@@ -59,7 +59,7 @@
 			var treeNode2QueryProp = ["id","name","number","longNumber","type"];
 			var height = top.getTopMainHeight()-50;
 			var winHeight = height+150;
-			var editWin ={title:'库存盘存',width:1200,height:winHeight>800?800:winHeight};
+			var editWin ={title:'盘存记录',width:1200,height:winHeight>800?800:winHeight};
 			var treeOpt = {
 					setting:{
 						data: {

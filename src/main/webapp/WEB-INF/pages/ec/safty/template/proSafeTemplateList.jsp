@@ -7,7 +7,7 @@
 <script type="text/javascript">
 </script>
 <body style="padding: 5px;">
-	<div id="table-toolbar" class="panel" style="height:42px;padding-top: 2px;">
+	<div id="table-toolbar" class="panel" style="height:40px;padding-top: 1px;margin-bottom: 5px;">
 		<button class="btn btn-success" type="button" id="jobRequire">
 			<span class="fa fa-file-o"></span>&nbsp;工作要求</button>
 	</div>
@@ -62,23 +62,23 @@
 
 	$(document).ready(function() {
 			var treeNode2QueryProp = ["id","name","number","longNumber","type"];
-			var editWin ={title:'项目安全样板',width:1200,height:(window.outerHeight-260)};
+        	var height = top.getTopMainHeight()-50;
+			var editWin ={title:'项目安全样板',width:1200,height:((height+100)>800?800:(height+100))};
 			var treeOpt = {
 					setting:{
 						data: {
 							simpleData: {enable:true,idKey: "id", pIdKey: "parentId",rootPId: ''}
 						}
 					}};
-			var height = window.outerHeight-305;
-			thisOrgList = $('body').treeListUI({tableEl:'#tblMain',treeUrl:'ec/basedata/projects/projectTree',baseUrl:'ec/safe/templates',title:'项目工程',height:(height+42),
+			thisOrgList = $('body').treeListUI({tableEl:'#tblMain',treeUrl:'ec/basedata/projects/projectTree',baseUrl:'ec/safe/templates',title:'项目工程',height:height,
 							treeContainer:"#tree_container",editWin:editWin,toolbar:"#table-toolbar",searchParams:{includeChild:true},treeOpt:treeOpt
-							,treeNode2QueryProp:treeNode2QueryProp,extendTableOptions:{toolbar:'#tblMain_toolbar',height:height,sortStable:false,rowStyle:changeBgColor}});
+							,treeNode2QueryProp:treeNode2QueryProp,extendTableOptions:{toolbar:'#tblMain_toolbar',height:height-45,sortStable:false,rowStyle:changeBgColor}});
 			thisOrgList.onLoad();
 			$('#jobRequire').on('click',function(){
                 var _selRows = thisOrgList.listUI.getSelectRow();
                 if(!webUtil.isEmpty(_selRows)&&_selRows.length>0){
                     var _thisRowData = _selRows[0];
-                    var _win = $.extend(true,{},{title:'工作要求',width:1200,height:500,btns:[]});
+                    var _win = $.extend(true,{},{title:'工作要求',width:1200,height:((height+100)>800?800:(height+100)),btns:[]});
                     _win.title = _win.title+'-确认';
                     _win.url =  webUtil.toUrl('ec/safe/templates/job/require');
                     _win.uiParams = {proSafeTemplateId:webUtil.uuIdReplaceID(_thisRowData.id)};

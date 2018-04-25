@@ -74,7 +74,7 @@ function treeOnClick(event, treeId, treeNode){
 }
 var tblMain;
 function tableParams(){
-	return JSON.stringify({tree:curTreeNode});
+	return JSON.stringify({tree:curTreeNode,wbsType:"${wbsType}"});
 }
 var def_table_options = {height:_height-80,striped:true,sortStable:true,showRefresh:false,clickToSelect:true
 		,cache:false,pageSize:20,showToggle:true,search:false,queryParams:tableParams

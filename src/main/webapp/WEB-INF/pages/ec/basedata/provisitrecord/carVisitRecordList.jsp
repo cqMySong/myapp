@@ -2,7 +2,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<title>到访车辆记录</title>
+<title>门岗车辆出入记录</title>
 </head>
 <script type="text/javascript">
 </script>

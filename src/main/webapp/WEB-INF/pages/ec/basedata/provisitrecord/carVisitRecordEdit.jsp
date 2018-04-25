@@ -3,7 +3,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-<title>到访车辆记录</title>
+<title>门岗车辆出入记录</title>
 </head>
 <style type="text/css">
 </style>

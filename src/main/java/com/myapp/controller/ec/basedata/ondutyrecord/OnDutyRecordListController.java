@@ -37,7 +37,7 @@ import com.myapp.service.ec.basedata.OnDutyRecordService;
  *
  *-----------MySong---------------
  */
-@PermissionAnn(name="系统管理.现场管理.基础数据.安保值班记录",number="app.ec.basedata.ondutyrecord")
+@PermissionAnn(name="系统管理.现场管理.基础数据.安保人员值班安排及值班记录表",number="app.ec.basedata.ondutyrecord")
 @Controller
 @RequestMapping("ec/basedata/ondutyrecords")
 public class OnDutyRecordListController extends BaseListController {
@@ -98,7 +98,7 @@ public class OnDutyRecordListController extends BaseListController {
 	}
 	
 	public String getHeadTitle() {
-		return "安保值班记录";
+		return "安保人员值班安排及值班记录表";
 	}
 	
 	public List<ExcelExportEntity> getExportHeader() {

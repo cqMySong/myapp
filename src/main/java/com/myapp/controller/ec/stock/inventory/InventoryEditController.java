@@ -34,11 +34,11 @@ import java.util.*;
 
 /**
  * @path：com.myapp.controller.ec.stock.inventory
- * @description：库存盘存
+ * @description：盘存记录
  * @author ： ly
  * @date: 2017-07-30 14:49
  */
-@PermissionAnn(name="系统管理.现场管理.库存管理.库存盘存",number="app.ec.stock.inventory")
+@PermissionAnn(name="系统管理.现场管理.库存管理.盘存记录",number="app.ec.stock.inventory")
 @Controller
 @RequestMapping("ec/stock/inventory")
 public class InventoryEditController extends BaseBillEditController {

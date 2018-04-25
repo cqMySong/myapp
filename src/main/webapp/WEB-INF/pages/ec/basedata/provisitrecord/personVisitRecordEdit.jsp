@@ -3,7 +3,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-<title>到访人员记录</title>
+<title>门岗人员出入记录表</title>
 </head>
 <style type="text/css">
 </style>
@@ -120,7 +120,7 @@
 
 	$(document).ready(function() {
 		var editUI = $('#editPanel').editUI({
-			title : "到访人员记录",
+			title : "门岗人员出入记录",
 			baseUrl : "ec/basedata/personvisitrecord",
 			toolbar : "#table-toolbar",
 			form : {

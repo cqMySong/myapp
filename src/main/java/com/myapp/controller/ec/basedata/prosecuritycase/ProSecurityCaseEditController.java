@@ -26,7 +26,7 @@ import com.myapp.service.ec.basedata.ProSecurityCaseService;
  * @system: 项目安保预案
  *-----------MySong---------------
  */
-@PermissionAnn(name="系统管理.现场管理.基础数据.安保预案",number="app.ec.basedata.prosecuritycase")
+@PermissionAnn(name="系统管理.现场管理.基础数据.安保人员值班记录",number="app.ec.basedata.prosecuritycase")
 @Controller
 @RequestMapping("ec/basedata/prosecuritycase")
 public class ProSecurityCaseEditController extends BaseEditController{

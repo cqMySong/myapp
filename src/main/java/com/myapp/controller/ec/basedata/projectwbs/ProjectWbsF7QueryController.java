@@ -12,6 +12,7 @@ import org.hibernate.criterion.Order;
 import org.hibernate.criterion.Restrictions;
 import org.hibernate.criterion.SimpleExpression;
 import org.springframework.stereotype.Controller;
+import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
@@ -114,6 +115,18 @@ public class ProjectWbsF7QueryController extends BasePageListController {
 		SimpleExpression se = Restrictions.eq("id","xyz");
 		if(!BaseUtil.isEmpty(serach)){
 			Map searchMap = JSONObject.parseObject(serach, new HashMap().getClass());
+			Object wbsType = searchMap.get("wbsType");
+			if(wbsType!=null){
+				String wbsTypeStr = wbsType.toString();
+				if(!StringUtils.isEmpty(wbsTypeStr)){
+					String[] wbsTypeArr = wbsTypeStr.split(",");
+					Object[] wbsTypeEnum = new Object[wbsTypeArr.length];
+					for(int i=0;i<wbsTypeArr.length;i++){
+						wbsTypeEnum[i] = EnumUtil.getEnum(ProWbsType.class.getName(),wbsTypeArr[i]);
+					}
+					query.add(Restrictions.in("wbsType",wbsTypeEnum));
+				}
+			}
 			Object objTree = searchMap.get("tree");
 			if(objTree!=null){
 				Map treeMap = JSONObject.parseObject(objTree.toString(), new HashMap().getClass());

@@ -26,11 +26,11 @@ import java.util.Map;
 
 /**
  * @path：com.myapp.controller.ec.stock.inventory
- * @description：盘存信息
+ * @description：盘存记录
  * @author ： ly
  * @date: 2017-08-28 21:02
  */
-@PermissionAnn(name="系统管理.现场管理.库存管理.库存盘存",number="app.ec.stock.inventory")
+@PermissionAnn(name="系统管理.现场管理.库存管理.盘存记录",number="app.ec.stock.inventory")
 @Controller
 @RequestMapping("ec/stock/inventories")
 public class InventoryListController extends BaseListController {

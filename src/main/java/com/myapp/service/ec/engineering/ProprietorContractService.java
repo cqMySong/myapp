@@ -23,7 +23,7 @@ public class ProprietorContractService extends BaseInterfaceService<ProprietorCo
      */
     public List queryByProjectAndType(String projectId,ProprietorContractType type){
         String hql = "select pci.rangeValuation as rangeValuation,pci.amount as amount," +
-                "pci.name as name,pci.id,pci.basisValuation as basisValuation " +
+                "pci.name as name,pci.id as id,pci.basisValuation as basisValuation " +
                 "from ProprietorContractInfo pci where pci.project.id = ? " +
                 "and pci.proprietorContractType=? order by pci.name";
         return findByHQL(hql,new Object[]{projectId, type});

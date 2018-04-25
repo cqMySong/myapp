@@ -3,14 +3,14 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-	<title>业主合同</title>
+	<title>工程预结</title>
 </head>
 <style type="text/css">
 </style>
 <script type="text/javascript">
 
 </script>
-<body style="padding: 5px;">
+<body style="padding: 5px;" class="panel">
 <div id="editPanel" class="myMainContent panel">
 	<div id="table-toolbar"></div>
 	<form id="editForm">

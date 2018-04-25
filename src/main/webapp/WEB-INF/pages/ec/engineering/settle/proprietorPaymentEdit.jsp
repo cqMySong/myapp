@@ -3,14 +3,14 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-	<title>业主付款</title>
+	<title>工程付款</title>
 </head>
 <style type="text/css">
 </style>
 <script type="text/javascript">
 
 </script>
-<body style="padding: 5px;">
+<body style="padding: 5px;" class="panel">
 <div id="editPanel" class="myMainContent panel">
 	<div id="table-toolbar"></div>
 	<form id="editForm">
@@ -179,7 +179,7 @@
     }
     $(document).ready(function() {
         editUI = $('#editPanel').editUI({
-            title : "工程收款",billModel:2,
+            title : "工程付款",billModel:2,
             baseUrl : "ec/engineering/proprietorpayment",
             toolbar : "#table-toolbar",
             form : {
@@ -189,12 +189,14 @@
         editUI.onLoad();
         $("input[name='approvedAmount']").on('change',function(){
             if(!isNaN($("input[name='paymentAmount']").val())&&!isNaN($(this).val())){
-                $("input[name='actualRatio']").val($("input[name='paymentAmount']").val()/$(this).val());
+                $("input[name='actualRatio']").val(
+                    Number(parseFloat($("input[name='paymentAmount']").val(),10)/parseFloat($(this).val(),10)*100).toFixed(2));
 			}
 		});
         $("input[name='paymentAmount']").on('change',function(){
             if(!isNaN($("input[name='approvedAmount']").val())&&!isNaN($(this).val())){
-                $("input[name='actualRatio']").val($(this).val()/$("input[name='paymentAmount']").val());
+                $("input[name='actualRatio']").val(
+                    Number(parseFloat($(this).val(),10)/parseFloat($("input[name='approvedAmount']").val(),10)*100).toFixed(2));
             }
         });
     })

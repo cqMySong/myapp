@@ -127,7 +127,7 @@
                         strContent+="<tr>" +
                             "<td>"+v["name"]+"</td>" +
 							"<td colspan='4'>"+v["rangeValuation"]+"</td>" +
-							"<td colspan='2'>"+v["amount"]+"</td>" +
+							"<td colspan='2'><a href=\"javascript:webUtil.showAttach('"+v["id"]+"','"+v["name"]+"');\">"+v["amount"]+"</a></td>" +
                             "<td colspan='2'>"+v["basisValuation"]+"</td>" +
 							"</tr>";
                         totalBudgetAmount+=parseFloat(v["amount"]);
@@ -149,7 +149,7 @@
                         strContent+="<tr>" +
                             "<td>"+v["name"]+"</td>" +
                             "<td colspan='4'>"+v["chargingContent"]+"</td>" +
-                            "<td colspan='2'>"+v["amount"]+"</td>" +
+                            "<td colspan='2'><a href=\"javascript:webUtil.showAttach('"+v["id"]+"','"+v["name"]+"');\">"+v["amount"]+"</a></td>" +
                             "<td colspan='2'>"+chargingBasis(v["chargingBasis"])+"</td>" +
                             "</tr>";
                         totalVisaAmount+=parseFloat(v["amount"]);
@@ -177,10 +177,10 @@
                             "<td>"+v["name"]+"</td>" +
                             "<td colspan='2'>"+deliveryDate.format("yyyy-MM-dd")+"</td>" +
                             "<td colspan='2'>"+v["deliveryAmount"]+"</td>" +
-                            "<td>"+v["approvedAmount"]+"</td>" +
-                            "<td>"+v["paymentAmount"]+"</td>" +
-                            "<td>"+v["actualRatio"]+"</td>" +
-                            "<td>"+v["paymentRatio"]+"</td>" +
+                            "<td><a href=\"javascript:webUtil.showAttach('"+v["id"]+"','"+v["name"]+"');\">"+v["approvedAmount"]+"</a></td>" +
+                            "<td><a href=\"javascript:webUtil.showAttach('"+v["id"]+"','"+v["name"]+"');\">"+v["paymentAmount"]+"</a></td>" +
+                            "<td>"+v["actualRatio"]+"%</td>" +
+                            "<td>"+v["paymentRatio"]+"%</td>" +
                             "</tr>";
                         totalDeliveryAmount+=parseFloat(v["deliveryAmount"]);
                         totalApprovedAmount+=parseFloat(v["approvedAmount"]);
@@ -202,7 +202,7 @@
                         strContent+="<tr>" +
                             "<td>"+v["name"]+"</td>" +
                             "<td colspan='4'>"+v["rangeValuation"]+"</td>" +
-                            "<td colspan='2'>"+v["amount"]+"</td>" +
+                            "<td colspan='2'><a href=\"javascript:webUtil.showAttach('"+v["id"]+"','"+v["name"]+"');\">"+v["amount"]+"</a></td>" +
                             "<td colspan='2'>"+v["basisValuation"]+"</td>" +
                             "</tr>";
                         totalBudgetAmount+=parseFloat(v["amount"]);

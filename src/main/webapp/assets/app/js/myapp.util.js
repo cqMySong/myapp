@@ -629,6 +629,17 @@ var webUtil = {
 			}
 		}
 		return iconHtml;
+	},
+     showAttach:function(bid,title,operate){
+		if(webUtil.isEmpty(bid)) return;
+		if(webUtil.isEmpty(title)) title = '单据';
+		if(webUtil.isEmpty(operate)) operate='view';
+
+		var attachUrl = webUtil.toUrl('base/attach')+'/toAttach';
+		var _win = {url:attachUrl,maxmin:false,title:title+'-附件管理'};
+		_win.uiParams = 'billId='+bid+'&operate='+operate;
+		_win.btns = ['关闭'];
+		webUtil.openWin(_win);
 	}
 };
 

@@ -3,7 +3,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-	<title>项目安全样板一览表</title>
+	<title>安全、文明施工样板规划、实施一览表</title>
 	<style type="text/css">
 		.mainContrainer {
 			width: 100%;

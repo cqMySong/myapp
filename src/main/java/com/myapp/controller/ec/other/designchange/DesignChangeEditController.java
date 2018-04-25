@@ -19,7 +19,7 @@ import com.myapp.enums.ec.DisclosureType;
 import com.myapp.service.ec.other.DesignChangeService;
 
 
-@PermissionAnn(name="系统管理.现场管理.其他管理.设计变更(洽商)",number="app.ec.other.designchange")
+@PermissionAnn(name="系统管理.现场管理.其他管理.设计变更（洽商）台账",number="app.ec.other.designchange")
 @Controller
 @RequestMapping("ec/other/designchange")
 public class DesignChangeEditController extends BaseBillEditController {

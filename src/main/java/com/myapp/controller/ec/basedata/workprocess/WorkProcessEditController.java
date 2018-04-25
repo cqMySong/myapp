@@ -65,6 +65,7 @@ public class WorkProcessEditController extends BaseEditController{
 		workProcessInfo.setWorkType(WorkType.SCHEUAL);
 		workProcessInfo.setCreateDate(new Date());
 		workProcessInfo.setCreator(getCurUser());
+		workProcessInfo.setName("项目主要问题处理摘要");
 		return workProcessInfo;
 	}
 	@Override

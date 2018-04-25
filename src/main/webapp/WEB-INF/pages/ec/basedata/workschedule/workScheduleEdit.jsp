@@ -24,8 +24,10 @@
 				</div>
 				<div class="col-sm-6">
 					<div class="input-group">
-						<span class="input-group-addon lable">工作安排名称</span>
-						<input name="name" class="require input-item form-control"  />
+						<span class="input-group-addon lable">工程项目</span>
+						<input name="project" class="require input-item form-control read"
+							   data-opt="{type:'f7',uiWin:{title:'工程项目',height:600,width:300,url:'ec/basedata/project'}}" />
+						<input name="name" type="hidden" class="input-item form-control require" />
 					</div>
 				</div>
 			</div>
@@ -101,15 +103,6 @@
 					<div class="input-group">
 						<span class="input-group-addon lable">备注</span>
 						<textarea name="remark" class="input-item form-control" rows="2"></textarea>
-					</div>
-				</div>
-			</div>
-			<div class="row mt10">
-				<div class="col-sm-6">
-					<div class="input-group">
-						<span class="input-group-addon lable">工程项目</span> 
-						<input name="project" class="require input-item form-control read" 
-							data-opt="{type:'f7',uiWin:{title:'工程项目',height:600,width:300,url:'ec/basedata/project'}}" />
 					</div>
 				</div>
 			</div>

@@ -22,7 +22,7 @@ import java.util.List;
  * @author :ly
  * @date:2017-10-25
  */
-@PermissionAnn(name="系统管理.现场管理.基础数据.场地移交",number="app.ec.basedata.sitetransfer")
+@PermissionAnn(name="系统管理.现场管理.基础数据.场地移交协议",number="app.ec.basedata.sitetransfer")
 @Controller
 @RequestMapping("ec/basedata/sitetransfer")
 public class SiteTransferEditController extends BaseBillEditController {

@@ -19,7 +19,7 @@ import java.util.Map;
  * @system: 项目级资料目录 -原材料检查
  *-----------MySong---------------
  */
-@PermissionAnn(name="系统管理.现场管理.项目资料目录.原材料检查",number="app.ec.proresourcedata.materialinspection")
+@PermissionAnn(name="系统管理.现场管理.项目资料目录.材料汇总表",number="app.ec.proresourcedata.materialinspection")
 @Controller
 @RequestMapping("ec/proresourceitem/materialinspections")
 public class ProMaterialInspectionListController extends ProResourceItemBaseListController {

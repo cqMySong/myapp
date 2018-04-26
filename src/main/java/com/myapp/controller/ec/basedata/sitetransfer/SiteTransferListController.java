@@ -19,7 +19,7 @@ import java.util.List;
  * @author ： ly
  * @date: 2017-08-25 17:28
  */
-@PermissionAnn(name="系统管理.现场管理.基础数据.场地移交",number="app.ec.basedata.sitetransfer")
+@PermissionAnn(name="系统管理.现场管理.基础数据.场地移交协议",number="app.ec.basedata.sitetransfer")
 @Controller
 @RequestMapping("ec/basedata/sitetransfers")
 public class SiteTransferListController extends BaseListController {

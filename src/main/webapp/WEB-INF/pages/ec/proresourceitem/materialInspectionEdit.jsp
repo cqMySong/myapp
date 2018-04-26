@@ -3,7 +3,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<title>原材料检查</title>
+<title>材料汇总表</title>
 </head>
 <style type="text/css">
 </style>
@@ -76,7 +76,7 @@
 	}
 	$(document).ready(function() {
 		editUI = $('#editPanel').editUI({
-			title : "原材料检查",
+			title : "材料汇总",
 			baseUrl : "ec/proresourceitem/materialinspection",
 			toolbar : "#table-toolbar",
 			form : {

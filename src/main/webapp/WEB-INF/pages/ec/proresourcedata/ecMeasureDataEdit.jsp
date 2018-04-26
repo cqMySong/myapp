@@ -3,14 +3,14 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<title>施工实测实量目录</title>
+<title>实测实量记录表</title>
 </head>
 <style type="text/css">
 </style>
 <script type="text/javascript">
 	
 </script>
-<body style="padding: 5px;">
+<body style="padding: 5px;" class="panel">
 		<div id="editPanel" class="myMainContent panel">
 		<div id="table-toolbar"></div>
 		<form id="editForm">
@@ -70,7 +70,7 @@
 	}
 	$(document).ready(function() {
 		editUI = $('#editPanel').editUI({
-			title : "施工实测实量目录",
+			title : "实测实量记录",
 			baseUrl : "ec/proresourcedata/ecmeasuredata",
 			toolbar : "#table-toolbar",
 			form : {

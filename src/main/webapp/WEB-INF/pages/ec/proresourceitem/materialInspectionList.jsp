@@ -2,14 +2,14 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<title>原材料检查</title>
+<title>材料汇总表</title>
 </head>
 <script type="text/javascript">
 </script>
 <body style="padding: 5px;">
 	<div id="table-toolbar" class="panel" style="height:40px;padding-top: 1px;margin-bottom: 5px;">
 		<button class="btn btn-success" type="button" id="batchimp">
-			<span class="fa fa-file-o"></span>&nbsp;原材料检查标准导入</button>
+			<span class="fa fa-file-o"></span>&nbsp;材料汇总标准导入</button>
 	</div>
 	<div class="mainContrainer">
 		<div class="leftContainer" id="tree_container"></div>
@@ -87,7 +87,7 @@ function getAllChildrenNodes(treeNode,result){
 }
 $(document).ready(function() {
      var treeNode2QueryProp = ["id","name","number","longNumber","type"];
-     var editWin ={title:'原材料检查',width:620,height:300,id:"proskillrecitemdata_tab"};
+     var editWin ={title:'材料汇总',width:620,height:300,id:"proskillrecitemdata_tab"};
      var treeOpt = {setting:{data: {
          	simpleData: {enable:true,idKey: "id", pIdKey: "parentId",rootPId: ''}
     	 }}};
@@ -103,7 +103,7 @@ $(document).ready(function() {
              webUtil.mesg('请先选择工程项目，然后才能做导入操作!');
              return false;
          }
-         var _win = $.extend(true,{},{title:'原材料检查导入',width:900,height:570,
+         var _win = $.extend(true,{},{title:'材料汇总导入',width:900,height:570,
              btns:['确定','取消'],btnCallBack:function(index,layerIndex,layero){
                  if(layero){
                      if(index==1){

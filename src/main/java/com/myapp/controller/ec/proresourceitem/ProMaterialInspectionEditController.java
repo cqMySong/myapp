@@ -16,7 +16,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
  * @system: 原材料检查
  *-----------MySong---------------
  */
-@PermissionAnn(name="系统管理.现场管理.项目资料目录.原材料检查",number="app.ec.proresourcedata.materialinspection")
+@PermissionAnn(name="系统管理.现场管理.项目资料目录.材料汇总表",number="app.ec.proresourcedata.materialinspection")
 @Controller
 @RequestMapping("ec/proresourceitem/materialinspection")
 public class ProMaterialInspectionEditController extends ProResourceItemBaseEditController {

@@ -10,7 +10,7 @@
 <script type="text/javascript">
 	
 </script>
-<body style="padding: 5px;">
+<body style="padding: 5px;" class="panel">
 		<div id="editPanel" class="myMainContent panel">
 		<div id="table-toolbar"></div>
 		<form id="editForm">
@@ -70,7 +70,7 @@
 	}
 	$(document).ready(function() {
 		editUI = $('#editPanel').editUI({
-			title : "项目安全资料目录",
+			title : "安全资料目录",
 			baseUrl : "ec/proresourcedata/safedata",
 			toolbar : "#table-toolbar",
 			form : {

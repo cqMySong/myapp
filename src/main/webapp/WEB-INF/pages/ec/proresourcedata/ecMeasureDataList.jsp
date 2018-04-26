@@ -2,7 +2,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<title>施工实测实量目录</title>
+<title>实测实量记录表</title>
 </head>
 <script type="text/javascript">
 </script>
@@ -55,7 +55,7 @@ function openUIParams(operate,params){
 }
 $(document).ready(function() {
      var treeNode2QueryProp = ["id","name","number","longNumber","type"];
-     var editWin ={title:'施工实测实量目录',width:620,height:300,id:"proecmeasuredata_tab"};
+     var editWin ={title:'实测实量记录',width:620,height:300,id:"proecmeasuredata_tab"};
      var treeOpt = {setting:{data: {
          	simpleData: {enable:true,idKey: "id", pIdKey: "parentId",rootPId: ''}
     	 }}};

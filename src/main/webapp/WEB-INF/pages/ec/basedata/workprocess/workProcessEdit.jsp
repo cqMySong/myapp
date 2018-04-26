@@ -24,8 +24,10 @@
 				</div>
 				<div class="col-sm-6">
 					<div class="input-group">
-						<span class="input-group-addon lable">处理名称</span>
-						<input name="name" class="require input-item form-control"  />
+						<span class="input-group-addon lable">工程项目</span>
+						<input name="project" class="require input-item form-control read"
+							   data-opt="{type:'f7',uiWin:{title:'工程项目',height:600,width:300,url:'ec/basedata/project'}}" />
+						<input name="name" type="hidden" class="require input-item form-control" value="项目主要问题处理摘要" />
 					</div>
 				</div>
 			</div>
@@ -84,11 +86,7 @@
 					</div>
 				</div>
 				<div class="col-sm-6">
-					<div class="input-group">
-						<span class="input-group-addon lable">工程项目</span>
-						<input name="project" class="require input-item form-control read"
-							   data-opt="{type:'f7',uiWin:{title:'工程项目',height:600,width:300,url:'ec/basedata/project'}}" />
-					</div>
+
 				</div>
 			</div>
 			<div class="row mt10">

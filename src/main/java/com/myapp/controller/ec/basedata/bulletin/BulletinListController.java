@@ -29,7 +29,7 @@ import java.util.Map;
  * @author ： ly
  * @date: 2017-08-28 21:02
  */
-@PermissionAnn(name="系统管理.现场管理.基础数据.通知通报",number="app.ec.basedata.bulletin")
+@PermissionAnn(name="系统管理.现场管理.基础数据.通知、通报台账",number="app.ec.basedata.bulletin")
 @Controller
 @RequestMapping("ec/basedata/bulletins")
 public class BulletinListController extends BaseListController {

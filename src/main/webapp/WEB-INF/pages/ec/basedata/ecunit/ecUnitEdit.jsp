@@ -3,7 +3,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<title>单位</title>
+<title>参建单位</title>
 </head>
 <style type="text/css">
 </style>
@@ -67,7 +67,7 @@
 
 	$(document).ready(function() {
 		var editUI = $('#editPanel').editUI({
-			title : "单位",
+			title : "参建单位",
 			baseUrl : "ec/basedata/ecunitEdit",
 			toolbar : "#table-toolbar",
 			form : {

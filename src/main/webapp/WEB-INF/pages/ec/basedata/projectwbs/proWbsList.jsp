@@ -9,7 +9,7 @@
 <body style="padding: 5px;">
 	<div id="table-toolbar" class="panel" style="height:40px;margin-bottom:5px;">
 		<button class="btn btn-success" type="button" id="batchimp">
-			<span class="fa fa-file-o"></span>&nbsp;工程分解结构标准导入</button>
+			<span class="fa fa-file-o"></span>&nbsp;项目分部分项工程标准导入</button>
 	
 	</div>
 	<div class="mainContrainer">
@@ -22,7 +22,7 @@
 					<table id="tblMain">
 						 <thead >
 							<tr>
-								<th data-field="proStruct_name">单位工程</th>
+								<th data-field="proStruct_name">(子)单位工程</th>
 								<th data-field="number" data-align="left">编码</th>
 								<th data-field="name">名称</th>
 								<th data-field="parent_number" data-align="left">上级编码</th>
@@ -49,7 +49,7 @@ function beforeAction(opt){
 		if(!webUtil.isEmpty(params)&&!webUtil.isEmpty(params.tree)
 				&&('proStructure'==params.tree.type)){
 		}else{
-			webUtil.mesg('请先选择的单位工程结构，然后才能做新增操作!');
+			webUtil.mesg('请先选择的(子)单位工程结构，然后才能做新增操作!');
 			return false;
 		}
 	}
@@ -75,7 +75,7 @@ function batchImpData(){
 			}
 		}});
 	}else{
-		webUtil.mesg('请先选择的工程项目的单位工程结构，然后才能做导入操作!');
+		webUtil.mesg('请先选择的工程项目的(子)单位工程结构，然后才能做导入操作!');
 	}
 }
 function getAllChildrenNodes(treeNode,result){
@@ -90,7 +90,7 @@ function getAllChildrenNodes(treeNode,result){
 }
 $(document).ready(function() {
      var treeNode2QueryProp = ["id","name","number","longNumber","type"];
-     var editWin ={title:'工程项目分解结构',width:620,height:450};
+     var editWin ={title:'项目分部分项工程',width:620,height:450};
      var treeOpt = {setting:{data: {
          	simpleData: {enable:true,idKey: "id", pIdKey: "parentId",rootPId: ''}
     	 }}};

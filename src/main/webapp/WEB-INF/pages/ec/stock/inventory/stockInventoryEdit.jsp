@@ -3,7 +3,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-	<title>库存盘存</title>
+	<title>盘存记录</title>
 </head>
 <style type="text/css">
 </style>
@@ -201,7 +201,7 @@
             ",toolbar:{title:'盘存物料列表',addBtn:null,removeBtn:null}}";
 		$("table.input-entry").attr("data-opt",entryOption);
         editUI = $('#editPanel').editUI({
-            title : "库存盘存",billModel:2,
+            title : "盘存记录",billModel:2,
             baseUrl : "ec/stock/inventory",
             toolbar : "#table-toolbar",
             form : {

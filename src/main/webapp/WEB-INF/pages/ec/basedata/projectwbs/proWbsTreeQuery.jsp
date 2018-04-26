@@ -2,7 +2,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<title>项目工程分解结构</title>
+<title>项目分部分项工程</title>
 <style type="text/css">
 .mainContrainer {
   width: 100%;
@@ -39,7 +39,7 @@
 					<table id="tblMain">
 						 <thead>
 							<tr>
-								<th data-field="proStruct_name">单位工程</th>
+								<th data-field="proStruct_name">(子)单位工程</th>
 								<th data-field="number" data-align="left">编码</th>
 								<th data-field="name">名称</th>
 								<th data-field="wbsType">结构类别</th>
@@ -74,7 +74,7 @@ function treeOnClick(event, treeId, treeNode){
 }
 var tblMain;
 function tableParams(){
-	return JSON.stringify({tree:curTreeNode});
+	return JSON.stringify({tree:curTreeNode,wbsType:"${wbsType}"});
 }
 var def_table_options = {height:_height-80,striped:true,sortStable:true,showRefresh:false,clickToSelect:true
 		,cache:false,pageSize:20,showToggle:true,search:false,queryParams:tableParams
@@ -91,7 +91,7 @@ function getData(){
 }
 function initTree(){
 	var treeViewer = $('#tree_container').myTreeViewer(null);
-	var treeViewer_opt = {theme:"panel-success",title:'项目单位工程结构',height:_height,search:true};
+	var treeViewer_opt = {theme:"panel-success",title:'(子)单位工程结构',height:_height,search:true};
 	treeViewer.init(treeViewer_opt);
 	
 	var treeOpt = {

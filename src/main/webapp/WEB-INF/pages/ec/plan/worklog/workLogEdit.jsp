@@ -269,7 +269,7 @@
 	
 	$(document).ready(function() {
 		editUI = $('#editPanel').editUI({
-			title : "项目工作日志",billModel:2,
+			title : "项目施工日志",billModel:2,
 			baseUrl : "ec/plan/worklog",
 			toolbar : "#table-toolbar",
 			form : {

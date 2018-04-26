@@ -3,7 +3,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<title>工程项目分解结构</title>
+<title>项目分部分项工程</title>
 </head>
 <style type="text/css">
 </style>
@@ -38,7 +38,7 @@
 				</div>
 				<div class="col-sm-6">
 					<div class="input-group">
-						<span class="input-group-addon lable">单位工程</span>
+						<span class="input-group-addon lable">(子)单位工程</span>
 						<input name="proStruct" class="input-item form-control require read" data-opt="{type:'f7'}" />
 					</div>
 				</div>
@@ -53,7 +53,7 @@
 				</div>
 				<div class="col-sm-6">
 					<div class="input-group">
-						<span class="input-group-addon lable">上级分解结构</span>
+						<span class="input-group-addon lable">上级分部分项工程</span>
 						<input name="parent" class="input-item form-control" 
 							data-opt="{type:'f7',dataChange:parent_dataChange,uiWin:{title:'项目单位工程',height:580,width:800,url:'ec/basedata/proWbsF7',uiParams:proWbs_params}}" />
 					</div>
@@ -124,7 +124,7 @@
 
 	$(document).ready(function() {
 		var editUI = $('#editPanel').editUI({
-			title : "工程项目分解结构",
+			title : "项目分部分项工程",
 			baseUrl : "ec/basedata/prowbs",
 			toolbar : "#table-toolbar",
 			form : {

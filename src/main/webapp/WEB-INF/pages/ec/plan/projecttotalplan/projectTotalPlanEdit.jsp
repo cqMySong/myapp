@@ -72,10 +72,10 @@
 							<tr>
 								<th data-field="proStructure" data-width="200" rowspan="2" data-type="f7" data-formatter="displayName" 
 										data-locked="true" data-align="left"
-										data-editor="{uiWin:{title:'单位工程',height:600,width:300,url:'ec/basedata/proStructureF7',uiParams:getParams}}">单位工程</th>
+										data-editor="{uiWin:{title:'单位工程',height:600,width:300,url:'ec/basedata/proStructureF7',uiParams:getParams}}">单位(子单位)工程</th>
 								<th data-field="projectWbs" rowspan="2"  data-type="f7" data-width="300" data-formatter="displayName"
 										data-align="left"
-										data-editor="{uiWin:{title:'工程分解结构',height:580,width:750,url:'ec/basedata/proWbsF7',uiParams:getParams}}">分解结构</th>
+										data-editor="{uiWin:{title:'分部分项工程',height:580,width:750,url:'ec/basedata/proWbsF7',uiParams:getParams}}">分部分项工程</th>
 										
 								<th data-field="proSub" rowspan="2"  data-type="f7" data-visible="false"
 										data-editor="{uiWin:{title:'项目分部工程',height:550,width:680,url:'ec/basedata/proSubF7',uiParams:getParams}}">项目分部工程</th>

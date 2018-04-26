@@ -2,7 +2,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<title>工程基础分解结构</title>
+<title>分部分项工程标准</title>
 </head>
 <script type="text/javascript">
 </script>
@@ -22,9 +22,9 @@
 					<table id="tblMain">
 						 <thead>
 							<tr>
-								<th data-field="parent_name" data-align="left">上级结构</th>
-								<th data-field="number" data-align="left">结构编码</th>
-								<th data-field="name" data-align="left">结构名称</th>
+								<th data-field="parent_name" data-align="left">上级工程</th>
+								<th data-field="number" data-align="left">工程编码</th>
+								<th data-field="name" data-align="left">工程名称</th>
 								<th data-field="wbsType" data-type="select" data-align="left">结构类型</th>
 								<th data-field="enabled" data-type="checkbox">启用</th>
 								<th data-field="remark" >备注</th>
@@ -60,7 +60,7 @@ $(document).ready(function() {
      includeChild = $('#includeChild').myComponet('checkbox',{method:'init',opt:_checkOpt});
      includeChild.setData(true);
      
-     var editWin ={title:'工程基础分解结构',width:620,height:400};
+     var editWin ={title:'分部分项工程标准',width:620,height:400};
      var height = top.getTopMainHeight()-48;
      thisOrgList = $('body').treeListUI({tableEl:'#tblMain',baseUrl:'ec/basedata/probasewbss',title:'组织信息',height:height,
     	 listModel:1,treeContainer:"#tree_container",editWin:editWin,toolbar:"#table-toolbar",searchParams:{includeChild:true}

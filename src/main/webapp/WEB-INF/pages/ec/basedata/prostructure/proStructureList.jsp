@@ -2,7 +2,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<title>项目分部分项</title>
+<title>项目(子)单位工程</title>
 </head>
 <script type="text/javascript">
 </script>
@@ -59,7 +59,7 @@ function getTreeQueryParams(){
 }
 $(document).ready(function() {
      var treeNode2QueryProp = ["id","name","number","longNumber","type"];
-     var editWin ={title:'项目工程结构',width:620,height:450};
+     var editWin ={title:'项目(子)单位工程',width:620,height:450};
      var treeOpt = {setting:{data: {
          	simpleData: {enable:true,idKey: "id", pIdKey: "parentId",rootPId: ''}
     	 }}};

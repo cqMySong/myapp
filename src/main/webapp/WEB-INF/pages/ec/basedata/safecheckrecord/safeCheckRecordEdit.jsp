@@ -3,7 +3,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-<title>安保监督检查 记录</title>
+<title>安保监督检查记录表</title>
 </head>
 <style type="text/css">
 </style>
@@ -98,7 +98,7 @@
 
 	$(document).ready(function() {
 		var editUI = $('#editPanel').editUI({
-			title : "安保监督检查 记录",
+			title : "安保监督检查记录",
 			baseUrl : "ec/basedata/safecheckrecord",
 			toolbar : "#table-toolbar",
 			form : {

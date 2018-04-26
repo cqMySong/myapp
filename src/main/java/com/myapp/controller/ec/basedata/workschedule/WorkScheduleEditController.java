@@ -66,6 +66,7 @@ public class WorkScheduleEditController extends BaseEditController{
 		workScheduleInfo.setWorkType(WorkType.SCHEUAL);
 		workScheduleInfo.setCreateDate(new Date());
 		workScheduleInfo.setCreator(getCurUser());
+		workScheduleInfo.setName("项目主要工作安排摘要");
 		return workScheduleInfo;
 	}
 	@Override

@@ -10,7 +10,7 @@
 <script type="text/javascript">
 
 </script>
-<body style="padding: 5px;">
+<body style="padding: 5px;" class="panel">
 <div id="editPanel" class="myMainContent panel">
 	<div id="table-toolbar"></div>
 	<form id="editForm">
@@ -19,14 +19,14 @@
 				<div class="input-group">
 					<span class="input-group-addon lable">分部名称</span>
 					<input type="text" name="branchBaseWbs" class="form-control input-item require"
-						   data-opt="{type:'f7',uiWin:{title:'分部名称',height:600,width:800,url:'ec/basedata/proWbsF7'}}">
+						   data-opt="{type:'f7',uiWin:{title:'分部名称',height:600,width:800,url:'ec/basedata/proWbsF7',uiParams:getParamsFB}}">
 				</div>
 			</div>
 			<div class="col-sm-3">
 				<div class="input-group">
 					<span class="input-group-addon lable">分项名称</span>
 					<input type="text" name="subentry" class="form-control input-item"
-						   data-opt="{type:'f7',uiWin:{title:'分项名称',height:600,width:800,url:'ec/basedata/proWbsF7'}}">
+						   data-opt="{type:'f7',uiWin:{title:'分项名称',height:600,width:800,url:'ec/basedata/proWbsF7',uiParams:getParamsFX}}">
 				</div>
 			</div>
 			<div class="col-sm-3">
@@ -126,9 +126,16 @@
 <%@include file="../../../base/base_edit.jsp"%>
 <script type="text/javascript">
     var editUI;
-    function getParams(){
+    function getParamsFB(){
         var pro = {};
         pro.projectId = $('input[name="project"]').myF7().getValue();
+        pro.wbsType="FBGC,ZFBGC";
+        return pro;
+    }
+    function getParamsFX(){
+        var pro = {};
+        pro.projectId = $('input[name="project"]').myF7().getValue();
+        pro.wbsType="FXGC";
         return pro;
     }
     /**

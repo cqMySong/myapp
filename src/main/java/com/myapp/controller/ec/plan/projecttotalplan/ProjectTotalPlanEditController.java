@@ -205,10 +205,10 @@ public class ProjectTotalPlanEditController extends BaseBillEditImportController
     
     public List<ExcelExportEntity> getExportHeader() {
     	List<ExcelExportEntity> headers = new ArrayList<ExcelExportEntity>();
-    	headers.add(stringEntity("名称", "proStructure_name","单位工程"));
-    	headers.add(stringEntity("编码", "proStructure_number","单位工程"));
-    	headers.add(stringEntity("名称", "projectWbs_name","工程分解结构"));
-    	headers.add(stringEntity("编码", "projectWbs_number","工程分解结构"));
+    	headers.add(stringEntity("名称", "proStructure_name","(子)单位工程"));
+    	headers.add(stringEntity("编码", "proStructure_number","(子)单位工程"));
+    	headers.add(stringEntity("名称", "projectWbs_name","分部分项工程"));
+    	headers.add(stringEntity("编码", "projectWbs_number","分部分项工程"));
     	headers.add(stringEntity("工作内容", "content"));
     	headers.add(stringEntity("施工人数", "proPersons"));
     	headers.add(stringEntity("工程量", "proQty"));
@@ -258,7 +258,7 @@ public class ProjectTotalPlanEditController extends BaseBillEditImportController
     			ProStructureInfo psInfo = null;
     			Object obj = rowMap.get("proStructure_name");
     			if(obj==null){
-        			mesg +="<br/>单位工程名称为空，不允许导入!"; 
+        			mesg +="<br/>(子)单位工程名称为空，不允许导入!"; 
         		}else{
         			String hql = "from ProStructureInfo where name=? and project.id=?";
         			List pms = new ArrayList();
@@ -271,14 +271,14 @@ public class ProjectTotalPlanEditController extends BaseBillEditImportController
         			}
         			psInfo = getService().getEntity(ProStructureInfo.class, hql, pms.toArray());
         			if(psInfo==null){
-        				mesg +="<br/>未找到名称为["+obj.toString()+"]的单位工程，不允许导入!"; 
+        				mesg +="<br/>未找到名称为["+obj.toString()+"]的(子)单位工程，不允许导入!"; 
         			}else{
         				rowMap.put("proStructure", getF7Map(psInfo,"id,name,displayName"));
         			}
         		}
         		obj = rowMap.get("projectWbs_name");
         		if(obj==null){
-        			mesg +="<br/>工程分解结构名称为空，不允许导入!"; 
+        			mesg +="<br/>项目分部分项工程名称为空，不允许导入!"; 
         		}else{
         			String hql = "from ProjectWbsInfo where name=? and project.id=?";
         			List pms = new ArrayList();
@@ -295,7 +295,7 @@ public class ProjectTotalPlanEditController extends BaseBillEditImportController
         			}
         			ProjectWbsInfo pwsInfo = getService().getEntity(ProjectWbsInfo.class, hql,pms.toArray());
         			if(pwsInfo==null){
-        				mesg +="<br/>未找到名称为["+obj.toString()+"]的工程分解结构，不允许导入!"; 
+        				mesg +="<br/>未找到名称为["+obj.toString()+"]的项目分部分项工程，不允许导入!"; 
         			}else{
         				rowMap.put("projectWbs", getF7Map(pwsInfo,"id,name,displayName"));
         			}

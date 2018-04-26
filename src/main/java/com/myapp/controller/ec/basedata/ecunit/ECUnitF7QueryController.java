@@ -50,7 +50,7 @@ public class ECUnitF7QueryController extends BaseF7QueryController {
 	}
 	
 	public String getUIWinTitle() {
-		return "单位";
+		return "参建单位";
 	}
 
 }

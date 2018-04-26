@@ -36,7 +36,7 @@ import com.myapp.service.ec.basedata.ProVisitRecordService;
  * @system: 项目安保预案
  *-----------MySong---------------
  */
-@PermissionAnn(name="系统管理.现场管理.基础数据.到访人员记录",number="app.ec.basedata.personvisitrecord")
+@PermissionAnn(name="系统管理.现场管理.基础数据.门岗人员出入记录表",number="app.ec.basedata.personvisitrecord")
 @Controller
 @RequestMapping("ec/basedata/personvisitrecords")
 public class PersonVisitRecordListController extends BaseListController {

@@ -86,8 +86,8 @@
 							,tableOpt:{editDataChanged:planItems_dataChanged,selectModel:2},addRow:tblAddRow}">
 						<thead>
 							<tr>
-								<th data-field="proStructure" data-width="200" rowspan="2" data-type="f7" data-formatter="displayName" data-locked="true" data-align="left">项目工程结构</th>
-								<th data-field="projectWbs" rowspan="2"  data-type="f7" data-width="300" data-formatter="displayName" data-locked="true" data-align="left">分解结构</th>
+								<th data-field="proStructure" data-width="200" rowspan="2" data-type="f7" data-formatter="displayName" data-locked="true" data-align="left">单位(子单位)工程</th>
+								<th data-field="projectWbs" rowspan="2"  data-type="f7" data-width="300" data-formatter="displayName" data-locked="true" data-align="left">分部分项工程</th>
 								<th data-field="proSub" rowspan="2" data-visible="false"  data-type="f7" data-locked="true">项目分部工程</th>
 								<th data-field="proSubItem" data-visible="false" rowspan="2" data-type="f7" data-locked="true">项目分项结构</th>
 								<th data-field="planContent" data-locked="true" rowspan="2" data-type="textarea">计划内容</th>

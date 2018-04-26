@@ -17,7 +17,7 @@ import com.myapp.entity.ec.basedata.ECUnitInfo;
 import com.myapp.enums.UnitType;
 import com.myapp.service.ec.basedata.ECUnitService;
 
-@PermissionAnn(name="系统管理.现场管理.基础数据.单位",number="app.ec.basedata.ecunit")
+@PermissionAnn(name="系统管理.现场管理.基础数据.参建单位",number="app.ec.basedata.ecunit")
 @Controller
 @RequestMapping("ec/basedata/ecunitEdit")
 public class ECUnitEditController extends BaseDataEditController {

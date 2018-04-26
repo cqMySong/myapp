@@ -24,7 +24,7 @@ import com.myapp.service.ec.basedata.ProStructureService;
  * @system: 
  *-----------MySong---------------
  */
-@PermissionAnn(name="系统管理.现场管理.基础数据.工程结构",number="app.ec.basedata.prostructure")
+@PermissionAnn(name="系统管理.现场管理.基础数据.(子)单位工程",number="app.ec.basedata.prostructure")
 @Controller
 @RequestMapping("ec/basedata/prostructure")
 public class ProStructureEditController extends BaseEditController{

@@ -22,7 +22,7 @@ public class ProprietorPaymentService extends BaseInterfaceService<ProprietorPay
      */
     public List queryByProject(String projectId){
         String hql = "select pyi.deliveryAmount as deliveryAmount,pyi.deliveryDate as deliveryDate," +
-                "pyi.name as name,pyi.id,pyi.approvedAmount as approvedAmount,pyi.paymentAmount as paymentAmount," +
+                "pyi.name as name,pyi.id as id,pyi.approvedAmount as approvedAmount,pyi.paymentAmount as paymentAmount," +
                 "pyi.actualRatio as actualRatio,pyi.paymentRatio as paymentRatio " +
                 "from ProprietorPaymentInfo pyi where pyi.project.id = ? " ;
         return findByHQL(hql,new Object[]{projectId});

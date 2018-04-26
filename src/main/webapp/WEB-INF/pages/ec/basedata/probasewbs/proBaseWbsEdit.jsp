@@ -2,7 +2,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<title>工程基础分解结构</title>
+<title>分部分项工程标准</title>
 </head>
 <style type="text/css">
 </style>
@@ -16,13 +16,13 @@
 			<div class="row">
 				<div class="col-sm-6">
 					<div class="input-group">
-						<span class="input-group-addon lable">结构编码</span> 
+						<span class="input-group-addon lable">工程编码</span> 
 						<input class="require input-item" name="number" type="text">
 					</div>
 				</div>
 				<div class="col-sm-6 mb15">
 					<div class="input-group">
-						<span class="input-group-addon lable">结构名称</span> 
+						<span class="input-group-addon lable">工程名称</span> 
 						<input name="name" class="input-item form-control">
 					</div>
 				</div>
@@ -30,7 +30,7 @@
 			<div class="row">
 				<div class="col-sm-6">
 					<div class="input-group">
-						<span class="input-group-addon lable">上级结构</span> 
+						<span class="input-group-addon lable">上级工程</span> 
 						<input name="parent" class="input-item form-control read" data-opt="{type:'f7'}" />
 						
 					</div>
@@ -84,7 +84,7 @@ function afterAction(_opt){
 	}
 }
 $(document).ready(function() {
-	var editUI = $('#editPanel').editUI({title:"工程基础分解结构",baseUrl:"ec/basedata/probasewbs",toolbar:"#table-toolbar",form:{el:"#editForm"}});
+	var editUI = $('#editPanel').editUI({title:"分部分项工程标准",baseUrl:"ec/basedata/probasewbs",toolbar:"#table-toolbar",form:{el:"#editForm"}});
 	editUI.onLoad();
 })
 </script>

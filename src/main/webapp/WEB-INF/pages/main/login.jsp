@@ -98,9 +98,7 @@ $(document).ready(function() {
 				if(code==0){
 					showMesg("登录成功!用户数据初始化中...");
 					var retData = data.data;
-					setTimeout(function(){
-						window.location.href = retData.indexUrl; 
-					},500)
+					window.location.href = retData.indexUrl; 
 				}else{
 					var mesg = data.statusMesg;
 					if(mesg){

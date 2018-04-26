@@ -2,7 +2,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<title>单位</title>
+<title>参建单位</title>
 </head>
 <style type="text/css">
 </style>
@@ -37,11 +37,11 @@ function beforeAction(opt){
 }
 
 function enableClick(btn){
-	alert(btn.text);
+	//alert(btn.text);
 }
 
 $(document).ready(function() {
-	var editWin ={title:'单位',width:620,height:360};
+	var editWin ={title:'参建单位',width:620,height:360};
 	listUI = $('#listPanel').listUI({tableEl:'#tblMain',listModel:1,baseUrl:'ec/basedata/ecunitList',editWin:editWin,toolbar:"#table-toolbar"});
 	listUI.onLoad();
 })

@@ -39,7 +39,7 @@ import com.myapp.service.ec.basedata.ProBaseWbsService;
  *
  *-----------MySong---------------
  */
-@PermissionAnn(name="系统管理.现场管理.基础数据.工程基础分解结构",number="app.ec.basedata.probasewbs")
+@PermissionAnn(name="系统管理.现场管理.基础数据.分部分项工程标准",number="app.ec.basedata.probasewbs")
 @Controller
 @RequestMapping("ec/basedata/probasewbss")
 public class ProBaseWbsListController extends BaseTreeListController {

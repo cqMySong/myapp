@@ -32,10 +32,10 @@ import com.myapp.service.ec.basedata.SafeCheckRecordService;
  * ©MySong基础框架搭建
  * @author mySong @date 2017年11月2日 
  * @system:
- * 安保监督检查
+ * 安保监督检查记录表
  *-----------MySong---------------
  */
-@PermissionAnn(name="系统管理.现场管理.基础数据.安保监督检查",number="app.ec.basedata.safecheckrecord")
+@PermissionAnn(name="系统管理.现场管理.基础数据.安保监督检查记录表",number="app.ec.basedata.safecheckrecord")
 @Controller
 @RequestMapping("ec/basedata/safecheckrecords")
 public class SafeCheckRecordListController extends BaseListController {

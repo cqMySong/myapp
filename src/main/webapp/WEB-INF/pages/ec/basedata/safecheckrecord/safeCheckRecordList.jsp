@@ -2,7 +2,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<title>安保监督检查</title>
+<title>安保监督检查记录表</title>
 </head>
 <script type="text/javascript">
 </script>

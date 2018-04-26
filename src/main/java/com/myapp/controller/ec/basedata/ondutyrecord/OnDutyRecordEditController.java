@@ -26,7 +26,7 @@ import com.myapp.service.ec.basedata.OnDutyRecordService;
  * @system:
  *-----------MySong---------------
  */
-@PermissionAnn(name="系统管理.现场管理.基础数据.安保值班记录",number="app.ec.basedata.ondutyrecord")
+@PermissionAnn(name="系统管理.现场管理.基础数据.安保人员值班安排及值班记录表",number="app.ec.basedata.ondutyrecord")
 @Controller
 @RequestMapping("ec/basedata/ondutyrecord")
 public class OnDutyRecordEditController extends BaseEditController{

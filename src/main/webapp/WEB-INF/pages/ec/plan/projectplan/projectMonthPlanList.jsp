@@ -49,8 +49,9 @@
 					<table id="tblMain">
 						  <thead >
 							<tr>
-								<th data-field="proStructureName" rowspan="2" width="150">项目工程结构</th>
-								<th data-field="proWbsName" rowspan="2" width="250">项目分解结构</th>
+								<th data-field="proStructureName" rowspan="2" width="150">单位(子单位)工程</th>
+								<th data-field="proWbsName" rowspan="2" width="250">项目分部分项工程</th>
+								
 								<th data-field="proSubName" data-visible="false" rowspan="2" width="100">项目分部工程</th>
 								<th data-field="proSubItemName" data-visible="false" rowspan="2" width="100">项目分项工程</th>
 								<th colspan="3">计划</th>

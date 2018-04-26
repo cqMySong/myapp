@@ -101,7 +101,7 @@
 
 	$(document).ready(function() {
 		var editUI = $('#editPanel').editUI({
-			title : "安保值班记录",
+			title : "安保人员值班安排及值班记录",
 			baseUrl : "ec/basedata/ondutyrecord",
 			toolbar : "#table-toolbar",
 			form : {

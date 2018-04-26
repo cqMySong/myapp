@@ -2,7 +2,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<title>项目工程分解结构标准导入</title>
+<title>项目分部分项工程标准导入</title>
 </head>
 <style type="text/css">
 .mainContrainer {
@@ -82,7 +82,7 @@
 	var treeUrl = 'ec/basedata/probasewbss/tree';
 	$(document).ready(function(){
 		leftTreeViewer = $('#allTreeItems').myTreeViewer(null);
-		leftTreeViewer.init({title:'工程分解结构标准',height:470});
+		leftTreeViewer.init({title:'项目分部分项工程标准',height:470});
 		leftTreeViewer.addRefreshBtn({clickFun:function(){
 			loadLeftTreeData();
 		}});

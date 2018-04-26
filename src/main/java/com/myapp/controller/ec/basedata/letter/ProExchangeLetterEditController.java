@@ -27,7 +27,7 @@ import com.myapp.service.ec.basedata.ProExchangeLetterService;
  * @system:项目往来单位函件
  *-----------MySong---------------
  */
-@PermissionAnn(name="系统管理.现场管理.函件管理.项目往来单位函件",number="app.ec.letter.proexchangeletter")
+@PermissionAnn(name="系统管理.现场管理.函件管理.往来单位函件台账",number="app.ec.letter.proexchangeletter")
 @Controller
 @RequestMapping("ec/letter/proexchangeletter")
 public class ProExchangeLetterEditController extends BaseEditController{

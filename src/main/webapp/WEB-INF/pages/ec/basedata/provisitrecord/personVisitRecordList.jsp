@@ -2,7 +2,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<title>到访人员记录</title>
+<title>门岗人员出入记录表</title>
 </head>
 <script type="text/javascript">
 </script>
@@ -62,7 +62,7 @@ function getTreeQueryParams(){
 }
 $(document).ready(function() {
      var treeNode2QueryProp = ["id","name","number","longNumber","type"];
-     var editWin ={title:'到访人员记录',width:620,height:500};
+     var editWin ={title:'门岗人员出入记录',width:620,height:500};
      var treeOpt = {setting:{data: {
          	simpleData: {enable:true,idKey: "id", pIdKey: "parentId",rootPId: ''}
     	 }}};

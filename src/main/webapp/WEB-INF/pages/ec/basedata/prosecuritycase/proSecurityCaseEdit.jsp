@@ -3,7 +3,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-<title>重点要点部位安保预案</title>
+<title>安保人员值班记录</title>
 </head>
 <style type="text/css">
 </style>
@@ -84,7 +84,7 @@
 
 	$(document).ready(function() {
 		var editUI = $('#editPanel').editUI({
-			title : "安保预案",
+			title : "安保人员值班记录",
 			baseUrl : "ec/basedata/prosecuritycase",
 			toolbar : "#table-toolbar",
 			form : {

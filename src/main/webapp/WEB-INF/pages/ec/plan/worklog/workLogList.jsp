@@ -2,7 +2,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<title>项目总计划</title>
+<title>项目施工日志</title>
 </head>
 <script type="text/javascript">
 </script>

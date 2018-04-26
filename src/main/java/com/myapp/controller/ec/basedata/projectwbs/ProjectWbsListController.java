@@ -43,7 +43,7 @@ import com.myapp.service.ec.basedata.ProjectWbsService;
  * 工程项目分解结构
  *-----------MySong---------------
  */
-@PermissionAnn(name="系统管理.现场管理.基础数据.工程项目分解结构",number="app.ec.basedata.prowbs")
+@PermissionAnn(name="系统管理.现场管理.基础数据.项目分部分项工程",number="app.ec.basedata.prowbs")
 @Controller
 @RequestMapping("ec/basedata/prowbss")
 public class ProjectWbsListController extends BaseDataListController {

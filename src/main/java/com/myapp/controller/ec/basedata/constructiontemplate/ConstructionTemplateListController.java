@@ -1,17 +1,24 @@
 package com.myapp.controller.ec.basedata.constructiontemplate;
+import com.myapp.core.annotation.AuthorAnn;
 import com.myapp.core.annotation.PermissionAnn;
 import com.myapp.core.base.service.impl.AbstractBaseService;
 import com.myapp.core.controller.BaseDataListController;
 import com.myapp.core.enums.DataTypeEnum;
+import com.myapp.core.enums.UnitClass;
 import com.myapp.core.model.ColumnModel;
+import com.myapp.core.model.WebDataModel;
 import com.myapp.entity.ec.basedata.ProBaseWbsInfo;
 import com.myapp.entity.ec.basedata.ProjectInfo;
 import com.myapp.service.ec.basedata.ConstructionTemplateService;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.annotation.Resource;
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  *-----------MySong---------------
@@ -49,5 +56,21 @@ public class ConstructionTemplateListController extends BaseDataListController {
 		cols.add(new ColumnModel("templateType"));
 		cols.add(new ColumnModel("content"));
 		return cols;
+	}
+
+	@AuthorAnn(doPermission=false)
+	@RequestMapping(value="/treeData")
+	@ResponseBody
+	public WebDataModel treeData() {
+		List<Map<String,Object>> rootList = new ArrayList<>();
+		List items = constructionTemplateService.queryAllConstructionTemplate();
+		Map root = new HashMap();
+		root.put("id", "");
+		root.put("name", "施工样板种类");
+		root.put("open", true);
+		root.put("children", items);
+		rootList.add(root);
+		data = rootList;
+		return ajaxModel();
 	}
 }

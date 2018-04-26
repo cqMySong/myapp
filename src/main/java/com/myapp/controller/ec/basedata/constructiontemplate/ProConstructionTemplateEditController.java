@@ -1,11 +1,13 @@
 package com.myapp.controller.ec.basedata.constructiontemplate;
 
 import com.myapp.core.annotation.PermissionAnn;
+import com.myapp.core.annotation.PermissionItemAnn;
 import com.myapp.core.base.entity.CoreInfo;
 import com.myapp.core.base.service.impl.AbstractBaseService;
 import com.myapp.core.controller.BaseEditController;
 import com.myapp.core.enums.DataTypeEnum;
 import com.myapp.core.model.ColumnModel;
+import com.myapp.core.model.WebDataModel;
 import com.myapp.entity.ec.basedata.ConstructionTemplateInfo;
 import com.myapp.entity.ec.basedata.ProConstructionTemplateInfo;
 import com.myapp.entity.ec.basedata.ProjectInfo;
@@ -13,6 +15,8 @@ import com.myapp.service.ec.basedata.ConstructionTemplateService;
 import com.myapp.service.ec.basedata.ProConstructionTemplateService;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.annotation.Resource;
 import java.util.List;
@@ -57,4 +61,18 @@ public class ProConstructionTemplateEditController extends BaseEditController {
 		return cols;
 	}
 
+	@PermissionItemAnn(name="导入保存",number="batchSave")
+	@ResponseBody
+	@RequestMapping(value="/batch/import",method= RequestMethod.POST)
+	public WebDataModel batchImportSave(String structId, String structCode, String wbsIds) {
+		WebDataModel webDataModel = new WebDataModel();
+		try{
+			proConstructionTemplateService.batchSave(structId,getCurUser(),wbsIds);
+			webDataModel.setStatusCode(STATUSCODE_SUCCESS);
+		}catch (Exception e) {
+			e.printStackTrace();
+			setExceptionMesg(e.getMessage());
+		}
+		return webDataModel;
+	}
 }

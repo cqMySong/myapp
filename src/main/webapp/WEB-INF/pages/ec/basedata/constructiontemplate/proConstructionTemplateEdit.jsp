@@ -10,7 +10,7 @@
 <script type="text/javascript">
 
 </script>
-<body style="padding: 5px;">
+<body style="padding: 5px;" class="panel">
 <div id="editPanel" class="panel">
 	<div id="table-toolbar">
 	</div>
@@ -39,7 +39,7 @@
 			<div class="col-sm-6 mb15">
 				<div class="input-group">
 					<span class="input-group-addon lable">施工样板清单</span>
-					<input name="constructionTemplate" class="require input-item form-control"
+					<input name="constructionTemplateInfo" class="require input-item form-control"
 						   data-opt="{type:'f7',dataChange:constructionTemplateChange,uiWin:{title:'施工样板清单',height:580,width:800,url:'ec/basedata/constructiontemplateF7'}}"/>
 				</div>
 			</div>

@@ -1,12 +1,15 @@
 package com.myapp.controller.ec.basedata.constructiontemplate;
 import com.alibaba.fastjson.JSONObject;
 import com.myapp.core.annotation.PermissionAnn;
+import com.myapp.core.annotation.PermissionItemAnn;
 import com.myapp.core.base.service.impl.AbstractBaseService;
 import com.myapp.core.controller.BaseDataListController;
 import com.myapp.core.entity.basedate.DataGroupInfo;
 import com.myapp.core.enums.DataTypeEnum;
+import com.myapp.core.enums.PermissionTypeEnum;
 import com.myapp.core.model.ColumnModel;
 import com.myapp.core.util.BaseUtil;
+import com.myapp.core.util.WebUtil;
 import com.myapp.entity.ec.basedata.ProjectInfo;
 import com.myapp.service.ec.basedata.ConstructionTemplateService;
 import com.myapp.service.ec.basedata.ProConstructionTemplateService;
@@ -15,6 +18,7 @@ import org.hibernate.criterion.Restrictions;
 import org.hibernate.criterion.SimpleExpression;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.servlet.ModelAndView;
 
 import javax.annotation.Resource;
 import java.util.ArrayList;
@@ -82,5 +86,14 @@ public class ProConstructionTemplateListController extends BaseDataListControlle
 		cols.add(new ColumnModel("name"));
 		cols.add(new ColumnModel("number"));
 		return cols;
+	}
+
+	@PermissionItemAnn(name="施工样板清单目录导入",number="import",type= PermissionTypeEnum.FUNCTION)
+	@RequestMapping("/batch/import")
+	public ModelAndView forwardBatchImport(){
+		Map params = new HashMap();
+		toListUIParams(params);
+		params.put("uiCtx", WebUtil.UUID_ReplaceID(params.get("uiCtx").toString()));
+		return toPage("ec/basedata/constructiontemplate/proConstructionTemplateBatchTreeImport", params);
 	}
 }

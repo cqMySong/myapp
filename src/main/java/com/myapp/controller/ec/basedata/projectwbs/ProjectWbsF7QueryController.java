@@ -101,7 +101,7 @@ public class ProjectWbsF7QueryController extends BasePageListController {
 		cols.add(new ColumnModel("name"));
 		cols.add(new ColumnModel("number"));
 		cols.add(new ColumnModel("displayName"));
-		cols.add(new ColumnModel("proStruct",DataTypeEnum.F7,ProStructureInfo.class));
+		cols.add(new ColumnModel("proStruct",DataTypeEnum.F7,ProStructureInfo.class,"id,number,name,displayName"));
 		cols.add(new ColumnModel("project",DataTypeEnum.F7,ProjectInfo.class));
 		cols.add(new ColumnModel("parent",DataTypeEnum.F7,ProjectWbsInfo.class,"id,number"));
 		cols.add(new ColumnModel("wbsType",DataTypeEnum.ENUM,ProWbsType.class));

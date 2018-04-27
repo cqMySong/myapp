@@ -39,8 +39,8 @@
 					<table id="tblMain">
 						 <thead>
 							<tr>
-								<th data-field="proStruct_name" data-align="left" data-visible="false">(子)单位工程</th>
-								<th data-field="proStruct_displayName">(子)单位工程</th>
+								<th data-field="proStruct_name" data-align="left" data-visible="false">单位(子单位)工程</th>
+								<th data-field="proStruct_displayName">单位(子单位)工程</th>
 								<th data-field="number" data-align="left">编码</th>
 								<th data-field="name" data-visible="false" data-align="left">名称</th>
 								<th data-field="displayName">全名</th>

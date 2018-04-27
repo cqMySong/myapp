@@ -36,7 +36,7 @@
 				<div class="col-sm-6">
 					<div class="input-group">
 						<span class="input-group-addon lable">上级</span> 
-						<input name="parent" class="require input-item form-control" 
+						<input name="parent" class="input-item form-control" 
 							data-opt="{type:'f7',dataChange:parent_dataChange,uiWin:{title:'组织查询',height:550,width:800,url:'base/orgf7',params:'key=124&val=1344'}}" />
 						
 					</div>
@@ -52,13 +52,13 @@
 				<div class="col-sm-6">
 					<div class="input-group">
 						<span class="input-group-addon lable">地址</span> 
-							<input name="url" class="input-item require">
+							<input name="url" class="input-item">
 					</div>
 				</div>
 				<div class="col-sm-6 mb15">
 					<div class="input-group">
 		                <span class="input-group-addon lable">类型</span>
-		                <select name="type" class="input-item require form-control" 
+		                <select name="type" class="input-item form-control" 
 		                	data-opt="{type:'select',selected:'FUNCTION',url:'base/common/combox?enum=com.myapp.core.enums.PermissionTypeEnum'}">
 		                	</select>
 		              </div>

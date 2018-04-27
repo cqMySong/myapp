@@ -22,7 +22,7 @@
 					<table id="tblMain">
 						 <thead >
 							<tr>
-								<th data-field="proStruct_name">(子)单位工程</th>
+								<th data-field="proStruct_name">单位(子单位)工程</th>
 								<th data-field="number" data-align="left">编码</th>
 								<th data-field="name">名称</th>
 								<th data-field="parent_number" data-align="left">上级编码</th>

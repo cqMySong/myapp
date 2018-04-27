@@ -3,7 +3,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<title>项目(子)单位工程</title>
+<title>项目单位(子单位)工程</title>
 </head>
 <style type="text/css">
 </style>
@@ -95,7 +95,7 @@
 
 	$(document).ready(function() {
 		var editUI = $('#editPanel').editUI({
-			title : "项目工程结构",
+			title : "项目单位(子单位)工程",
 			baseUrl : "ec/basedata/prostructure",
 			toolbar : "#table-toolbar",
 			form : {

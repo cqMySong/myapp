@@ -103,7 +103,7 @@ function initGantView(){
 			//alert("data = "+data.label);
 		},
 		leftCols:[
-		          {text:'(子)单位工程',name:'dwgc',algin:'left',width:150},
+		          {text:'单位(子单位)工程',name:'dwgc',algin:'left',width:150},
 		          {text:'分部分项工程',name:'wbs',algin:'left',width:150},
 		          {text:'具体工作内容',name:'content',type:'textarea',algin:'center',width:150},
 		          {text:'生产情况',name:'item',algin:'center',width:60},

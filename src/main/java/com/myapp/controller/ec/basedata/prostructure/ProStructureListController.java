@@ -34,7 +34,7 @@ import com.myapp.service.ec.basedata.ProjectService;
  *
  *-----------MySong---------------
  */
-@PermissionAnn(name="系统管理.现场管理.基础数据.(子)单位工程",number="app.ec.basedata.prostructure")
+@PermissionAnn(name="系统管理.现场管理.基础数据.单位(子单位)工程",number="app.ec.basedata.prostructure")
 @Controller
 @RequestMapping("ec/basedata/prostructures")
 public class ProStructureListController extends BaseDataListController {

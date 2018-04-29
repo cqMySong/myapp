@@ -48,7 +48,7 @@
 			<div class="row mt10">
 				<div class="col-sm-12">
 					<div class="input-group">
-						<span class="input-group-addon lable">划分办法</span>
+						<span class="input-group-addon lable">划分标准</span>
 						<textarea name="content" class="input-item form-control" rows="2"></textarea>
 					</div>
 				</div>

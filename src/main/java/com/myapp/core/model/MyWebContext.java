@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
+import com.myapp.core.entity.BaseOrgInfo;
 import com.myapp.core.entity.UserInfo;
 import com.myapp.core.util.BaseUtil;
 
@@ -19,12 +20,13 @@ public class MyWebContext {
 	private String userName;//用户名
 	private String userId;//用户id
 	private String userNumber;//用户编码
-	private String orgId;//默认组织id
-	private String orgName;//默认组织名
+	private String orgId;//默认组织id 废弃
+	private String orgName;//默认组织名  废弃
+	private BaseOrgInfo curOrg;//当前登录的默认组织
 	private String mainPosition;
 	private String linker;
 	private List<Map<String,Object>> positions;//用户岗位范围
-	private List<Map<String,String>> orgs;//用户组织范围
+	private List<BaseOrgInfo> orgs;//用户组织范围
 	private Map<String,Map<String,String>> permission;//用户权限范围 :<url,<其他属性值>>
 	private Boolean admin = Boolean.FALSE;
 	private Boolean sysUser = Boolean.FALSE;
@@ -60,10 +62,11 @@ public class MyWebContext {
 	public void setOrgName(String orgName) {
 		this.orgName = orgName;
 	}
-	public List<Map<String, String>> getOrgs() {
+	public List<BaseOrgInfo> getOrgs() {
+		if(orgs==null) orgs = new ArrayList<BaseOrgInfo>();
 		return orgs;
 	}
-	public void setOrgs(List<Map<String, String>> orgs) {
+	public void setOrgs(List<BaseOrgInfo> orgs) {
 		this.orgs = orgs;
 	}
 	
@@ -120,6 +123,12 @@ public class MyWebContext {
 	}
 	public void setMainMenu(List<Map<String, Object>> mainMenu) {
 		this.mainMenu = mainMenu;
+	}
+	public BaseOrgInfo getCurOrg() {
+		return curOrg;
+	}
+	public void setCurOrg(BaseOrgInfo curOrg) {
+		this.curOrg = curOrg;
 	}
 	
 }

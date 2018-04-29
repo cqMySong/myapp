@@ -21,9 +21,11 @@ import com.myapp.core.entity.PositionInfo;
 import com.myapp.core.entity.PositionJobDutyInfo;
 import com.myapp.core.entity.UserInfo;
 import com.myapp.core.entity.UserPositionInfo;
+import com.myapp.core.enums.OrgTypeEnum;
 import com.myapp.core.exception.db.QueryException;
 import com.myapp.core.model.MyWebContext;
 import com.myapp.core.service.MainMenuService;
+import com.myapp.core.service.OrgService;
 import com.myapp.core.service.PermissionAssignService;
 import com.myapp.core.util.BaseUtil;
 import com.myapp.core.util.MyWebContextUtil;
@@ -44,6 +46,35 @@ public class WebContextService extends AbstractBaseService{
 	public PermissionAssignService permissionAssignService;
 	@Resource
 	public MainMenuService mainMenuService;
+	@Resource
+	public OrgService orgService;
+	
+	public void setCurOrg(MyWebContext myWebCtx,BaseOrgInfo curOrg){
+		if(myWebCtx!=null&&curOrg!=null){
+			BaseOrgInfo	curCtxOrg =  new BaseOrgInfo();
+			curCtxOrg.setId(curOrg.getId());
+			curCtxOrg.setName(curOrg.getName());
+			curCtxOrg.setNumber(curOrg.getNumber());
+			curCtxOrg.setLongNumber(curOrg.getLongNumber());
+			curCtxOrg.setDisplayName(curOrg.getDisplayName());
+			curCtxOrg.setOrgType(curOrg.getOrgType());
+			myWebCtx.setCurOrg(curCtxOrg);
+		}
+	}
+	public void addCurCtxOrg(MyWebContext myWebCtx,BaseOrgInfo curOrg){
+		if(myWebCtx!=null&&curOrg!=null){
+			BaseOrgInfo	curCtxOrg =  new BaseOrgInfo();
+			curCtxOrg.setId(curOrg.getId());
+			curCtxOrg.setName(curOrg.getName());
+			curCtxOrg.setNumber(curOrg.getNumber());
+			curCtxOrg.setLongNumber(curOrg.getLongNumber());
+			curCtxOrg.setDisplayName(curOrg.getDisplayName());
+			curCtxOrg.setOrgType(curOrg.getOrgType());
+			List<BaseOrgInfo> orgs = myWebCtx.getOrgs();
+			orgs.add(curCtxOrg);
+			myWebCtx.setOrgs(orgs);
+		}
+	}
 	
 	public void initWebContext(HttpServletRequest request,UserInfo uInfo) throws QueryException{
 		if(uInfo!=null){
@@ -63,6 +94,7 @@ public class WebContextService extends AbstractBaseService{
 			//此处先暂时通过对象的级联查找对应的工作职责，如果后期速度问题，在改为sql查询
 			if(ups.size()>0){
 				List<Map<String, Object>> positions = new ArrayList<Map<String,Object>>();
+				List<BaseOrgInfo> orgs = new ArrayList<BaseOrgInfo>();
 				for(UserPositionInfo upInfo:ups){
 					PositionInfo pInfo = upInfo.getPosition();
 					if(pInfo!=null){
@@ -72,11 +104,25 @@ public class WebContextService extends AbstractBaseService{
 						pm.put("isMain",upInfo.getMain());//只要岗位
 						pm.put("respible",pInfo.getRespible());//负责人岗位
 						String orgName = "";
-						if(pInfo.getOrg()!=null) orgName = pInfo.getOrg().getDisplayName();
+						String orgId = "";
+						String orgLn = "";
+						BaseOrgInfo curOrg = pInfo.getOrg();
+						if(curOrg!=null) {
+							orgName = curOrg.getDisplayName();
+							orgId = curOrg.getId();
+							orgLn = curOrg.getLongNumber();
+							addCurCtxOrg(myWebCtx,curOrg);
+						}
 						pm.put("org", orgName);//岗位对应的部门
+						pm.put("orgId", orgId);//岗位对应的部门id
+						pm.put("orgLn", orgLn);//岗位对应的部门longnumber
+						
 						if(upInfo.getMain()){
 							positions.add(0,pm);
-							myWebCtx.setMainPosition(pInfo.getName());
+							if(curOrg!=null&&myWebCtx.getCurOrg()==null){
+								myWebCtx.setMainPosition(pInfo.getName());
+								setCurOrg(myWebCtx,curOrg);
+							}
 						}else{
 							positions.add(pm);
 						}

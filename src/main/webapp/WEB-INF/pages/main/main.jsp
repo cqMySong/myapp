@@ -2,11 +2,24 @@
 <%@ page import="com.myapp.core.model.MyWebContext" %>
 <%@ page import="java.util.List,java.util.ArrayList" %>
 <%@ page import="java.util.Map,java.util.HashMap" %>
+<%@ page import="com.myapp.core.entity.BaseOrgInfo" %>
 <html lang="en">
 	<head>
 		<title>${appName }</title>
 	</head>
 	<%@include file="../inc/webBase.inc"%>
+<style type="text/css">
+.table > tbody > tr > td{
+	vertical-align:middle;
+	font-size:12px;
+	text-align: center;
+}
+.table > thead > tr > th{
+	padding-bottom: 10px;
+	padding-top: 10px;
+}
+
+</style>
 	<% MyWebContext webCtx = (MyWebContext)request.getSession().getAttribute("webCtx"); %>
 	<link rel="stylesheet" href="<%=appRoot%>/assets/css/main.css"/>
 	<body>
@@ -114,7 +127,9 @@
 
 				<div class="leftpanel-userinfo collapse" id="loguserinfo">
 					<h5 class="sidebar-title">行政部门：</h5>
-					<address><%=webCtx.getOrgName()%></address>
+					<address id="switchOrg" style="cursor:pointer">
+						<%=(webCtx.getCurOrg()!=null?webCtx.getCurOrg().getDisplayName():"")%>
+					</address>
 					<h5 class="sidebar-title">联系方式：</h5>
 					<ul class="list-group">
 						<li class="list-group-item">
@@ -322,8 +337,57 @@
 		</div>
 	</div>
 </div>
+<div id="orgScopes" class="page-statistics" style="display: none; padding:0px;border-radius：4px;">
+	<div class="panel" style="margin-bottom: 0px;padding-bottom: 0px;">
+		<div class="panel-body" style="padding: 0px;">
+			<div class="table-responsive" style="height: 300px;">
+                <table class="table table-bordered table-success table-striped nomargin">
+                  <thead>
+                    <tr>
+                      <th class="text-center" style="width: 50px;">选择</th>
+                      <th class="text-center" style="width: 80px;">组织编码</th>
+                      <th class="text-center" style="width: 370px;">组织全名</th>
+                      <th class="text-center" style="width: 80px;">组织类型</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                  <%
+                  	List<BaseOrgInfo> orgs = webCtx.getOrgs();
+                  	if(orgs!=null&&orgs instanceof List&&((List)orgs).size()>0){
+                  		String thisCurOrgID = webCtx.getCurOrg()!=null?webCtx.getCurOrg().getId():"";
+                 	 	for(BaseOrgInfo org:orgs){
+                 	 		String thisCur = thisCurOrgID.equals(org.getId())?"thisCurOrg":"";
+                 	 		String selIcon = "thisCurOrg".equals(thisCur)?"fa-check-circle":"fa-circle-thin";
+                 	 		String curSelect = "thisCurOrg".equals(thisCur)?"selected":"";
+                  %>
+                  	<tr orgId ='<%=org.getId()%>' class="toSel <%=thisCur%> <%=curSelect%>" style="cursor: pointer;">
+                  	  <td><i  class="fa <%=selIcon %> _toSel" style="font-size: 14px;"></i></td>
+                      <td><%=org.getNumber()%></td>
+                      <td><%=org.getDisplayName()%></td>
+                      <td> <%=org.getOrgType().getName()%></td>
+                  	</tr>
+                  		<%
+                  		}
+                  		%>
+                  <%}else{ %>
+                  	<tr>
+                  		<td colspan="4">用户组织范围为空!</td>
+                  	</tr>
+                  <%} %>
+                  </tbody>
+               </table>
+            </div>
+		</div>
+		<div class="panel-footer pull-right" style="padding: 5px;">
+			<div class="btn-group">
+                <button class="btn btn-primary" id="switchOrg_ok" type="button">确定</button>
+                <button class="btn btn-primary" id="switchOrg_cancel" type="button">关闭</button>
+              </div>
+		</div>
+	</div>
+								
+</div>
 <script type="text/javascript">
-
 function openUserSetUI(){
 	var win = {title:'<i class="fa fa-user"></i>&nbsp;用户信息设置',maxmin:false,height:500,width:350,btns:null,url:app.root+'/main/toUserSet'};
 	webUtil.openWin(win);
@@ -357,6 +421,53 @@ function closeLockWin(){
 	layer.close(lockWinIndex);
 }
 
+function toSelectOrg($dom){
+	//String selIcon = "thisCurOrg".equals(thisCur)?"fa-check-circle":"fa-circle-thin";
+	//$('._toSel').attr("checked",false); selected
+	if(!$dom.hasClass('selected')){
+		var icon = $dom.find('i._toSel');
+		$('i._toSel.fa-check-circle').removeClass("fa-check-circle").addClass("fa-circle-thin");
+		icon.removeClass('fa-circle-thin').addClass('fa-check-circle');
+		$('tr.toSel.selected').removeClass('selected');
+		$dom.addClass('selected');
+		
+	}
+}
+var switchOrgIndex ;
+function switchOrg(){
+	var selOrg = $('tr.toSel.selected');
+	closeSwitchOrg();
+	if(!selOrg.hasClass("thisCurOrg")){
+		var orgId = selOrg.attr("orgId");
+		if(!webUtil.isEmpty(orgId)){
+			orgId = webUtil.uuIdReplaceID(orgId);
+			var params = {orgId : orgId};
+			webUtil.ajaxData({
+				url : '/main/switchOrg',
+				data : params,
+				success : function(data) {
+					var statusCode = $(data).attr('statusCode');
+					if(statusCode==0){
+						window.location.reload();
+					}
+				}
+			});
+		}
+	}
+}
+function openSwitchOrg(){
+	switchOrgIndex = layer.open({
+		type : 1,
+		title : '用户组织切换',
+		closeBtn : 0,
+		shadeClose : false,
+		shade:0.9,area:'600px',
+		content :$('#orgScopes')
+	});
+}
+function closeSwitchOrg(){
+	layer.close(switchOrgIndex);
+}
 $(document).ready(function() {
 	var initTabs = {
 		items : [ {
@@ -436,6 +547,20 @@ $(document).ready(function() {
 				//
 			}
 		}
+	});
+	
+	$('#switchOrg').click(function(){
+		openSwitchOrg();
+	});
+	
+	$('#switchOrg_cancel').click(function(){
+		closeSwitchOrg();
+	});
+	$('#switchOrg_ok').click(function(){
+		switchOrg();
+	});
+	$('.toSel').click(function(){
+		toSelectOrg($(this));
 	});
 })
 </script>

@@ -50,10 +50,13 @@
 							<div class="row">
 								<div class="row panel-quick-page">
 							<% 
+								String curOrgLn = webCtx.getCurOrg()!=null?webCtx.getCurOrg().getLongNumber():null;
 								List<Map<String, Object>> positions = webCtx.getPositions();
 								if(positions!=null&&positions.size()>0){
 									for(Map<String,Object> pm:positions){
-										Object obj = pm.get("id");
+										Object obj = pm.get("orgLn");
+										if(!(curOrgLn!=null&&obj!=null&&obj.toString().startsWith(curOrgLn))) continue;
+										obj = pm.get("id");
 										String pid = obj!=null?obj.toString():"";
 										obj = pm.get("name");
 										String name = obj!=null?obj.toString():"";

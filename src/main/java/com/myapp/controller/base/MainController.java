@@ -15,17 +15,20 @@ import org.springframework.web.servlet.ModelAndView;
 import com.alibaba.fastjson.JSONObject;
 import com.myapp.core.annotation.AuthorAnn;
 import com.myapp.core.base.controller.BaseController;
+import com.myapp.core.entity.BaseOrgInfo;
 import com.myapp.core.entity.UserInfo;
 import com.myapp.core.enums.UserState;
 import com.myapp.core.exception.db.QueryException;
 import com.myapp.core.exception.db.SaveException;
 import com.myapp.core.model.WebDataModel;
 import com.myapp.core.service.MainMenuService;
+import com.myapp.core.service.OrgService;
 import com.myapp.core.service.UserService;
 import com.myapp.core.service.base.WebContextService;
 import com.myapp.core.util.BaseUtil;
 import com.myapp.core.util.DateUtil;
 import com.myapp.core.util.WebSocketSessionUtil;
+import com.myapp.core.util.WebUtil;
 
 /**
  *-----------MySong---------------
@@ -46,6 +49,9 @@ public class MainController extends BaseController {
 	
 	@Resource
 	public MainMenuService mainMenuService;
+	
+	@Resource
+	public OrgService orgService;
 	
 	@RequestMapping("/index")
 	@AuthorAnn(doLongin=true,doPermission=false)
@@ -152,19 +158,12 @@ public class MainController extends BaseController {
 	@RequestMapping("/menu")
 	public WebDataModel getMainMenu(){
 		init();
-		
-		try {
-			WebSocketSessionUtil.broadcast("a", "还原光临!"+getCurUser().getName()+"("+DateUtil.formatDateByFormat(new Date(),DateUtil.DATEFORMT_YMDHMS)+")");
-		} catch (Exception e1) {
-			e1.printStackTrace();
-		}
-		
 		String fln = request.getParameter("fln");
 		if(BaseUtil.isEmpty(fln)){
 			setErrorMesg("系统功能菜单编码为空!");
 		}else{
 			try {
-				data = mainMenuService.getUserMenuJson(fln, getCurUserInfo());
+				data = mainMenuService.getUserMenuJson(fln, getCurUserInfo(),getCurWebContext());
 			} catch (QueryException e) {
 				e.printStackTrace();
 				setExceptionMesg("获取用户菜单异常!"+e.getMessage());
@@ -178,6 +177,22 @@ public class MainController extends BaseController {
 	public ModelAndView webSocket(){
 		Map params = new HashMap();
 		return toPage("main/websocket", params);
+	}
+	
+	@AuthorAnn(doLongin=true,doPermission=false)
+	@ResponseBody
+	@RequestMapping("/switchOrg")
+	public WebDataModel switchOrg(){
+		init();
+		String orgId = request.getParameter("orgId");
+		if(BaseUtil.isNotEmpty(orgId)){
+			orgId = WebUtil.UUID_ReplaceID(orgId);
+			BaseOrgInfo orgInfo = (BaseOrgInfo) orgService.getEntity(orgId);
+			webContextService.setCurOrg(getCurWebContext(), orgInfo);
+		}else{
+			setErrorMesg("组织id为空不能切换操作!");
+		}
+		return ajaxModel();
 	}
 	
 	

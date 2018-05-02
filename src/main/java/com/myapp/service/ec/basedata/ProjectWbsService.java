@@ -79,4 +79,15 @@ public class ProjectWbsService extends BaseInterfaceService<ProjectWbsInfo> {
         wdm.setStatusMesg(mesg);
         return wdm;
     }
+
+    /**
+     *
+     * @param projectId
+     * @param basewWbsId
+     * @return
+     */
+    public ProjectWbsInfo queryByWsBase(String projectId,String basewWbsId){
+        String hql = "from ProjectWbsInfo a where a.project.id=? and a.baseWbs.id=?";
+        return getEntity(hql,new Object[]{projectId,basewWbsId});
+    }
 }

@@ -14,6 +14,8 @@ import com.myapp.core.util.WebUtil;
 import com.myapp.entity.ec.basedata.*;
 import com.myapp.entity.ec.labour.LabourEnterInfo;
 import com.myapp.service.ec.basedata.ImageDataService;
+import com.myapp.service.ec.basedata.ProBatchTestService;
+import com.myapp.service.ec.basedata.ProjectWbsService;
 import com.myapp.service.ec.labour.LabourEnterService;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -37,6 +39,10 @@ import java.util.Map;
 public class ImageDataEditController extends BaseEditController {
 	@Resource
 	public ImageDataService imageDataService;
+	@Resource
+	public ProjectWbsService projectWbsService;
+	@Resource
+	public ProBatchTestService proBatchTestService;
 	@Override
 	public AbstractBaseService getService() {
 		return imageDataService;
@@ -66,7 +72,7 @@ public class ImageDataEditController extends BaseEditController {
 		cols.add(proBatchTest);
 
 		ColumnModel proBaseWbs = new ColumnModel("proBaseWbs",DataTypeEnum.F7,"id,name");
-		proBaseWbs.setClaz(ProBaseWbsInfo.class);
+		proBaseWbs.setClaz(ProjectWbsInfo.class);
 		cols.add(proBaseWbs);
 		return cols;
 	}
@@ -117,6 +123,25 @@ public class ImageDataEditController extends BaseEditController {
 							}
 						} catch (QueryException e) {
 							e.printStackTrace();
+						}
+					}else if("jyphf".equals(type.toString())){
+						String parentId = WebUtil.UUID_ReplaceID(treeMap.get("parentId").toString());
+						ProjectWbsInfo projectWbsInfo = (ProjectWbsInfo) projectWbsService.getEntity(parentId);
+						if(projectWbsInfo!=null){
+							imageDataInfo.setProject(projectWbsInfo.getProject());
+							imageDataInfo.setProStructure(projectWbsInfo.getProStruct());
+							imageDataInfo.setProBaseWbs(projectWbsInfo);
+						}
+						ProBatchTestInfo proBatchTestInfo = (ProBatchTestInfo) proBatchTestService.getEntity(id);
+						if(proBatchTestInfo!=null){
+							imageDataInfo.setProBatchTest(proBatchTestInfo);
+						}
+					}else {
+						ProjectWbsInfo projectWbsInfo = (ProjectWbsInfo) projectWbsService.getEntity(id);
+						if(projectWbsInfo!=null){
+							imageDataInfo.setProject(projectWbsInfo.getProject());
+							imageDataInfo.setProStructure(projectWbsInfo.getProStruct());
+							imageDataInfo.setProBaseWbs(projectWbsInfo);
 						}
 					}
 				}

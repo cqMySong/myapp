@@ -71,7 +71,7 @@
     }
     $(document).ready(function() {
         var treeNode2QueryProp = ["id","name","number","longNumber","type"];
-        var editWin ={title:'项目施工样板清单',width:620,height:400,id:"prosafedata_tab"};
+        var editWin ={title:'项目施工样板清单',width:720,height:500,id:"prosafedata_tab"};
         var treeOpt = {setting:{data: {
             simpleData: {enable:true,idKey: "id", pIdKey: "parentId",rootPId: ''}
         }}};

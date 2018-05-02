@@ -33,7 +33,7 @@
 								<th data-field="lastFinishDate" data-type="date">最迟完成日期</th>
 								<th data-field="schemeTypeName">方案类别</th>
 								<th data-field="billState" data-formatter="billState_formatter">状态</th>
-								<th data-field="projectBegDate" data-type="date">工程开始日期</th>
+								<!--<th data-field="projectBegDate" data-type="date">工程开始日期</th> -->
 							</tr>
 						</thead>
 					</table>

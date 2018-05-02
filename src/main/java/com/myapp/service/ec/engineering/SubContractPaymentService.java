@@ -65,7 +65,8 @@ public class SubContractPaymentService extends BaseInterfaceService<SubContractP
         sql.append("select b.fnumber,b.fname,c.fname as unitName,b.fAmount,a.fid,a.fRemark,")
                 .append("a.fJobContent,a.fStartDate,a.fEndDate,a.fSettleAmount,a.fOperator,")
                 .append("case when b.fSubcontractExpenseType='ARTIFICIAL' then '人工费' else '其他' end expenseType,")
-                .append("case when a.fPaymentType='INTERIM' then '进度' else '结算' end paymentType ")
+                .append("case when a.fPaymentType='INTERIM' then '进度' else '结算' end paymentType,")
+                .append("(select count(t.fid) from t_base_attachFile t where t.fsourceBillId = a.fid) as attach ")
                 .append("from t_ec_subcontract_payment a,t_ec_subcontract b,t_ec_ecunit c ")
                 .append("where a.fSubcontracId = b.fid and b.fEcUnitId = c.fid and a.fProjectId=? ");
         paramList.add(params.get("projectId"));
@@ -85,7 +86,8 @@ public class SubContractPaymentService extends BaseInterfaceService<SubContractP
                 .append("select b.fnumber,b.fname,b.fSupplyCompany as unitName,b.fAmount,a.fid,a.fRemark,")
                 .append("a.fJobContent,a.fStartDate,a.fEndDate,a.fSettleAmount,c.fname as fOperator,")
                 .append("case when b.fExpenseType='MATERIAL' then '材料费' when b.fExpenseType='EQUIPMENT' then '机械费' else '其他' end expenseType,")
-                .append("'结算' as paymentType ")
+                .append("'结算' as paymentType,")
+                .append("(select count(t.fid) from t_base_attachFile t where t.fsourceBillId = a.fid) as attach ")
                 .append("from t_ec_material_settle a,t_ec_purchase_contract b,t_pm_user c ")
                 .append("where a.fPurchaseContractId = b.fid and c.fid = a.fOperatorId and a.fProjectId=?");
         paramList.add(params.get("projectId"));

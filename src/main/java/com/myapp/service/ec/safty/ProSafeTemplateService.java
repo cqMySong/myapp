@@ -1,17 +1,24 @@
 package com.myapp.service.ec.safty;
 
 import com.myapp.core.entity.PositionInfo;
+import com.myapp.core.entity.UserInfo;
 import com.myapp.core.exception.db.DeleteException;
 import com.myapp.core.exception.db.QueryException;
 import com.myapp.core.exception.db.SaveException;
 import com.myapp.core.model.PageModel;
+import com.myapp.core.model.WebDataModel;
 import com.myapp.core.service.base.BaseInterfaceService;
 import com.myapp.core.util.BaseUtil;
+import com.myapp.entity.ec.basedata.ProjectInfo;
+import com.myapp.entity.ec.basedata.QualityTemplateInfo;
 import com.myapp.entity.ec.basedata.SafeTemplateInfo;
+import com.myapp.entity.ec.quality.ProQualityTemplateInfo;
 import com.myapp.entity.ec.safty.ProSafeTemplateDetailInfo;
 import com.myapp.entity.ec.safty.ProSafeTemplateInfo;
+import com.myapp.service.ec.basedata.ProjectWbsService;
 import com.myapp.service.ec.basedata.SafeTemplateDetailService;
 import org.springframework.stereotype.Service;
+import org.springframework.util.StringUtils;
 
 import javax.annotation.Resource;
 import java.util.*;
@@ -25,6 +32,8 @@ public class ProSafeTemplateService extends BaseInterfaceService<ProSafeTemplate
     private ProSafeTemplateDetailService proSafeTemplateDetailService;
     @Resource
     private SafeTemplateDetailService safeTemplateDetailService;
+    @Resource
+    private ProjectWbsService projectWbsService;
     @Override
     public Object getEntity(String id) {
         ProSafeTemplateInfo proSafeTemplateInfo = (ProSafeTemplateInfo) super.getEntity(id);
@@ -128,5 +137,65 @@ public class ProSafeTemplateService extends BaseInterfaceService<ProSafeTemplate
             }
         }
         return pageModel;
+    }
+
+    /**
+     * 功能：项目级资料目录
+     * @param projectId
+     * @param userInfo
+     * @param wbsIds
+     */
+    public WebDataModel batchSave(String projectId, UserInfo userInfo, String wbsIds) throws SaveException {
+        WebDataModel wdm = new WebDataModel();
+        wdm.setData(null);
+        int code = 0;
+        String mesg = "";
+        if(BaseUtil.isEmpty(projectId)){
+            wdm.setStatusCode(-1);
+            wdm.setStatusMesg("对应的工程项目单位工程为空，无法完成对应项目工程下的数据导入!");
+            return wdm;
+        }
+        if(BaseUtil.isEmpty(wbsIds)){
+            wdm.setStatusCode(-1);
+            wdm.setStatusMesg("未选择对应的标准信息!");
+            return wdm;
+        }
+
+        String hql = " from SafeTemplateInfo as ri where ri.enabled=? " +
+                " and ri.id in('"+wbsIds.replaceAll(",","','")+"') "
+                + " and not exists(from ProSafeTemplateInfo as pri where pri.safeTemplateInfo.id = ri.id and pri.project.id=? )";
+        List params = new ArrayList();
+        params.add(Boolean.TRUE);
+        params.add(projectId);
+
+        List<SafeTemplateInfo> datas = findByHQL(hql, params.toArray());
+        if(datas!=null&&datas.size()>0){
+            code = 0;
+            mesg = "数据成功导入["+datas.size()+"]个!";
+            for(SafeTemplateInfo dgInfo:datas){
+                ProSafeTemplateInfo priInfo = new ProSafeTemplateInfo();
+                ProjectInfo pinfo = new ProjectInfo();
+                pinfo.setId(projectId);
+                priInfo.setProject(pinfo);
+                priInfo.setName(dgInfo.getName());
+                priInfo.setNumber(dgInfo.getNumber());
+                priInfo.setSafeTemplateInfo(dgInfo);
+                priInfo.setCreateUser(userInfo);
+                priInfo.setCreateDate(new Date());
+                if (dgInfo.getSubentry()!=null&&!StringUtils.isEmpty(dgInfo.getSubentry().getId())) {
+                    priInfo.setSubentry(projectWbsService.queryByWsBase(projectId,dgInfo.getSubentry().getId()));
+                }
+                if (dgInfo.getBranchBaseWbs()!=null&&!StringUtils.isEmpty(dgInfo.getBranchBaseWbs().getId())) {
+                    priInfo.setBranchBaseWbs(projectWbsService.queryByWsBase(projectId,dgInfo.getBranchBaseWbs().getId()));
+                }
+                saveEntity(priInfo);
+            }
+        }else{
+            code = 1;
+            mesg = "没有对应的数据可供导入!";
+        }
+        wdm.setStatusCode(code);
+        wdm.setStatusMesg(mesg);
+        return wdm;
     }
 }

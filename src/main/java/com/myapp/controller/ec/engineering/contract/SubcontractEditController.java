@@ -23,7 +23,7 @@ import java.util.List;
  * @author ： ly
  * @date: 2017-07-30 14:49
  */
-@PermissionAnn(name="系统管理.现场管理.工程合同.分包合同",number="app.ec.engineering.subcontract")
+@PermissionAnn(name="系统管理.现场管理.工程合同.合同台账",number="app.ec.engineering.subcontract")
 @Controller
 @RequestMapping("ec/engineering/subcontract")
 public class SubcontractEditController extends BaseBillEditController {
@@ -66,6 +66,7 @@ public class SubcontractEditController extends BaseBillEditController {
         cols.add(new ColumnModel("createDate", DataTypeEnum.DATETIME));
         cols.add(new ColumnModel("auditDate", DataTypeEnum.DATETIME));
         cols.add(new ColumnModel("lastUpdateDate", DataTypeEnum.DATETIME));
+        cols.add(new ColumnModel("remark", DataTypeEnum.STRING));
         ColumnModel project = new ColumnModel("project",DataTypeEnum.F7,"id,name");
         project.setClaz(ProjectInfo.class);
         cols.add(project);

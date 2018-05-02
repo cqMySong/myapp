@@ -44,6 +44,10 @@ public class StockInventoryDetailInfo extends CoreBaseEntryInfo<StockInventoryIn
      */
     private BigDecimal quantity;
     /**
+     * 入库数量
+     */
+    private BigDecimal inStockCount;
+    /**
      * 备注
      */
     private String remark;
@@ -110,5 +114,13 @@ public class StockInventoryDetailInfo extends CoreBaseEntryInfo<StockInventoryIn
 
     public void setQuantity(BigDecimal quantity) {
         this.quantity = quantity;
+    }
+    @Column(name = "fInStockCount")
+    public BigDecimal getInStockCount() {
+        return inStockCount;
+    }
+
+    public void setInStockCount(BigDecimal inStockCount) {
+        this.inStockCount = inStockCount;
     }
 }

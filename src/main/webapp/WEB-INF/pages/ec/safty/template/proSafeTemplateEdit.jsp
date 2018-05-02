@@ -33,7 +33,7 @@
 				<div class="input-group">
 					<span class="input-group-addon lable">样板标准</span>
 					<input type="text" name="safeTemplateInfo" class="form-control input-item"
-						   data-opt="{type:'f7',dataChange:changeSafeTemplate,uiWin:{title:'样板标准',height:600,width:800,url:'ec/basedata/safetemplatef7'}}">
+						   data-opt="{type:'f7',dataChange:changeSafeTemplate,uiWin:{title:'样板标准',height:600,width:800,url:'ec/basedata/safetemplatef7',uiParams:getParamsTemplate}}">
 				</div>
 			</div>
 			<div class="col-sm-3">
@@ -141,6 +141,13 @@
         var pro = {};
         pro.projectId = $('input[name="project"]').myF7().getValue();
         pro.wbsType="FXGC";
+        pro.parentId = webUtil.uuIdReplaceID($('input[name="branchBaseWbs"]').myF7().getValue());
+        return pro;
+    }
+    function getParamsTemplate() {
+        var pro = {};
+        pro.subentry = webUtil.uuIdReplaceID($('input[name="subentry"]').myF7().getValue());;
+        pro.branchBaseWbs = webUtil.uuIdReplaceID($('input[name="branchBaseWbs"]').myF7().getValue());
         return pro;
     }
     /**

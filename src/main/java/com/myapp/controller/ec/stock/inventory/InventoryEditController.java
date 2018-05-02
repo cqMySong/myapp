@@ -66,6 +66,7 @@ public class InventoryEditController extends BaseBillEditController {
                     stockInventoryDetailInfo = new StockInventoryDetailInfo();
                     stockInventoryDetailInfo.setStockCount(new BigDecimal(stockMap.get("count").toString()));
                     stockInventoryDetailInfo.setQuantity(stockMap.get("quantity")==null?BigDecimal.ZERO:new BigDecimal(stockMap.get("quantity").toString()));
+                    stockInventoryDetailInfo.setInStockCount(stockMap.get("inStockCount")==null?BigDecimal.ZERO:new BigDecimal(stockMap.get("inStockCount").toString()));
                     stockInfo = new StockInfo();
                     stockInfo.setId((String) stockMap.get("id"));
                     stockInfo.setSpecification((String) stockMap.get("specification"));
@@ -159,6 +160,7 @@ public class InventoryEditController extends BaseBillEditController {
         stockInventoryDetailInfos.getCols().add(new ColumnModel("stockCount",DataTypeEnum.NUMBER));
         stockInventoryDetailInfos.getCols().add(new ColumnModel("inventoryCount",DataTypeEnum.NUMBER));
         stockInventoryDetailInfos.getCols().add(new ColumnModel("quantity",DataTypeEnum.NUMBER));
+        stockInventoryDetailInfos.getCols().add(new ColumnModel("inStockCount",DataTypeEnum.NUMBER));
         stockInventoryDetailInfos.getCols().add(new ColumnModel("remark"));
         cols.add(stockInventoryDetailInfos);
 

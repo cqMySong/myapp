@@ -3,10 +3,13 @@ package com.myapp.service.ec.basedata;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 
 import com.alibaba.fastjson.JSON;
 import com.myapp.core.entity.UserInfo;
 import com.myapp.core.enums.SchemeState;
+import com.myapp.core.exception.db.QueryException;
+import com.myapp.core.model.PageModel;
 import com.myapp.entity.ec.basedata.*;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Service;
@@ -126,4 +129,37 @@ public class ProSkillDisclosureService extends
 		wdm.setStatusMesg(mesg);
 		return wdm;
 	}
+
+	/**
+	 * 功能：施工技术交底台帐
+	 * @param curPage
+	 * @param pageSize
+	 * @param params
+	 * @return
+	 * @throws QueryException
+	 */
+	public PageModel queryProqmSkilllLedger(Integer curPage, Integer pageSize, Map<String,Object> params)
+			throws QueryException {
+		List<Object> paramList = new ArrayList<>();
+		StringBuffer sql = new StringBuffer();
+		sql.append("select b.fname as className,a.fname as name,")
+				.append("ds.fname as disclosurer,a.fFinishTime as finishTime,")
+				.append("a.fsendee as sendee,a.fid as id,")
+				.append("(select count(t.fid) from t_base_attachFile t where t.fsourceBillId = fid) as attach ")
+				.append("from t_ec_proskillidisclosure a left join t_ec_skillClass b on a.fskillclass = b.fid ")
+				.append(" left join t_pm_user ds on a.fdisclosurerId = ds.fid ")
+				.append("where a.fskilltype='QM' and a.fProjectId=? ");
+		paramList.add(params.get("projectId"));
+		if(!BaseUtil.isEmpty(params.get("sendee"))){
+			sql.append("and a.fsendee like ? ");
+			paramList.add("%"+params.get("sendee")+"%");
+		}
+		if(!BaseUtil.isEmpty(params.get("directorName"))){
+			sql.append("and ds.fname like ? ");
+			paramList.add("%"+params.get("directorName")+"%");
+		}
+		sql.append(" order by a.fname,a.fFinishTime");
+		return toPageSqlQuery(curPage,pageSize,sql.toString(),paramList.toArray());
+	}
+
 }

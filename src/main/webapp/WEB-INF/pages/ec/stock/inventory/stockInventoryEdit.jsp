@@ -75,8 +75,9 @@
 							<th data-field="material" data-type="f7"  data-locked="true">物料名称</th>
 							<th data-field="specification" data-type="text" data-locked="true" data-width="120">规格</th>
 							<th data-field="measureUnit" data-type="text" data-locked="true" data-width="100">单位</th>
-							<th data-field="stockCount" data-type="number" data-locked="true" data-width="100">库存数量</th>
 							<th data-field="quantity" data-type="number" data-locked="true" data-width="100">预算数量</th>
+							<th data-field="inStockCount" data-type="number" data-locked="true" data-width="100">已入库数量</th>
+							<th data-field="stockCount" data-type="number" data-locked="true" data-width="100">库存数量</th>
 							<th data-field="inventoryCount" data-type="number" data-width="100">盘存数量</th>
 							<th data-field="remark" data-type="text" data-width="100">备注</th>
 						</tr>

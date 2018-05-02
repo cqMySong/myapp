@@ -47,6 +47,7 @@ public class ProSkillDisclosureQMEditController extends BaseEditController {
 		cols.add(new ColumnModel("project",DataTypeEnum.F7,ProjectInfo.class));
 		cols.add(new ColumnModel("disclosurer",DataTypeEnum.F7,UserInfo.class));
 		cols.add(new ColumnModel("finishTime",DataTypeEnum.DATE));
+		cols.add(new ColumnModel("sendee",DataTypeEnum.STRING));
 		return cols;
 	}
 	@Override

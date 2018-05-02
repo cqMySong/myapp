@@ -83,7 +83,7 @@ public class SubcontractService extends BaseInterfaceService<SubcontractInfo> {
         StringBuffer sql = new StringBuffer();
         sql.append("select b.fname as unitName,a.fTreatyContents as treatyContents,")
                 .append("a.fDirectorName as directorName,a.fDirectorTel as directorTel,")
-                .append("a.fAptitude as aptitude ")
+                .append("a.fAptitude as aptitude,a.fRemark as remark ")
                 .append("from t_ec_subcontract a,t_ec_ecUnit b ")
                 .append("where a.fEcUnitId = b.fId and a.fSubcontractExpenseType = 'ARTIFICIAL' and a.fProjectId=? ");
         paramList.add(params.get("projectId"));

@@ -10,7 +10,7 @@
 <script type="text/javascript">
 
 </script>
-<body style="padding: 5px;">
+<body style="padding: 5px;" class="panel">
 <div id="editPanel" class="myMainContent panel">
 	<div id="table-toolbar"></div>
 	<form id="editForm">
@@ -215,8 +215,10 @@
         }
     }
     $(document).ready(function() {
-        var height = window.outerHeight-460;
-        var entryOption = "{type:'entry',height:"+height+",tableOpt:{editDataChanged:purchaseStockDetailInfos_dataChanged}"+
+        var height = top.getTopMainHeight()+100;
+        height = height>760?760:height;
+        var winHeight = height-480;
+        var entryOption = "{type:'entry',height:"+(winHeight<270?270:winHeight)+",tableOpt:{editDataChanged:purchaseStockDetailInfos_dataChanged}"+
             ",toolbar:{title:'采购入库清单'}}";
 		$("table.input-entry").attr("data-opt",entryOption);
         editUI = $('#editPanel').editUI({
@@ -236,7 +238,7 @@
             rightBtnGroup.addBtn({entry:purchaseStockDetailInfosEntry,css:'btn-sm',text:'复制插入',icon:"fa fa-edit",clickFun:btnCopyInsertRow});
             purchaseStockDetailInfosEntry.resetView();
         }
-        webUtil.initMainPanel('#editPanel');
+        //webUtil.initMainPanel('#editPanel');
     })
 </script>
 </html>

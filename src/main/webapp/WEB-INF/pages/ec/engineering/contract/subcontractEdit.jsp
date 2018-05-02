@@ -112,6 +112,14 @@
 			</div>
 		</div>
 		<div class="row mt10">
+			<div class="col-sm-12">
+				<div class="input-group">
+					<span class="input-group-addon lable">备注</span>
+					<textarea name="remark" rows="3" class="input-item form-control"></textarea>
+				</div>
+			</div>
+		</div>
+		<div class="row mt10">
 			<div class="col-sm-4">
 				<div class="input-group">
 					<span class="input-group-addon lable">创建人</span>

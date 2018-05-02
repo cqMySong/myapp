@@ -170,6 +170,8 @@
                     var totalApprovedAmount = 0;
                     var totalPaymentAmount = 0;
                     var deliveryDate = null;
+                    var totalPaymentRatio = 0;
+                    var count = 0;
                     $.each(ledgerData['payment'],function(i,v){
                         deliveryDate = new Date();
                         deliveryDate.setTime(v["deliveryDate"]);
@@ -185,10 +187,13 @@
                         totalDeliveryAmount+=parseFloat(v["deliveryAmount"]);
                         totalApprovedAmount+=parseFloat(v["approvedAmount"]);
                         totalPaymentAmount+=parseFloat(v["paymentAmount"]);
+                        totalPaymentRatio+=parseFloat(v["paymentRatio"]);
+                        count = i+1;
                     });
                     strContent+="<tr>" +
                         "<th>合计</th><th colspan='2'></th><th colspan='2'>"+totalDeliveryAmount+"</th>" +
-                        "<th>"+totalApprovedAmount+"</th><th>"+totalPaymentAmount+"</th><th></th><th></th>" +
+                        "<th>"+totalApprovedAmount+"</th><th>"+totalPaymentAmount+"</th><th>"+Number(100*totalPaymentAmount/totalApprovedAmount).toFixed(2)+"%</th>" +
+						"<th>"+Number(totalPaymentRatio/count).toFixed(2)+"%</th>" +
                         "</tr>";
                 }
                 if(ledgerData['settle']&&ledgerData['settle'].length>0){

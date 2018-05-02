@@ -29,7 +29,7 @@ public class ImageDataInfo extends CoreBaseInfo {
     /**
      *分部分项工程
      */
-    private ProBaseWbsInfo proBaseWbs;
+    private ProjectWbsInfo proBaseWbs;
     /**
      * 项目级别检验批划分
      */
@@ -119,11 +119,11 @@ public class ImageDataInfo extends CoreBaseInfo {
 
     @OneToOne(fetch= FetchType.LAZY)
     @JoinColumn(name = "fProBaseWbsId")
-    public ProBaseWbsInfo getProBaseWbs() {
+    public ProjectWbsInfo getProBaseWbs() {
         return proBaseWbs;
     }
 
-    public void setProBaseWbs(ProBaseWbsInfo proBaseWbs) {
+    public void setProBaseWbs(ProjectWbsInfo proBaseWbs) {
         this.proBaseWbs = proBaseWbs;
     }
 }

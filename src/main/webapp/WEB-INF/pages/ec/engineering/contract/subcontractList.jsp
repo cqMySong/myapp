@@ -2,7 +2,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<title>分包合同</title>
+<title>合同台账</title>
 </head>
 <script type="text/javascript">
 </script>
@@ -57,7 +57,7 @@
 	$(document).ready(function() {
 			var treeNode2QueryProp = ["id","name","number","longNumber","type"];
         	var height = top.getTopMainHeight()-50;
-			var editWin ={title:'分包合同',width:900,height:520};
+			var editWin ={title:'分包合同',width:900,height:580};
 			var treeOpt = {
 					setting:{
 						data: {

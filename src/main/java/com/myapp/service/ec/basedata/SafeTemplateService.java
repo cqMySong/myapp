@@ -1,5 +1,6 @@
 package com.myapp.service.ec.basedata;
 
+import com.myapp.core.exception.db.QueryException;
 import com.myapp.core.service.base.BaseInterfaceService;
 import com.myapp.entity.ec.basedata.SafeTemplateInfo;
 import org.springframework.stereotype.Service;
@@ -31,5 +32,18 @@ public class SafeTemplateService extends  BaseInterfaceService<SafeTemplateInfo>
             return result.get(0).get("jobRequirement");
         }
         return null;
+    }
+
+    /**
+     * 功能：查询当前工程的分部分项  质量样板工作
+     * @param projectId
+     * @return
+     */
+    public List queryProjectSafeTemplate(String projectId) throws QueryException {
+        String sql = "select distinct a.fid as id,a.fname as name,a.fnumber as number " +
+                " from t_ec_safe_template a,t_ec_projectwbs b " +
+                " where b.fprojectId =? and (a.fBranchBaseWbsId = b.fbasewWbsId " +
+                " or a.fSubentryId = b.fbasewWbsId) order by a.fname";
+        return executeSQLQuery(sql,new Object[]{projectId});
     }
 }

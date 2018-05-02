@@ -27,7 +27,7 @@ import java.util.Map;
  * @author ： ly
  * @date: 2017-08-28 21:02
  */
-@PermissionAnn(name="系统管理.现场管理.工程合同.分包合同",number="app.ec.engineering.subcontract")
+@PermissionAnn(name="系统管理.现场管理.工程合同.合同台账",number="app.ec.engineering.subcontract")
 @Controller
 @RequestMapping("ec/engineering/subcontracts")
 public class SubcontractListController extends BaseListController {

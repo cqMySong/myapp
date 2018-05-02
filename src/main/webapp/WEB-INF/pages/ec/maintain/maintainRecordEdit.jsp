@@ -46,7 +46,7 @@
 		<div class="row mt10">
 			<div class="col-sm-6">
 				<div class="input-group">
-					<span class="input-group-addon lable">维修员</span> 
+					<span class="input-group-addon lable">维修人员</span>
 				<input name="maintainer" class="input-item form-control" data-opt="{type:'f7',uiWin:{title:'用户信息',height:600,width:800,url:'base/userf7'}}">
 				</div>
 			</div>

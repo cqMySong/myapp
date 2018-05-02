@@ -127,6 +127,17 @@ public class ProjectWbsF7QueryController extends BasePageListController {
 					query.add(Restrictions.in("wbsType",wbsTypeEnum));
 				}
 			}
+			Object parentId = searchMap.get("parentId");
+			if(parentId!=null){
+				String parentIdStr = parentId.toString();
+				if(!StringUtils.isEmpty(parentIdStr)){
+					parentIdStr = WebUtil.UUID_ReplaceID(parentIdStr);
+					ProjectWbsInfo projectWbsInfo = (ProjectWbsInfo) projectWbsService.getEntity(parentIdStr);
+					if(projectWbsInfo!=null){
+						query.add(Restrictions.like("longNumber",projectWbsInfo.getLongNumber()+"%"));
+					}
+				}
+			}
 			Object objTree = searchMap.get("tree");
 			if(objTree!=null){
 				Map treeMap = JSONObject.parseObject(objTree.toString(), new HashMap().getClass());

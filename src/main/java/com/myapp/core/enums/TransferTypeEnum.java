@@ -12,7 +12,7 @@ import java.util.Map;
  */
 public enum TransferTypeEnum implements MyEnum<TransferTypeEnum> {
 	UNIT("UNIT","单位"),
-	INTERNAL_ORG("INTERNAL_ORG ","内部组织");
+	INTERNAL_ORG("INTERNAL_ORG","内部组织");
 
 	private String name;
 	private String value;

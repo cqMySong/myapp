@@ -30,7 +30,7 @@
 								<th data-field="attachs">附件</th>
 								<th data-field="createDate" data-type="date">创建时间</th>
 								<th data-field="disclosurer_name">交底人</th>
-								<th data-field="projectStartTime" data-type="date">工程开始时间</th>
+								<!--<th data-field="projectStartTime" data-type="date">工程开始时间</th>-->
 							</tr>
 						</thead>
 					</table>

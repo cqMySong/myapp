@@ -24,6 +24,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.servlet.ModelAndView;
 
 import javax.annotation.Resource;
 import java.util.HashMap;
@@ -140,5 +141,12 @@ public class ProQualityTemplateListController extends BaseListController {
         }
         model.addAttribute("mainPosition",mainPosition);
         return "ec/quality/template/proQualityJobRequireEdit";
+    }
+
+    @PermissionItemAnn(name="质量样板导入",number="import",type= PermissionTypeEnum.FUNCTION)
+    @RequestMapping("/batch/import")
+    public ModelAndView forwardBatchImport(){
+        Map params = getUiCtx();
+        return toPage("ec/quality/template/proQualityTemplateBatchImport", params);
     }
 }

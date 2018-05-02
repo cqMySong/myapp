@@ -8,6 +8,8 @@
 </script>
 <body style="padding: 5px;">
 	<div id="table-toolbar" class="panel" style="height:40px;padding-top: 1px;margin-bottom: 5px;">
+		<button class="btn btn-success" type="button" id="batchImpl">
+			<span class="fa fa-file-o"></span>&nbsp;质量样板导入</button>
 		<button class="btn btn-success" type="button" id="jobRequire">
 			<span class="fa fa-file-o"></span>&nbsp;工作要求</button>
 	</div>
@@ -59,7 +61,17 @@
 	function openUIParams(operate,params){
 
 	}
-
+    function getAllChildrenNodes(treeNode,result){
+        var childrenNodes = treeNode.children;
+        if (childrenNodes) {
+            for (var i = 0; i < childrenNodes.length; i++) {
+                result = getAllChildrenNodes(childrenNodes[i], result);
+            }
+        }else{
+            result.push(treeNode.id);
+        }
+        return result;
+    }
 	$(document).ready(function() {
 			var treeNode2QueryProp = ["id","name","number","longNumber","type"];
         	var height = top.getTopMainHeight()-50;
@@ -87,6 +99,51 @@
                     webUtil.mesg('请先选中对应的数据行，方可进行工作要求操作!');
                 }
 			});
+          //质量样板导入
+          $('#batchImpl').on('click',function(){
+            var tree = thisOrgList.getSelectNode();
+            if(webUtil.isEmpty(tree)||'project'!=tree.type){
+                webUtil.mesg('请先选择工程项目，然后才能做导入操作!');
+                return false;
+            }
+            var _win = $.extend(true,{},{title:'质量样板导入',width:900,height:570,
+                btns:['确定','取消'],btnCallBack:function(index,layerIndex,layero){
+                    if(layero){
+                        if(index==1){
+                            var iframe_win = $(layero).parent().find('#layui-layer-iframe'+layerIndex)[0].contentWindow;
+                            var datas = iframe_win.getData();
+                            if(!webUtil.isEmpty(datas)&&datas.length>0){
+                                var wbsIds = [];
+                                $.each(datas,function(i,val){
+                                    getAllChildrenNodes(val,wbsIds);
+                                });
+                                var pams = {structId:tree.id,structCode:tree.number,wbsIds:wbsIds.join(",")};
+                                webUtil.ajaxData({url:"ec/quality/template/batch/import",data:pams,async:true,success:function(data){
+                                    var statusCode = $(data).attr('statusCode');
+                                    if(0==statusCode){
+                                        var msg = $(data).attr('statusMesg');
+                                        if(!webUtil.isEmpty(msg)){
+                                            webUtil.mesg(msg);
+                                        }
+                                        thisOrgList.listUI.executeQuery();
+                                    }
+                                }});
+                                return true;
+                            }else{
+                                webUtil.mesg("未选择任何数据!");
+                                return false;
+                            }
+                        }
+                    }
+                    return true;
+                }});
+            _win.url =  webUtil.toUrl('ec/quality/templates/batch/import');
+            _win.uiParams={targetId:webUtil.uuIdReplaceID(tree.id)};
+            _win.colseCallBack =function(){
+                thisOrgList.listUI.executeQuery();
+            };
+            webUtil.openWin(_win);
+        });
 	});
     function changeBgColor(row, index) {
         var color = "";

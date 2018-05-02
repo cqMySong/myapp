@@ -63,17 +63,24 @@
 			<div class="row mt10">
 				<div class="col-sm-6">
 					<div class="input-group">
+						<span class="input-group-addon lable">交底接受人</span>
+						<input name="sendee" class="input-item form-control" data-rule="notEmpty"/>
+					</div>
+				</div>
+				<div class="col-sm-6">
+					<div class="input-group">
 						<span class="input-group-addon lable">技术类别</span>
 						<select name="skillType" data-opt="{type:'select',url:'base/common/combox?enum=com.myapp.enums.ec.SkillType'}" class="form-control input-item require read">
 						</select>
 					</div>
 				</div>
+			</div>
+			<div class="row mt10">
 				<div class="col-sm-6">
 					<div class="input-group">
 						<span class="input-group-addon lable">工程项目</span>
 						<input name="project" class="require input-item form-control read"
 							   data-opt="{type:'f7',uiWin:{title:'工程项目',height:600,width:300,url:'ec/basedata/project'}}" />
-
 					</div>
 				</div>
 			</div>

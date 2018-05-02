@@ -34,24 +34,25 @@
 		</div>
 		<div class="col-lg-4 col-sm-4 mb5">
 			<div class="input-group">
-				<span class="input-group-addon lable">移交单位</span>
-				<input name="transferUnit" class="require input-item form-control"/>
-			</div>
-		</div>
-		<div class="col-lg-4 col-sm-4 mb5">
-			<div class="input-group">
-				<span class="input-group-addon lable">接收单位</span>
-				<input name="receivingUnit" class="require input-item form-control"/>
-			</div>
-		</div>
-		<div class="col-lg-4 col-sm-4 mb5">
-			<div class="input-group">
 				<span class="input-group-addon lable">移交类型</span>
 				<select name="transferType" data-opt="{type:'select',selected:'UNIT',url:'base/common/combox?enum=com.myapp.core.enums.TransferTypeEnum'}"
 						class="form-control input-item require">
 				</select>
 			</div>
 		</div>
+		<div class="col-lg-4 col-sm-4 mb5">
+			<div class="input-group">
+				<span class="input-group-addon lable" id="transferUnit">移交单位</span>
+				<input name="transferUnit" class="require input-item form-control"/>
+			</div>
+		</div>
+		<div class="col-lg-4 col-sm-4 mb5">
+			<div class="input-group">
+				<span class="input-group-addon lable" id="receivingUnit">接收单位</span>
+				<input name="receivingUnit" class="require input-item form-control"/>
+			</div>
+		</div>
+
 		<div class="col-lg-4 col-sm-4 mb5">
 			<div class="input-group">
 				<span class="input-group-addon lable">业务状态</span>
@@ -81,7 +82,7 @@
 		</div>
 		<div class="col-lg-12 col-sm-12 mb5">
 			<div class="input-group">
-				<span class="input-group-addon lable">接收单位职责</span>
+				<span class="input-group-addon lable" id="receivingDuty">接收单位职责</span>
 				<textarea name="receivingDuty" style="height:40px;" class="require input-item form-control"></textarea>
 			</div>
 		</div>
@@ -151,7 +152,19 @@
             if(data&&data.other&&data.data){
                 $('input[name="project"]').myF7().setData({id:data.data.belongId,
                     name:data.other,type:data.data.type});
+
             }
+            if(data&&data.data){
+                if(data.data.transferType=="UNIT"){
+                    $('#transferUnit').text("移交单位");
+                    $('#receivingUnit').text("接收单位");
+                    $('#receivingDuty').text("接收单位职责");
+                }else{
+                    $('#transferUnit').text("移交部门");
+                    $('#receivingUnit').text("接收班组");
+                    $('#receivingDuty').text("接收班组职责");
+                }
+			}
         }
     }
     $(document).ready(function() {
@@ -164,6 +177,17 @@
             }
         });
         editUI.onLoad();
+        $('select[name="transferType"]').on("select2:select",function(e){
+			if(e.target.value=="UNIT"){
+				$('#transferUnit').text("移交单位");
+                $('#receivingUnit').text("接收单位");
+                $('#receivingDuty').text("接收单位职责");
+			}else{
+                $('#transferUnit').text("移交部门");
+                $('#receivingUnit').text("接收班组");
+                $('#receivingDuty').text("接收班组职责");
+			}
+        });
     });
 </script>
 </html>

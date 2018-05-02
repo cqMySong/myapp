@@ -30,7 +30,7 @@
 								<th data-field="name">名称</th>
 								<th data-field="content" data-width="400" data-type="textarea">划分办法</th>
 								<th data-field="attachs">附件数</th>
-								<th data-field="projectStartTime" data-type="date">工程开始时间</th>
+								<!--<th data-field="projectStartTime" data-type="date">工程开始时间</th>-->
 							</tr>
 						</thead>
 					</table>

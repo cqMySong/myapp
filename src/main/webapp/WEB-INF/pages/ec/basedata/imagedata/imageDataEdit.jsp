@@ -40,7 +40,7 @@
 				<div class="col-sm-6 mb15">
 					<div class="input-group">
 						<span class="input-group-addon lable">工程结构</span>
-						<input name="proStructure" class="input-item form-control"
+						<input name="proStructure" class="input-item form-control read"
 							data-opt="{type:'f7',uiWin:{title:'项目工程结构',height:580,width:300,url:'ec/basedata/proStructureF7',uiParams:proStructure_data}}" />
 					</div>
 				</div>
@@ -49,7 +49,7 @@
 				<div class="col-sm-6">
 					<div class="input-group">
 						<span class="input-group-addon lable">分部分项</span>
-						<input name="proBaseWbs" class="input-item form-control"
+						<input name="proBaseWbs" class="input-item form-control read"
 							   data-opt="{type:'f7',uiWin:{title:'分项工程',height:560,width:800,url:'ec/basedata/proBaseWbsF7',uiParams:proBaseWbsParam}}" />
 					</div>
 				</div>
@@ -120,7 +120,6 @@
 	}
 	function proBatchTestChange(oldVal,newVal){
 		if(newVal){
-		    console.log(newVal);
             $('input[name="proBaseWbs"]').myF7().setData({id:newVal.proBaseWbs_id,name:newVal.proBaseWbs_displayName});
 		}
 	}

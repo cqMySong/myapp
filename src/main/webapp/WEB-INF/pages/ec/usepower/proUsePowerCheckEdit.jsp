@@ -10,7 +10,7 @@
 <script type="text/javascript">
 	
 </script>
-<body style="padding: 5px;">
+<body style="padding: 5px;" class="panel">
 		<div id="editPanel" class="myMainContent panel">
 		<div id="table-toolbar"></div>
 		<form id="editForm">
@@ -58,21 +58,24 @@
 				</div>
 			</div>
 			<div class="row mt10">
-				<div class="col-sm-12">
+				<div class="col-sm-4">
 					<div class="input-group">
-						<span class="input-group-addon lable">备注</span>
-						<textarea name="remark" style="height:40px;" class="input-item form-control"></textarea>
+						<span class="input-group-addon lable">检查员</span>
+						<input name="ecChecker" class="input-item form-control" data-opt="{type:'f7',uiWin:{title:'用户信息',height:600,width:800,url:'base/userf7'}}">
+					</div>
+				</div>
+				<div class="col-sm-8">
+					<div class="input-group">
+						<span class="input-group-addon lable">整改意见</span>
+						<input name="rectifyIdea" class="input-item form-control" style="width: 100%;" data-rule="notEmpty">
 					</div>
 				</div>
 			</div>
-			
 			<div class="row mt10">
 				<div class="col-sm-12 " style="border: 1px solid #ddd;">
-					<table name="checkItems" class="input-entry" data-opt="{type:'entry',height:430,tableOpt:{editDataChanged:checkItems_dataChanged}
-							,toolbar:{title:'检查内容清单'}}">
+					<table name="checkItems" class="input-entry">
 						<thead>
 							<tr>
-							
 								<th data-field="usePower" data-width="100" data-type="f7"
 									 data-editor="{uiWin:{title:'安全用电标准查询',height:550,width:680
 									 ,url:'ec/basedata/safeusepowerF7'}}">检查内容</th>
@@ -85,20 +88,13 @@
 				</div>
 			</div>
 			<div class="row mt10">
-				<div class="col-sm-4">
+				<div class="col-sm-12">
 					<div class="input-group">
-						<span class="input-group-addon lable">检查员</span> 
-						<input name="ecChecker" class="input-item form-control" data-opt="{type:'f7',uiWin:{title:'用户信息',height:600,width:800,url:'base/userf7'}}">
-					</div>
-				</div>
-				<div class="col-sm-8">
-					<div class="input-group">
-						<span class="input-group-addon lable">整改意见</span>
-						<input name="rectifyIdea" class="input-item form-control" style="width: 100%;" data-rule="notEmpty">
+						<span class="input-group-addon lable">备注</span>
+						<textarea name="remark" style="height:40px;" class="input-item form-control"></textarea>
 					</div>
 				</div>
 			</div>
-			
 			<div class="row mt10">
 				<div class="col-sm-4">
 					<div class="input-group">
@@ -217,6 +213,10 @@
 		}
 	}
 	$(document).ready(function() {
+        var winHeight =  top.getTopMainHeight()+100;
+        var entryOption = "{type:'entry',height:"+(winHeight>800?370:(winHeight-430))+",tableOpt:{editDataChanged:checkItems_dataChanged}"+
+            ",toolbar:{title:'检查内容清单'}}";
+        $("table.input-entry").attr("data-opt",entryOption);
 		editUI = $('#editPanel').editUI({
 			title : "施工现场安全用电检查表",billModel:2,
 			baseUrl : "ec/usepower/prousepowercheck",

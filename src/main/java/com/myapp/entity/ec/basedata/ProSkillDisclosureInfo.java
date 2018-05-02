@@ -35,6 +35,7 @@ public class ProSkillDisclosureInfo extends CoreBaseInfo {
 	private UserInfo disclosurer;//交底人
 	private SkillItemInfo skillItem;//技术名称
 	private Date finishTime;//完成时间
+	private String sendee;//交底接收人
 	
 	@Column(name="fskilltype",length=10)
 	@Type(type="myEnum",parameters={@Parameter(name="enumClass",value="com.myapp.enums.ec.SkillType")})
@@ -93,5 +94,14 @@ public class ProSkillDisclosureInfo extends CoreBaseInfo {
 
 	public void setFinishTime(Date finishTime) {
 		this.finishTime = finishTime;
+	}
+
+	@Column(name="fSendee")
+	public String getSendee() {
+		return sendee;
+	}
+
+	public void setSendee(String sendee) {
+		this.sendee = sendee;
 	}
 }

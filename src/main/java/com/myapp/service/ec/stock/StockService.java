@@ -75,7 +75,9 @@ public class StockService  extends BaseInterfaceService<StockInfo> {
                 "stock.specification as specification,stock.measureUnit as measureUnit," +
                 "stock.materialInfo as materialInfo," +
                 "(select sum(bdi.quantity) from BudgetingInfo bi,BudgetingDetailInfo bdi where bdi.parent.id = bi.id" +
-                " and bi.project.id = stock.projectInfo.id and bdi.material.id = stock.materialInfo.id ) as quantity" +
+                " and bi.project.id = stock.projectInfo.id and bdi.material.id = stock.materialInfo.id ) as quantity," +
+                "(select sum(bdi.count) from PurchaseStockInfo bi,PurchaseStockDetailInfo bdi where bdi.parent.id = bi.id" +
+                " and bi.project.id = stock.projectInfo.id and bdi.material.id = stock.materialInfo.id ) as inStockCount " +
                 " from StockInfo stock " +
                 "where stock.projectInfo.id=?";
         return findByHQL(hql,new String[]{projectId});

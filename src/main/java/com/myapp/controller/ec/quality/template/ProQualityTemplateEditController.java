@@ -2,6 +2,7 @@ package com.myapp.controller.ec.quality.template;
 
 import com.myapp.core.annotation.AuthorAnn;
 import com.myapp.core.annotation.PermissionAnn;
+import com.myapp.core.annotation.PermissionItemAnn;
 import com.myapp.core.base.entity.CoreBaseInfo;
 import com.myapp.core.base.service.impl.AbstractBaseService;
 import com.myapp.core.controller.BaseBillEditController;
@@ -24,6 +25,7 @@ import com.myapp.service.ec.quality.ProQualityTemplateDetailService;
 import com.myapp.service.ec.quality.ProQualityTemplateService;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.annotation.Resource;
@@ -88,6 +90,7 @@ public class ProQualityTemplateEditController extends BaseBillEditController {
         return cols;
     }
 
+    @AuthorAnn(doLongin=true,doPermission=false)
     @RequestMapping("/job/require/save")
     @ResponseBody
     public WebDataModel saveJobRequire(String jobRequireItems) {
@@ -108,5 +111,20 @@ public class ProQualityTemplateEditController extends BaseBillEditController {
     public WebDataModel queryJobRequire(String proQualityTemplateId) {
         this.data = proQualityTemplateDetailService.queryJobRequireByProQualityTemplateId(proQualityTemplateId);
         return ajaxModel();
+    }
+
+    @PermissionItemAnn(name="导入保存",number="batchSave")
+    @ResponseBody
+    @RequestMapping(value="/batch/import",method= RequestMethod.POST)
+    public WebDataModel batchImportSave(String structId, String structCode, String wbsIds) {
+        WebDataModel webDataModel = new WebDataModel();
+        try{
+            proQualityTemplateService.batchSave(structId,getCurUser(),wbsIds);
+            webDataModel.setStatusCode(STATUSCODE_SUCCESS);
+        }catch (Exception e) {
+            e.printStackTrace();
+            setExceptionMesg(e.getMessage());
+        }
+        return webDataModel;
     }
 }

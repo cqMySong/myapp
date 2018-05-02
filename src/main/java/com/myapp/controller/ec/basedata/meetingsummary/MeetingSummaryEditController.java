@@ -22,7 +22,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import javax.annotation.Resource;
 import java.util.List;
 
-@PermissionAnn(name="系统管理.现场管理.基础数据.会议纪要",number="app.ec.basedata.meetingsummary")
+@PermissionAnn(name="系统管理.现场管理.基础数据.会议纪要台账",number="app.ec.basedata.meetingsummary")
 @Controller
 @RequestMapping("ec/basedata/meetingsummary")
 public class MeetingSummaryEditController extends BaseBillEditController {

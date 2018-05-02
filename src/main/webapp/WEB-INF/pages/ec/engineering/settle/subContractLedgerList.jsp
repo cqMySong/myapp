@@ -72,7 +72,7 @@
 						<th data-field="fEndDate" data-type="date">结束时间</th>
 						<th data-field="fSettleAmount">金额(元)</th>
 						<th data-field="fAmount">合同金额(元)</th>
-						<th data-field="contrac">计价依据</th>
+						<th data-field="attach" data-formatter="showAttach">计价依据</th>
 						<th data-field="fOperator">经办人</th>
 						<th data-field="fRemark">备注</th>
 					</tr>
@@ -138,6 +138,9 @@
 			return value+"_"+row.paymentType;
 		}
 		return value;
+    }
+    function showAttach(value, row, index) {
+		return "<a href=\"javascript:webUtil.showAttach('"+row.fid+"','"+row.fname+"');\">"+value+"</a>";
     }
     $(function(){
         var height = top.getTopMainHeight()-40;

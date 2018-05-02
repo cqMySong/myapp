@@ -73,6 +73,10 @@ public class SubcontractInfo extends CoreBaseBillInfo {
      * 合同签订时间
      */
     private Date contractDate;
+    /**
+     * 备注
+     */
+    private String remark;
 
     /**
      * 修改前数据
@@ -197,5 +201,14 @@ public class SubcontractInfo extends CoreBaseBillInfo {
 
     public void setPaymentMethod(PaymentMethod paymentMethod) {
         this.paymentMethod = paymentMethod;
+    }
+
+    @Column(name="fRemark",length = 200)
+    public String getRemark() {
+        return remark;
+    }
+
+    public void setRemark(String remark) {
+        this.remark = remark;
     }
 }

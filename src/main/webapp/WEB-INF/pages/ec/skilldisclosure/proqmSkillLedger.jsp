@@ -2,7 +2,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-	<title>劳务分包登记备案台帐</title>
+	<title>施工技术交底台账</title>
 	<style type="text/css">
 		.mainContrainer {
 			width: 100%;
@@ -34,14 +34,14 @@
 	<div id="table-toolbar" style="height:40px;padding-top: 2px;">
 		<div class="col-sm-3">
 			<div class="input-group">
-				<span class="input-group-addon lable">负责人</span>
+				<span class="input-group-addon lable">交底人</span>
 				<input name="directorName"  autocomplete="off" type="text" class="input-item form-control">
 			</div>
 		</div>
 		<div class="col-sm-3">
 			<div class="input-group">
-				<span class="input-group-addon lable">单位名称</span>
-				<input type="text" class="input-item form-control" name="unitName">
+				<span class="input-group-addon lable">接受交底人</span>
+				<input type="text" class="input-item form-control" name="sendee">
 			</div>
 		</div>
 		<div class="btn-group">
@@ -56,21 +56,21 @@
 		<div class="rightContainer" id="main_container">
 			<table id="tblMain">
 				<thead >
-					<tr>
-						<th data-field="unitName">单位名称</th>
-						<th data-field="treatyContents">分包工程内容</th>
-						<th data-field="directorName">现场分包负责人</th>
-						<th data-field="directorTel">联系电话</th>
-						<th data-field="aptitude">公司资质</th>
-						<th data-field="remark">备注</th>
-					</tr>
+				<tr>
+					<th data-field="className">分类</th>
+					<th data-field="name">施工技术交底名称</th>
+					<th data-field="disclosurer">交底人</th>
+					<th data-field="sendee">接收交底人</th>
+					<th data-field="finishTime" data-type="date">交底时间</th>
+					<th data-field="attach" data-formatter="showAttach">附件</th>
+				</tr>
 				</thead>
 			</table>
 		</div>
 	</div>
 </div>
 </body>
-<%@include file="../../../inc/webBase.inc"%>
+<%@include file="../../inc/webBase.inc"%>
 <script type="text/javascript">
     var orgTree;
     var curSelOrg;
@@ -98,6 +98,9 @@
         }});
         loadTreeData();
     }
+    function showAttach(value, row, index) {
+     return "<a href=\"javascript:webUtil.showAttach('"+row.id+"','"+row.name+"');\">"+value+"</a>"
+    }
     function loadTreeData(){
         webUtil.ajaxData({url:'ec/basedata/projects/projectTree',async:false,success:function(data){
             var treeDatas = data.data;
@@ -111,14 +114,14 @@
         var height = top.getTopMainHeight()-105;
         var table_options = {height:height,striped:true,sortStable:false,showRefresh:false,selectModel:1
             ,cache:false,showToggle:false,search:false,queryParams:searchPrams,toolbar:false
-            ,showColumns:false,idField:"id",mypagination:true,url:'ec/engineering/artificialcontractledger/query'};
+            ,showColumns:false,idField:"id",mypagination:true,url:'ec/skilldisclosure/proqmskillledger/query'};
         tblMain = $('#tblMain').myDataTable(table_options);
     }
     function searchPrams(){
         var params = {};
         params.projectId = curSelOrg.id;
         params.directorName = $("input[name='directorName']").val();
-        params.unitName = $("input[name='unitName']").val();
+        params.sendee = $("input[name='sendee']").val();
         return webUtil.json2Str(params);
     }
     $(function(){

@@ -8,7 +8,10 @@ import com.myapp.core.entity.PositionInfo;
 import com.myapp.core.enums.DataTypeEnum;
 import com.myapp.core.model.ColumnModel;
 import com.myapp.core.model.WebDataModel;
+import com.myapp.core.util.EnumUtil;
+import com.myapp.core.util.WebUtil;
 import com.myapp.entity.ec.basedata.ProBaseWbsInfo;
+import com.myapp.enums.ec.SkillType;
 import com.myapp.service.ec.basedata.QualityTemplateDetailService;
 import com.myapp.service.ec.basedata.QualityTemplateService;
 import org.apache.commons.lang3.StringUtils;
@@ -18,7 +21,10 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.annotation.Resource;
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  *-----------MySong---------------
@@ -65,5 +71,25 @@ public class QualityTemplateListController extends BaseDataListController {
 			this.data = qualityTemplateDetailService.queryByQualityTemplateId(qualityTemplateId);
 		}
 		return super.ajaxModel();
+	}
+
+	@AuthorAnn(doPermission=false)
+	@RequestMapping(value="/show/tree")
+	@ResponseBody
+	public WebDataModel showTree(String targetId) {
+		try{
+			List<Map<String,Object>> result = qualityTemplateService.queryProjectQualityTemplate(WebUtil.UUID_ReplaceID(targetId));
+			List<Map<String,Object>> rootList = new ArrayList<>();
+			Map root = new HashMap();
+			root.put("id", "");
+			root.put("name", "质量样板标准");
+			root.put("children", result);
+			rootList.add(root);
+			data = rootList;
+		}catch(Exception e){
+			e.printStackTrace();
+			setErrorMesg(e.getMessage());
+		}
+		return ajaxModel();
 	}
 }

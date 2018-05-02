@@ -2,7 +2,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-	<title>会议纪要</title>
+	<title>会议纪要台账</title>
 </head>
 <script type="text/javascript">
 </script>

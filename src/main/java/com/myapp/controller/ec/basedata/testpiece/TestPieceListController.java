@@ -26,7 +26,7 @@ import java.util.Map;
 /**
  * @author ly
  */
-@PermissionAnn(name="系统管理.现场管理.基础数据.试件管理",number="app.ec.basedata.testpiece")
+@PermissionAnn(name="系统管理.现场管理.基础数据.试件台",number="app.ec.basedata.testpiece")
 @Controller
 @RequestMapping("ec/basedata/testpieces")
 public class TestPieceListController extends BaseListController {

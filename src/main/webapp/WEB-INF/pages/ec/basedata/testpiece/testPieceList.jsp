@@ -2,7 +2,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-	<title>试件列表信息</title>
+	<title>试件台</title>
 </head>
 <script type="text/javascript">
 </script>

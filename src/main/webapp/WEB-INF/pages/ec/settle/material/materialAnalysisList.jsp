@@ -67,9 +67,11 @@
 						<th data-field="fname" width="100">材料名称</th>
 						<th data-field="fSpecification" width="100">规格</th>
 						<th data-field="unitName" width="60">单位</th>
-						<th data-field="quantity"width="100" >预算数量</th>
-						<th data-field="purchaseCount"  width="100">当期入库数量</th>
-						<th data-field="settleCount"  width="100">当期结算数量</th>
+						<th data-field="quantity" width="100" >预算数量</th>
+						<th data-field="quantityPrice" width="100" data-formatter="quantityPrice">平均预算单价</th>
+						<th data-field="purchaseCount" width="100">当期入库数量</th>
+						<th data-field="settleCount" width="100">当期结算数量</th>
+						<th data-field="settlePrice" width="100" data-formatter="settlePrice" >平均结算单价</th>
 						<th data-field="fCalculationCount"  width="100">当期图算用量</th>
 						<th data-field="fActualUseCount"  width="100">当期实际用量</th>
 						<th data-field="fstartdate"  data-type="date" width="120">开始时间</th>
@@ -132,6 +134,16 @@
         params.endDate = $("input[name='endDate']").val();
         params.materialName = $("input[name='materialName']").val();
         return webUtil.json2Str(params);
+    }
+    function quantityPrice(value, row, index) {
+		if(row.quantity>0){
+		    return Number(row.quantityPrice/row.quantity).toFixed(2);
+		}
+    }
+    function settlePrice(value, row, index) {
+        if(row.settleCount>0){
+            return Number(row.settlePrice/row.settleCount).toFixed(2);
+        }
     }
     $(function(){
         var height = top.getTopMainHeight()-40;

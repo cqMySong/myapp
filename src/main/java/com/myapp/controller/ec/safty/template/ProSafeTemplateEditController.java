@@ -2,6 +2,7 @@ package com.myapp.controller.ec.safty.template;
 
 import com.myapp.core.annotation.AuthorAnn;
 import com.myapp.core.annotation.PermissionAnn;
+import com.myapp.core.annotation.PermissionItemAnn;
 import com.myapp.core.base.entity.CoreBaseInfo;
 import com.myapp.core.base.service.impl.AbstractBaseService;
 import com.myapp.core.controller.BaseBillEditController;
@@ -18,6 +19,7 @@ import com.myapp.service.ec.safty.ProSafeTemplateDetailService;
 import com.myapp.service.ec.safty.ProSafeTemplateService;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.annotation.Resource;
@@ -104,5 +106,20 @@ public class ProSafeTemplateEditController extends BaseBillEditController {
     public WebDataModel queryJobRequire(String proSafeTemplateId) {
         this.data = proSafeTemplateDetailService.queryJobRequireByProSafeTemplateId(proSafeTemplateId);
         return ajaxModel();
+    }
+
+    @PermissionItemAnn(name="导入保存",number="batchSave")
+    @ResponseBody
+    @RequestMapping(value="/batch/import",method= RequestMethod.POST)
+    public WebDataModel batchImportSave(String structId, String structCode, String wbsIds) {
+        WebDataModel webDataModel = new WebDataModel();
+        try{
+            proSafeTemplateService.batchSave(structId,getCurUser(),wbsIds);
+            webDataModel.setStatusCode(STATUSCODE_SUCCESS);
+        }catch (Exception e) {
+            e.printStackTrace();
+            setExceptionMesg(e.getMessage());
+        }
+        return webDataModel;
     }
 }

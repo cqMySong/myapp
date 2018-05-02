@@ -29,7 +29,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-@PermissionAnn(name="系统管理.现场管理.基础数据.会议纪要",number="app.ec.basedata.meetingsummary")
+@PermissionAnn(name="系统管理.现场管理.基础数据.会议纪要台账",number="app.ec.basedata.meetingsummary")
 @Controller
 @RequestMapping("ec/basedata/meetingsummaries")
 public class MeetingSummaryListController extends BaseListController {

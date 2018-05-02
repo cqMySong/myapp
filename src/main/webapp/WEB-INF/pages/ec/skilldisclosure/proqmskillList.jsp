@@ -31,7 +31,7 @@
 								<th data-field="disclosurer_name">交底人</th>
 								<th data-field="finishTime" data-type="date">交底时间</th>
 								<th data-field="createDate" data-type="date">创建时间</th>
-								<th data-field="projectStartTime" data-type="date">工程开始时间</th>
+								<!--<th data-field="projectStartTime" data-type="date">工程开始时间</th>-->
 							</tr>
 						</thead>
 					</table>
@@ -93,7 +93,7 @@ function getAllChildrenNodes(treeNode,result){
 }
 $(document).ready(function() {
      var treeNode2QueryProp = ["id","name","number","longNumber","type"];
-     var editWin ={title:'项目施工技术交底',width:620,height:340,id:"proqmskill_tab"};
+     var editWin ={title:'项目施工技术交底',width:620,height:440};
      var treeOpt = {setting:{data: {
          	simpleData: {enable:true,idKey: "id", pIdKey: "parentId",rootPId: ''}
     	 }}};

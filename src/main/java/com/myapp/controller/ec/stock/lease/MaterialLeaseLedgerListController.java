@@ -56,11 +56,8 @@ public class MaterialLeaseLedgerListController extends BasePageListController {
             if(searchMap!=null&&searchMap.get("projectId")!=null){
                 projectId = searchMap.get("projectId").toString();
             }
-            if(searchMap!=null&&searchMap.get("startDate")!=null){
-                params.put("startDate",searchMap.get("startDate"));
-            }
-            if(searchMap!=null&&searchMap.get("endDate")!=null){
-                params.put("endDate",searchMap.get("endDate"));
+            if(searchMap!=null&&searchMap.get("materialName")!=null){
+                params.put("materialName",searchMap.get("materialName"));
             }
             if(searchMap!=null&&searchMap.get("leaseUnit")!=null){
                 params.put("leaseUnit",searchMap.get("leaseUnit"));

@@ -10,7 +10,7 @@
 <script type="text/javascript">
 
 </script>
-<body style="padding: 5px;">
+<body style="padding: 5px;" class="panel">
 <div id="editPanel" class="myMainContent panel">
 	<div id="table-toolbar"></div>
 	<form id="editForm">
@@ -57,7 +57,7 @@
 					<thead>
 					<tr>
 						<th data-field="materialType" data-width="80" data-type="select" data-locked="true">物料类型</th>
-						<th data-field="budgetingDetailInfo" data-type="f7"  data-width="150"
+						<th data-field="budgetingDetailInfo" data-type="f7"
 							data-editor="{mutil:true,uiWin:{title:'预算详细',height:580,width:880,url:'ec/budget/budgetingDetailF7',uiParams:getParams}}">物料名称</th>
 						<th data-field="specification" data-type="text" data-locked="true" data-width="100">规格</th>
 						<th data-field="measureUnit" data-type="f7" data-locked="true" data-width="80">计量单位</th>
@@ -209,8 +209,10 @@
         }
     }
     $(document).ready(function() {
-        var height = window.outerHeight-470
-        var entryOption = "{type:'entry',height:"+height+",tableOpt:{editDataChanged:enquiryPriceDetailInfos_dataChanged}"+
+        var height = top.getTopMainHeight()+100;
+        height = height>760?760:height;
+        var winHeight = height-480;
+        var entryOption = "{type:'entry',height:"+(winHeight<260?260:winHeight)+",tableOpt:{editDataChanged:enquiryPriceDetailInfos_dataChanged}"+
             ",toolbar:{title:'预算询价明细'}}";
 		$("table.input-entry").attr("data-opt",entryOption);
         editUI = $('#editPanel').editUI({
@@ -230,7 +232,7 @@
             rightBtnGroup.addBtn({entry:enquiryPriceDetailInfosEntry,css:'btn-sm',text:'复制插入',icon:"fa fa-edit",clickFun:btnCopyInsertRow});
             enquiryPriceDetailInfosEntry.resetView();
         }
-        webUtil.initMainPanel('#editPanel');
+        //webUtil.initMainPanel('#editPanel');
     })
 </script>
 </html>

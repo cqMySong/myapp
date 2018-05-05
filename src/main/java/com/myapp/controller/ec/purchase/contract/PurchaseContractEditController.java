@@ -1,5 +1,6 @@
 package com.myapp.controller.ec.purchase.contract;
 
+import com.myapp.core.annotation.AuthorAnn;
 import com.myapp.core.annotation.PermissionAnn;
 import com.myapp.core.base.entity.CoreBaseInfo;
 import com.myapp.core.base.service.impl.AbstractBaseService;
@@ -99,12 +100,17 @@ public class PurchaseContractEditController extends BaseBillEditController {
 
         return cols;
     }
-
+    @AuthorAnn(doLongin=true,doPermission=false)
     @RequestMapping("/detail")
     @ResponseBody
     public WebDataModel getPurchaseContractDetail(String purchaseContractId) {
         WebDataModel webDataModel = new WebDataModel();
-        webDataModel.setData(purchaseContractDetailService.getByPurchaseContractId(purchaseContractId));
+        try {
+            webDataModel.setData(purchaseContractDetailService.getByPurchaseContractId(purchaseContractId));
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+
         webDataModel.setStatusCode(STATUSCODE_SUCCESS);
         return webDataModel;
     }

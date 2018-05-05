@@ -10,7 +10,7 @@
 <script type="text/javascript">
 
 </script>
-<body style="padding: 5px;">
+<body style="padding: 5px;" class="panel">
 <div id="editPanel" class="myMainContent panel">
 	<div id="table-toolbar"></div>
 	<form id="editForm">
@@ -194,8 +194,10 @@
         }
     }
     $(document).ready(function() {
-        var height = window.outerHeight-460;
-        var entryOption = "{type:'entry',height:"+height+",tableOpt:{}"+
+        var height = top.getTopMainHeight()+100;
+        height = height>760?760:height;
+        var winHeight = height-480;
+        var entryOption = "{type:'entry',height:"+(winHeight<260?260:winHeight)+",tableOpt:{}"+
             ",toolbar:{title:'图算用量物料列表'}}";
 		$("table.input-entry").attr("data-opt",entryOption);
         editUI = $('#editPanel').editUI({
@@ -213,7 +215,7 @@
             stockCalculationDetailInfosEntry = stockCalculationDetailInfosEntryObj.entry;
             stockCalculationDetailInfosEntry.resetView();
         }
-        webUtil.initMainPanel('#editPanel');
+        //webUtil.initMainPanel('#editPanel');
     })
 </script>
 </html>

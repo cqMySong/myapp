@@ -76,6 +76,7 @@
 					<th data-field="payDate" data-type="date">支付日期</th>
 					<th data-field="payAmountRatio" data-formatter="payAmountRatioFormatter">劳务费支付比例</th>
 					<th data-field="contractRatio" data-formatter="contractRatioFormatter">合同约定比例</th>
+					<th data-field="remark">备注</th>
 				</tr>
 				</thead>
 			</table>

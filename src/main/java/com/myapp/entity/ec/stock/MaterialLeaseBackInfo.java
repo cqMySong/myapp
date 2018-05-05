@@ -2,13 +2,11 @@ package com.myapp.entity.ec.stock;
 
 import com.myapp.core.annotation.MyEntityAnn;
 import com.myapp.core.base.entity.CoreBaseBillInfo;
-import com.myapp.core.entity.MaterialInfo;
-import com.myapp.core.entity.MeasureUnitInfo;
 import com.myapp.entity.ec.basedata.ProjectInfo;
 
 import javax.persistence.*;
-import java.math.BigDecimal;
 import java.util.Date;
+import java.util.Set;
 
 /**
  * @path：com.myapp.entity.ec.stock
@@ -18,29 +16,26 @@ import java.util.Date;
  */
 @Entity
 @MyEntityAnn(name="材料周转、租用归还信息")
-@Table(name="t_ec_material_back")
+@Table(name="t_ec_material_lease_back")
 public class MaterialLeaseBackInfo extends CoreBaseBillInfo {
     /**
      * 项目工程
      */
     private ProjectInfo project;
-
-    private MaterialLeaseInfo materialLeaseInfo;
-
     /**
-     * 材料信息
+     * 出租单位
      */
-    private MaterialInfo materialInfo;
-    /**
-     * 单位
-     */
-    private MeasureUnitInfo measureUnitInfo;
+    private String leaseUnit;
+
 
     private Date backDate;
 
-    private BigDecimal backCount;
-
     private String remark;
+
+    /**
+     * 归还详细信息
+     */
+    private Set<MaterialLeaseBackDetailInfo> materialLeaseBackDetailInfos;
 
     @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "fProjectId")
@@ -52,15 +47,6 @@ public class MaterialLeaseBackInfo extends CoreBaseBillInfo {
         this.project = project;
     }
 
-    @OneToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "fMaterialLeaseId")
-    public MaterialLeaseInfo getMaterialLeaseInfo() {
-        return materialLeaseInfo;
-    }
-
-    public void setMaterialLeaseInfo(MaterialLeaseInfo materialLeaseInfo) {
-        this.materialLeaseInfo = materialLeaseInfo;
-    }
 
     @Column(name="fBackDate")
     public Date getBackDate() {
@@ -71,14 +57,6 @@ public class MaterialLeaseBackInfo extends CoreBaseBillInfo {
         this.backDate = backDate;
     }
 
-    @Column(name="fBackCount",precision = 10,scale = 2)
-    public BigDecimal getBackCount() {
-        return backCount;
-    }
-
-    public void setBackCount(BigDecimal backCount) {
-        this.backCount = backCount;
-    }
 
     @Column(name="fRemark",length = 500)
     public String getRemark() {
@@ -89,23 +67,22 @@ public class MaterialLeaseBackInfo extends CoreBaseBillInfo {
         this.remark = remark;
     }
 
-    @OneToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "fMaterialId")
-    public MaterialInfo getMaterialInfo() {
-        return materialInfo;
+    @Column(name="fLeaseUnit",length = 200)
+    public String getLeaseUnit() {
+        return leaseUnit;
     }
 
-    public void setMaterialInfo(MaterialInfo materialInfo) {
-        this.materialInfo = materialInfo;
+    public void setLeaseUnit(String leaseUnit) {
+        this.leaseUnit = leaseUnit;
     }
 
-    @OneToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "fMeasureUnitId")
-    public MeasureUnitInfo getMeasureUnitInfo() {
-        return measureUnitInfo;
+    @OneToMany(cascade={CascadeType.ALL},mappedBy="parent")
+    @OrderBy("seq ASC")
+    public Set<MaterialLeaseBackDetailInfo> getMaterialLeaseBackDetailInfos() {
+        return materialLeaseBackDetailInfos;
     }
 
-    public void setMeasureUnitInfo(MeasureUnitInfo measureUnitInfo) {
-        this.measureUnitInfo = measureUnitInfo;
+    public void setMaterialLeaseBackDetailInfos(Set<MaterialLeaseBackDetailInfo> materialLeaseBackDetailInfos) {
+        this.materialLeaseBackDetailInfos = materialLeaseBackDetailInfos;
     }
 }

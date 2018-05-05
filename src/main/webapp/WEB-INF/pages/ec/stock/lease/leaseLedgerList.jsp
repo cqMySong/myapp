@@ -34,14 +34,8 @@
 	<div id="table-toolbar" style="height:40px;padding-top: 2px;">
 		<div class="col-sm-3">
 			<div class="input-group">
-				<span class="input-group-addon lable">出租开始时间</span>
-				<input name="startDate"  autocomplete="off" type="text" class="input-item form-control read" data-opt="{type:'date'}">
-			</div>
-		</div>
-		<div class="col-sm-3">
-			<div class="input-group">
-				<span class="input-group-addon lable">出租结束时间</span>
-				<input name="endDate"  autocomplete="off" type="text" class="input-item form-control read" data-opt="{type:'date'}">
+				<span class="input-group-addon lable">材料名称</span>
+				<input name="materialName"  type="text" class="input-item form-control ">
 			</div>
 		</div>
 		<div class="col-sm-3">
@@ -65,20 +59,24 @@
 				<tr>
 					<th data-field="materialNumber" rowspan="2">编号</th>
 					<th data-field="materialName" rowspan="2">材料、设备名称</th>
-					<th data-field="materialType" rowspan="2" data-formatter="materialTypeFormatter">类型</th>
-					<th data-field="materialUnit" rowspan="2">单位</th>
-					<th data-field="leaseUnit" rowspan="2">出租单位</th>
-					<th colspan="2">租用</th>
-					<th colspan="2">归还</th>
+					<th data-field="unitName" rowspan="2">单位</th>
+					<th colspan="4">租用</th>
+					<th colspan="4">归还</th>
 					<th colspan="2">现场损耗</th>
+					<th data-field="leaseUnit" rowspan="2">出租单位</th>
+					<th data-field="remark" rowspan="2" data-type="textarea">备注</th>
 				</tr>
 				<tr>
 					<th data-field="leaseDate" data-type="date">时间</th>
 					<th data-field="leaseCount">数量</th>
+					<th data-field="leaseTotalCount">累计数量</th>
+					<th data-field="leaseAttach" data-formatter="showLeaseAttach">附件</th>
 					<th data-field="backDate" data-type="date">时间</th>
 					<th data-field="backCount">数量</th>
-					<th data-field="diffCount">数量</th>
-					<th data-field="diffRatio">比值（%）</th>
+					<th data-field="backTotalCount">累计数量</th>
+					<th data-field="backAttach" data-formatter="showBackAttach">附件</th>
+					<th data-field="diffCount" data-formatter="diffCountFormatter">数量</th>
+					<th data-field="diffRatio" data-formatter="diffRatioFormatter">比值（%）</th>
 				</tr>
 				</thead>
 			</table>
@@ -99,6 +97,18 @@
             tblMain.refreshData();
         }
     }
+    function diffRatioFormatter(value, row, index){
+        if(!row.backTotalCount){
+            return "100%";
+        }
+        return Number((row.leaseTotalCount-row.backTotalCount)*100/row.leaseTotalCount).toFixed(2)+"%";
+    }
+    function diffCountFormatter(value, row, index){
+        if(!row.backTotalCount){
+            return row.leaseTotalCount;
+        }
+        return (row.leaseTotalCount-row.backTotalCount);
+    }
     function materialTypeFormatter(value, row, index){
         var txt = value;
         if(value=='STRUCTURE'){
@@ -107,6 +117,14 @@
             txt = '机械';
         }
         return txt;
+    }
+    function showLeaseAttach(value, row, index) {
+        if(!value){return value};
+        return "<a href=\"javascript:webUtil.showAttach('"+row.leaseId+"','');\">"+value+"</a>";
+    }
+    function showBackAttach(value, row, index) {
+        if(!value){return value};
+        return "<a href=\"javascript:webUtil.showAttach('"+row.backId+"','');\">"+value+"</a>";
     }
     function initOrgTree(height){
         var treeOpt = {view: {dblClickExpand: true,selectedMulti: false}
@@ -132,7 +150,7 @@
         }});
     }
     function initTable(){
-        var height = top.getTopMainHeight()-105;
+        var height = top.getTopMainHeight()-50;
         var table_options = {height:height,striped:true,sortStable:false,showRefresh:false,selectModel:1
             ,cache:false,showToggle:false,search:false,queryParams:searchPrams,toolbar:false,rowStyle:changeBgColor
             ,showColumns:false,idField:"id",mypagination:true,url:'ec/stock/leaseledger/query'};
@@ -141,8 +159,7 @@
     function searchPrams(){
         var params = {};
         params.projectId = curSelOrg.id;
-        params.startDate = $("input[name='startDate']").val();
-        params.endDate = $("input[name='endDate']").val();
+        params.materialName = $("input[name='materialName']").val();
         params.leaseUnit = $("input[name='leaseUnit']").val();
         return webUtil.json2Str(params);
     }

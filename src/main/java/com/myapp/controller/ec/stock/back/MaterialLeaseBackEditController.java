@@ -16,7 +16,9 @@ import com.myapp.core.enums.MaterialType;
 import com.myapp.core.exception.db.QueryException;
 import com.myapp.core.model.ColumnModel;
 import com.myapp.entity.ec.basedata.ProjectInfo;
+import com.myapp.entity.ec.stock.MaterialLeaseBackDetailInfo;
 import com.myapp.entity.ec.stock.MaterialLeaseBackInfo;
+import com.myapp.entity.ec.stock.MaterialLeaseDetailInfo;
 import com.myapp.entity.ec.stock.MaterialLeaseInfo;
 import com.myapp.service.ec.stock.MaterialLeaseBackService;
 import com.myapp.service.ec.stock.MaterialLeaseService;
@@ -42,7 +44,6 @@ public class MaterialLeaseBackEditController extends BaseBillEditController {
     @Override
     public Object createNewData() {
         MaterialLeaseBackInfo materialLeaseBackInfo = new MaterialLeaseBackInfo();
-        materialLeaseBackInfo.setName("单据名称");
         return materialLeaseBackInfo;
     }
 
@@ -56,20 +57,6 @@ public class MaterialLeaseBackEditController extends BaseBillEditController {
         return this.materialLeaseBackService;
     }
 
-    @Override
-    public void afterOperate(BaseMethodEnum bme) throws HibernateException, QueryException {
-        super.afterOperate(bme);
-        if(this.data!=null){
-            if(!bme.getValue().equals(BaseMethodEnum.ADDNEW.getValue())&&this.data instanceof JSONObject){
-                JSONObject jsonObject = (JSONObject) this.data;
-                JSONObject materialLeaseInfo = jsonObject.getJSONObject("materialLeaseInfo");
-                materialLeaseInfo.put("name",materialLeaseInfo.getString("number"));
-                jsonObject.put("materialLeaseInfo",materialLeaseInfo);
-                jsonObject.put("leaseUnit",materialLeaseInfo.getString("leaseUnit"));
-                this.data = jsonObject;
-            }
-        }
-    }
 
     @Override
     public List<ColumnModel> getDataBinding() {
@@ -77,7 +64,7 @@ public class MaterialLeaseBackEditController extends BaseBillEditController {
         cols.add(new ColumnModel("name"));
         cols.add(new ColumnModel("number"));
         cols.add(new ColumnModel("backDate",DataTypeEnum.DATE));
-        cols.add(new ColumnModel("backCount",DataTypeEnum.NUMBER));
+        cols.add(new ColumnModel("leaseUnit",DataTypeEnum.STRING));
         cols.add(new ColumnModel("remark",DataTypeEnum.STRING));
         cols.add(new ColumnModel("billState",DataTypeEnum.ENUM, BillState.class));
         cols.add(new ColumnModel("createUser",DataTypeEnum.F7,UserInfo.class));
@@ -91,17 +78,21 @@ public class MaterialLeaseBackEditController extends BaseBillEditController {
         project.setClaz(ProjectInfo.class);
         cols.add(project);
 
-        ColumnModel materialLeaseInfo = new ColumnModel("materialLeaseInfo",DataTypeEnum.F7,"id,number,leaseUnit");
-        materialLeaseInfo.setClaz(MaterialLeaseInfo.class);
-        cols.add(materialLeaseInfo);
-
-        ColumnModel materialInfo = new ColumnModel("materialInfo",DataTypeEnum.F7,"id,name");
+        ColumnModel materialLeaseBackDetailInfos = new ColumnModel("materialLeaseBackDetailInfos", DataTypeEnum.ENTRY,
+                MaterialLeaseBackDetailInfo.class);
+        ColumnModel materialInfo = new ColumnModel("materialInfo", DataTypeEnum.F7,"id,name");
         materialInfo.setClaz(MaterialInfo.class);
-        cols.add(materialInfo);
+        materialLeaseBackDetailInfos.getCols().add(materialInfo);
 
-        ColumnModel measureUnitInfo = new ColumnModel("measureUnitInfo",DataTypeEnum.F7,"id,name");
+        ColumnModel measureUnitInfo = new ColumnModel("measureUnitInfo", DataTypeEnum.F7,"id,name");
         measureUnitInfo.setClaz(MeasureUnitInfo.class);
-        cols.add(measureUnitInfo);
+        materialLeaseBackDetailInfos.getCols().add(measureUnitInfo);
+
+        materialLeaseBackDetailInfos.getCols().add(new ColumnModel("materialType", DataTypeEnum.ENUM, MaterialType.class));
+        materialLeaseBackDetailInfos.getCols().add(new ColumnModel("backCount", DataTypeEnum.NUMBER));
+        materialLeaseBackDetailInfos.getCols().add(new ColumnModel("remark", DataTypeEnum.STRING));
+        materialLeaseBackDetailInfos.getCols().add(new ColumnModel("specification", DataTypeEnum.STRING));
+        cols.add(materialLeaseBackDetailInfos);
         return cols;
     }
 }

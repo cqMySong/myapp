@@ -76,7 +76,7 @@
 						<th data-field="fActualUseCount"  width="100">当期实际用量</th>
 						<th data-field="fstartdate"  data-type="date" width="120">开始时间</th>
 						<th data-field="fenddate" data-type="date" width="120">结束时间</th>
-						<th data-field="remark" width="200">预警</th>
+						<th data-field="remark" data-type="textarea" width="200">备注</th>
 					</tr>
 				</thead>
 			</table>

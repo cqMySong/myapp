@@ -92,21 +92,12 @@ public class MaterialLeaseListController extends BaseListController {
         cols.add(new ColumnModel("createDate", DataTypeEnum.DATETIME));
         cols.add(new ColumnModel("leaseUnit",DataTypeEnum.STRING));
         cols.add(new ColumnModel("leaseDate",DataTypeEnum.DATE));
-        cols.add(new ColumnModel("leaseCount",DataTypeEnum.NUMBER));
         cols.add(new ColumnModel("remark",DataTypeEnum.STRING));
         cols.add(new ColumnModel("billState",DataTypeEnum.ENUM, BillState.class));
 
         ColumnModel project = new ColumnModel("project",DataTypeEnum.F7,"id,name");
         project.setClaz(ProjectInfo.class);
         cols.add(project);
-
-        ColumnModel materialInfo = new ColumnModel("materialInfo",DataTypeEnum.F7,"id,name");
-        materialInfo.setClaz(MaterialInfo.class);
-        cols.add(materialInfo);
-
-        ColumnModel measureUnitInfo = new ColumnModel("measureUnitInfo",DataTypeEnum.F7,"id,name");
-        measureUnitInfo.setClaz(MeasureUnitInfo.class);
-        cols.add(measureUnitInfo);
 
         ColumnModel createUser = new ColumnModel("createUser",DataTypeEnum.F7,"id,name");
         createUser.setClaz(UserInfo.class);

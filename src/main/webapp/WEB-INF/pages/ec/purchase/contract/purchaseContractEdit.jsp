@@ -10,7 +10,7 @@
 <script type="text/javascript">
 
 </script>
-<body style="padding: 5px;">
+<body style="padding: 5px;" class="panel">
 <div id="editPanel" class="myMainContent panel">
 	<div id="table-toolbar"></div>
 	<form id="editForm">
@@ -194,12 +194,12 @@
                             materialName:applyMaterialInfo["bdi.materialName"],
                             applyMaterialDetailInfo:{id: applyMaterialInfo.id},
                             measureUnitName:applyMaterialInfo["mui.name"],
-                            material:{id:applyMaterialInfo["mater.id"],name:applyMaterialInfo["bdi.materialName"]}};
+                            material:{id:applyMaterialInfo["ma.id"],name:applyMaterialInfo["bdi.materialName"]}};
                         purchaseContractDetailInfosEntry.insertRow(obj.rowIndex+i,rowData);
 					}
 				});
                 purchaseContractDetailInfosEntry.setTableCellValue(obj.rowIndex, 'material',
-                    {id:applyMaterialFirst["mater.id"],name:applyMaterialFirst["bdi.materialName"]});
+                    {id:applyMaterialFirst["ma.id"],name:applyMaterialFirst["bdi.materialName"]});
             }
 		}
         if(obj.rowData["quantity"]&&obj.rowData["purchasePrice"]){
@@ -248,8 +248,10 @@
         }
     }
     $(document).ready(function() {
-        var height = window.outerHeight-515;
-        var entryOption = "{type:'entry',height:"+height+",tableOpt:{editDataChanged:purchaseContractDetailInfos_dataChanged}"+
+        var height = top.getTopMainHeight()+100;
+        height = height>760?760:height;
+        var winHeight = height-480;
+        var entryOption = "{type:'entry',height:"+(winHeight<220?220:winHeight)+",tableOpt:{editDataChanged:purchaseContractDetailInfos_dataChanged}"+
             ",toolbar:{title:'采购合同清单'}}";
 		$("table.input-entry").attr("data-opt",entryOption);
         editUI = $('#editPanel').editUI({
@@ -269,7 +271,7 @@
             rightBtnGroup.addBtn({entry:purchaseContractDetailInfosEntry,css:'btn-sm',text:'复制插入',icon:"fa fa-edit",clickFun:btnCopyInsertRow});
             purchaseContractDetailInfosEntry.resetView();
         }
-        webUtil.initMainPanel('#editPanel');
+        //webUtil.initMainPanel('#editPanel');
     })
 </script>
 </html>

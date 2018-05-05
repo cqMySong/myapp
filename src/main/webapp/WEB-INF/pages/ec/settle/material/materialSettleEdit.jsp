@@ -10,7 +10,7 @@
 <script type="text/javascript">
 
 </script>
-<body style="padding: 5px;">
+<body style="padding: 5px;" class="panel">
 <div id="editPanel" class="myMainContent panel">
 	<div id="table-toolbar" style="height: 20px;"></div>
 	<form id="editForm">
@@ -218,8 +218,10 @@
         }
     }
     $(document).ready(function() {
-        var height = window.outerHeight-460;
-        var entryOption = "{type:'entry',height:"+height+",tableOpt:{}"+
+        var height = top.getTopMainHeight()+100;
+        height = height>760?760:height;
+        var winHeight = height-480;
+        var entryOption = "{type:'entry',height:"+(winHeight<200?200:winHeight)+",tableOpt:{}"+
             ",toolbar:{title:'结算物料清单',addBtn:null,removeBtn:null}}";
 		$("table.input-entry").attr("data-opt",entryOption);
         editUI = $('#editPanel').editUI({
@@ -236,7 +238,7 @@
         if(!webUtil.isEmpty(materialSettleDetailInfosEntryObj)){
             materialSettleDetailInfosEntry = materialSettleDetailInfosEntryObj.entry;
         }
-        webUtil.initMainPanel('#editPanel');
+        //webUtil.initMainPanel('#editPanel');
     })
 </script>
 </html>

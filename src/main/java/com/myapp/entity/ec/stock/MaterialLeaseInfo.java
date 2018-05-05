@@ -10,6 +10,7 @@ import com.myapp.entity.ec.basedata.ProjectInfo;
 import javax.persistence.*;
 import java.math.BigDecimal;
 import java.util.Date;
+import java.util.Set;
 
 /**
  * @path：com.myapp.entity.ec.stock
@@ -25,22 +26,11 @@ public class MaterialLeaseInfo extends CoreBaseBillInfo {
      * 项目工程
      */
     private ProjectInfo project;
-    /**
-     * 材料信息
-     */
-    private MaterialInfo materialInfo;
-    /**
-     * 单位
-     */
-    private MeasureUnitInfo measureUnitInfo;
+
     /**
      * 租用日期
      */
     private Date leaseDate;
-    /**
-     * 租用数量
-     */
-    private BigDecimal leaseCount;
 
     /**
      * 出租单位
@@ -51,7 +41,11 @@ public class MaterialLeaseInfo extends CoreBaseBillInfo {
      */
     private String remark;
 
-    private MaterialLeaseBackInfo materialLeaseBackInfo;
+    /**
+     * 出租详细信息
+     */
+    private Set<MaterialLeaseDetailInfo> materialLeaseDetailInfos;
+
 
     @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "fProjectId")
@@ -63,25 +57,6 @@ public class MaterialLeaseInfo extends CoreBaseBillInfo {
         this.project = project;
     }
 
-    @OneToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "fMaterialId")
-    public MaterialInfo getMaterialInfo() {
-        return materialInfo;
-    }
-
-    public void setMaterialInfo(MaterialInfo materialInfo) {
-        this.materialInfo = materialInfo;
-    }
-
-    @OneToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "fMeasureUnitId")
-    public MeasureUnitInfo getMeasureUnitInfo() {
-        return measureUnitInfo;
-    }
-
-    public void setMeasureUnitInfo(MeasureUnitInfo measureUnitInfo) {
-        this.measureUnitInfo = measureUnitInfo;
-    }
     @Column(name="fLeaseDate")
     public Date getLeaseDate() {
         return leaseDate;
@@ -90,14 +65,7 @@ public class MaterialLeaseInfo extends CoreBaseBillInfo {
     public void setLeaseDate(Date leaseDate) {
         this.leaseDate = leaseDate;
     }
-    @Column(name="fLeaseCount",precision = 10,scale = 2)
-    public BigDecimal getLeaseCount() {
-        return leaseCount;
-    }
 
-    public void setLeaseCount(BigDecimal leaseCount) {
-        this.leaseCount = leaseCount;
-    }
     @Column(name="fLeaseUnit",length = 200)
     public String getLeaseUnit() {
         return leaseUnit;
@@ -115,12 +83,13 @@ public class MaterialLeaseInfo extends CoreBaseBillInfo {
         this.remark = remark;
     }
 
-    @OneToOne(cascade={CascadeType.ALL},mappedBy="materialLeaseInfo")
-    public MaterialLeaseBackInfo getMaterialLeaseBackInfo() {
-        return materialLeaseBackInfo;
+    @OneToMany(cascade={CascadeType.ALL},mappedBy="parent")
+    @OrderBy("seq ASC")
+    public Set<MaterialLeaseDetailInfo> getMaterialLeaseDetailInfos() {
+        return materialLeaseDetailInfos;
     }
 
-    public void setMaterialLeaseBackInfo(MaterialLeaseBackInfo materialLeaseBackInfo) {
-        this.materialLeaseBackInfo = materialLeaseBackInfo;
+    public void setMaterialLeaseDetailInfos(Set<MaterialLeaseDetailInfo> materialLeaseDetailInfos) {
+        this.materialLeaseDetailInfos = materialLeaseDetailInfos;
     }
 }

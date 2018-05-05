@@ -10,7 +10,7 @@
 <script type="text/javascript">
 
 </script>
-<body style="padding: 5px;">
+<body style="padding: 5px;" class="panel">
 <div id="editPanel" class="myMainContent panel">
 	<div id="table-toolbar"></div>
 	<form id="editForm">
@@ -201,8 +201,10 @@
         }
     }
     $(document).ready(function() {
-        var height = window.outerHeight-460;
-        var entryOption = "{type:'entry',height:"+height+",tableOpt:{editDataChanged:stockOutDetailInfos_dataChanged}"+
+        var height = top.getTopMainHeight()+100;
+        height = height>760?760:height;
+        var winHeight = height-480;
+        var entryOption = "{type:'entry',height:"+(winHeight<260?260:winHeight)+",tableOpt:{editDataChanged:stockOutDetailInfos_dataChanged}"+
             ",toolbar:{title:'领料出库清单'}}";
 		$("table.input-entry").attr("data-opt",entryOption);
         editUI = $('#editPanel').editUI({
@@ -222,7 +224,7 @@
             rightBtnGroup.addBtn({entry:stockOutDetailInfosEntry,css:'btn-sm',text:'复制插入',icon:"fa fa-edit",clickFun:btnCopyInsertRow});
             stockOutDetailInfosEntry.resetView();
         }
-        webUtil.initMainPanel('#editPanel');
+        //webUtil.initMainPanel('#editPanel');
     })
 </script>
 </html>

@@ -29,7 +29,7 @@ public class MaterialSettleService extends BaseInterfaceService<MaterialSettleIn
             throws QueryException {
         StringBuffer sql = new StringBuffer();
         sql.append("select b.fstartdate,b.fenddate,c.fMaterialId,c.fCalculationCount,d.fnumber,d.fname,")
-            .append("d.fSpecification,f.fname as unitName,a.fActualUseCount, ")
+            .append("d.fSpecification,f.fname as unitName,a.fActualUseCount,c.fremark as remark, ")
             .append("(select sum(b1.fQuantity) from t_ec_budgeting a1,t_ec_budgeting_detail b1 ")
             .append("where a1.fid = b1.fprentid and b1.fmaterialId = c.fMaterialId and a1.fProjectId=b.fProjectId ")
             .append("group by b1.fmaterialId) as quantity, ")

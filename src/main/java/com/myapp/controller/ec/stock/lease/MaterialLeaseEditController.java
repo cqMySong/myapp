@@ -14,6 +14,8 @@ import com.myapp.core.model.ColumnModel;
 import com.myapp.entity.ec.basedata.ProjectInfo;
 import com.myapp.entity.ec.engineering.SiteVisaInInfo;
 import com.myapp.entity.ec.engineering.SiteVisaOutInfo;
+import com.myapp.entity.ec.purchase.PurchaseContractDetailInfo;
+import com.myapp.entity.ec.stock.MaterialLeaseDetailInfo;
 import com.myapp.entity.ec.stock.MaterialLeaseInfo;
 import com.myapp.service.ec.engineering.SiteVisaInService;
 import com.myapp.service.ec.stock.MaterialLeaseService;
@@ -39,7 +41,6 @@ public class MaterialLeaseEditController extends BaseBillEditController {
     @Override
     public Object createNewData() {
         MaterialLeaseInfo materialLeaseInfo = new MaterialLeaseInfo();
-        materialLeaseInfo.setName("单据名称");
         return materialLeaseInfo;
     }
 
@@ -60,7 +61,6 @@ public class MaterialLeaseEditController extends BaseBillEditController {
         cols.add(new ColumnModel("number"));
         cols.add(new ColumnModel("leaseUnit",DataTypeEnum.STRING));
         cols.add(new ColumnModel("leaseDate",DataTypeEnum.DATE));
-        cols.add(new ColumnModel("leaseCount",DataTypeEnum.NUMBER));
         cols.add(new ColumnModel("remark",DataTypeEnum.STRING));
         cols.add(new ColumnModel("billState",DataTypeEnum.ENUM, BillState.class));
         cols.add(new ColumnModel("createUser",DataTypeEnum.F7,UserInfo.class));
@@ -74,13 +74,20 @@ public class MaterialLeaseEditController extends BaseBillEditController {
         project.setClaz(ProjectInfo.class);
         cols.add(project);
 
-        ColumnModel materialInfo = new ColumnModel("materialInfo",DataTypeEnum.F7,"id,name");
+        ColumnModel materialLeaseDetailInfos = new ColumnModel("materialLeaseDetailInfos", DataTypeEnum.ENTRY,
+                MaterialLeaseDetailInfo.class);
+        ColumnModel materialInfo = new ColumnModel("materialInfo", DataTypeEnum.F7,"id,name");
         materialInfo.setClaz(MaterialInfo.class);
-        cols.add(materialInfo);
+        materialLeaseDetailInfos.getCols().add(materialInfo);
 
-        ColumnModel measureUnitInfo = new ColumnModel("measureUnitInfo",DataTypeEnum.F7,"id,name");
+        ColumnModel measureUnitInfo = new ColumnModel("measureUnitInfo", DataTypeEnum.F7,"id,name");
         measureUnitInfo.setClaz(MeasureUnitInfo.class);
-        cols.add(measureUnitInfo);
+        materialLeaseDetailInfos.getCols().add(measureUnitInfo);
+        materialLeaseDetailInfos.getCols().add(new ColumnModel("materialType", DataTypeEnum.ENUM, MaterialType.class));
+        materialLeaseDetailInfos.getCols().add(new ColumnModel("leaseCount", DataTypeEnum.NUMBER));
+        materialLeaseDetailInfos.getCols().add(new ColumnModel("specification", DataTypeEnum.STRING));
+        materialLeaseDetailInfos.getCols().add(new ColumnModel("remark", DataTypeEnum.STRING));
+        cols.add(materialLeaseDetailInfos);
         return cols;
     }
 }

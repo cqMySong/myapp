@@ -192,10 +192,11 @@ public class ProjectTotalPlanEditController extends BaseBillEditImportController
     
     public String getFillRemark() {
     	StringBuffer sb = new StringBuffer();
-    	sb.append("\r\n\t 1:单位工程编码与名称必须对应存在且一致!");
-    	sb.append("\r\n\t 2:工程分解结构编码与名称必须对应存在且一致!");
-    	sb.append("\r\n\t 3:责任人为用户编码，多人用  , 分隔开!");
-    	sb.append("\r\n\t 4:计划开始日期和截止日期必须为日期格式[Y-M-D]，且开始日期小于截止日期!");
+//    	sb.append("\r\n\t 1:单位工程编码与名称必须对应存在且一致!");
+//    	sb.append("\r\n\t 2:工程分解结构编码与名称必须对应存在且一致!");
+    	sb.append("\r\n\t 1:工作内容必填，且不能为空!");
+    	sb.append("\r\n\t 2:责任人为用户编码，多人用  , 分隔开!");
+    	sb.append("\r\n\t 3:计划开始日期和截止日期必须为日期格式[Y-M-D]，且开始日期小于截止日期!");
     	return sb.toString();
     }
     
@@ -205,10 +206,10 @@ public class ProjectTotalPlanEditController extends BaseBillEditImportController
     
     public List<ExcelExportEntity> getExportHeader() {
     	List<ExcelExportEntity> headers = new ArrayList<ExcelExportEntity>();
-    	headers.add(stringEntity("名称", "proStructure_name","(子)单位工程"));
-    	headers.add(stringEntity("编码", "proStructure_number","(子)单位工程"));
-    	headers.add(stringEntity("名称", "projectWbs_name","分部分项工程"));
-    	headers.add(stringEntity("编码", "projectWbs_number","分部分项工程"));
+//    	headers.add(stringEntity("名称", "proStructure_name","(子)单位工程"));
+//    	headers.add(stringEntity("编码", "proStructure_number","(子)单位工程"));
+//    	headers.add(stringEntity("名称", "projectWbs_name","分部分项工程"));
+//    	headers.add(stringEntity("编码", "projectWbs_number","分部分项工程"));
     	headers.add(stringEntity("工作内容", "content"));
     	headers.add(stringEntity("施工人数", "proPersons"));
     	headers.add(stringEntity("工程量", "proQty"));
@@ -255,51 +256,55 @@ public class ProjectTotalPlanEditController extends BaseBillEditImportController
     		if(BaseUtil.isEmpty(proId)){
     			mesg +="<br/>当前工程项目为空，不允许导入!";
     		}else{
-    			ProStructureInfo psInfo = null;
-    			Object obj = rowMap.get("proStructure_name");
-    			if(obj==null){
-        			mesg +="<br/>(子)单位工程名称为空，不允许导入!"; 
-        		}else{
-        			String hql = "from ProStructureInfo where name=? and project.id=?";
-        			List pms = new ArrayList();
-        			pms.add(obj.toString());
-        			pms.add(proId);
-        			Object obj_number = rowMap.get("proStructure_number");
-        			if(obj_number!=null){
-        				hql +=" and number=?";
-        				pms.add(obj_number.toString());
-        			}
-        			psInfo = getService().getEntity(ProStructureInfo.class, hql, pms.toArray());
-        			if(psInfo==null){
-        				mesg +="<br/>未找到名称为["+obj.toString()+"]的(子)单位工程，不允许导入!"; 
-        			}else{
-        				rowMap.put("proStructure", getF7Map(psInfo,"id,name,displayName"));
-        			}
-        		}
-        		obj = rowMap.get("projectWbs_name");
-        		if(obj==null){
-        			mesg +="<br/>项目分部分项工程名称为空，不允许导入!"; 
-        		}else{
-        			String hql = "from ProjectWbsInfo where name=? and project.id=?";
-        			List pms = new ArrayList();
-        			pms.add(obj.toString());
-        			pms.add(proId);
-        			Object obj_number = rowMap.get("projectWbs_number");
-        			if(obj_number!=null){
-        				hql +=" and number=?";
-        				pms.add(obj_number.toString());
-        			}
-        			if(psInfo!=null){
-        				hql +=" and proStruct.id=?";
-        				pms.add(psInfo.getId());
-        			}
-        			ProjectWbsInfo pwsInfo = getService().getEntity(ProjectWbsInfo.class, hql,pms.toArray());
-        			if(pwsInfo==null){
-        				mesg +="<br/>未找到名称为["+obj.toString()+"]的项目分部分项工程，不允许导入!"; 
-        			}else{
-        				rowMap.put("projectWbs", getF7Map(pwsInfo,"id,name,displayName"));
-        			}
-        		}
+//    			ProStructureInfo psInfo = null;
+//    			Object obj = rowMap.get("proStructure_name");
+//    			if(obj==null){
+//        			mesg +="<br/>(子)单位工程名称为空，不允许导入!"; 
+//        		}else{
+//        			String hql = "from ProStructureInfo where name=? and project.id=?";
+//        			List pms = new ArrayList();
+//        			pms.add(obj.toString());
+//        			pms.add(proId);
+//        			Object obj_number = rowMap.get("proStructure_number");
+//        			if(obj_number!=null){
+//        				hql +=" and number=?";
+//        				pms.add(obj_number.toString());
+//        			}
+//        			psInfo = getService().getEntity(ProStructureInfo.class, hql, pms.toArray());
+//        			if(psInfo==null){
+//        				mesg +="<br/>未找到名称为["+obj.toString()+"]的(子)单位工程，不允许导入!"; 
+//        			}else{
+//        				rowMap.put("proStructure", getF7Map(psInfo,"id,name,displayName"));
+//        			}
+//        		}
+//        		obj = rowMap.get("projectWbs_name");
+//        		if(obj==null){
+//        			mesg +="<br/>项目分部分项工程名称为空，不允许导入!"; 
+//        		}else{
+//        			String hql = "from ProjectWbsInfo where name=? and project.id=?";
+//        			List pms = new ArrayList();
+//        			pms.add(obj.toString());
+//        			pms.add(proId);
+//        			Object obj_number = rowMap.get("projectWbs_number");
+//        			if(obj_number!=null){
+//        				hql +=" and number=?";
+//        				pms.add(obj_number.toString());
+//        			}
+//        			if(psInfo!=null){
+//        				hql +=" and proStruct.id=?";
+//        				pms.add(psInfo.getId());
+//        			}
+//        			ProjectWbsInfo pwsInfo = getService().getEntity(ProjectWbsInfo.class, hql,pms.toArray());
+//        			if(pwsInfo==null){
+//        				mesg +="<br/>未找到名称为["+obj.toString()+"]的项目分部分项工程，不允许导入!"; 
+//        			}else{
+//        				rowMap.put("projectWbs", getF7Map(pwsInfo,"id,name,displayName"));
+//        			}
+//        		}
+    			Object obj = rowMap.get("content");
+    			if(BaseUtil.isEmpty(obj)){
+    				mesg +="<br/>施工内容不能为空!"; 
+    			}
         		Object begDateobj = rowMap.get("planBegDate");
         		Date begDate = null;
         		if(begDateobj!=null){
@@ -333,7 +338,6 @@ public class ProjectTotalPlanEditController extends BaseBillEditImportController
         			rowMap.put("dutyers", users);
         		}
     		}
-    		
     		if(!BaseUtil.isEmpty(mesg)){
     			rm.setResultType(ResultTypeEnum.ERROR);
     			rm.setMesg("第["+(rowIdx+6)+"]行中:"+mesg);

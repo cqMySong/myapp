@@ -71,10 +71,10 @@
 						<thead>
 							<tr>
 								<th data-field="proStructure" data-width="200" rowspan="2" data-type="f7" data-formatter="displayName" 
-										data-locked="true" data-align="left"
+										data-locked="true" data-align="left" data-visible="false"
 										data-editor="{uiWin:{title:'单位（子单位）工程',height:600,width:300,url:'ec/basedata/proStructureF7',uiParams:getParams}}">单位(子单位)工程</th>
 								<th data-field="projectWbs" rowspan="2"  data-type="f7" data-width="300" data-formatter="displayName"
-										data-align="left"
+										data-align="left" data-visible="false"
 										data-editor="{uiWin:{title:'分部分项工程',height:580,width:750,url:'ec/basedata/proWbsF7',uiParams:getParams}}">分部分项工程</th>
 										
 								<th data-field="proSub" rowspan="2"  data-type="f7" data-visible="false"
@@ -82,7 +82,7 @@
 								<th data-field="proSubItem" rowspan="2" data-type="f7" data-visible="false"
 										data-editor="{uiWin:{title:'项目分项工程',height:550,width:680,url:'ec/basedata/proSubItemF7',uiParams:getParams}}">项目分项结构</th>
 								
-								<th data-field="content" rowspan="2" data-width="220"  data-type="textarea">工作内容</th>		
+								<th data-field="content" rowspan="2" data-width="350"  data-type="textarea">工作内容</th>		
 								<th data-field="proPersons" rowspan="2">施工人数</th>		
 								<th data-field="proQty" rowspan="2" >工程量</th>
 								<th colspan="3">计划</th>

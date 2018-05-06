@@ -81,24 +81,23 @@
 	var rightTree;
 	var targetId = '${targetId}';
 	var treeUrl = 'base/permissionAssign/tree';
-	$(document).ready(function(){
-		leftTreeViewer = $('#allTreeItems').myTreeViewer(null);
-		leftTreeViewer.init({title:'系统权限项',height:470});
-		leftTreeViewer.addRefreshBtn({clickFun:function(){
-			loadLeftTreeData();
-		}});
-		leftTreeViewer.addTree(setting,[]);
-		leftTree = leftTreeViewer.getTree();
-		
-		rightTree = $.fn.zTree.init($('#toAssignTreeItems'), setting2, []);
-		loadLeftTreeData();
-	});
 	var treeDatas ;
 	function loadLeftTreeData(){
 		var url =treeUrl;
 		if(!webUtil.isEmpty(targetId)){
 			url = treeUrl+'?targetId='+webUtil.uuIdReplaceID(targetId);
 		}
+		if(toOrg){
+			var orgId = webUtil.uuIdReplaceID(getSelOrg());
+			if(!webUtil.isEmpty(orgId)){
+				if(url.indexOf('?')>0) {
+					url+='&';
+				}else{
+					url+='?';
+				}
+				url += 'orgId='+webUtil.uuIdReplaceID(orgId);
+			}
+		} 
 		webUtil.ajaxData({url:url,async:false,success:function(data){
 			treeDatas = data.data;
 			if (treeDatas.length>0&&!webUtil.isEmpty(leftTree)) {
@@ -106,8 +105,6 @@
 			}
 		}});
 	}
-</script>
-<script type="text/javascript">
 function getData(){
 	return rightTree.getNodes();
 }
@@ -157,6 +154,7 @@ function unAssign(all){
 }
 var orgs = '${orgs}';
 var target = '${target}';
+var toOrg = false;
 $(document).ready(function() {
 	$('#toRight').click(function(){
 		toAssign(false);
@@ -171,16 +169,29 @@ $(document).ready(function() {
 		unAssign(false);
 	});
 	
+	leftTreeViewer = $('#allTreeItems').myTreeViewer(null);
+	leftTreeViewer.init({title:'系统权限项',height:470});
+	leftTreeViewer.addRefreshBtn({clickFun:function(){
+		loadLeftTreeData();
+	}});
+	leftTreeViewer.addTree(setting,[]);
+	leftTree = leftTreeViewer.getTree();
+	
+	rightTree = $.fn.zTree.init($('#toAssignTreeItems'), setting2, []);
 	if(!webUtil.isEmpty(target)&&!webUtil.isEmpty(orgs)){
 		orgs = webUtil.str2Json(orgs);
+		toOrg = true;
 		$('#userOrg').myComponet('select',{method:'init',opt:{
 			key:'id',val:'name',
 			data:orgs
 		}});
+		$('#userOrg').on("change",function(){
+			loadLeftTreeData();
+		});
 	}else{
 		$('#userOrg').hide();
 	}
-	
+	loadLeftTreeData();
 })
 </script>
 </html>

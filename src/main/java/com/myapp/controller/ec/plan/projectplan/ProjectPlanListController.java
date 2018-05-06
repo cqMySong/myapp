@@ -174,6 +174,7 @@ public class ProjectPlanListController extends BasePageListController {
 		return "ec/plan/projectplan/projectWeekPlanList";
 	}
 	
+	@PermissionItemAnn(name="进度计划监控",number="planRpt",type=PermissionTypeEnum.PAGE)
 	@RequestMapping("/list")
 	public ModelAndView list(){
 		Map params = new HashMap();
@@ -189,12 +190,14 @@ public class ProjectPlanListController extends BasePageListController {
 	@ResponseBody
 	public WebDataModel getPlanCompareRpt(){
 		String projectId = request.getParameter("projectId");
+		String begDate = request.getParameter("begDate");
+		String endDate = request.getParameter("endDate");
 		init();
 		if(BaseUtil.isEmpty(projectId)){
 			setErrorMesg("工程项目id为空，不能执行此查询功能!");
 		}else{
 			try {
-				data = projectTotalPlanService.getPlanFinishCompareRpt(projectId);
+				data = projectTotalPlanService.getPlanFinishCompareRpt(projectId,begDate,endDate);
 			} catch (QueryException e) {
 				e.printStackTrace();
 				setExceptionMesg(e.getMessage());

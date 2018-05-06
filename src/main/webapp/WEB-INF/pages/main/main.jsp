@@ -458,7 +458,7 @@ function switchOrg(){
 function openSwitchOrg(){
 	switchOrgIndex = layer.open({
 		type : 1,
-		title : '用户组织切换',
+		title : '<i class="fa fa-windows"></i>&nbsp;用户组织切换',
 		closeBtn : 0,
 		shadeClose : false,
 		shade:0.9,area:'600px',

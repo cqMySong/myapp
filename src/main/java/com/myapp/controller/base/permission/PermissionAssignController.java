@@ -148,9 +148,15 @@ public class PermissionAssignController extends CoreBaseController {
 				query.addOrder(order);
 			}
 			String sourceId = getTargetId();
+			String orgId = getOrgId();
 			Map<String,String> hasAssignMap = new HashMap<String,String>();
 			if(!BaseUtil.isEmpty(sourceId)){
-				List hasAsign = permissionAssignService.getHasAssignPermissions(sourceId);
+				List hasAsign = null;
+				if(BaseUtil.isNotEmpty(orgId)){
+					hasAsign = permissionAssignService.getHasAssignUserOrgPermissions(sourceId, orgId);
+				}else{
+					hasAsign = permissionAssignService.getHasAssignPermissions(sourceId);
+				}
 				if(hasAsign!=null&&hasAsign.size()>0){
 					for(int i=0;i<hasAsign.size();i++){
 						Map thisMap = (Map)hasAsign.get(i);
@@ -216,7 +222,7 @@ public class PermissionAssignController extends CoreBaseController {
 	@ResponseBody
 	public WebDataModel getHasAssignData(){
 		init();
-		data = permissionAssignService.getHasAssignPermissions(getTargetId(),getPermName());
+		data = permissionAssignService.getHasAssignPermissions(getTargetId(),getPermName(),null);
 		return ajaxModel();
 	}
 	/**

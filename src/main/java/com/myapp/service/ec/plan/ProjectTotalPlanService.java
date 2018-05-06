@@ -39,8 +39,9 @@ public class ProjectTotalPlanService extends BaseInterfaceService<ProjectTotalPl
 	 * @param proId 项目组织id
 	 * @throws QueryException 
 	 */
-	public List getPlanFinishCompareRpt(String proId) throws QueryException{
+	public List getPlanFinishCompareRpt(String proId,String begDate,String endDate) throws QueryException{
 		if(BaseUtil.isEmpty(proId)) return null;
+		List params = new ArrayList();
 		StringBuffer sb = new StringBuffer();
 		sb.append(" select pte.fid as id,pst.fdisplayName as dwgc,pwb.fdisplayName as wbs");
 		sb.append(" ,pte.fprogress as pprogress,pte.fcontent as content");
@@ -56,16 +57,25 @@ public class ProjectTotalPlanService extends BaseInterfaceService<ProjectTotalPl
 		sb.append("  SELECT a.fPlanItemId as ptid,a.fid as repid,a.fbegDate AS bd,a.fendDate AS ed,a.fprogress as progress");
 		sb.append("  from t_ec_proWorkPlanItem a,t_ec_proWorkPlanReport b");
 		sb.append("  where a.fprentid = b.fid and b.fBillState =? and b.fprojectId =?");
-		sb.append("  and a.fbegDate is not null and a.fendDate is not null");
+		params.add(BillState.AUDIT.getValue());
+		params.add(proId);
+		sb.append("  and a.fbegDate is not null");
 		sb.append(" ) AS rpt ON rpt.ptid=pte.fid");
 		
 		sb.append(" where pt.fBillState = ? and pt.fprojectId=?");
+		params.add(BillState.AUDIT.getValue());
+		params.add(proId);
+		if(BaseUtil.isNotEmpty(begDate)){
+			sb.append(" and pte.fplanBegDate<=?");
+			params.add(begDate);
+		}
+		if(BaseUtil.isNotEmpty(endDate)){
+			sb.append(" and pte.fplanEndDate>=?");
+			params.add(endDate);
+		}
+		
 		sb.append(" order by pte.fplanBegDate");
-		List params = new ArrayList();
-		params.add(BillState.AUDIT.getValue());
-		params.add(proId);
-		params.add(BillState.AUDIT.getValue());
-		params.add(proId);
+		
 		
 		System.out.println(sb.toString());
 //		单位工程	分部工程	分项工程	具体工作内容	生产情况对比	开始时间	截止时间	工程量	施工人员	持续天数

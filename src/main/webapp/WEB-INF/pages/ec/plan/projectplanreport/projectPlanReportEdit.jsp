@@ -86,18 +86,19 @@
 							,tableOpt:{editDataChanged:planItems_dataChanged,selectModel:2},addRow:tblAddRow}">
 						<thead>
 							<tr>
-								<th data-field="proStructure" data-width="200" rowspan="2" data-type="f7" data-formatter="displayName" data-locked="true" data-align="left">单位(子单位)工程</th>
-								<th data-field="projectWbs" rowspan="2"  data-type="f7" data-width="300" data-formatter="displayName" data-locked="true" data-align="left">分部分项工程</th>
+								<th data-field="proStructure" data-width="200" rowspan="2" data-type="f7" data-visible="false" data-formatter="displayName" data-locked="true" data-align="left">单位(子单位)工程</th>
+								<th data-field="projectWbs" rowspan="2"  data-type="f7" data-width="300" data-visible="false" data-formatter="displayName" data-locked="true" data-align="left">分部分项工程</th>
 								<th data-field="proSub" rowspan="2" data-visible="false"  data-type="f7" data-locked="true">项目分部工程</th>
 								<th data-field="proSubItem" data-visible="false" rowspan="2" data-type="f7" data-locked="true">项目分项结构</th>
+								
 								<th data-field="planContent" data-locked="true" rowspan="2" data-type="textarea">计划内容</th>
-								<th colspan="3" data-width="210">工作日志</th>
+								<th colspan="3" data-width="280">工作日志</th>
 								<th data-field="planItemId" data-visible="false" data-locked="true" rowspan="2">计划ID</th>
 							</tr>
 							<tr>
-								<th data-field="begDate" data-width="180" class="_myMerge" data-type="date">开始日期</th>
-								<th data-field="endDate" data-width="180" data-type="date">完成日期</th>
-								<th data-field="progress" data-width="100" data-type="number">完成进度(%)</th>
+								<th data-field="begDate" data-width="100" class="_myMerge" data-type="date">开始日期</th>
+								<th data-field="endDate" data-width="100" data-type="date">完成日期</th>
+								<th data-field="progress" data-width="80" data-type="number">完成进度(%)</th>
 							</tr>
 						</thead>
 					</table>

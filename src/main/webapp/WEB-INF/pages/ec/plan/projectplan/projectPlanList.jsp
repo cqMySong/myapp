@@ -33,13 +33,17 @@
 	<div class="panel">
 		<div id="table-toolbar" style="height:40px;">
 			<div class="btn-group">
-				<button class="btn btn-success" type="button">
-					<span class="fa fa-file-o"></span>&nbsp;新增</button>
-				<button class="btn btn-success" type="button">
-					<span class="fa fa-file-text-o"></span>&nbsp;查看</button>
-				<button class="btn btn-success" type="button">
-					<span class="fa fa-edit"></span>&nbsp;修改</button>
-			</div>
+				<div class="input-group" style="width: 600px; margin-left: 10px;margin-top: 2px;">
+					<input id="begDate" style="width: 200px;" class="form-control toDate" data-opt="{type:'date'}">
+					<span style="vertical-align: middle;line-height: 35px;padding: 0px 5px;float: left;">监控期间</span>
+					<input id="endDate" style="width: 200px;" class="form-control toDate" data-opt="{type:'date'}">
+					<button type="button" id="toQuery" class="btn btn-success" style="float:left;margin-left: 5px;">
+						<span class="fa fa-filter"></span>&nbsp;查询
+					</button>
+				</div>
+				
+			</div>	
+				
 		</div>
 		<hr style="margin: 2px 0px;">
 		<div class="mainContrainer">
@@ -52,7 +56,7 @@
 	</div>
 </body>
 <%@include file="../../../inc/webBase.inc"%>
-<link rel="stylesheet" href="<%=appRoot%>/assets/lib/gantt/css/style.css?v=121"/>
+<link rel="stylesheet" href="<%=appRoot%>/assets/lib/gantt/css/style.css?v=1211"/>
 <script src="<%=appRoot%>/assets/lib/gantt/js/jquery.fn.gantt.js?v=1254" charset ="GB2312"></script>
 
 <script type="text/javascript">
@@ -63,8 +67,9 @@ function initOrgTree(){
 		,data: {simpleData: {enable:true,idKey: "id", pIdKey: "parentId",rootPId: ''}}
 		,callback:{onClick:treeClick}
 		};
+	var height = top.getTopMainHeight()-45;;
 	var treeViewer = $('#left_container').myTreeViewer(null);
-	treeViewer.init({theme:"panel-success",title:'<i class="fa fa-building-o" style="font-size: 12px;"></i>&nbsp;工程项目',search:true});
+	treeViewer.init({theme:"panel-success",height:height,title:'<i class="fa fa-building-o" style="font-size: 12px;"></i>&nbsp;工程项目',search:true});
 	treeViewer.addTree(treeOpt,[]);
 	orgTree = treeViewer.getTree();
 	treeViewer.addRefreshBtn({clickFun:function(btn){
@@ -83,7 +88,7 @@ function loadTreeData(){
 function treeClick(event, treeId, treeNode){
 	if(webUtil.isEmpty(curSelOrg)) curSelOrg = {id:'xyz'};
 	if(webUtil.isEmpty(curSelOrg.id)) curSelOrg.id = 'xyz';
-	if(curSelOrg.id!=treeNode.id){
+	if(curSelOrg.id!=treeNode.id&&'project'==treeNode.type){
 		curSelOrg = treeNode;
 		loadPlanItemData();
 	}
@@ -103,9 +108,9 @@ function initGantView(){
 			//alert("data = "+data.label);
 		},
 		leftCols:[
-		          {text:'单位(子单位)工程',name:'dwgc',algin:'left',width:150},
-		          {text:'分部分项工程',name:'wbs',algin:'left',width:150},
-		          {text:'具体工作内容',name:'content',type:'textarea',algin:'center',width:150},
+		          //{text:'单位(子单位)工程',name:'dwgc',algin:'left',width:150},
+		          //{text:'分部分项工程',name:'wbs',algin:'left',width:150},
+		          {text:'具体工作内容',name:'content',type:'textarea',algin:'center',width:250},
 		          {text:'生产情况',name:'item',algin:'center',width:60},
 		          {text:'开始时间',name:'bd',width:70},
 		          {text:'截止时间',name:'ed',width:70},
@@ -121,20 +126,42 @@ function initGantView(){
 }
 var itemUrl = "ec/plan/projectplans/planRpt";
 function loadPlanItemData(){
-	var dataPrams = {projectId:curSelOrg.id};
-	webUtil.ajaxData({url:itemUrl,data:dataPrams,success:function(data){
-		var items = data.data;
-		$(".gantt").gantt({
-			navigate: "scroll"
-			,leftPanelWidth:600
-			,itemsPerPage:20
-			,source:items});
-	}});
+	if('project'==curSelOrg.type){
+		var bd = $('#begDate').val();
+		var ed = $('#endDate').val();
+		var dataPrams = {projectId:curSelOrg.id,begDate:bd,endDate:ed};
+		webUtil.ajaxData({url:itemUrl,data:dataPrams,success:function(data){
+			var items = data.data;
+			$(".gantt").gantt({
+				navigate: "scroll"
+				,leftPanelWidth:600
+				,itemsPerPage:20
+				,source:items});
+		}});
+	}
+	
 }
-
+function toQueryPlanItemData(){
+	if(!webUtil.isEmpty(curSelOrg)&&'project'==curSelOrg.type){
+		loadPlanItemData();
+	}else{
+		webUtil.mesg("请选择对应的工程项目!");
+	}
+}
+var dpicker = {language: 'zh-CN',format:'yyyy-mm-dd',autoclose: true,todayBtn: 'linked',pickerPosition: "bottom-left"};
 $(document).ready(function() {
 	initHeadStyle();
 	loadTreeData();
+	$('.toDate').datepicker(dpicker);
+	var curDate = new Date();
+	var begDateS = curDate.format('yyyy-MM')+'-01';
+	$('#begDate').datepicker('update',begDateS);
+	curDate = curDate.format('yyyy-MM-dd');
+	$('#endDate').datepicker('update',curDate);
+	$('#toQuery').click(function(){
+		toQueryPlanItemData();
+		
+	});
 })
 </script>
 </html>

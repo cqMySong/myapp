@@ -22,10 +22,10 @@ if(proIdObj!=null) projectId = proIdObj.toString();
 		<table id="tblMain">
 			<thead>
 				<tr>
-					<th data-field="proStructure" rowspan="2" data-type="f7" data-width="200" data-formatter="displayName" data-align="left">单位(子单位)工程</th>
-					<th data-field="projectWbs" rowspan="2"  data-type="f7" data-width="300" data-formatter="displayName" data-align="left">分部分项工程</th>
-					<th data-field="proSub" data-visible="false" rowspan="2"  data-type="f7">项目分部工程</th>
-					<th data-field="proSubItem" data-visible="false" rowspan="2" data-type="f7">项目分项结构</th>
+					<th data-field="proStructure" rowspan="2" data-type="f7" data-visible="false"  data-width="200" data-formatter="displayName" data-align="left">单位(子单位)工程</th>
+					<th data-field="projectWbs" rowspan="2"  data-type="f7" data-visible="false" data-width="300" data-formatter="displayName" data-align="left">分部分项工程</th>
+					<th data-field="proSub" data-visible="false" rowspan="2" data-visible="false" data-type="f7">项目分部工程</th>
+					<th data-field="proSubItem" data-visible="false" rowspan="2" data-visible="false" data-type="f7">项目分项结构</th>
 					<th colspan="3">计划</th>
 					<th data-field="content" rowspan="2"   data-type="textarea">工作内容</th>
 					<th data-field="proQty" rowspan="2" >工程量</th>

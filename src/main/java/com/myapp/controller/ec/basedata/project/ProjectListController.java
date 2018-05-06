@@ -30,6 +30,7 @@ import com.myapp.core.entity.BaseOrgInfo;
 import com.myapp.core.enums.DataTypeEnum;
 import com.myapp.core.enums.OrgTypeEnum;
 import com.myapp.core.model.ColumnModel;
+import com.myapp.core.model.MyWebContext;
 import com.myapp.core.model.WebDataModel;
 import com.myapp.core.util.BaseUtil;
 import com.myapp.core.util.EnumUtil;
@@ -98,6 +99,13 @@ public class ProjectListController extends BaseListController {
 					orgCriteria.setProjection(Projections.property("torg.id"));
 					query.add(Subqueries.exists(orgCriteria));
 				}
+			}
+		}
+		MyWebContext webCtx = getCurWebContext();
+		if(webCtx!=null){
+			BaseOrgInfo curOrg = webCtx.getCurOrg();
+			if(curOrg!=null&&BaseUtil.isNotEmpty(curOrg.getId())){
+				query.add(Restrictions.eq("org.id",curOrg.getId()));
 			}
 		}
 	}

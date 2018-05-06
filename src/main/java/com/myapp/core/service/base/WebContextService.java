@@ -12,6 +12,7 @@ import javax.servlet.http.HttpServletRequest;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.alibaba.fastjson.JSONObject;
 import com.myapp.core.base.service.impl.AbstractBaseService;
 import com.myapp.core.base.setting.SystemConstant;
 import com.myapp.core.entity.BaseOrgInfo;
@@ -95,6 +96,7 @@ public class WebContextService extends AbstractBaseService{
 			if(ups.size()>0){
 				List<Map<String, Object>> positions = new ArrayList<Map<String,Object>>();
 				List<BaseOrgInfo> orgs = new ArrayList<BaseOrgInfo>();
+				Map proOrgIds = new HashMap();
 				for(UserPositionInfo upInfo:ups){
 					PositionInfo pInfo = upInfo.getPosition();
 					if(pInfo!=null){
@@ -111,21 +113,29 @@ public class WebContextService extends AbstractBaseService{
 							orgName = curOrg.getDisplayName();
 							orgId = curOrg.getId();
 							orgLn = curOrg.getLongNumber();
-							addCurCtxOrg(myWebCtx,curOrg);
-						}
-						pm.put("org", orgName);//岗位对应的部门
-						pm.put("orgId", orgId);//岗位对应的部门id
-						pm.put("orgLn", orgLn);//岗位对应的部门longnumber
-						
-						if(upInfo.getMain()){
-							positions.add(0,pm);
-							if(curOrg!=null&&myWebCtx.getCurOrg()==null){
-								myWebCtx.setMainPosition(pInfo.getName());
-								setCurOrg(myWebCtx,curOrg);
+							BaseOrgInfo projectOrg = orgService.getCurOrg(orgId, OrgTypeEnum.PROJECTORG);
+							if(projectOrg!=null){
+								if(!proOrgIds.containsKey(projectOrg.getId())){
+									addCurCtxOrg(myWebCtx,projectOrg);
+									proOrgIds.put(projectOrg.getId(), projectOrg.getId());
+								}
 							}
-						}else{
-							positions.add(pm);
+							
+							pm.put("org", orgName);//岗位对应的部门
+							pm.put("orgId", orgId);//岗位对应的部门id
+							pm.put("orgLn", orgLn);//岗位对应的部门longnumber
+							
+							if(upInfo.getMain()){
+								positions.add(0,pm);
+								myWebCtx.setMainPosition(pInfo.getName());
+								if(projectOrg!=null&&myWebCtx.getCurOrg()==null){
+									setCurOrg(myWebCtx,projectOrg);
+								}
+							}else{
+								positions.add(pm);
+							}
 						}
+						
 						Set<PositionJobDutyInfo> jobItems = pInfo.getJobDutyItems();
 						if(jobItems.size()>0){
 							List<Map<String, String>> jobItem = new ArrayList<Map<String,String>>(); 
@@ -220,6 +230,16 @@ public class WebContextService extends AbstractBaseService{
 		String d = "系统管理_岗位管理_编辑";
 		String[] ds = d.split("_");
 		System.out.println(ds[ds.length-2]);
+		
+		List<Map<String,String>> orgs = new ArrayList<Map<String,String>>();
+		for(int i=0;i<5;i++){
+			Map<String,String> item = new HashMap<String, String>();
+			for(int j=0;j<3;j++){
+				item.put("key_"+j, "name_"+j);
+			}
+			orgs.add(item);
+		}
+		System.out.println(JSONObject.toJSON(orgs));
 	}
 
 	protected Class getEntityClass() {

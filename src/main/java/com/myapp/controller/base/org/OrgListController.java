@@ -13,18 +13,18 @@ import org.hibernate.criterion.Order;
 import org.hibernate.criterion.Restrictions;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.servlet.ModelAndView;
 
 import cn.afterturn.easypoi.excel.entity.params.ExcelExportEntity;
 
 import com.alibaba.fastjson.JSONObject;
 import com.myapp.core.annotation.PermissionAnn;
 import com.myapp.core.base.service.impl.AbstractBaseService;
-import com.myapp.core.controller.BaseListController;
 import com.myapp.core.controller.BaseTreeListController;
+import com.myapp.core.entity.BaseOrgInfo;
 import com.myapp.core.enums.DataTypeEnum;
 import com.myapp.core.enums.OrgTypeEnum;
 import com.myapp.core.model.ColumnModel;
+import com.myapp.core.model.MyWebContext;
 import com.myapp.core.service.OrgService;
 import com.myapp.core.util.BaseUtil;
 import com.myapp.core.util.EnumUtil;
@@ -91,6 +91,20 @@ public class OrgListController extends BaseTreeListController {
 			}
 			query.add(Restrictions.in("orgType",params));
 		}
+		MyWebContext webCtx = getCurWebContext();
+		if(webCtx!=null){
+			BaseOrgInfo curOrg = webCtx.getCurOrg();
+			if(curOrg!=null&&BaseUtil.isNotEmpty(curOrg.getLongNumber())){
+				String cfln = curOrg.getLongNumber();
+				List<String> params = new ArrayList<String>();
+				params.add(cfln);
+				while(cfln.indexOf("!")>0){
+					cfln = cfln.substring(0,cfln.lastIndexOf("!"));
+					params.add(cfln);
+				}
+				query.add(Restrictions.in("longNumber",params));
+			}
+		}
 	}
 
 	public Order getOrder() {
@@ -124,6 +138,14 @@ public class OrgListController extends BaseTreeListController {
 		remark.setWrap(true);
 		entity.add(remark);
 		return entity;
+	}
+	
+	public static void main(String[] args){
+		String s= "01!02!03";
+		while(s.indexOf("!")>0){
+			s = s.substring(0,s.lastIndexOf("!"));
+			System.out.println(s);
+		}
 	}
 	
 }

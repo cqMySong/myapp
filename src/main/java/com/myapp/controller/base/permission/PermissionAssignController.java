@@ -20,13 +20,17 @@ import org.springframework.web.servlet.ModelAndView;
 import com.alibaba.fastjson.JSONObject;
 import com.myapp.core.base.service.impl.AbstractBaseService;
 import com.myapp.core.controller.CoreBaseController;
-import com.myapp.core.entity.PermissionAssignInfo;
+import com.myapp.core.entity.BaseOrgInfo;
+import com.myapp.core.entity.PositionInfo;
 import com.myapp.core.enums.DataTypeEnum;
+import com.myapp.core.enums.OrgTypeEnum;
 import com.myapp.core.exception.db.QueryException;
 import com.myapp.core.model.ColumnModel;
 import com.myapp.core.model.WebDataModel;
+import com.myapp.core.service.OrgService;
 import com.myapp.core.service.PermissionAssignService;
 import com.myapp.core.service.PermissionService;
+import com.myapp.core.service.UserService;
 import com.myapp.core.util.BaseUtil;
 import com.myapp.core.util.WebUtil;
 
@@ -50,13 +54,50 @@ public class PermissionAssignController extends CoreBaseController {
 	
 	@Resource
 	public PermissionAssignService permissionAssignService;
+	@Resource
+	public UserService userService;
+	@Resource
+	public OrgService orgService;
 	
 	@RequestMapping("/show")
 	public ModelAndView toView(){
 		init();
 		Map params = new HashMap();
 		packageUIParams(params);
-		params.put("targetId", getTargetId());
+		String targetId = getTargetId();
+		params.put("targetId",targetId);
+		String target = request.getParameter("target");
+		target = BaseUtil.isEmpty(target)?"BLANK":target.toUpperCase();
+		params.put("target",target);
+		if(BaseUtil.isNotEmpty(targetId)){
+			if(target.equals("USER")){//权限分配到人
+				List<PositionInfo> ps = userService.queryPosition(targetId);
+				if(ps!=null&&ps.size()>0){
+					Map proOrgIds = new HashMap();
+					List<Map<String,String>> orgs = new ArrayList<Map<String,String>>();
+					for(PositionInfo p:ps){
+						if(p!=null){
+							BaseOrgInfo org = p.getOrg();
+							if(org!=null){
+								BaseOrgInfo projectOrg = orgService.getCurOrg(org.getId(), OrgTypeEnum.PROJECTORG);
+								if(projectOrg!=null){
+									if(!proOrgIds.containsKey(projectOrg.getId())){
+										Map<String,String> orgMap = new HashMap<String, String>();
+										orgMap.put("id", projectOrg.getId());
+										orgMap.put("name", projectOrg.getName());
+										orgs.add(orgMap);
+										proOrgIds.put(projectOrg.getId(),projectOrg.getId());
+									}
+								}
+							}
+						}
+					}
+					if(orgs.size()>0){
+						params.put("orgs", JSONObject.toJSON(orgs));
+					}
+				}
+			}
+		}
 		return toPage(getAssignURL(), params);
 	}
 	
@@ -140,7 +181,7 @@ public class PermissionAssignController extends CoreBaseController {
 	public WebDataModel assign(){
 		try {
 			init();
-			String msg = permissionAssignService.toAssign(getTargetId(), getPermissionIds());
+			String msg = permissionAssignService.toAssign(getTargetId(), getPermissionIds(),getOrgId());
 			if(!BaseUtil.isEmpty(msg)){
 				setInfoMesg(msg);
 			}
@@ -199,7 +240,10 @@ public class PermissionAssignController extends CoreBaseController {
 	public String getAssignURL(){
 		return "permission/permissionAssign";
 	}
-
+	
+	public String getOrgId(){
+		return WebUtil.UUID_ReplaceID(request.getParameter("orgId"));
+	}
 	public String getTargetId() {
 		return WebUtil.UUID_ReplaceID(request.getParameter("targetId"));
 	}

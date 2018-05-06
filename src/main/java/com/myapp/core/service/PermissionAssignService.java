@@ -52,23 +52,28 @@ public class PermissionAssignService extends BaseInterfaceService<PermissionAssi
 		return findByHQL(sb.toString(), params.toArray());
 	}
 	
-	public String toAssign(String targetId,String permissionIds) throws SaveException{
+	public String toAssign(String targetId,String permissionIds,String orgId) throws SaveException{
 		if(BaseUtil.isEmpty(targetId)||BaseUtil.isEmpty(permissionIds)){
 			return "相关参数为空，无法完成权限的分配操作!";
 		}else{
 			String[] pems = permissionIds.split(",");
+			int size = 0;
 			for(int i=0;i<pems.length;i++){
 				String permId = pems[i];
 				Object obj =  permissionService.getEntity(pems[i]);
 				if(obj!=null&&obj instanceof PermissionInfo){
+					PermissionInfo per = (PermissionInfo)obj;
+					if(per.getType()==null) continue;
 					PermissionAssignInfo paInfo = new PermissionAssignInfo();
 					paInfo.setTargetId(targetId);
+					paInfo.setOrgId(orgId);
 					paInfo.setTargetType(UuidUtils.getEntityTypeById(targetId));
-					paInfo.setPermission((PermissionInfo)obj);
+					paInfo.setPermission(per);
 					saveEntity(paInfo);
+					size++;
 				}
 			}
-			return "完成了["+pems.length+"]项的权限分配操作!";
+			return "完成了["+size+"]项的权限分配操作!";
 		}
 	}
 	//取消分配

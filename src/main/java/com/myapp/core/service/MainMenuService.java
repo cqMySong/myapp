@@ -154,8 +154,10 @@ public class MainMenuService extends BaseInterfaceService<MainMenuInfo> {
 			return getModelMenu(mln,uInfo);
 		}
 		String curOrgLn = "";
+		String curOrgId ="";
 		if(webCtx!=null&&webCtx.getCurOrg()!=null){
-			curOrgLn = webCtx.getCurOrg()!=null?webCtx.getCurOrg().getLongNumber():"";
+			curOrgLn = webCtx.getCurOrg().getLongNumber();
+			curOrgId = webCtx.getCurOrg().getId();
 		}
 		String userId = uInfo.getId();
 		List params = new ArrayList();
@@ -168,18 +170,21 @@ public class MainMenuService extends BaseInterfaceService<MainMenuInfo> {
 		sb.append(" from t_pm_mainmenu as a");
 		sb.append(" where a.fonshow =? and exists(");params.add(Boolean.TRUE);
 			sb.append(" select b.fid from t_pm_permission as b where b.furl = a.furl and b.ftype=?");params.add(PermissionTypeEnum.PAGE.getValue());
-				//用户权限范围内
-				sb.append("	and exists(select c.fid from t_pm_permissionassign as c where c.fpermissionId=b.fid and c.ftargetId=?)");params.add(userId);
-				//组织范围内
-				if(BaseUtil.isNotEmpty(curOrgLn)){
-					sb.append("	and exists(SELECT t5.fid ");
+				//用户权限范围内所有权限
+			
+				//1：组织范围内:通过工作岗位职责分部的权限切通过导入到用户的权限中
+				sb.append("	and ( ");
+				sb.append("(");
+					sb.append("	exists(select c.fid from t_pm_permissionassign as c where c.fpermissionId=b.fid and c.ftargetId=? and c.forgId is null)");params.add(userId);
+					sb.append(" and exists(SELECT t5.fid ");//组织范围内:通过工作岗位职责分部的权限
 					sb.append("	from t_base_Org AS t1,t_pm_position AS t2");
 					sb.append(",t_pm_positionJobDuty AS t3,t_pm_permissionassign AS t4,t_pm_permission AS t5");
 					sb.append(" where t1.flongnumber like ?");params.add(curOrgLn+"%");
 					sb.append(" and t2.forgId = t1.fid and t3.fprentid = t2.fid and t5.ftype=?");params.add(PermissionTypeEnum.PAGE.getValue());
-					sb.append(" and t3.fjobDutyId = t4.ftargetId and t5.fid = t4.fpermissionId and t5.fid = b.fid");
-					sb.append(")");
-				}
+					sb.append(" and t3.fjobDutyId = t4.ftargetId and t5.fid = t4.fpermissionId and t5.fid = b.fid)");
+				sb.append(")");
+				sb.append(" or exists(select c.fid from t_pm_permissionassign as c where c.fpermissionId=b.fid and c.ftargetId=? and c.forgId=?)");params.add(userId);params.add(curOrgId);
+				sb.append(")");
 		sb.append(" )");
 		if(!BaseUtil.isEmpty(mln)){
 			sb.append(" and a.flongnumber like ? ");
@@ -197,15 +202,18 @@ public class MainMenuService extends BaseInterfaceService<MainMenuInfo> {
 			//用户权限范围内
 			sb.append("	and exists(select c.fid from t_pm_permissionassign as c where c.fpermissionId=b.fid and c.ftargetId=?)");params.add(userId);
 				//组织范围内
-				if(BaseUtil.isNotEmpty(curOrgLn)){
-					sb.append("	and exists(SELECT t5.fid ");
+				sb.append("	and ( ");
+				sb.append("(");
+					sb.append("	exists(select c.fid from t_pm_permissionassign as c where c.fpermissionId=b.fid and c.ftargetId=? and c.forgId is null)");params.add(userId);
+					sb.append(" and exists(SELECT t5.fid ");//组织范围内:通过工作岗位职责分部的权限
 					sb.append("	from t_base_Org AS t1,t_pm_position AS t2");
 					sb.append(",t_pm_positionJobDuty AS t3,t_pm_permissionassign AS t4,t_pm_permission AS t5");
 					sb.append(" where t1.flongnumber like ?");params.add(curOrgLn+"%");
 					sb.append(" and t2.forgId = t1.fid and t3.fprentid = t2.fid and t5.ftype=?");params.add(PermissionTypeEnum.PAGE.getValue());
-					sb.append(" and t3.fjobDutyId = t4.ftargetId and t5.fid = t4.fpermissionId and t5.fid = b.fid");
-					sb.append(")");
-				}
+					sb.append(" and t3.fjobDutyId = t4.ftargetId and t5.fid = t4.fpermissionId and t5.fid = b.fid)");
+				sb.append(")");
+				sb.append(" or exists(select c.fid from t_pm_permissionassign as c where c.fpermissionId=b.fid and c.ftargetId=? and c.forgId=?)");params.add(userId);params.add(curOrgId);
+				sb.append(")");
 		sb.append(" ) and t.fid = a.fprentid");
 		if(!BaseUtil.isEmpty(mln)){
 			sb.append(" and a.flongnumber like ? ");

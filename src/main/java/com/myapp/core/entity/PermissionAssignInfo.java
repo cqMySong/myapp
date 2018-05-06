@@ -25,6 +25,7 @@ public class PermissionAssignInfo extends CoreInfo {
 	private String targetId;//目标对象id
 	private PermissionInfo permission;//权限对象
 	private String targetType;//目标对象的bostype
+	private String orgId;//权限所以的业务组织id ：
 	
 	@OneToOne(fetch=FetchType.LAZY)
 	@JoinColumn(name = "fpermissionId")
@@ -49,6 +50,14 @@ public class PermissionAssignInfo extends CoreInfo {
 	}
 	public void setTargetType(String targetType) {
 		this.targetType = targetType;
+	}
+	
+	@Column(name="forgId",length=100)
+	public String getOrgId() {
+		return orgId;
+	}
+	public void setOrgId(String orgId) {
+		this.orgId = orgId;
 	}
 	
 }

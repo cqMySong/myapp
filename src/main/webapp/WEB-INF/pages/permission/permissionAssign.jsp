@@ -47,11 +47,12 @@
 		<div class=" rightContainer" >
 			<div>
 				<div class="panel panel-success">
-					<div class="panel-heading" style="padding: 13px;">
+					<div class="panel-heading" style="padding: 14px;">
 						<h3 class="panel-title">分配权限项</h3>
-						<ul class="panel-options">
-							<i style="cursor: pointer; font-size: 12px; color: rgb(255, 255, 255);"
-								class="fa fa-search">&nbsp;</i>
+						<ul class="panel-options" style="top:1px;right:1px;">
+							<select id="userOrg" style="height:30px;width:200px;"
+								data-opt="{type:'select'}" class="form-control">
+							</select>
 						</ul>
 					</div>
 					<div class="panel-body" style="padding: 0px 2px 2px 2px;">
@@ -110,7 +111,9 @@
 function getData(){
 	return rightTree.getNodes();
 }
-
+function getSelOrg(){
+	return $('#userOrg').myComponet('select',{method:'getdata'});
+}
 function toAddTree(treeNodes){
 	rightTree.destroy();
 	var addTreeNode = [];
@@ -149,9 +152,11 @@ function unAssign(all){
 		}
 	}else{
 		rightTree.destroy();
-		rightTree = $.fn.zTree.init($('#toAssignTreeItems'), setting2, [])
+		rightTree = $.fn.zTree.init($('#toAssignTreeItems'), setting2, []);
 	}
 }
+var orgs = '${orgs}';
+var target = '${target}';
 $(document).ready(function() {
 	$('#toRight').click(function(){
 		toAssign(false);
@@ -165,6 +170,17 @@ $(document).ready(function() {
 	$('#toRemove').click(function(){
 		unAssign(false);
 	});
+	
+	if(!webUtil.isEmpty(target)&&!webUtil.isEmpty(orgs)){
+		orgs = webUtil.str2Json(orgs);
+		$('#userOrg').myComponet('select',{method:'init',opt:{
+			key:'id',val:'name',
+			data:orgs
+		}});
+	}else{
+		$('#userOrg').hide();
+	}
+	
 })
 </script>
 </html>

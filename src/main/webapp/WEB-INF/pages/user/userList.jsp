@@ -89,15 +89,16 @@ var assignWin = {url:showAssignUrl,height:580,width:710,title:'权限分配',max
 			if(index==1){
 				var iframe_win = $(layero).parent().find('#layui-layer-iframe'+layerIndex)[0].contentWindow;
 				var datas = iframe_win.getData();
-				if(!webUtil.isEmpty(datas)&&datas.length>0){
+				var orgId = iframe_win.getSelOrg();
+				if(!webUtil.isEmpty(orgId)&&!webUtil.isEmpty(datas)&&datas.length>0){
 					var permissionIds = getAllChildrenNodes(datas[0],'');
-					var pams = {targetId:curSourceId,permissionIds:permissionIds};
+					var pams = {targetId:curSourceId,permissionIds:permissionIds,orgId:orgId};
 					webUtil.ajaxData({url:toAssignUrl,data:pams,async:true,success:function(data){
 						load_tblMain2Data();
 					}});
 					return true;
 				}else{
-					webUtil.mesg("未选择任何数据!");
+					webUtil.mesg("未选择任何权限数据或者为选择对应的权限组织!");
 					return false;
 				}
 			}
@@ -130,13 +131,23 @@ function getSelectedId(){
 	}
 	return null;
 }
+function getSelectedRow(){
+	var _selRows = thisOrgList.getSelectRow();
+	if(!webUtil.isEmpty(_selRows)&&_selRows.length>0){
+		return _selRows[0];
+	}
+	return null;
+}
 var curSourceId ;
 function toAssignPermission(){
-	curSourceId = getSelectedId();
-	if(!webUtil.isEmpty(curSourceId)){
-		assignWin.url = showAssignUrl+'?targetId='+webUtil.uuIdReplaceID(curSourceId);
+	var selRow = getSelectedRow();
+	if(!webUtil.isEmpty(selRow)){
+		curSourceId = selRow.id;
+		assignWin.url = showAssignUrl+'?targetId='+webUtil.uuIdReplaceID(curSourceId)+"&target=User";//权限到用户
+		assignWin.title = '权限分部-'+selRow.name;
 		webUtil.openWin(assignWin);
 	}else{
+		curSourceId = '';
 		webUtil.mesg('请先选择对应的工作职责信息!');
 	}
 }

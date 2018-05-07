@@ -7,6 +7,8 @@ import java.util.Map;
 
 import javax.annotation.Resource;
 
+import com.myapp.core.util.WebUtil;
+import com.myapp.service.ec.basedata.ProjectWbsService;
 import org.hibernate.Criteria;
 import org.hibernate.criterion.MatchMode;
 import org.hibernate.criterion.Order;
@@ -45,6 +47,8 @@ import com.myapp.service.ec.basedata.ProBaseWbsService;
 public class ProBaseWbsListController extends BaseTreeListController {
 	@Resource
 	public ProBaseWbsService proBaseWbsService;
+	@Resource
+	private ProjectWbsService projectWbsService;
 	public AbstractBaseService getService() {
 		return proBaseWbsService;
 	}
@@ -135,5 +139,28 @@ public class ProBaseWbsListController extends BaseTreeListController {
 		entitys.add(booleanEntity("启用", "enabled"));
 		entitys.add(remarkEntity("备注", "remark"));
 		return entitys;
+	}
+
+	@AuthorAnn(doLongin=true,doPermission=false)
+	@RequestMapping(value="/tree/project")
+	@ResponseBody
+	public WebDataModel showProjectTree(String targetId) {
+		try {
+			init();
+			Criteria query = initTreeQueryCriteria();
+			executeTreeQueryParams(query);
+			query.add(Restrictions.in("id",projectWbsService.queryWsBaseByProject(WebUtil.UUID_ReplaceID(targetId))));
+			List<Order> orders = getTreeOrders();
+			if(query!=null&&orders!=null&&orders.size()>0){
+				for(Order order:orders){
+					query.addOrder(order);
+				}
+			}
+			data = excueteTreeQuery(query);
+		} catch (Exception e) {
+			e.printStackTrace();
+			setExceptionMesg(e.getMessage());
+		}
+		return ajaxModel();
 	}
 }

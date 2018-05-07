@@ -9,7 +9,7 @@
 <script type="text/javascript">
 </script>
 <body style="padding: 5px;" >
-    <div id="table-toolbar" class="panel" style="height:60px;margin-bottom:5px;"></div>
+    <div id="table-toolbar" class="panel" style="height:40px;padding-top: 1px;margin-bottom: 5px;"></div>
 	<div class="mainContrainer">
 		<div class="leftContainer" id="tree_container"></div>
 		<div class="rightContainer" id="tblMain_container">
@@ -52,7 +52,6 @@ function beforeAction(opt){
 	if(opt=='addnew'){
 		var params = thisOrgList.uiParams(opt);
 		var tree = thisOrgList.tree;
-		alert(tree.name);
 		if(!webUtil.isEmpty(params)&&!webUtil.isEmpty(params.tree)
 				&&'project'==params.tree.type){
 		}else{
@@ -64,18 +63,18 @@ function beforeAction(opt){
 }
 
 function enableClick(btn){
-	alert(btn.text);
+
 }
 $(document).ready(function() {
     var treeNode2QueryProp = ["id","name","number","longNumber","type"];
-    var editWin ={title:'质量交底',width:980,height:730,openType:'MAINTAB',id:"qualityStandard_tab"};
+    var editWin ={title:'质量交底',width:980,height:530};
     var treeOpt = {setting:{data: {
         	simpleData: {enable:true,idKey: "id", pIdKey: "parentId",rootPId: ''}
    	 }}};
-    var height = 700;
+    var height = top.getTopMainHeight()-50;
     thisOrgList = $('body').treeListUI({tableEl:'#tblMain',treeUrl:'ec/basedata/projects/projectTree',baseUrl:'ec/quality/standard/qualityStandardList',title:'工程项目',height:height,
    	 treeContainer:"#tree_container",editWin:editWin,toolbar:"#table-toolbar",searchParams:{includeChild:true},treeOpt:treeOpt
-   	 ,treeNode2QueryProp:treeNode2QueryProp,extendTableOptions:{toolbar:'#tblMain_toolbar',height:height,sortStable:false}});
+   	 ,treeNode2QueryProp:treeNode2QueryProp,extendTableOptions:{toolbar:'#tblMain_toolbar',height:height-45,sortStable:false}});
     thisOrgList.onLoad();
 });
 </script>

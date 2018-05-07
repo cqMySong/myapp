@@ -90,4 +90,14 @@ public class ProjectWbsService extends BaseInterfaceService<ProjectWbsInfo> {
         String hql = "from ProjectWbsInfo a where a.project.id=? and a.baseWbs.id=?";
         return getEntity(hql,new Object[]{projectId,basewWbsId});
     }
+
+    public List<String> queryWsBaseByProject(String projectId){
+        String hql = "select distinct a.baseWbs.id as wbsId from ProjectWbsInfo a where a.project.id=?";
+        List<Map<String,Object>> result = findByHQL(hql,new Object[]{projectId});
+        List<String> wbsIdList = new ArrayList<>();
+        for(Map<String,Object> map:result){
+            wbsIdList.add(map.get("wbsId").toString());
+        }
+        return wbsIdList;
+    }
 }

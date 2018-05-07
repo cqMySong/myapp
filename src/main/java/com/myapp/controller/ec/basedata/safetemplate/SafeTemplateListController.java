@@ -75,12 +75,42 @@ public class SafeTemplateListController extends BaseDataListController {
 	@ResponseBody
 	public WebDataModel showTree(String targetId) {
 		try{
+			init();
 			List<Map<String,Object>> result = safeTemplateService.queryProjectSafeTemplate(WebUtil.UUID_ReplaceID(targetId));
+			Map<String,List<Map<String,Object>>> proWbsIdGroup = new HashMap<>();
+			for(Map<String,Object> wbsMap:result){
+				if(proWbsIdGroup.get(wbsMap.get("proWbsId").toString())==null){
+					proWbsIdGroup.put(wbsMap.get("proWbsId").toString(),new ArrayList<Map<String,Object>>());
+				}
+				proWbsIdGroup.get(wbsMap.get("proWbsId").toString()).add(wbsMap);
+			}
+			List<Map<String,Object>> resultTree = safeTemplateService.queryProjectSafeTemplateTree(WebUtil.UUID_ReplaceID(targetId));
 			List<Map<String,Object>> rootList = new ArrayList<>();
+			List<Map<String,Object>> trees = new ArrayList<Map<String,Object>>();
+			Map<String, Map<String,Object>> nMap = new HashMap<String, Map<String,Object>>();
+			Map<String,Object> parent = null;
+			Map<String,Object> node = null;
+			for (Map<String,Object> wbsTree : resultTree) {
+				node = new HashMap<>();
+				node.put("name",wbsTree.get("typeName"));
+				node.put("id",wbsTree.get("id"));
+				node.put("children",proWbsIdGroup.get(wbsTree.get("id")));
+				nMap.put(wbsTree.get("id").toString(), node);
+				parent = nMap.get(wbsTree.get("parentId").toString());
+				if (null != parent) {
+					if (null == parent.get("children")) {
+						parent.put("children",new ArrayList<Map<String,Object>>());
+					}
+					((ArrayList<Map<String,Object>>)parent.get("children")).add(node);
+				}
+				if ("0".equals(wbsTree.get("parentId").toString())) {
+					trees.add(node);
+				}
+			}
 			Map root = new HashMap();
 			root.put("id", "");
 			root.put("name", "安全样板标准");
-			root.put("children", result);
+			root.put("children", trees);
 			rootList.add(root);
 			data = rootList;
 		}catch(Exception e){

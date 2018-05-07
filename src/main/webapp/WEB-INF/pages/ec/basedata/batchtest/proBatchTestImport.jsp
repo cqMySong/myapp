@@ -79,7 +79,7 @@
     var rightTreeViewer;
     var rightTree;
     var targetId = '${targetId}';
-    var treeUrl = 'ec/basedata/probasewbss/tree';
+    var treeUrl = 'ec/basedata/probasewbss/tree/project';
     $(document).ready(function(){
         leftTreeViewer = $('#allTreeItems').myTreeViewer(null);
         leftTreeViewer.init({title:'检验批划分标准',height:470});

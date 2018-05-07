@@ -5,6 +5,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import com.myapp.core.exception.db.QueryException;
 import org.springframework.stereotype.Service;
 
 import com.myapp.core.exception.db.AddNewException;
@@ -78,5 +79,11 @@ public class ProBaseWbsService extends BaseInterfaceService<ProBaseWbsInfo> {
 		wdm.setStatusMesg(mesg);
 		return wdm;
 	}
-	
+
+	public List<Map<String,Object>> queryProjectWbs(String projectId) throws QueryException {
+		String sql = "select distinct a.fid as id,a.fname as name,a.fnumber as number,a.fprentid  as parent " +
+				" from t_ec_probasewbs a,t_ec_projectwbs b " +
+				"where a.fid = b.fbasewWbsId and b.fprojectId = ? order by a.fnumber";
+		return executeSQLQuery(sql,new Object[]{projectId});
+	}
 }

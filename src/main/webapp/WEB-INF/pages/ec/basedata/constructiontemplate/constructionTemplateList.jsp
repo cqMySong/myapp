@@ -39,7 +39,7 @@
     }
 
     function enableClick(btn){
-        alert(btn.text);
+
     }
 
     $(document).ready(function() {

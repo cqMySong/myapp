@@ -40,7 +40,20 @@ public class SafeTemplateService extends  BaseInterfaceService<SafeTemplateInfo>
      * @return
      */
     public List queryProjectSafeTemplate(String projectId) throws QueryException {
-        String sql = "select distinct a.fid as id,a.fname as name,a.fnumber as number " +
+        String sql = "select distinct a.fid as id,a.fname as name,a.fnumber as number,b.fid as proWbsId " +
+                " from t_ec_safe_template a,t_ec_projectwbs b " +
+                " where b.fprojectId =? and (a.fBranchBaseWbsId = b.fbasewWbsId " +
+                " or a.fSubentryId = b.fbasewWbsId) order by a.fname";
+        return executeSQLQuery(sql,new Object[]{projectId});
+    }
+
+    /**
+     * 功能：查询当前工程的分部分项  质量样板工作
+     * @param projectId
+     * @return
+     */
+    public List queryProjectSafeTemplateTree(String projectId) throws QueryException {
+        String sql = "select distinct b.fname as typeName,ifnull(b.fprentid,'0') as parentId,b.fid as id " +
                 " from t_ec_safe_template a,t_ec_projectwbs b " +
                 " where b.fprojectId =? and (a.fBranchBaseWbsId = b.fbasewWbsId " +
                 " or a.fSubentryId = b.fbasewWbsId) order by a.fname";

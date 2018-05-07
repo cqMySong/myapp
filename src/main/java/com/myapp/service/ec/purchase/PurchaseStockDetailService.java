@@ -151,4 +151,125 @@ public class PurchaseStockDetailService extends BaseInterfaceService<PurchaseSto
         return  toPageSqlQuery(curPage,pageSize,sql.toString(),paramList.toArray());
     }
 
+
+    /**
+     * 功能：查询材料出入库台帐
+     * @param curPage
+     * @param pageSize
+     * @param params
+     * @return
+     * @throws QueryException
+     */
+    public PageModel queryLeaseLedger(Integer curPage, Integer pageSize, Map<String,Object> params,String materialType)
+            throws QueryException {
+        List<Object> paramList = new ArrayList<>();
+        StringBuffer sql = new StringBuffer();
+        sql.append("select budget.fMaterialId as materialId,budget.fnumber as materialNumber,budget.fMaterialName as materialName,")
+                .append("budget.fSpecification as specification,budget.fQuantity as budgetCount ,ips.fcreateDate as inStockDate,")
+                .append("sum(ipsd.fCount) as inStockCount,ips.fnumber as inStockNo,ips.fid as inStockId,(")
+                .append("select sum(a.fCount) as totalInStockCount from t_ec_purchase_stock_detail a,t_ec_purchase_stock b ")
+                .append("where ipsd.fMaterialId = a.fMaterialId and a.fprentid = b.fid and b.fprojectid = ips.fprojectid and b.fCreateDate<=ips.fcreateDate")
+                .append(") as totalInStockCount from ")
+                .append("(select a.fMaterialId,b.fnumber,a.fMaterialName,a.fSpecification,sum(a.fQuantity) as fQuantity,d.fProjectId  ")
+                .append("from t_ec_budgeting_detail a,t_base_material b,t_ec_budgeting d ")
+                .append("where a.fMaterialId = b.fid and  d.fid = a.fprentid and b.fMaterialType in ("+materialType+") and  d.fProjectId = ? ");
+        paramList.add(params.get("projectId"));
+        if(!BaseUtil.isEmpty(params.get("materialName"))){
+            sql.append(" and a.fMaterialName like ? ");
+            paramList.add("%"+params.get("materialName")+"%");
+        }
+        sql.append(" group by a.fMaterialId) budget,t_ec_purchase_stock_detail ipsd,t_ec_purchase_stock ips")
+                .append("where ipsd.fMaterialId = budget.fMaterialId and ipsd.fprentid = ips.fid and budget.fProjectId = ips.fProjectId" )
+                .append("group by ipsd.fMaterialId,ips.fid")
+                .append("order by budget.fMaterialId,ips.fcreateDate ");
+        paramList.add(params.get("projectId"));
+        if(!BaseUtil.isEmpty(params.get("leaseUnit"))){
+            sql.append(" and c.fLeaseUnit like ? ");
+            paramList.add("%"+params.get("leaseUnit")+"%");
+        }
+        if(!BaseUtil.isEmpty(params.get("materialName"))){
+            sql.append(" and c.fname like ? ");
+            paramList.add("%"+params.get("materialName")+"%");
+        }
+        sql.append(" order by c.fname,d.fname,b.fLeaseDate,b.fcreateDate");
+        //出租信息
+        List<Map> leaseList =  executeSQLQuery(sql.toString(),paramList.toArray());
+        List<Object> backParamList = new ArrayList<>();
+        StringBuffer backSql = new StringBuffer();
+        backSql.append("select b.fid as backId,a.fMaterialId as materialId,c.fnumber as materialNumber,")
+                .append("c.fname as materialName,d.fname as unitName,a.fBackCount as backCount,")
+                .append("b.fBackDate as backDate,b.fLeaseUnit as leaseUnit,a.fremark as remark,")
+                .append("(select sum(t.fBackCount) from t_ec_material_lease_back_detail t,t_ec_material_lease_back t1 ")
+                .append(" where t1.fid = t.fprentid and t1.fProjectId = b.fProjectId and t.fMaterialId = a.fMaterialId ")
+                .append(" and t1.fcreateDate<=b.fcreateDate) as backTotalCount,")
+                .append("(select count(t.fid) from t_base_attachFile t where t.fsourceBillId = b.fid) as backAttach ")
+                .append(" from t_ec_material_lease_back_detail a,t_ec_material_lease_back b,t_base_material c,t_base_measureunit d")
+                .append(" where a.fprentid = b.fid and a.fMaterialId = c.fid and c.fUnit = d.fid and b.fProjectId = ? ");
+        backParamList.add(params.get("projectId"));
+        if(!BaseUtil.isEmpty(params.get("leaseUnit"))){
+            backSql.append(" and c.fLeaseUnit like ? ");
+            backParamList.add("%"+params.get("leaseUnit")+"%");
+        }
+        if(!BaseUtil.isEmpty(params.get("materialName"))){
+            backSql.append(" and c.fname like ? ");
+            backParamList.add("%"+params.get("materialName")+"%");
+        }
+        backSql.append(" order by c.fname,d.fname,b.fBackDate,b.fcreateDate");
+        //归还信息
+        List<Map> backList =  executeSQLQuery(backSql.toString(),backParamList.toArray());
+        int leaseIndex = 0;
+        int backIndex = 0;
+        List<Map> materialLease = new ArrayList<>();
+        Map lease = null;
+        Map back = null;
+        while (true){
+            lease = null;
+            back = null;
+            if(leaseIndex<leaseList.size()){
+                lease = leaseList.get(leaseIndex);
+            }
+            if(backIndex<backList.size()){
+                back = backList.get(backIndex);
+            }
+            if(lease!=null&&back!=null&&lease.get("materialId").toString()
+                    .equals(back.get("materialId").toString())){
+                lease.putAll(back);
+                materialLease.add(lease);
+                leaseIndex++;
+                backIndex++;
+            }else if(lease!=null&&back!=null&&!lease.get("materialId").toString()
+                    .equals(back.get("materialId").toString())){
+                if(materialLease.size()==0){
+                    materialLease.add(lease);
+                    leaseIndex++;
+                }else if(lease.get("materialId").toString().equals(
+                        materialLease.get(materialLease.size()-1).get("materialId").toString())){
+                    materialLease.add(lease);
+                    leaseIndex++;
+                }else if(back.get("materialId").toString().equals(
+                        materialLease.get(materialLease.size()-1).get("materialId").toString())){
+                    if(materialLease.size()!=0){
+                        back.put("leaseTotalCount",materialLease.get(materialLease.size()-1).get("leaseTotalCount"));
+                    }
+                    materialLease.add(back);
+                    backIndex++;
+                }
+            }else if(lease!=null&&back==null){
+                materialLease.add(lease);
+                leaseIndex++;
+            }else if(lease==null&&back!=null){
+                if(materialLease.size()!=0){
+                    back.put("leaseTotalCount",materialLease.get(materialLease.size()-1).get("leaseTotalCount"));
+                }
+                materialLease.add(back);
+                backIndex++;
+            }else{
+                break;
+            }
+
+        }
+        PageModel pageModel = new PageModel(1,Integer.MAX_VALUE,Integer.MAX_VALUE);
+        pageModel.setDatas(materialLease);
+        return pageModel;
+    }
 }

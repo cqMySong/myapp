@@ -9,7 +9,7 @@
 <script type="text/javascript">
 	
 </script>
-<body style="padding: 5px;">
+<body style="padding: 5px;" class="panel">
 	<div id="editPanel" class="panel">
 		<div id="table-toolbar">
 		</div>
@@ -123,7 +123,6 @@
 			var uiCtx = getUICtx();
 			if(!webUtil.isEmpty(uiCtx)&&$.isPlainObject(uiCtx)
 					&&!webUtil.isEmpty(uiCtx.tree)){
-				alert(uiCtx.tree.name);
 				$('input[name="project"]').myF7().setData(uiCtx.tree);
 			}
 		}

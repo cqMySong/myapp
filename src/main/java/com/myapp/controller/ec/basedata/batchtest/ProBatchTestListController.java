@@ -156,6 +156,11 @@ public class ProBatchTestListController extends BaseListController {
 	@RequestMapping("/batch/import")
 	public ModelAndView forwardBatchImport(){
 		Map params = new HashMap();
+		params = getUiCtx();
+		if(params!=null&&params.get("project")!=null){
+			Map project = (Map) params.get("project");
+			params.put("targetId",project.get("id"));
+		}
 		toListUIParams(params);
 		params.put("uiCtx",WebUtil.UUID_ReplaceID(params.get("uiCtx").toString()));
 		return toPage("ec/basedata/batchtest/proBatchTestImport", params);

@@ -122,8 +122,9 @@ public class ApplyMaterialDetailF7QueryController extends BaseF7QueryController 
 					query.add(Restrictions.isNull("pcdi.id"));
 				}else{
 					query.createAlias("purchaseStockDetailInfoSet","psdi",JoinType.LEFT_OUTER_JOIN);
-					query.add(Restrictions.or(Restrictions.isNull("psdi.id"),
-							Restrictions.gtProperty("purchaseNum","psdi.count")));
+					query.add(Restrictions.isNull("psdi.id"));
+					//query.add(Restrictions.or(Restrictions.isNull("psdi.id"),
+					//		Restrictions.gtProperty("purchaseNum","psdi.count")));
 				}
 			}
 		}

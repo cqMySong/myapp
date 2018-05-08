@@ -61,7 +61,7 @@ public class ToolsStockLedgerListController extends BasePageListController {
         }
         params.put("projectId",projectId);
         try {
-            this.data = purchaseStockDetailService.queryMaterialStockLedger(getCurPage(),getPageSize(),params,"'TOOL'");
+            this.data = purchaseStockDetailService.queryLeaseLedger(getCurPage(),getPageSize(),params,"'TOOL'");
         } catch (Exception e) {
             e.printStackTrace();
         }

@@ -10,12 +10,17 @@ import javax.persistence.JoinColumn;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
+import org.hibernate.annotations.Parameter;
+import org.hibernate.annotations.Type;
+
 import com.myapp.core.base.entity.CoreBaseEntryInfo;
 import com.myapp.core.entity.UserInfo;
 import com.myapp.entity.ec.basedata.ProStructureInfo;
 import com.myapp.entity.ec.basedata.ProSubInfo;
 import com.myapp.entity.ec.basedata.ProSubItemInfo;
 import com.myapp.entity.ec.basedata.ProjectWbsInfo;
+import com.myapp.enums.ec.CauseType;
+import com.myapp.enums.ec.YesNoEnum;
 
 /**
  *-----------MySong---------------
@@ -44,6 +49,16 @@ public class ProjectPlanReportItemInfo extends CoreBaseEntryInfo<ProjectPlanRepo
 	
 	private Date begDate;//开始日期
 	private Date endDate;//截止日期
+	
+	//处理办法的几个字段
+	private String delayNature;//延误性质
+	private CauseType delayCause;//延误原因
+	private String meetContent;//专题会议纪要
+	private String meetTodo;//会议纪要执行情况
+	private String toDo;//赶工情况
+	private YesNoEnum doDelay;//办理工期延误
+	private YesNoEnum doWorkPay;//办理工期费用索赔
+	
 	
 	@OneToOne(fetch=FetchType.LAZY)
 	@JoinColumn(name = "fproStructureId")
@@ -143,6 +158,58 @@ public class ProjectPlanReportItemInfo extends CoreBaseEntryInfo<ProjectPlanRepo
 	}
 	public void setProjectWbs(ProjectWbsInfo projectWbs) {
 		this.projectWbs = projectWbs;
+	}
+	@Column(name="fdelayNature")
+	public String getDelayNature() {
+		return delayNature;
+	}
+	public void setDelayNature(String delayNature) {
+		this.delayNature = delayNature;
+	}
+	@Column(name="fdelayCuse",length=20)
+	@Type(type="myEnum",parameters={@Parameter(name="enumClass",value="com.myapp.enums.ec.CauseType")})
+	public CauseType getDelayCause() {
+		return delayCause;
+	}
+	public void setDelayCause(CauseType delayCause) {
+		this.delayCause = delayCause;
+	}
+	@Column(name="fmeetContent")
+	public String getMeetContent() {
+		return meetContent;
+	}
+	public void setMeetContent(String meetContent) {
+		this.meetContent = meetContent;
+	}
+	@Column(name="fmeetTodo")
+	public String getMeetTodo() {
+		return meetTodo;
+	}
+	public void setMeetTodo(String meetTodo) {
+		this.meetTodo = meetTodo;
+	}
+	@Column(name="ftoDo")
+	public String getToDo() {
+		return toDo;
+	}
+	public void setToDo(String toDo) {
+		this.toDo = toDo;
+	}
+	@Column(name="fdoDelay",length=20)
+	@Type(type="myEnum",parameters={@Parameter(name="enumClass",value="com.myapp.enums.ec.YesNoEnum")})
+	public YesNoEnum getDoDelay() {
+		return doDelay;
+	}
+	public void setDoDelay(YesNoEnum doDelay) {
+		this.doDelay = doDelay;
+	}
+	@Column(name="fdoWorkPay",length=20)
+	@Type(type="myEnum",parameters={@Parameter(name="enumClass",value="com.myapp.enums.ec.YesNoEnum")})
+	public YesNoEnum getDoWorkPay() {
+		return doWorkPay;
+	}
+	public void setDoWorkPay(YesNoEnum doWorkPay) {
+		this.doWorkPay = doWorkPay;
 	}
 	
 	

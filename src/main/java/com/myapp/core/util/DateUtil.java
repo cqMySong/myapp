@@ -298,6 +298,23 @@ public class DateUtil {
 		int maxDate = a.get(Calendar.DATE);
 		return maxDate;
 	}
+	
+	/**
+	 * 只是判断年月日
+	 * @param d1
+	 * @param d2
+	 * @return
+	 * 返回 -99 结果未知，1:d1>d2,0:d1=d2,-1:d1<d2
+	 */
+	public static int compareDate(Date d1,Date d2){
+		if(d1!=null&&d2!=null){
+			String d1s = formatDate(d1);
+			String d2s = formatDate(d2);
+			if(d1s.equals(d2s)) return 0;
+			return d1.after(d2)?1:-1;
+		}
+		return -99;
+	}
     
     public static void main(String[] args){
     	System.out.println(formatDate(getLastDayOfWeek(new Date())));

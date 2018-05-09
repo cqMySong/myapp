@@ -26,6 +26,12 @@
   height: 100%;
   padding: 0px 2px 2px 2px;
 }
+.my-progress-bar{
+	width:60px !important;
+	height: 30px !important;
+	padding: 6px;
+}
+
 </style>
 <script type="text/javascript">
 </script>
@@ -41,9 +47,12 @@
 						<span class="fa fa-filter"></span>&nbsp;查询
 					</button>
 				</div>
-				
 			</div>	
-				
+			<div class="pull-right" style="padding:5px; ">
+				<div class="progress-bar progress-bar-success my-progress-bar" ><span class="fn-label">提前完成</span></div>
+				<div class="progress-bar progress-bar-warning my-progress-bar" ><span class="fn-label">如期完成</span></div>
+				<div class="progress-bar progress-bar-danger my-progress-bar" ><span class="fn-label">延期完成</span></div>
+			</div>	
 		</div>
 		<hr style="margin: 2px 0px;">
 		<div class="mainContrainer">
@@ -56,8 +65,8 @@
 	</div>
 </body>
 <%@include file="../../../inc/webBase.inc"%>
-<link rel="stylesheet" href="<%=appRoot%>/assets/lib/gantt/css/style.css?v=1211"/>
-<script src="<%=appRoot%>/assets/lib/gantt/js/jquery.fn.gantt.js?v=1254" charset ="GB2312"></script>
+<link rel="stylesheet" href="<%=appRoot%>/assets/lib/gantt/css/style.css?v=12111"/>
+<script src="<%=appRoot%>/assets/lib/gantt/js/jquery.fn.gantt.js?v=125114" charset ="GB2312"></script>
 
 <script type="text/javascript">
 var orgTree ;
@@ -110,14 +119,21 @@ function initGantView(){
 		leftCols:[
 		          //{text:'单位(子单位)工程',name:'dwgc',algin:'left',width:150},
 		          //{text:'分部分项工程',name:'wbs',algin:'left',width:150},
-		          {text:'具体工作内容',name:'content',type:'textarea',algin:'center',width:250},
+		          {text:'工作内容',name:'content',type:'textarea',algin:'center',width:250},
 		          {text:'生产情况',name:'item',algin:'center',width:60},
 		          {text:'开始时间',name:'bd',width:70},
 		          {text:'截止时间',name:'ed',width:70},
 		          {text:'进度完成(%)',name:'progress',width:80},
 		          {text:'工程量',name:'proqty',width:50},
 		          {text:'施工人员',name:'sgry',width:80},
-		          {text:'持续天数',name:'days',width:60}
+		          {text:'持续天数',name:'days',width:60},
+		          {text:'延误性质',name:'dn',width:100},
+		          {text:'延误原因',name:'dc',width:60},
+		          {text:'专题会议纪要',name:'mc',width:100},
+		          {text:'纪要执行情况',name:'mtd',width:100},
+		          {text:'赶工情况',name:'td',width:80},
+		          {text:'办理工期延误',name:'dd',width:60},
+		          {text:'办理工期费用索赔',name:'dwp',width:60}
 		  ],
 		leftColClick:function(data){
 			//alert('你点击了第:'+data.rowIdx+'行');

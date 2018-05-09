@@ -93,6 +93,16 @@
 								
 								<th data-field="planContent" data-locked="true" rowspan="2" data-type="textarea">计划内容</th>
 								<th colspan="3" data-width="280">工作日志</th>
+								<th data-field="delayNature" rowspan="2" data-type="textarea">延误性质</th>
+								<th data-field="delayCause" rowspan="2" data-type="select"
+								 data-editor="{type:'select',url:'base/common/combox?enum=com.myapp.enums.ec.CauseType'}">延误原因</th>
+								<th data-field="meetContent" rowspan="2" data-type="textarea">专题会议纪要</th>
+								<th data-field="meetTodo" rowspan="2" data-type="textarea">会议纪要执行情况</th>
+								<th data-field="toDo" rowspan="2" data-type="textarea">赶工情况</th>
+								<th data-field="doDelay" rowspan="2" data-type="select"
+									data-editor="{type:'select',url:'base/common/combox?enum=com.myapp.enums.ec.YesNoEnum'}">办理工期延误</th>
+								<th data-field="doWorkPay" rowspan="2" data-type="select"
+									data-editor="{type:'select',url:'base/common/combox?enum=com.myapp.enums.ec.YesNoEnum'}">办理工期费用索赔</th>
 								<th data-field="planItemId" data-visible="false" data-locked="true" rowspan="2">计划ID</th>
 							</tr>
 							<tr>
@@ -184,6 +194,9 @@
 							newRow.planContent = drow.content;
 							newRow.planItemId = drow.id;
 							newRow.projectWbs = drow.projectWbs;
+							newRow.delayCause = 'BLANK';
+							newRow.doDelay = 'BLANK';
+							newRow.doWorkPay = 'BLANK';
 							planItemsEntry.addRow(newRow);
 						}
 					}
@@ -245,7 +258,7 @@
 	}
 	$(document).ready(function() {
 		editUI = $('#editPanel').editUI({
-			title : "项目施工日志",billModel:2,
+			title : "进度计划汇报",billModel:2,
 			baseUrl : "ec/plan/projectplanreport",
 			toolbar : "#table-toolbar",
 			form : {

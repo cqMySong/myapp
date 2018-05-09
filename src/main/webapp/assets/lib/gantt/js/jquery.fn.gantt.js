@@ -1061,15 +1061,15 @@
             createProgressBar: function (days, day) {
             	
             	var id = day.id ? day.id : "",
-        			cls = day.customClass ? day.customClass : "",
+        			cls = day.customClass ? day.customClass : "success",
         			desc = day.desc ? day.desc : "",
         			label = day.label ? day.label : "",
         			percent = day.percent?day.percent:0;
                  
                 var cellWidth = tools.getCellSize();
                 var barMarg = tools.getProgressBarMargin() || 0;
-                var bar = $('<div class="bar progress"><div class="progress-bar progress-bar-warning" role="progressbar" aria-valuenow="60" aria-valuemin="0" aria-valuemax="100" style="width:'+percent+'%;background-color:#e4a24d;">&nbsp;<span class="fn-label">'+(percent>0?'('+percent+'%)':'') + label + '</span></div></div>')
-                        .addClass(cls)
+                var bar = $('<div class="bar progress"><div class="progress-bar progress-bar-'+cls+'" role="progressbar" aria-valuenow="60" aria-valuemin="0" aria-valuemax="100" style="width:'+percent+'%;">&nbsp;<span class="fn-label">'+(percent>0?'('+percent+'%)':'') + label + '</span></div></div>')
+                       // .addClass(cls)
                         .css({width: ((cellWidth * days) - barMarg) + 2})
                         .data("dataObj", day);
                 bar.attr("id",id);

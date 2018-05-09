@@ -85,7 +85,6 @@ public class ProjectPlanItemsController extends BasePageListController {
 		}
 		return projectId;
 	}
-	
 	@AuthorAnn(doLongin=true,doPermission=false)
 	@RequestMapping("/show")
 	public ModelAndView show(){
@@ -114,6 +113,8 @@ public class ProjectPlanItemsController extends BasePageListController {
 			packageListDataColumns(datas, cms);
 		}
 	}
+	
+	@AuthorAnn(doLongin=true,doPermission=false)
 	@RequestMapping(value="/datas")
 	@ResponseBody
 	public WebDataModel toList() {

@@ -18,10 +18,13 @@ import com.myapp.core.model.WebDataModel;
 import com.myapp.core.service.base.BaseInterfaceService;
 import com.myapp.core.util.BaseUtil;
 import com.myapp.core.util.DateUtil;
+import com.myapp.core.util.EnumUtil;
 import com.myapp.core.util.WebUtil;
 import com.myapp.entity.ec.plan.ProjectPlanReportInfo;
 import com.myapp.entity.ec.plan.ProjectPlanReportItemInfo;
 import com.myapp.entity.ec.plan.ProjectTotalPlanInfo;
+import com.myapp.enums.ec.CauseType;
+import com.myapp.enums.ec.YesNoEnum;
 
 /**
  *-----------MySong---------------
@@ -38,6 +41,7 @@ public class ProjectTotalPlanService extends BaseInterfaceService<ProjectTotalPl
 	 * 获取工程项目的总计划与实际完成情况对比情况
 	 * @param proId 项目组织id
 	 * @throws QueryException 
+	 * “绿色” :success(提前完成) ，“黄色”:warning(如期完成)，“红色”: danger(延期完成)
 	 */
 	public List getPlanFinishCompareRpt(String proId,String begDate,String endDate) throws QueryException{
 		if(BaseUtil.isEmpty(proId)) return null;
@@ -45,9 +49,13 @@ public class ProjectTotalPlanService extends BaseInterfaceService<ProjectTotalPl
 		StringBuffer sb = new StringBuffer();
 		sb.append(" select pte.fid as id,pst.fdisplayName as dwgc,pwb.fdisplayName as wbs");
 		sb.append(" ,pte.fprogress as pprogress,pte.fcontent as content");
-		sb.append(" ,pte.fplanBegDate as bd,pte.fplanEndDate as ed,pte.fproQty as proqty");
-		sb.append(" ,pte.fdutyers as sgry,pte.fplanDays as days");
+		sb.append(" ,pte.fplanBegDate as bd,pte.fplanEndDate as ed");
+		sb.append(" ,pte.frealBegDate as prbd,pte.frealEndDate as pred");
+		sb.append(" ,pte.fdutyers as sgry,pte.fplanDays as days,pte.fproQty as proqty");
 		sb.append(" ,rpt.repid as repid,rpt.bd as relbd,rpt.ed as reled,rpt.progress as relprogress");
+		//处理办法
+		sb.append(" ,rpt.dn as dn,rpt.dc as dc,rpt.mc as mc,rpt.mtd as mtd,rpt.td as td,rpt.dd as dd,rpt.dwp as dwp");
+		//dn,dc,mc,mtd,td,dd,dwp
 		sb.append(" from t_ec_projectTotalPlan as pt");
 		sb.append(" left join t_ec_projectTotalPlanItem as pte on pte.fprentid=pt.fid ");
 		sb.append(" left join t_ec_proStructure as pst on pst.fid=pte.fproStructureId ");
@@ -55,6 +63,7 @@ public class ProjectTotalPlanService extends BaseInterfaceService<ProjectTotalPl
 		
 		sb.append(" left join (");
 		sb.append("  SELECT a.fPlanItemId as ptid,a.fid as repid,a.fbegDate AS bd,a.fendDate AS ed,a.fprogress as progress");
+		sb.append(" ,a.fdelayNature as dn,a.fdelayCuse as dc,a.fmeetContent as mc,a.fmeetTodo as mtd,a.ftoDo as td,a.fdoDelay as dd,a.fdoWorkPay as dwp");
 		sb.append("  from t_ec_proWorkPlanItem a,t_ec_proWorkPlanReport b");
 		sb.append("  where a.fprentid = b.fid and b.fBillState =? and b.fprojectId =?");
 		params.add(BillState.AUDIT.getValue());
@@ -66,11 +75,11 @@ public class ProjectTotalPlanService extends BaseInterfaceService<ProjectTotalPl
 		params.add(BillState.AUDIT.getValue());
 		params.add(proId);
 		if(BaseUtil.isNotEmpty(begDate)){
-			sb.append(" and pte.fplanBegDate<=?");
+			sb.append(" and pte.fplanBegDate>=?");
 			params.add(begDate);
 		}
 		if(BaseUtil.isNotEmpty(endDate)){
-			sb.append(" and pte.fplanEndDate>=?");
+			sb.append(" and pte.fplanBegDate<=?");
 			params.add(endDate);
 		}
 		
@@ -81,12 +90,19 @@ public class ProjectTotalPlanService extends BaseInterfaceService<ProjectTotalPl
 //		单位工程	分部工程	分项工程	具体工作内容	生产情况对比	开始时间	截止时间	工程量	施工人员	持续天数
 		List<Map> datas = executeSQLQuery(sb.toString(), params.toArray());
 		List<Map<String,Object>> ganttDatas = new ArrayList<Map<String,Object>>();
+		
+		Date curEndDate = DateUtil.parseDate(endDate!=null?endDate:DateUtil.formatDate(new Date()));
+		
 		if(datas!=null&&datas.size()>0){
 			Set<String> planSet = new HashSet<String>();
 			Map<String,String> ryMap = new HashMap<String,String>();
 			for(Map data:datas){
 				if(data!=null&&data.size()>0){
 					String pid = (String)data.get("id");
+					Date bd = obj2Date(data.get("bd"));
+					Date ed = obj2Date(data.get("ed"));
+					Date pred = obj2Date(data.get("pred"));
+					if(pred==null) pred = curEndDate;
 					if(!BaseUtil.isEmpty(pid)&&!planSet.contains(pid)){
 						Map<String,Object> curData = new HashMap<String,Object>();
 						curData.put("dwgc", data.get("dwgc"));
@@ -94,8 +110,7 @@ public class ProjectTotalPlanService extends BaseInterfaceService<ProjectTotalPl
 						curData.put("progress", data.get("pprogress"));
 						curData.put("content", data.get("content"));
 						curData.put("item", "进度计划");
-						Date bd = obj2Date(data.get("bd"));
-						Date ed = obj2Date(data.get("ed"));
+						
 						String bdStr = bd!=null?DateUtil.formatDate(bd):"";
 						String edStr = bd!=null?DateUtil.formatDate(ed):"";
 						curData.put("bd",bdStr);
@@ -121,6 +136,14 @@ public class ProjectTotalPlanService extends BaseInterfaceService<ProjectTotalPl
 						}
 						curData.put("sgry",sgry);
 						curData.put("days",data.get("days"));
+						//处理了办法 dn,dc,mc,mtd,td,dd,dwp
+						curData.put("dn", "");
+						curData.put("dc", "");
+						curData.put("mc", "");
+						curData.put("mtd","");
+						curData.put("td", "");
+						curData.put("dd", "");
+						curData.put("dwp", "");
 						List<Map<String,Object>> items = new ArrayList<Map<String,Object>>();
 						Map<String,Object> itemData = new HashMap<String,Object>();
 						itemData.put("id",WebUtil.UUID2String2(pid));
@@ -129,6 +152,20 @@ public class ProjectTotalPlanService extends BaseInterfaceService<ProjectTotalPl
 						itemData.put("percent",data.get("pprogress"));
 						itemData.put("desc",data.get("content"));
 						itemData.put("label",data.get("content"));
+						String customClass = "success";
+						if(ed!=null){
+							if(pred!=null) {
+								int c = DateUtil.compareDate(pred, ed);
+								if(c==1){
+									customClass = "danger";
+								}else if(c==-1){
+									customClass = "success";
+								}else{
+									customClass = "warning";
+								}
+							}
+						}
+						itemData.put("customClass",customClass);
 						items.add(itemData);
 						curData.put("values", items);
 						ganttDatas.add(curData);
@@ -142,15 +179,25 @@ public class ProjectTotalPlanService extends BaseInterfaceService<ProjectTotalPl
 						curData.put("progress", data.get("relprogress"));
 						curData.put("content", "   ");
 						curData.put("item", "实际完成");
-						Date bd = obj2Date(data.get("relbd"));
-						Date ed = obj2Date(data.get("reled"));
-						String bdStr = bd!=null?DateUtil.formatDate(bd):"";
-						String edStr = bd!=null?DateUtil.formatDate(ed):"";
+						Date rbd = obj2Date(data.get("relbd"));
+						Date red = obj2Date(data.get("reled"));
+						String bdStr = rbd!=null?DateUtil.formatDate(rbd):"";
+						String edStr = red!=null?DateUtil.formatDate(red):"";
 						curData.put("bd",bdStr);
 						curData.put("ed",edStr);
 						curData.put("proqty"," --- ");
 						curData.put("sgry"," --- ");
 						curData.put("days",getDays(data.get("relbd"),data.get("reled")));
+						
+						//处理了办法 dn,dc,mc,mtd,td,dd,dwp
+						curData.put("dn", data.get("dn"));
+						curData.put("dc", toCauseType(data.get("dc")));
+						curData.put("mc", data.get("mc"));
+						curData.put("mtd",data.get("mtd"));
+						curData.put("td", data.get("td"));
+						curData.put("dd", toYesNoEnum(data.get("dd")));
+						curData.put("dwp", toYesNoEnum(data.get("dwp")));
+						
 						List<Map<String,Object>> items = new ArrayList<Map<String,Object>>();
 						Map<String,Object> itemData = new HashMap<String,Object>();
 						itemData.put("id",WebUtil.UUID2String2(pid));
@@ -159,6 +206,19 @@ public class ProjectTotalPlanService extends BaseInterfaceService<ProjectTotalPl
 						itemData.put("percent",data.get("relprogress"));
 						itemData.put("desc","  ");
 						itemData.put("label","  ");
+						String customClass = "success";
+						if(ed!=null){
+							int c = DateUtil.compareDate(red!=null?red:curEndDate, ed);
+							if(c==1){
+								customClass = "danger";
+							}else if(c==-1){
+								customClass = "success";
+							}else{
+								customClass = "warning";
+							}
+						}
+						itemData.put("customClass",customClass);
+						
 						items.add(itemData);
 						curData.put("values", items);
 						ganttDatas.add(curData);
@@ -168,6 +228,19 @@ public class ProjectTotalPlanService extends BaseInterfaceService<ProjectTotalPl
 			}
 		}
 		return ganttDatas;
+	}
+	
+	private String toCauseType(Object obj){
+		if(obj==null) return "";
+		CauseType ct = EnumUtil.getEnum(CauseType.class.getName(), obj.toString());
+		if(ct!=null) return ct.getName();
+		return "";
+	}
+	private String toYesNoEnum(Object obj){
+		if(obj==null) return "";
+		YesNoEnum ct = EnumUtil.getEnum(YesNoEnum.class.getName(), obj.toString());
+		if(ct!=null) return ct.getName();
+		return "";
 	}
 	
 	public String getSgRyName(String ryId) throws QueryException{

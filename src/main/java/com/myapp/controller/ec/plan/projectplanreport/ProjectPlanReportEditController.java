@@ -32,6 +32,8 @@ import com.myapp.entity.ec.basedata.ProjectWbsInfo;
 import com.myapp.entity.ec.plan.ProjectPlanReportInfo;
 import com.myapp.entity.ec.plan.ProjectPlanReportItemInfo;
 import com.myapp.entity.ec.plan.ProjectTotalPlanInfo;
+import com.myapp.enums.ec.CauseType;
+import com.myapp.enums.ec.YesNoEnum;
 import com.myapp.service.ec.plan.ProjectPlanReportService;
 import com.myapp.service.ec.plan.ProjectTotalPlanService;
 
@@ -100,6 +102,13 @@ public class ProjectPlanReportEditController extends BaseBillEditController{
 		planItems.getCols().add(new ColumnModel("planContent"));
 		planItems.getCols().add(new ColumnModel("progress",DataTypeEnum.NUMBER));
 		planItems.getCols().add(new ColumnModel("planItemId"));
+		planItems.getCols().add(new ColumnModel("delayNature"));
+		planItems.getCols().add(new ColumnModel("delayCause",DataTypeEnum.ENUM,CauseType.class));
+		planItems.getCols().add(new ColumnModel("meetContent"));
+		planItems.getCols().add(new ColumnModel("meetTodo"));
+		planItems.getCols().add(new ColumnModel("toDo"));
+		planItems.getCols().add(new ColumnModel("doDelay",DataTypeEnum.ENUM,YesNoEnum.class));
+		planItems.getCols().add(new ColumnModel("doWorkPay",DataTypeEnum.ENUM,YesNoEnum.class));
 		cols.add(planItems);
 		return cols;
 	}
@@ -162,7 +171,9 @@ public class ProjectPlanReportEditController extends BaseBillEditController{
 							itemInfo.setPlanContent((String)item.get("content"));
 							itemInfo.setPlanItemId((String)item.get("planItemId"));
 							itemInfo.setBegDate((Date)item.get("realBegDate"));
-							
+							itemInfo.setDelayCause(CauseType.BLANK);
+							itemInfo.setDoDelay(YesNoEnum.BLANK);
+							itemInfo.setDoWorkPay(YesNoEnum.BLANK);
 							items.add(itemInfo);
 						}
 						proTotalPlanInfo.setPlanReportItems(items);

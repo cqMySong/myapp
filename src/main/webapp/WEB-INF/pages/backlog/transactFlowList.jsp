@@ -8,7 +8,7 @@
 </style>
 <script type="text/javascript">
 </script>
-<body style="padding: 5px;margin: 0px;" >
+<body style="padding: 5px;margin: 0px;" class="panel">
 	<div id="listPanel" class="panel" style="padding:2px;">
 		<div id="table-toolbar">
 		</div>
@@ -40,14 +40,16 @@ function formatter_pass(value, row, index){
 		var txt = value;
 		if(value=="1"){
 			txt = '同意';
-		}else if(value=="2"){
+		}else if(value=="0"){
 			txt = '不同意';
 		}
 		return txt;
 }
 $(document).ready(function() {
+    var height = top.getTopMainHeight()-50;
+    var winHeight = height+150;
 	thisListUI = $('#listPanel').listUI({tableEl:'#tblMain',
-			extendTableOptions:{url:'base/backlogs/histoic/flow/${procInsId}',height:window.outerHeight-210},hasDefToolbar:false});
+			extendTableOptions:{url:'base/backlogs/histoic/flow/${procInsId}',height:winHeight>450?450:winHeight},hasDefToolbar:false});
 	thisListUI.onLoad();
 });
 </script>

@@ -1,5 +1,6 @@
 package com.myapp.controller.base.backlog;
 
+import com.myapp.core.annotation.AuthorAnn;
 import com.myapp.core.annotation.PermissionAnn;
 import com.myapp.core.annotation.PermissionItemAnn;
 import com.myapp.core.base.service.impl.AbstractBaseService;
@@ -10,7 +11,12 @@ import com.myapp.core.enums.PermissionTypeEnum;
 import com.myapp.core.exception.db.QueryException;
 import com.myapp.core.model.ColumnModel;
 import com.myapp.core.model.WebDataModel;
+import com.myapp.core.service.act.ActProcessService;
 import com.myapp.core.service.act.ActTaskService;
+import org.activiti.engine.TaskService;
+import org.activiti.engine.history.HistoricProcessInstance;
+import org.activiti.engine.task.Task;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -37,7 +43,10 @@ import java.util.Map;
 public class BackLogListController extends BaseListController {
     @Resource
     private ActTaskService actTaskService;
-
+    @Resource
+    private ActProcessService processService;
+    @Autowired
+    private TaskService taskService;
     @Override
     public String getEditUrl() {
         return "backlog/transact";
@@ -48,6 +57,7 @@ public class BackLogListController extends BaseListController {
         return "backlog/backlogList";
     }
 
+    @AuthorAnn(doLongin=true,doPermission=false)
     @Override
     public WebDataModel toList() {
         init();
@@ -55,7 +65,7 @@ public class BackLogListController extends BaseListController {
         return  ajaxModel();
     }
 
-    @PermissionItemAnn(name="办理",number="transact",type= PermissionTypeEnum.PAGEADDFUNCTION)
+    @AuthorAnn(doLongin=true,doPermission=false)
     @RequestMapping("/transact/{taskId}/{taskDefinitionKey}/{processInstanceId}/{processDefinitionId}/{status}/{executionId}")
     public ModelAndView transact(@PathVariable String taskId,@PathVariable String taskDefinitionKey,
                                  @PathVariable String processInstanceId,@PathVariable String processDefinitionId,
@@ -73,6 +83,7 @@ public class BackLogListController extends BaseListController {
             params.put("businessKey",actTaskService.getBusinessKey(taskId));
             //获取业务单据路径
             params.put("formKey",actTaskService.getFormKey(processDefinitionId,taskDefinitionKey));
+            params.put("needAttention",taskService.getVariable(taskId,"needAttention"));
         } catch (Exception e) {
             e.printStackTrace();
             setExceptionMesg(e.getMessage());
@@ -81,9 +92,11 @@ public class BackLogListController extends BaseListController {
         return toPage(getEditUrl(), params);
     }
 
+
     /**
      * 读取带跟踪的图片
      */
+    @AuthorAnn(doLongin=true,doPermission=false)
     @RequestMapping(value = "/photo/{procDefId}/{execId}")
     public void tracePhoto(@PathVariable("procDefId") String procDefId, @PathVariable("execId") String execId,
                            HttpServletResponse response) throws Exception {
@@ -98,11 +111,35 @@ public class BackLogListController extends BaseListController {
     }
 
     /**
+     * 读取带跟踪的图片
+     */
+    @AuthorAnn(doLongin=true,doPermission=false)
+    @RequestMapping(value = "/photo/{processInstanceId}")
+    public void traceShowPhoto(@PathVariable("processInstanceId") String processInstanceId,
+                           HttpServletResponse response) throws Exception {
+        response.setContentType("image/jpeg");
+        Task task = actTaskService.queryByProcessInstanceId(processInstanceId);
+        InputStream imageStream = null;
+        if(task!=null){
+            imageStream = actTaskService.tracePhoto(task.getProcessDefinitionId(), task.getExecutionId());
+        }else{
+            HistoricProcessInstance historicProcessInstance = actTaskService.queryHisByProcessInstanceId(processInstanceId);
+            imageStream = processService.resourceRead(historicProcessInstance.getProcessDefinitionId(), null, "image");
+        }
+        // 输出资源内容到相应对象
+        byte[] b = new byte[1024];
+        int len;
+        while ((len = imageStream.read(b, 0, 1024)) != -1) {
+            response.getOutputStream().write(b, 0, len);
+        }
+    }
+    /**
      * 功能：跳转到审核意见界面
      * @param procInsId
      * @param model
      * @return
      */
+    @AuthorAnn(doLongin=true,doPermission=false)
     @RequestMapping("/histoic/flow/show/{procInsId}")
     public String showTransactFlow(@PathVariable String procInsId, Model model){
         model.addAttribute("procInsId",procInsId);
@@ -115,6 +152,7 @@ public class BackLogListController extends BaseListController {
      * @return
      * @throws QueryException
      */
+    @AuthorAnn(doLongin=true,doPermission=false)
     @RequestMapping("/histoic/flow/{procInsId}")
     @ResponseBody
     public WebDataModel queryTransact(@PathVariable String procInsId) throws QueryException {
@@ -142,5 +180,6 @@ public class BackLogListController extends BaseListController {
         cols.add(new ColumnModel("createDate"));
         return cols;
     }
+
 
 }

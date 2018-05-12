@@ -1,18 +1,23 @@
 package com.myapp.service.ec.purchase;
 
+import com.myapp.core.enums.BillState;
 import com.myapp.core.exception.db.QueryException;
 import com.myapp.core.exception.db.SaveException;
 import com.myapp.core.model.PageModel;
+import com.myapp.core.service.act.ActTaskService;
 import com.myapp.core.service.base.BaseInterfaceService;
 import com.myapp.core.util.BaseUtil;
+import com.myapp.core.util.EnumUtil;
+import com.myapp.core.util.WebUtil;
 import com.myapp.entity.ec.purchase.ApplyMaterialDetailInfo;
 import com.myapp.entity.ec.purchase.ApplyMaterialInfo;
-import com.myapp.entity.ec.purchase.PurchaseStockDetailInfo;
-import com.myapp.entity.ec.purchase.PurchaseStockInfo;
+import org.activiti.engine.delegate.DelegateExecution;
+import org.activiti.engine.delegate.ExecutionListener;
+import org.activiti.engine.impl.el.FixedValue;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
-import java.math.BigDecimal;
 import java.util.*;
 
 /**
@@ -22,86 +27,74 @@ import java.util.*;
  * @date: 2017-10-29 21:48
  */
 @Service("applyMaterialService")
-public class ApplyMaterialService extends BaseInterfaceService<ApplyMaterialInfo> {
+public class ApplyMaterialService extends BaseInterfaceService<ApplyMaterialInfo> implements ExecutionListener {
     @Resource
     private ApplyMaterialDetailService applyMaterialDetailService;
+
+    @Resource
+    private ActTaskService actTaskService;
+
+    /**
+     * 审批事项
+     */
+    private FixedValue auditState;
     @Override
-    public Object getEntity(String id) {
-        ApplyMaterialInfo applyMaterialInfo = (ApplyMaterialInfo) super.getEntity(id);
-        Set<ApplyMaterialDetailInfo> applyMaterialDetailSet = new HashSet<>();
-        if(applyMaterialInfo.getApplyMaterialDetailInfos()!=null){
-            Iterator iterator = applyMaterialInfo.getApplyMaterialDetailInfos().iterator();
-            ApplyMaterialDetailInfo applyMaterialDetail = null;
-            ApplyMaterialDetailInfo applyMaterialDetailOld = null;
-            while (iterator.hasNext()){
-                applyMaterialDetailOld = (ApplyMaterialDetailInfo) iterator.next();
-                applyMaterialDetail = new ApplyMaterialDetailInfo();
-                applyMaterialDetail.setId(applyMaterialDetailOld.getId());
-                applyMaterialDetail.setPurchaseNum(applyMaterialDetailOld.getPurchaseNum());
-                applyMaterialDetail.setSno(applyMaterialDetailOld.getSno());
-                applyMaterialDetail.setBudgetingDetailInfo(applyMaterialDetailOld.getBudgetingDetailInfo());
-                applyMaterialDetailSet.add(applyMaterialDetail);
-            }
-        }
-        applyMaterialInfo.setOldApplyMaterialDetail(applyMaterialDetailSet);
-        return applyMaterialInfo;
+    public Object submitEntity(Object entity) throws SaveException {
+        Object returnObj = super.submitEntity(entity);
+        ApplyMaterialInfo applyMaterialInfo = (ApplyMaterialInfo) returnObj;
+        applyMaterialInfo.setBizDate(new Date());
+        String processInstanceId = actTaskService.startProcess(ApplyMaterialInfo.class,applyMaterialInfo.getId(),
+                applyMaterialInfo.getName(),null,applyMaterialInfo.getCreateUser().getNumber());
+        applyMaterialInfo.setProcessInstanceId(processInstanceId);
+        applyMaterialInfo.setAuditState(BillState.AUDITING);
+        return returnObj;
     }
 
     @Override
     public Object saveEntity(Object entity) throws SaveException {
-        ApplyMaterialInfo applyMaterialInfo = (ApplyMaterialInfo)entity;
-        Set<ApplyMaterialDetailInfo> applyMaterialDetailInfos = applyMaterialInfo.getOldApplyMaterialDetail();
-        applyMaterialInfo = (ApplyMaterialInfo) super.saveEntity(entity);
-        if(applyMaterialDetailInfos==null){
-            applyMaterialDetailInfos = new HashSet<ApplyMaterialDetailInfo>();
-        }
-        boolean isExist = false;
-        BigDecimal diffCount = BigDecimal.ZERO;
-        for(ApplyMaterialDetailInfo applyMaterialDetailOld:applyMaterialDetailInfos){
-            isExist = false;
-            for(ApplyMaterialDetailInfo applyMaterialDetailNew:applyMaterialInfo.getApplyMaterialDetailInfos()){
-                if(applyMaterialDetailOld.getId().equals(applyMaterialDetailNew.getId())){
-                    isExist = true;
-                    diffCount = applyMaterialDetailOld.getPurchaseNum().subtract(applyMaterialDetailNew.getPurchaseNum());
-                    applyMaterialDetailNew.setCumulativePurchaseNum(
-                            applyMaterialDetailNew.getCumulativePurchaseNum().subtract(diffCount));
-                    break;
+        ApplyMaterialInfo applyMaterialInfo = (ApplyMaterialInfo) entity;
+        if(applyMaterialInfo.getApplyMaterialDetailInfos()!=null){
+            Iterator<ApplyMaterialDetailInfo> detailInfoIterator = applyMaterialInfo.getApplyMaterialDetailInfos().iterator();
+            while (detailInfoIterator.hasNext()){
+                ApplyMaterialDetailInfo applyMaterialDetailInfo = detailInfoIterator.next();
+                if(StringUtils.isEmpty(applyMaterialDetailInfo.getId())){
+                    applyMaterialDetailInfo.setProcessNo(1);
+                    applyMaterialDetailInfo.setStatus("0");
                 }
             }
+        }
+        return super.saveEntity(entity);
+    }
 
-            if(!isExist){
-                diffCount = applyMaterialDetailOld.getPurchaseNum();
-            }
-            try {
-                applyMaterialDetailService.updateCumulativePurchaseNum(diffCount,
-                        applyMaterialDetailOld.getBudgetingDetailInfo(),applyMaterialDetailOld.getSno());
-            } catch (QueryException e) {
-                throw new SaveException(e);
-            }
+    /**
+     * 功能：查询物料的当前库存数量和累计申购数量
+     * @param projectId
+     * @param materialIds
+     * @return
+     */
+    public Map queryStockAndTotalApplyCount(String projectId,String materialIds) throws QueryException {
+        String[] materialIdArr = materialIds.split(",");
+        StringBuffer materialIdStr = new StringBuffer();
+        projectId = WebUtil.UUID_ReplaceID(projectId);
+        for(String wbsId:materialIdArr){
+            materialIdStr.append("'").append(wbsId).append("',");
         }
-        for(ApplyMaterialDetailInfo applyMaterialDetailNew:applyMaterialInfo.getApplyMaterialDetailInfos()){
-            isExist = false;
-            for(ApplyMaterialDetailInfo applyMaterialDetailOld:applyMaterialDetailInfos){
-                if(applyMaterialDetailOld.getId().equals(applyMaterialDetailNew.getId())){
-                    isExist = true;
-                    break;
-                }
-            }
-
-            if(!isExist){
-                try {
-                    ApplyMaterialDetailInfo applyMaterialDetailInfo = applyMaterialDetailService
-                            .queryLastApplyMaterial(applyMaterialDetailNew.getBudgetingDetailInfo());
-                    applyMaterialDetailNew.setCumulativePurchaseNum(applyMaterialDetailNew
-                        .getPurchaseNum().add(applyMaterialDetailInfo.getCumulativePurchaseNum()==null?
-                                    BigDecimal.ZERO:applyMaterialDetailInfo.getCumulativePurchaseNum()));
-                    applyMaterialDetailNew.setSno(System.currentTimeMillis());
-                } catch (QueryException e) {
-                    throw new SaveException(e);
-                }
-            }
+        String sql = "select b.fMaterialId as materialId,sum(b.stockCount) as stockCount,sum(b.purchaseNum) as purchaseNum from ( " +
+                "select a.fMaterialId,a.fCount as stockCount,0 as purchaseNum from t_ec_stock a  " +
+                "where a.fMaterialId in ("+materialIdStr.toString().substring(0,materialIdStr.toString().length()-1)+")" +
+                "and a.fProjectId= ? " +
+                "union all " +
+                "select b.fMaterialId,0 as stockCount,sum(b.fPurchaseNum) as purchaseNum from t_ec_apply_material a,t_ec_apply_material_detail b " +
+                "where a.fid = b.fprentid and b.fMaterialId in ("+materialIdStr.toString().substring(0,materialIdStr.toString().length()-1)+") " +
+                "and a.fProjectId = ? and a.fcreateDate<= sysdate() " +
+                "group by b.fMaterialId " +
+                ") b group by b.fMaterialId";
+        List<Map> result = executeSQLQuery(sql,new Object[]{projectId,projectId});
+        Map<String,Map> resultMap = new HashMap<>();
+        for(Map map:result){
+            resultMap.put(map.get("materialId").toString(),map);
         }
-        return applyMaterialInfo;
+        return resultMap;
     }
 
     /**
@@ -153,5 +146,26 @@ public class ApplyMaterialService extends BaseInterfaceService<ApplyMaterialInfo
 
             sql.append("order by e.fMaterialName,e.fSpecification,a.fArrivalTime,d.fInStockDate");
         return  toPageSqlQuery(curPage,pageSize,sql.toString(),paramList.toArray());
+    }
+
+    /**
+     * 审核结束返回信息
+     * @param delegateExecution
+     * @throws Exception
+     */
+    @Override
+    public void notify(DelegateExecution delegateExecution) throws Exception {
+        String businessKey =  delegateExecution.getProcessBusinessKey();
+        ApplyMaterialInfo applyMaterialInfo = loadEntity(businessKey);
+        applyMaterialInfo.setAuditState(EnumUtil.getEnum(BillState.class.getName(),auditState.getExpressionText()));
+        saveEntity(applyMaterialInfo);
+    }
+
+    public FixedValue getAuditState() {
+        return auditState;
+    }
+
+    public void setAuditState(FixedValue auditState) {
+        this.auditState = auditState;
     }
 }

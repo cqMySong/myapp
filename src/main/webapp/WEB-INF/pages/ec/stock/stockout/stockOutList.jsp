@@ -22,7 +22,8 @@
 								<th data-field="name">领料说明</th>
 								<th data-field="number">出库单号</th>
 								<th data-field="outStockDate" data-type="date">出库时间</th>
-								<th data-field="picker">责任人</th>
+								<th data-field="picker">领用人</th>
+								<th data-field="pickUnit">领用单位</th>
 								<th data-field="billState" data-type="select">业务状态</th>
 								<th data-field="createDate" data-type="date">创建日期</th>
 								<th data-field="remark">备注</th>

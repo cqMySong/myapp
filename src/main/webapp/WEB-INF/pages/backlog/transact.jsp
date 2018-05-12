@@ -8,7 +8,7 @@
 </style>
 <script type="text/javascript">
 </script>
-<body style="padding: 5px;">
+<body class="panel" style="padding: 5px;padding-bottom: 0px;" >
 	<div id="transactPanel" class="panel" >
 			<div id="table-toolbar">
 				<div class="btn-group">
@@ -20,7 +20,7 @@
 					</button>
 				</div>
 			</div>
-		   <div class="row">
+		   <div class="row no-padding">
 			   <iframe src="${appRoot}/${formKey}?id=${businessKey}" id="billInfo"  class="col-lg-12 col-sm-12" style="border: 0px;"></iframe>
 		   </div>
             <form id="transactForm">
@@ -41,7 +41,15 @@
 						</tr>
 					</thead>
 				</table>
-				<div class="row" >
+				<div class="row mt5">
+					<div class="col-sm-12 col-lg-12">
+						<div class="input-group">
+							<span class="input-group-addon lable">审查事项</span>
+							<textarea name="needAttention" class="input-item form-control" rows="2">${needAttention}</textarea>
+						</div>
+					</div>
+				</div>
+				<div class="row mt5" >
 					<div class="col-sm-2 col-lg-2">
 						<div class="input-group">
 							<span class="input-group-addon lable" style="height: 52px;">同意</span>
@@ -51,7 +59,7 @@
 					<div class="col-sm-2 col-lg-2">
 						<div class="input-group">
 							<span class="input-group-addon lable" style="height: 52px;">不同意</span>
-							<input name="pass" class="input-item" value="2" data-opt="{type:'radio',height:52}" type="radio"/>
+							<input name="pass" class="input-item" value="0" data-opt="{type:'radio',height:52}" type="radio"/>
 						</div>
 					</div>
 					<div class="col-sm-8 col-lg-8">
@@ -76,7 +84,7 @@ function formatter_pass(value, row, index){
 	var txt = value;
 	if(value=="1"){
 		txt = '同意';
-	}else if(value=="2"){
+	}else if(value=='0'){
 		txt = '不同意';
 	}
 	return txt;
@@ -85,20 +93,21 @@ $(document).ready(function() {
 	var editUI = $('#transactPanel').editUI({title:"审核信息",baseUrl:"base/backlog",toolbar:"#table-toolbar",
 			form:{el:"#transactForm"},hasDefToolbar:false,operate:OperateType.audit});
 	editUI.onLoad();
-	$('#billInfo').height(window.outerHeight-500);
-	$('#transactForm').height("260");
-	var auditDetailTable = $('#auditDetail').myDataTable({height:200});
+    var height = top.getTopMainHeight()+100;
+	$('#billInfo').height(height-390);
+	$('#transactForm').css({"margin-top":"10px","height":"260px"});
+	var auditDetailTable = $('#auditDetail').myDataTable({height:170,mypagination:false,striped:true,sortStable:false,
+		showRefresh:false,selectModel:1,cache:false,showToggle:false,search:false});
 	auditDetailTable.refreshData('base/backlogs/histoic/flow/${processInstanceId}');
 	$('#showBackLogPic').on('click',function(){
 		var url = app.root+"/base/backlogs/photo/${processDefinitionId}/${executionId}";
-		webUtil.openWin({title:'流程进度',btns:null,operate:OperateType.audit,width:(window.outerWidth-80),
-				height:(window.outerHeight-120),url:url});
+		webUtil.openWin({title:'流程进度',btns:null,operate:OperateType.audit,width:1100,
+				height:460,url:url});
 	});
 	//提交审核
 	$('#subAudit').on('click',function(){
 		var thisEditUI = editUI;
-		if(thisEditUI.editForm.verifyInputRequire()
-				&&thisEditUI.actionBefore(OperateType.save)){
+		if(thisEditUI.actionBefore(OperateType.save)){
 				var this_editData = thisEditUI.storeData();
 				var _toData = {};
 				_toData.editData = JSON.stringify(this_editData);

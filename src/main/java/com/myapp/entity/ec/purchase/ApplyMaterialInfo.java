@@ -2,7 +2,9 @@ package com.myapp.entity.ec.purchase;
 
 import com.myapp.core.annotation.MyEntityAnn;
 import com.myapp.core.base.entity.CoreBaseBillInfo;
+import com.myapp.core.enums.BillState;
 import com.myapp.entity.ec.basedata.ProjectInfo;
+import org.hibernate.annotations.Type;
 
 import javax.persistence.*;
 import java.util.Set;
@@ -26,13 +28,18 @@ public class ApplyMaterialInfo extends CoreBaseBillInfo {
      */
     private String remark;
     /**
+     * 流程审核状态
+     */
+    private BillState auditState;
+    /**
+     * 流程进度id
+     */
+    private String processInstanceId;
+
+    /**
      * 材料申购明细信息
      */
     private Set<ApplyMaterialDetailInfo> applyMaterialDetailInfos;
-    /**
-     * 材料申购历史数据
-     */
-    private Set<ApplyMaterialDetailInfo> oldApplyMaterialDetail;
 
     @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "fProjectId")
@@ -43,7 +50,7 @@ public class ApplyMaterialInfo extends CoreBaseBillInfo {
     public void setProject(ProjectInfo project) {
         this.project = project;
     }
-
+    @Column(name="fRemark")
     public String getRemark() {
         return remark;
     }
@@ -62,12 +69,21 @@ public class ApplyMaterialInfo extends CoreBaseBillInfo {
         this.applyMaterialDetailInfos = applyMaterialDetailInfos;
     }
 
-    @Transient
-    public Set<ApplyMaterialDetailInfo> getOldApplyMaterialDetail() {
-        return oldApplyMaterialDetail;
+    @Column(name="fAuditState",length=20)
+    @Type(type="myEnum",parameters={@org.hibernate.annotations.Parameter(name="enumClass",value="com.myapp.core.enums.BillState")})
+    public BillState getAuditState() {
+        return auditState;
     }
 
-    public void setOldApplyMaterialDetail(Set<ApplyMaterialDetailInfo> oldApplyMaterialDetail) {
-        this.oldApplyMaterialDetail = oldApplyMaterialDetail;
+    public void setAuditState(BillState auditState) {
+        this.auditState = auditState;
+    }
+    @Column(name="fProcessInstanceId")
+    public String getProcessInstanceId() {
+        return processInstanceId;
+    }
+
+    public void setProcessInstanceId(String processInstanceId) {
+        this.processInstanceId = processInstanceId;
     }
 }

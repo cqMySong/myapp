@@ -167,7 +167,6 @@ public class WebContextService extends AbstractBaseService{
 					
 					//设置权限范围
 					myWebCtx.setPermission(getUserPermissions(uInfo.getId()));
-					System.out.println(upInfo.getPosition().getName());
 				}
 			}
 			List menus = mainMenuService.getTopMainMenu(uInfo);

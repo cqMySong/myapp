@@ -5,6 +5,7 @@ import com.myapp.core.exception.db.QueryException;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Map;
 
 /**
  * 包路径：com.myapp.core.service.base
@@ -33,12 +34,12 @@ public class BaseSubSystemService extends BaseInterfaceService<SubsystemTreeInfo
      * @return
      */
     public String queryByEntityClaz(Class classParam){
-        String hql = "select entityObjectType from SubsystemTreeInfo where entityClaz=?";
-        List fIdList = findByHQL(hql,new String[]{classParam.getName()});
+        String hql = "select entityObjectType as objectType from SubsystemTreeInfo where entityClaz=?";
+        List<Map> fIdList = findByHQL(hql,new String[]{classParam.getName()});
         if(fIdList==null||fIdList.size()==0){
             return null;
         }
-        return fIdList.get(0).toString();
+        return fIdList.get(0).get("objectType").toString();
     }
 
 

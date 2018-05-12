@@ -9,7 +9,7 @@
 <script type="text/javascript">
 </script>
 <body style="padding: 5px;margin: 0px;" >
-	<div id="listPanel" class="panel" style="padding:2px;">
+	<div id="listPanel" class="panel">
 		<div id="table-toolbar">
 			<div class="btn-group">
 				<button class="btn btn-success" type="button" id="actProcessSuspend">
@@ -80,8 +80,9 @@ function suspended_formatter(value, row, index){
 }
 $(document).ready(function() {
 	var editWin ={title:'流程信息',width:620,height:450};
-	thisListUI = $('#listPanel').listUI({tableEl:'#tblMain',height:680,baseUrl:thisBaseUrl,editWin:editWin,
-			hasDefToolbar:false,toolbar:"#table-toolbar",extendTableOptions:{height:window.outerHeight-295}});
+    var height = top.getTopMainHeight()-50;
+	thisListUI = $('#listPanel').listUI({tableEl:'#tblMain',height:height,baseUrl:thisBaseUrl,editWin:editWin,
+			hasDefToolbar:false,toolbar:"#table-toolbar",extendTableOptions:{height:height-45}});
 	thisListUI.onLoad();
 	//挂起
 	$('#actProcessSuspend').on('click',function(){

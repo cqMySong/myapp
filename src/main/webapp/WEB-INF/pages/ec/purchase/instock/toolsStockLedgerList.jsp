@@ -54,19 +54,19 @@
 					<th data-field="materialNumber" width="120">编号</th>
 					<th data-field="materialName" width="120">材料名称</th>
 					<th data-field="specification"  width="120">规格</th>
-					<th data-field="budgetCount"  width="100">预算数量</th>
 					<th data-field="inStockDate" width="100" data-type="datetime">入库时间</th>
 					<th data-field="inStockCount" width="100">入库数量</th>
 					<th data-field="inStockNo" width="100" data-formatter="showAttach">入库单号及附件</th>
 					<th data-field="totalInStockCount" width="100">累计入库数量</th>
 					<th data-field="outStockDate" width="100" data-type="datetime">出库时间</th>
 					<th data-field="outStockCount" width="100">出库数量</th>
+					<th data-field="pickUnit" width="100">领用单位</th>
+					<th data-field="picker" width="100">领用人</th>
 					<th data-field="outStockNo" width="100" data-formatter="showAttachOut">出库单号及附件</th>
 					<th data-field="totalOutStockCount" width="100">累计出库数量</th>
 					<th data-field="revertCount" width="100">归还情况</th>
 					<th data-field = "stockCount" width="100" data-formatter="showStockCount">库存量</th>
 					<th data-field = "remark" width="100" data-type="textarea">备注</th>
-
 				</tr>
 				</thead>
 			</table>

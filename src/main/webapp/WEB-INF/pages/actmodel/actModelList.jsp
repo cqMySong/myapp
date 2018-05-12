@@ -68,9 +68,10 @@ function category_formatter(value, row, index){
     return txt;
 }
 $(document).ready(function() {
+    var height = top.getTopMainHeight()-50;
 	var editWin ={title:'模型信息',width:620,height:380};
-	thisListUI = $('#listPanel').listUI({tableEl:'#tblMain',height:680,baseUrl:thisBaseUrl,editWin:editWin
-			,hasDefToolbar:false,toolbar:"#table-toolbar",extendTableOptions:{height:window.outerHeight-295}});
+	thisListUI = $('#listPanel').listUI({tableEl:'#tblMain',height:height,baseUrl:thisBaseUrl,editWin:editWin
+			,hasDefToolbar:false,toolbar:"#table-toolbar",extendTableOptions:{height:height-45}});
 	thisListUI.onLoad();
 	//添加模型
 	$('#actAdd').on('click',function(){

@@ -37,9 +37,30 @@ public class ApplyMaterialDetailInfo extends CoreBaseEntryInfo<ApplyMaterialInfo
      */
     private Date arrivalTime;
     /**
+     * 库存数量
+     */
+    private BigDecimal stockCount;
+    /**
+     * 进度序号 1、施工员  2、技术负责人 3、材料员  4、项目经理 5、完结
+     */
+    private int processNo;
+    /**
+     * 状态
+     */
+    private String status;
+
+    /**
      * 累计申购数量
      */
     private BigDecimal cumulativePurchaseNum;
+    /**
+     * 预计采购单价
+     */
+    private BigDecimal purchasePrice;
+    /**
+     * 预计到货时间
+     */
+    private Date purchaseArrivalTime;
     /**
      * 序号
      */
@@ -125,5 +146,48 @@ public class ApplyMaterialDetailInfo extends CoreBaseEntryInfo<ApplyMaterialInfo
 
     public void setMaterialInfo(MaterialInfo materialInfo) {
         this.materialInfo = materialInfo;
+    }
+
+    @Column(name="fStockCount")
+    public BigDecimal getStockCount() {
+        return stockCount;
+    }
+
+    public void setStockCount(BigDecimal stockCount) {
+        this.stockCount = stockCount;
+    }
+    @Column(name="fProcessNo")
+    public int getProcessNo() {
+        return processNo;
+    }
+
+    public void setProcessNo(int processNo) {
+        this.processNo = processNo;
+    }
+    @Column(name="fStatus",length = 1)
+    public String getStatus() {
+        return status;
+    }
+
+    public void setStatus(String status) {
+        this.status = status;
+    }
+
+    @Column(name="fPurchasePrice",precision = 10,scale = 2)
+    public BigDecimal getPurchasePrice() {
+        return purchasePrice;
+    }
+
+    public void setPurchasePrice(BigDecimal purchasePrice) {
+        this.purchasePrice = purchasePrice;
+    }
+
+    @Column(name="fPurchaseArrivalTime")
+    public Date getPurchaseArrivalTime() {
+        return purchaseArrivalTime;
+    }
+
+    public void setPurchaseArrivalTime(Date purchaseArrivalTime) {
+        this.purchaseArrivalTime = purchaseArrivalTime;
     }
 }

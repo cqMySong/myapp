@@ -29,18 +29,24 @@
 			</div>
 			<div class="col-sm-3">
 				<div class="input-group">
-					<span class="input-group-addon lable">责任人</span>
+					<span class="input-group-addon lable">领用人</span>
 					<input name="picker" class="require input-item form-control"/>
 				</div>
 			</div>
+			<div class="col-sm-3">
+				<div class="input-group">
+					<span class="input-group-addon lable">领用单位</span>
+					<input name="pickUnit" class="require input-item form-control"/>
+				</div>
+			</div>
+		</div>
+		<div class="row mt10">
 			<div class="col-sm-3">
 				<div class="input-group">
 					<span class="input-group-addon lable">出库日期</span>
 					<input type="text" name="outStockDate" class="form-control input-item require" data-opt="{type:'date'}">
 				</div>
 			</div>
-		</div>
-		<div class="row mt10">
 			<div class="col-sm-3">
 				<div class="input-group">
 					<span class="input-group-addon lable">工程项目</span>
@@ -56,7 +62,7 @@
 					</select>
 				</div>
 			</div>
-			<div class="col-sm-6">
+			<div class="col-sm-3">
 				<div class="input-group">
 					<span class="input-group-addon lable">备注</span>
 					<textarea name="remark" style="height:40px;" class="input-item form-control"></textarea>

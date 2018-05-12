@@ -19,6 +19,7 @@ if(typeof billModel == "undefined"){
 	var billModel = {};
 	billModel.baseData =1;
 	billModel.billData =2;
+    billModel.flowData =3;
 }
 
 var _uiCtx = '<%=_uiCtx%>';
@@ -65,6 +66,9 @@ var EditUI = function(el,opt){
 			btng.addBtn(toDoBtnGroup({text:'审核',icon:"fa fa-mail-forward",clickFun:this.audit}));
 			btng.addBtn(toDoBtnGroup({text:'反审核',icon:"fa fa-mail-reply",clickFun:this.unaudit}));
 		}
+        if(this.options.billModel == billModel.flowData){
+            btng.addBtn(toDoBtnGroup({text:'提交',icon:"fa fa-location-arrow",clickFun:this.submit}));
+        }
 		btng.addBtn(toDoBtnGroup({text:'删除',icon:"fa fa-remove",clickFun:this.remove}));
 		btng.addBtn(toDoBtnGroup({text:'附件管理',icon:"fa fa-paperclip",clickFun:this.attach}));
 	}

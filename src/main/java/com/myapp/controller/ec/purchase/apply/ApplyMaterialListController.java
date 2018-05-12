@@ -76,7 +76,9 @@ public class ApplyMaterialListController extends BaseListController {
         cols.add(new ColumnModel("name"));
         cols.add(new ColumnModel("number"));
         cols.add(new ColumnModel("billState", DataTypeEnum.ENUM,BillState.class));
+        cols.add(new ColumnModel("auditState", DataTypeEnum.ENUM,BillState.class));
         cols.add(new ColumnModel("remark"));
+        cols.add(new ColumnModel("processInstanceId"));
         cols.add(new ColumnModel("createDate",DataTypeEnum.DATE));
         ColumnModel project = new ColumnModel("project",DataTypeEnum.F7,"id,name");
         project.setClaz(ProjectInfo.class);

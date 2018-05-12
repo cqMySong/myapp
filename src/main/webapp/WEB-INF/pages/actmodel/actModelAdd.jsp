@@ -68,8 +68,7 @@ $(document).ready(function() {
 	var index = parent.layer.getFrameIndex(window.name); //获取窗口索引
 	$('#saveActModel').on('click',function(){
 			var thisEditUI = editUI;
-			if(thisEditUI.editForm.verifyInputRequire()
-					&&thisEditUI.actionBefore(OperateType.save)){
+			if(thisEditUI.actionBefore(OperateType.save)){
 					var this_editData = thisEditUI.storeData();
 					var _toData = {};
 					_toData.editData = JSON.stringify(this_editData);

@@ -32,6 +32,10 @@ public class StockOutInfo extends CoreBaseBillInfo {
      */
     private String picker;
     /**
+     * 领料单位
+     */
+    private String pickUnit;
+    /**
      * 领料时间
      */
     private Date outStockDate;
@@ -100,5 +104,13 @@ public class StockOutInfo extends CoreBaseBillInfo {
 
     public void setOldStockOutDetails(Set<StockOutDetailInfo> oldStockOutDetails) {
         this.oldStockOutDetails = oldStockOutDetails;
+    }
+    @Column(name = "fPickUnit")
+    public String getPickUnit() {
+        return pickUnit;
+    }
+
+    public void setPickUnit(String pickUnit) {
+        this.pickUnit = pickUnit;
     }
 }

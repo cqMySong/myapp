@@ -3,15 +3,19 @@ package com.myapp.service.ec.purchase;
 import com.myapp.core.exception.db.QueryException;
 import com.myapp.core.exception.db.SaveException;
 import com.myapp.core.service.base.BaseInterfaceService;
+import com.myapp.core.util.DateUtil;
+import com.myapp.core.util.WebUtil;
 import com.myapp.entity.ec.budget.BudgetingDetailInfo;
 import com.myapp.entity.ec.purchase.ApplyMaterialDetailInfo;
 import org.hibernate.Criteria;
 import org.hibernate.criterion.Order;
 import org.hibernate.criterion.Restrictions;
 import org.springframework.stereotype.Service;
+import org.springframework.util.StringUtils;
 
 import java.math.BigDecimal;
 import java.util.List;
+import java.util.Map;
 
 /**
  * @path：com.myapp.service.ec.purchase
@@ -22,53 +26,87 @@ import java.util.List;
 @Service("applyMaterialDetailService")
 public class ApplyMaterialDetailService extends BaseInterfaceService<ApplyMaterialDetailInfo> {
     /**
-     * 查找最近一次的预算申购信息
-     * @param budgetingDetailInfo
+     * 部门负责人查看界面
+     * @param businessKey
      * @return
+     * @throws QueryException
      */
-    public ApplyMaterialDetailInfo queryLastApplyMaterial(BudgetingDetailInfo budgetingDetailInfo) throws QueryException {
-        Criteria query = initQueryCriteria(ApplyMaterialDetailInfo.class);
-        query.add(Restrictions.eq("budgetingDetailInfo",budgetingDetailInfo));
-        query.addOrder(Order.desc("sno"));
-        List applyMaterials = query.list();
-        if(applyMaterials!=null){
-            return (ApplyMaterialDetailInfo) applyMaterials.get(0);
-        }
-        return null;
+    public List<Map> queryDeptManagerAudit(String businessKey) throws QueryException {
+        String sql = "select c.fquantity as quantity,c.fBudgetaryPrice as budgetaryPrice,c.fSpecification as specification," +
+                "d.fname as materialName,d.fnumber as materialNumber,e.fname as materialUnit,b.fbizDate as submitDate," +
+                "a.fpurchaseNum as purchaseNum,b.fnumber as applyNumber,a.fStockCount as stockCount," +
+                "a.fArrivalTime as arrivalTime,a.fCumulativePurchaseNum as cumulativePurchaseNum,a.fid as id " +
+                " from t_ec_apply_material_detail a,t_ec_apply_material b,t_ec_budgeting_detail c,t_base_material d," +
+                "t_base_measureunit e " +
+                "where a.fprentId = b.fid and a.fBudgetingDetailId = c.fid and c.fMaterialId = d.fid" +
+                " and e.fid = c.fMeasureUnitId and b.fid=?";
+        return executeSQLQuery(sql,new Object[]{businessKey});
     }
 
     /**
-     * 查找指定序号后的申购信息
-     * @param budgetingDetailInfo
-     * @param sno
+     * 技术负责人审核查看界面
+     * @param businessKey
      * @return
+     * @throws QueryException
      */
-    public List<ApplyMaterialDetailInfo> queryAfterApplyMaterial(BudgetingDetailInfo budgetingDetailInfo,Long sno) throws QueryException {
-        Criteria query = initQueryCriteria(ApplyMaterialDetailInfo.class);
-        query.add(Restrictions.eq("budgetingDetailInfo",budgetingDetailInfo));
-        query.add(Restrictions.gt("sno",sno));
-        List applyMaterials = query.list();
-        if(applyMaterials!=null){
-            return applyMaterials;
-        }
-        return null;
+    public List<Map> queryTechnicalManagerAudit(String businessKey) throws QueryException {
+        String sql = "select c.fquantity as quantity,c.fBudgetaryPrice as budgetaryPrice,c.fSpecification as specification," +
+                "d.fname as materialName,d.fnumber as materialNumber,e.fname as materialUnit,b.fbizDate as submitDate," +
+                "a.fpurchaseNum as purchaseNum,b.fnumber as applyNumber,a.fStockCount as stockCount," +
+                "a.fArrivalTime as arrivalTime,a.fCumulativePurchaseNum as cumulativePurchaseNum,a.fid as id " +
+                " from t_ec_apply_material_detail a,t_ec_apply_material b,t_ec_budgeting_detail c,t_base_material d," +
+                "t_base_measureunit e " +
+                "where a.fprentId = b.fid and a.fBudgetingDetailId = c.fid and c.fMaterialId = d.fid" +
+                " and e.fid = c.fMeasureUnitId and b.fid=?";
+        return executeSQLQuery(sql,new Object[]{businessKey});
+    }
+    /**
+     * 材料员审核界面
+     * @param businessKey
+     * @return
+     * @throws QueryException
+     */
+    public List<Map> queryMaterialManagerAudit(String businessKey) throws QueryException {
+        String sql = "select c.fquantity as quantity,c.fBudgetaryPrice as budgetaryPrice,c.fSpecification as specification," +
+                "d.fname as materialName,d.fnumber as materialNumber,e.fname as materialUnit,b.fbizDate as submitDate," +
+                "a.fpurchaseNum as purchaseNum,b.fnumber as applyNumber,a.fStockCount as stockCount,a.fpurchasePrice as purchasePrice," +
+                "a.fArrivalTime as arrivalTime,a.fCumulativePurchaseNum as cumulativePurchaseNum,a.fid as id,a.fPurchaseArrivalTime as purchaseArrivalTime " +
+                " from t_ec_apply_material_detail a,t_ec_apply_material b,t_ec_budgeting_detail c,t_base_material d," +
+                "t_base_measureunit e " +
+                "where a.fprentId = b.fid and a.fBudgetingDetailId = c.fid and c.fMaterialId = d.fid" +
+                " and e.fid = c.fMeasureUnitId and b.fid=?";
+        return executeSQLQuery(sql,new Object[]{businessKey});
     }
 
     /**
-     * 功能：更新累计申购数量
-     * @param diffCount
-     * @param budgetingDetailInfo
-     * @param sno
+     * 项目经理审核查看界面
+     * @param businessKey
+     * @return
+     * @throws QueryException
      */
-    public void updateCumulativePurchaseNum(BigDecimal diffCount,BudgetingDetailInfo budgetingDetailInfo,
-                                            Long sno) throws SaveException, QueryException {
-        List<ApplyMaterialDetailInfo> applyMaterialDetailList = queryAfterApplyMaterial(budgetingDetailInfo,sno);
-        if(applyMaterialDetailList!=null){
-            for(ApplyMaterialDetailInfo materialDetailInfo:applyMaterialDetailList){
-                materialDetailInfo.setCumulativePurchaseNum(materialDetailInfo.getCumulativePurchaseNum()
-                        .subtract(diffCount));
-                saveEntity(materialDetailInfo);
-            }
+    public List<Map> queryProjectManagerAudit(String businessKey) throws QueryException {
+        String sql = "select c.fquantity as quantity,c.fBudgetaryPrice as budgetaryPrice,c.fSpecification as specification," +
+                "d.fname as materialName,d.fnumber as materialNumber,e.fname as materialUnit,b.fbizDate as submitDate," +
+                "a.fpurchaseNum as purchaseNum,b.fnumber as applyNumber,a.fStockCount as stockCount,a.fpurchasePrice as purchasePrice," +
+                "a.fArrivalTime as arrivalTime,a.fCumulativePurchaseNum as cumulativePurchaseNum,a.fid as id,a.fPurchaseArrivalTime as purchaseArrivalTime " +
+                " from t_ec_apply_material_detail a,t_ec_apply_material b,t_ec_budgeting_detail c,t_base_material d," +
+                "t_base_measureunit e " +
+                "where a.fprentId = b.fid and a.fBudgetingDetailId = c.fid and c.fMaterialId = d.fid" +
+                " and e.fid = c.fMeasureUnitId and b.fid=?";
+        return executeSQLQuery(sql,new Object[]{businessKey});
+    }
+
+    public void editAuditData(String purchasePrice,String purchaseArrivalTime,String id,String purchaseNum) throws SaveException {
+        ApplyMaterialDetailInfo applyMaterialDetailInfo = loadEntity(id);
+        if(!StringUtils.isEmpty(purchasePrice)){
+            applyMaterialDetailInfo.setPurchasePrice(new BigDecimal(purchasePrice));
         }
+        if(!StringUtils.isEmpty(purchaseArrivalTime)){
+            applyMaterialDetailInfo.setPurchaseArrivalTime(DateUtil.parseDate(purchaseArrivalTime));
+        }
+        if(!StringUtils.isEmpty(purchaseNum)){
+            applyMaterialDetailInfo.setPurchaseNum(new BigDecimal(purchaseNum));
+        }
+        saveEntity(applyMaterialDetailInfo);
     }
 }

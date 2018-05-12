@@ -16,7 +16,8 @@ import com.myapp.core.util.BaseUtil;
  *-----------MySong---------------
  */
 public enum BillState implements MyEnum<BillState> {
-	ADDNEW("ADDNEW","编制中"),SAVE("SAVE","已保存"),SUBMIT("SUBMIT","已提交"),AUDIT("AUDIT","已审核"),NOPASS("NOPASS","审核不通过");
+	ADDNEW("ADDNEW","编制中"),SAVE("SAVE","已保存"),SUBMIT("SUBMIT","已提交"),AUDIT("AUDIT","已审核"),NOPASS("NOPASS","审核不通过"),
+	AUDITING("AUDITING","审核中"),CANCEL("CANCEL","作废");
 
 	private String name;
 	private String value;
@@ -27,6 +28,8 @@ public enum BillState implements MyEnum<BillState> {
         map.put(SUBMIT.getValue(), SUBMIT);
         map.put(AUDIT.getValue(), AUDIT);
         map.put(NOPASS.getValue(), NOPASS);
+		map.put(AUDITING.getValue(), AUDITING);
+		map.put(CANCEL.getValue(), CANCEL);
     }
 
 	BillState(String value,String name){

@@ -61,12 +61,13 @@
 						<th data-field="totalInStockCount" width="100">累计入库数量</th>
 						<th data-field="outStockDate" width="100" data-type="datetime">出库时间</th>
 						<th data-field="outStockCount" width="100">出库数量</th>
+						<th data-field="pickUnit" width="100">领用单位</th>
+						<th data-field="picker" width="100">领用人</th>
 						<th data-field="outStockNo" width="100" data-formatter="showAttachOut">出库单号及附件</th>
 						<th data-field="totalOutStockCount" width="100">累计出库数量</th>
 						<th data-field="revertCount" width="100">归还情况</th>
 						<th data-field = "stockCount" width="100" data-formatter="showStockCount">库存量</th>
 						<th data-field = "remark" width="100" data-type="textarea">备注</th>
-
 					</tr>
 				</thead>
 			</table>

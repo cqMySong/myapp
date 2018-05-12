@@ -176,7 +176,7 @@ public class ActTaskService extends BaseInterfaceService<BackLogInfo> {
      */
     public void complete(BackLogInfo backLogInfo){
         // 添加意见
-        if (StringUtils.isNotBlank(backLogInfo.getProcessInstanceId()) && StringUtils.isNotBlank(backLogInfo.getReason())){
+        if (StringUtils.isNotBlank(backLogInfo.getProcessInstanceId())){
             Authentication.setAuthenticatedUserId(backLogInfo.getAssignee());
             taskService.addComment(backLogInfo.getTaskId(), backLogInfo.getProcessInstanceId(),"reason",backLogInfo.getReason());
             taskService.addComment(backLogInfo.getTaskId(), backLogInfo.getProcessInstanceId(),"pass",backLogInfo.getPass());
@@ -253,13 +253,14 @@ public class ActTaskService extends BaseInterfaceService<BackLogInfo> {
             if (StringUtils.isNotBlank(startAct) && !start){
                 continue;
             }
-            if ("serviceTask".equals(histIns.getActivityType())){
+            if ("exclusiveGateway".equals(histIns.getActivityType())){
+                continue;
+            }
+            if(histIns.getEndTime()==null){
                 continue;
             }
             // 只显示开始节点和结束节点，并且执行人不为空的任务
-            //|| "endEvent".equals(histIns.getActivityType())
-            if (StringUtils.isNotBlank(histIns.getAssignee())
-                    || "startEvent".equals(histIns.getActivityType())){
+            //|| "endEvent".equals(histIns.getActivityType()
 
                 // 给节点增加一个序号
                 Integer actNum = actMap.get(histIns.getActivityId());
@@ -268,12 +269,12 @@ public class ActTaskService extends BaseInterfaceService<BackLogInfo> {
                 }
 
                 BackLogInfo backLogInfo = new BackLogInfo();
-                //.setHistIns(histIns);
                 backLogInfo.setTaskName(histIns.getActivityName());
                 backLogInfo.setStartTime(histIns.getStartTime());
                 backLogInfo.setEndTime(histIns.getEndTime());;
                 // 获取流程发起人名称
                 if ("startEvent".equals(histIns.getActivityType())){
+                    backLogInfo.setPass("1");
                     List<HistoricProcessInstance> il = historyService.createHistoricProcessInstanceQuery()
                             .processInstanceId(procInsId).orderByProcessInstanceStartTime().asc().list();
                     if (il.size() > 0){
@@ -325,9 +326,30 @@ public class ActTaskService extends BaseInterfaceService<BackLogInfo> {
                     break;
                 }
             }*/
-        }
         PageModel<BackLogInfo> pageModel = new PageModel<BackLogInfo>(1,backLogInfos.size()==0?1:backLogInfos.size(),backLogInfos.size());
         pageModel.setDatas(backLogInfos);
         return pageModel;
+    }
+
+    /**
+     * 签收
+     * @param taskId
+     * @param userId
+     */
+    public void claim(String taskId, String userId){
+        taskService.claim(taskId, userId);
+    }
+
+    /**
+     * 签收
+     * @param processInstanceId
+     */
+    public Task queryByProcessInstanceId(String processInstanceId){
+        return taskService.createTaskQuery().processInstanceId(processInstanceId).singleResult();
+    }
+
+    public HistoricProcessInstance queryHisByProcessInstanceId(String processInstanceId){
+        return historyService.createHistoricProcessInstanceQuery()
+                .processInstanceId(processInstanceId).singleResult();
     }
 }

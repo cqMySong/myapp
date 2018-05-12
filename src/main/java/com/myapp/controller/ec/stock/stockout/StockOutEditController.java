@@ -86,6 +86,7 @@ public class StockOutEditController extends BaseBillEditController {
         cols.add(new ColumnModel("number"));
         cols.add(new ColumnModel("remark"));
         cols.add(new ColumnModel("picker",DataTypeEnum.STRING));
+        cols.add(new ColumnModel("pickUnit",DataTypeEnum.STRING));
         cols.add(new ColumnModel("outStockDate",DataTypeEnum.DATE));
         cols.add(new ColumnModel("billState",DataTypeEnum.ENUM, BillState.class));
         cols.add(new ColumnModel("createUser",DataTypeEnum.F7,UserInfo.class));

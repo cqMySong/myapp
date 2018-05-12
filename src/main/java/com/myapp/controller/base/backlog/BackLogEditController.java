@@ -1,5 +1,6 @@
 package com.myapp.controller.base.backlog;
 
+import com.myapp.core.annotation.AuthorAnn;
 import com.myapp.core.annotation.PermissionAnn;
 import com.myapp.core.base.entity.CoreBaseInfo;
 import com.myapp.core.base.service.impl.AbstractBaseService;
@@ -44,6 +45,7 @@ public class BackLogEditController extends BaseEditController {
         return  true;
     }
 
+    @AuthorAnn(doLongin=true,doPermission=false)
     @RequestMapping("/audit")
     @ResponseBody
     public WebDataModel subAudit(){
@@ -53,6 +55,21 @@ public class BackLogEditController extends BaseEditController {
             backLogInfo.setAssignee(getCurUser().getNumber());
             actTaskService.complete(backLogInfo);
             setInfoMesg("审核操作成功");
+        } catch (Exception e) {
+            e.printStackTrace();
+            setInfoMesg(e.getMessage());
+        }
+        return ajaxModel();
+    }
+
+    @AuthorAnn(doLongin=true,doPermission=false)
+    @RequestMapping("/claim")
+    @ResponseBody
+    public WebDataModel claim(String taskId){
+        try {
+            super.beforeOperate(BaseMethodEnum.SAVE);
+            actTaskService.claim(taskId,getCurUser().getNumber());
+            setInfoMesg("签收成功");
         } catch (Exception e) {
             e.printStackTrace();
             setInfoMesg(e.getMessage());

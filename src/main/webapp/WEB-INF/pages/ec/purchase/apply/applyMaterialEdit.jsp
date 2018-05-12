@@ -62,10 +62,12 @@
 							data-editor="{mutil:true,uiWin:{title:'预算详细',height:580,width:880,url:'ec/budget/budgetingDetailF7',uiParams:getParams}}">物料名称</th>
 						<th data-field="specification" data-type="text" data-locked="true" data-width="150">规格</th>
 						<th data-field="measureUnit" data-type="f7" data-locked="true" data-width="80">计量单位</th>
-						<th data-field="quantity" data-type="text" data-locked="true" data-width="80">数量</th>
+						<th data-field="quantity" data-type="text" data-locked="true" data-width="80">预算数量</th>
 						<th data-field="budgetaryPrice" data-width="100" data-type="text" data-locked="true">预算价</th>
-						<th data-field="purchaseNum"  data-width="100" data-type="number">申购数量</th>
-						<th data-field="arrivalTime"  data-width="120"  data-type="date">计划到场时间</th>
+						<th data-field="stockCount" data-width="100" data-type="number" data-locked="true">库存量</th>
+						<th data-field="purchaseNum" data-width="100" data-type="number">申购数量</th>
+						<th data-field="arrivalTime" data-width="120" data-type="date">计划到场时间</th>
+						<th data-field="cumulativePurchaseNum" data-width="120" data-locked="true" data-type="number">累计申购数量</th>
 					</tr>
 					</thead>
 				</table>
@@ -101,13 +103,13 @@
 			<div class="col-sm-4">
 				<div class="input-group">
 					<span class="input-group-addon lable">最后修改日期</span>
-					<input name="lastUpdateDate" class="input-item form-control read" data-opt="{type:'date'}">
+					<input name="lastUpdateDate" class="input-item form-control read" data-opt="{type:'datetime'}">
 				</div>
 			</div>
 			<div class="col-sm-4">
 				<div class="input-group">
 					<span class="input-group-addon lable">审核日期</span>
-					<input name="auditDate" type="text" class="form-control input-item read" data-opt="{type:'date'}"/>
+					<input name="auditDate" type="text" class="form-control input-item read" data-opt="{type:'datetime'}"/>
 				</div>
 			</div>
 		</div>
@@ -129,12 +131,28 @@
                 var budgetDetailArr = obj.rowData[obj.field];
                 if(budgetDetailArr&&budgetDetailArr.length>0) {
                     var budgetDetailInfoFirst = null;
+                    var materialIds = [];
+                    $.each(budgetDetailArr, function (i, budgetDetailInfo) {
+                        materialIds.push(budgetDetailInfo.material_id);
+                    });
+                    var materialStockCount = {};
+                    webUtil.ajaxData({
+                        url: 'ec/purchase/applymaterial/queryStockAndTotalApply',
+						data: {projectId:$('input[name="project"]').myF7().getValue(),materialIds:materialIds.join(",")},
+                        async: false, success: function (data) {
+							if(data.statusCode=="0"){
+                                materialStockCount = data.data;
+							}
+                        }
+                    });
                     $.each(budgetDetailArr, function (i, budgetDetailInfo) {
                         if (i == 0) {
                             applyMaterialDetailInfosEntry.setTableCellValue(obj.rowIndex, 'materialType', budgetDetailInfo.materialType);
                             applyMaterialDetailInfosEntry.setTableCellValue(obj.rowIndex, 'specification', budgetDetailInfo.specification);
                             applyMaterialDetailInfosEntry.setTableCellValue(obj.rowIndex, 'quantity', budgetDetailInfo.quantity);
                             applyMaterialDetailInfosEntry.setTableCellValue(obj.rowIndex, 'budgetaryPrice', budgetDetailInfo.budgetaryPrice);
+                            applyMaterialDetailInfosEntry.setTableCellValue(obj.rowIndex, 'stockCount', materialStockCount[budgetDetailInfo.material_id].stockCount);
+                            applyMaterialDetailInfosEntry.setTableCellValue(obj.rowIndex, 'cumulativePurchaseNum', materialStockCount[budgetDetailInfo.material_id].purchaseNum);
                             var measureInfo = {
                                 id: budgetDetailInfo.measureUnitInfo_id,
                                 name: budgetDetailInfo.measureUnitInfo_name
@@ -155,7 +173,9 @@
                                 measureUnit:{id:budgetDetailInfo.measureUnitInfo_id,
                                     name:budgetDetailInfo.measureUnitInfo_name},
 								materialInfo:{id: budgetDetailInfo.material_id,
-                                    name: budgetDetailInfo.mmaterial_name}
+                                    name: budgetDetailInfo.mmaterial_name},
+								stockCount: materialStockCount[budgetDetailInfo.material_id].stockCount,
+                                cumulativePurchaseNum: materialStockCount[budgetDetailInfo.material_id].purchaseNum
 								};
                             applyMaterialDetailInfosEntry.insertRow(obj.rowIndex+i,rowData);
                         }
@@ -213,7 +233,7 @@
             ",toolbar:{title:'材料申购明细'}}";
 		$("table.input-entry").attr("data-opt",entryOption);
         editUI = $('#editPanel').editUI({
-            title : "材料申购",billModel:2,
+            title : "材料申购",billModel:3,
             baseUrl : "ec/purchase/applymaterial",
             toolbar : "#table-toolbar",
             form : {

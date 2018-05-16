@@ -117,8 +117,8 @@ public class LicenseHelper  {
 	public static void main(String[] args)  {
 		try{
 			String marchCode = SystemTool.getMachineCode();//"TCMxmdeuuyHGCogzk9m26Q==";//人和电脑机器码
-			genLicenseFile("d:/lic/license.data","DYoKH1EGJcPG13ynRsUjBg==");
-//			decryptLicense(new File("d:/lic/license.data"));
+			genLicenseFile("d:/lic/license.data",marchCode);
+			decryptLicense(new File("d:/lic/license.data"));
 		}catch(Exception e){
 			e.printStackTrace();
 			System.err.println(e.getMessage());

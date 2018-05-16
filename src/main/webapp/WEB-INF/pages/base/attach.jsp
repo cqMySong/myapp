@@ -137,7 +137,24 @@ function _onlineview(rid){
 		if(!webUtil.isEmpty(fileData)){
 			var title = fileData.fileName||'在线文档查看';
 			title ='<i class="fa fa-file-text-o"></i>&nbsp;'+title;
-			webUtil.openWin({title:title,width:1000,height:750,btns:['关闭'],url:fileData.viewUrl});
+			var ft = fileData.fileType;
+			if(!webUtil.isEmpty(ft)){
+				if(ft == 'html'){
+					webUtil.openWin({title:title,width:1000,height:750,btns:['关闭'],url:fileData.viewUrl});
+				}else if(ft == 'image'){
+					parent.layer.open({
+						  type: 1,
+						  title: false,
+						  closeBtn: 1,
+						  area:[ '800px', '600px' ],
+						  shadeClose: true,
+						  skin: 'layui-layer-nobg',
+						  content: '<img style="width:600px,height:400px" src="'+fileData.viewUrl+'" >'
+					});
+				}else{
+					webUtil.mesg('未知文件类型,不支持在线查看!');
+				}
+			}
 		}
 	}});
 }

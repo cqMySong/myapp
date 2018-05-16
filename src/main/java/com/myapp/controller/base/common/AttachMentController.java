@@ -299,112 +299,69 @@ public class AttachMentController extends BaseController {
 	@AuthorAnn(doLongin=false,doPermission=false)
 	public WebDataModel view(){
 		init();
+		Map dataMap = new HashMap();
 		String billId = getBillId();
 		if(!BaseUtil.isEmpty(billId)){
 			AttachFileInfo afInfo = (AttachFileInfo) attachFileService.getEntity(billId);
 			if(afInfo.getComplete()){
 				FileType ftype = DocConvertUtil.getFileType(afInfo.getFile());
-				if(ftype!=null&&(FileType.DOC.equals(ftype)
-						||FileType.EXCEL.equals(ftype)||FileType.PPT.equals(ftype)
-						||FileType.PDF.equals(ftype))){
+				if(ftype!=null){
+					dataMap.put("fileName", afInfo.getFileName());
+					dataMap.put("fileSize", afInfo.getFmortSize());
+					
 					ServletContext ctx = request.getServletContext();
-					String attachFilePath = getAttachDir(); 
-					String onlineDir = ctx.getRealPath("/")+"onlineview";
+					String onlineDir = ctx.getRealPath("/")+"onlineview";//硬盘上保存的主目录
 					String srcFile = afInfo.getFile();
 					srcFile = srcFile.replaceAll("%", "");
-					String fname = DocConvertUtil.getFileNamePrefx(srcFile);
-					String viewUrlPath = request.getContextPath()+"/onlineview/html/"+fname;
-					File viewFile = new File(onlineDir+"/html/"+fname,"index.html");
-					if(!viewFile.exists()){//文件还未转换过的
-						File targetFile = new File(onlineDir+"/"+srcFile);
-						if(targetFile.exists()){
-							//文件已经存在的情况下
-						}else{
-							StoreageTypeEnum ste = afInfo.getStorageType();
-							String file = afInfo.getPath()+"/"+afInfo.getFile();//此文件位置为最初的目录位置
-							
-							InputStream in = null;
-							OutputStream out = null; 
-							BufferedInputStream bis = null;
-							BufferedOutputStream bos = null;
-							try{
-								if(StoreageTypeEnum.FTP.equals(ste)){
-									String ftpId = afInfo.getFtpId();
-									if(!BaseUtil.isEmpty(ftpId)){
-										FtpServerInfo ftpInfo = (FtpServerInfo) ftpServerService.getEntity(ftpId);
-										if(ftpInfo!=null){
-											FtpClientUtil ftp = ftpServerService.getMyFtpClient(ftpInfo);
-											if(ftp!=null){
-//												in = ftp.downFtpFile(file);
-												in =null;
-												targetFile = new File(onlineDir+"/"+srcFile);
-												DocConvertUtil.checkFilePath(targetFile.getParentFile());
-												ftp.downloadFile(file, onlineDir+"/"+srcFile);
-											}
+					String viewUrlRoot = request.getContextPath()+"/onlineview";
+					try{
+						if((FileType.DOC.equals(ftype)
+								||FileType.EXCEL.equals(ftype)||FileType.PPT.equals(ftype)
+								||FileType.PDF.equals(ftype))){
+							String fname = DocConvertUtil.getFileNamePrefx(srcFile);
+							String viewUrlPath = viewUrlRoot+"/html/"+fname;
+							File viewFile = new File(onlineDir+"/html/"+fname,"index.html");
+							if(!viewFile.exists()){//文件还未转换过的
+								String targetDir = onlineDir+"/"+srcFile;
+								File targetFile = attachFileService.downLoadFile2Dir(afInfo,targetDir);
+								if(targetFile!=null&&targetFile.exists()){
+									try{
+										//文档转换
+										targetFile = new File(onlineDir+"/"+srcFile);
+										DocConvertUtil.checkFilePath(targetFile.getParentFile());
+										if(targetFile.exists()){
+											DocConvertUtil.pdf2Html(DocConvertUtil.documnt2Pdf(targetFile, null), onlineDir+"/html");
 										}
+									}catch (Exception e) {
+										e.printStackTrace();
+										setExceptionMesg("文档转换出错:"+e.getMessage());
 									}
-								}else if(StoreageTypeEnum.APP.equals(ste)){
-									File serverFile = new File(file);
-									if(serverFile.exists()){
-										in = new FileInputStream(serverFile);  
-									}
-								}
-								if(in!=null){
-									targetFile = new File(onlineDir+"/"+srcFile);
-									DocConvertUtil.checkFilePath(targetFile.getParentFile());
-									bis = new BufferedInputStream(in);
-									FileOutputStream fileOut = new FileOutputStream(targetFile);  
-									bos = new BufferedOutputStream(fileOut);
-									byte[] buf = new byte[4096];  
-									int length = bis.read(buf);  
-									//保存文件  
-									while(length != -1){
-										 bos.write(buf, 0, length);  
-										 length = bis.read(buf);  
-									}  
-								}
-							}catch (Exception e) {
-								e.printStackTrace();
-								setExceptionMesg("文档下载出错:"+e.getMessage());
-							}finally{
-								try {
-									if(bos!=null) bos.close();  
-									if(bis!=null) bis.close();
-									if(out!=null){
-										out.flush();
-										out.close();
-									}
-									if(in!=null)in.close();
-								} catch (IOException e) {
-									e.printStackTrace();
-									setExceptionMesg("文档下载出错:"+e.getMessage());
 								}
 							}
-						}
-						try{
-							//文档转换
-							targetFile = new File(onlineDir+"/"+srcFile);
-							DocConvertUtil.checkFilePath(targetFile.getParentFile());
-							if(targetFile.exists()){
-								DocConvertUtil.pdf2Html(DocConvertUtil.documnt2Pdf(targetFile, null), onlineDir+"/html");
+							viewFile = new File(onlineDir+"/html/"+fname,"index.html");
+							if(viewFile.exists()){
+								dataMap.put("viewUrl",viewUrlPath+"/"+"index.html");
+								dataMap.put("fileType", "html");
+							}else{
+								setErrorMesg("未找到对应转换的文件!");
 							}
-						}catch (Exception e) {
-							e.printStackTrace();
-							setExceptionMesg("文档转换出错:"+e.getMessage());
+						}else if(FileType.IMG.equals(ftype)){
+							String targetDir = onlineDir+"/images/"+srcFile;//图片保存的目录位置
+							File targetFile = attachFileService.downLoadFile2Dir(afInfo,targetDir);
+							if(targetFile!=null&&targetFile.exists()){
+								dataMap.put("viewUrl",viewUrlRoot+"/images/"+srcFile);
+								dataMap.put("fileType", "image");
+							}else{
+								setErrorMesg("未找到对应转换的文件!");
+							}
+						}else{
+							setErrorMesg("此文件("+afInfo.getFileName()+")不支持在线查看!");
 						}
+						
+					}catch (Exception e) {
+						e.printStackTrace();
+						setExceptionMesg("文档下载出错:"+e.getMessage());
 					}
-					viewFile = new File(onlineDir+"/html/"+fname,"index.html");
-					if(viewFile.exists()){
-						Map dataMap = new HashMap();
-						dataMap.put("viewUrl",viewUrlPath+"/"+"index.html");
-						dataMap.put("fileName", afInfo.getFileName());
-						dataMap.put("fileSize", afInfo.getFmortSize());
-						this.data = dataMap;
-					}else{
-						setErrorMesg("未找到对应转换的文件!");
-					}
-				}else{
-					setErrorMesg("此文件("+afInfo.getFileName()+")不支持在线查看!");
 				}
 			}else{
 				setErrorMesg("附件信息数据未完整，不允许在线查看!");
@@ -412,6 +369,7 @@ public class AttachMentController extends BaseController {
 		}else{
 			setErrorMesg("无文件信息!");
 		}
+		this.data = dataMap;
 		return ajaxModel();
 	}
 	

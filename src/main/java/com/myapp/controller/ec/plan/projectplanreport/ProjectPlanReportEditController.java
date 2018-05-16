@@ -133,50 +133,55 @@ public class ProjectPlanReportEditController extends BaseBillEditController{
 					pInfo.setName(proName);
 					proTotalPlanInfo.setProject(pInfo);
 					name +=proName;
-					String hql = "from ProjectTotalPlanInfo where project.id=?";
-					ProjectTotalPlanInfo ptPlInfo = projectTotalPlanService.getEntity(hql, new String[]{proId});
-					proTotalPlanInfo.setPlanInfo(ptPlInfo);
+					String hql = "from ProjectTotalPlanInfo where project.id=? and billState=?";
 					List params = new ArrayList();
-					Date bd = DateUtil.parseDate(DateUtil.formatDateByFormat(begDate, "yyyyMMdd")+" 00:00:00", "yyyyMMdd HH:mm:ss");
-					Date ed = DateUtil.parseDate(DateUtil.formatDateByFormat(endDate, "yyyyMMdd")+" 23:59:59", "yyyyMMdd HH:mm:ss");
-					params.add(ptPlInfo.getId());
-					params.add(proId);
-					params.add(ed);
-					params.add(bd);
-					params.add(bd);
-					List datas = projectTotalPlanService.findByHQL(PlanQueryUtil.findProjectPlanReport(), params.toArray());
-					if(datas!=null&&datas.size()>0){
-						Set<ProjectPlanReportItemInfo> items = new HashSet<ProjectPlanReportItemInfo>();
-						for(int i=0;i<datas.size();i++){
-							Map item = (Map) datas.get(i);
-							ProjectPlanReportItemInfo itemInfo = new ProjectPlanReportItemInfo();
-							ProStructureInfo pstInfo = new ProStructureInfo();
-							pstInfo.setId((String)item.get("proStructureId"));
-							pstInfo.setDisplayName((String)item.get("proStructureName"));
-							itemInfo.setProStructure(pstInfo);
-							ProjectWbsInfo pwInfo = new ProjectWbsInfo();
-							pwInfo.setId((String)item.get("proWbsId"));
-							pwInfo.setDisplayName((String)item.get("proWbsDisplayName"));
-							itemInfo.setProjectWbs(pwInfo);
-							
-							ProSubInfo psInfo = new ProSubInfo();
-							psInfo.setId((String)item.get("proSubId"));
-							psInfo.setName((String)item.get("proSubName"));
-							itemInfo.setProSub(psInfo);
-							ProSubItemInfo psiInfo = new ProSubItemInfo();
-							psiInfo.setId((String)item.get("proSubItemId"));
-							psiInfo.setName((String)item.get("proSubItemName"));
-							itemInfo.setProSubItem(psiInfo);
-							itemInfo.setParent(proTotalPlanInfo);
-							itemInfo.setPlanContent((String)item.get("content"));
-							itemInfo.setPlanItemId((String)item.get("planItemId"));
-							itemInfo.setBegDate((Date)item.get("realBegDate"));
-							itemInfo.setDelayCause(CauseType.BLANK);
-							itemInfo.setDoDelay(YesNoEnum.BLANK);
-							itemInfo.setDoWorkPay(YesNoEnum.BLANK);
-							items.add(itemInfo);
+					params.add("proId");
+					params.add(BillState.AUDIT);
+					ProjectTotalPlanInfo ptPlInfo = projectTotalPlanService.getEntity(hql,params.toArray());
+					if(ptPlInfo!=null){
+						proTotalPlanInfo.setPlanInfo(ptPlInfo);
+						params = new ArrayList();
+						Date bd = DateUtil.parseDate(DateUtil.formatDateByFormat(begDate, "yyyyMMdd")+" 00:00:00", "yyyyMMdd HH:mm:ss");
+						Date ed = DateUtil.parseDate(DateUtil.formatDateByFormat(endDate, "yyyyMMdd")+" 23:59:59", "yyyyMMdd HH:mm:ss");
+						params.add(ptPlInfo.getId());
+						params.add(proId);
+						params.add(ed);
+						params.add(bd);
+						params.add(bd);
+						List datas = projectTotalPlanService.findByHQL(PlanQueryUtil.findProjectPlanReport(), params.toArray());
+						if(datas!=null&&datas.size()>0){
+							Set<ProjectPlanReportItemInfo> items = new HashSet<ProjectPlanReportItemInfo>();
+							for(int i=0;i<datas.size();i++){
+								Map item = (Map) datas.get(i);
+								ProjectPlanReportItemInfo itemInfo = new ProjectPlanReportItemInfo();
+								ProStructureInfo pstInfo = new ProStructureInfo();
+								pstInfo.setId((String)item.get("proStructureId"));
+								pstInfo.setDisplayName((String)item.get("proStructureName"));
+								itemInfo.setProStructure(pstInfo);
+								ProjectWbsInfo pwInfo = new ProjectWbsInfo();
+								pwInfo.setId((String)item.get("proWbsId"));
+								pwInfo.setDisplayName((String)item.get("proWbsDisplayName"));
+								itemInfo.setProjectWbs(pwInfo);
+								
+								ProSubInfo psInfo = new ProSubInfo();
+								psInfo.setId((String)item.get("proSubId"));
+								psInfo.setName((String)item.get("proSubName"));
+								itemInfo.setProSub(psInfo);
+								ProSubItemInfo psiInfo = new ProSubItemInfo();
+								psiInfo.setId((String)item.get("proSubItemId"));
+								psiInfo.setName((String)item.get("proSubItemName"));
+								itemInfo.setProSubItem(psiInfo);
+								itemInfo.setParent(proTotalPlanInfo);
+								itemInfo.setPlanContent((String)item.get("content"));
+								itemInfo.setPlanItemId((String)item.get("planItemId"));
+								itemInfo.setBegDate((Date)item.get("realBegDate"));
+								itemInfo.setDelayCause(CauseType.BLANK);
+								itemInfo.setDoDelay(YesNoEnum.BLANK);
+								itemInfo.setDoWorkPay(YesNoEnum.BLANK);
+								items.add(itemInfo);
+							}
+							proTotalPlanInfo.setPlanReportItems(items);
 						}
-						proTotalPlanInfo.setPlanReportItems(items);
 					}
 				}
 			}

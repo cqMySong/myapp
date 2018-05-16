@@ -41,7 +41,7 @@
 				<tr>
 					<th data-field="applyNumber" data-locked="true">申购单号</th>
 					<th data-field="purchaseNum" data-type="number">申购数量</th>
-					<th data-field="arrivalTime" data-locked="true" data-type="date">计划到场时间</th>
+					<th data-field="arrivalTime" data-type="date">计划到场时间</th>
 					<th data-field="cumulativePurchaseNum" data-locked="true">累计申购数量</th>
 				</tr>
 				</thead>
@@ -56,11 +56,11 @@
     function initTable(){
         var height = top.getTopMainHeight();
         var businessKey = "${id}";
-        var table_options = {type:'entry',height:height-295,striped:true,sortStable:false,showRefresh:false,selectModel:0
-            ,cache:false,showToggle:false,search:false,toolbar:null
-            ,showColumns:false,idField:"id",mypagination:false,pagination:false};
+        var table_options = {type:'entry',height:height-295,striped:true,sortStable:false,showRefresh:false,selectModel:1
+            ,cache:false,showToggle:false,search:false,toolbar:null,showColumns:false,idField:"id"};
         deptManagerGrid = $('#deptManagerGrid').myDataTable(table_options);
         deptManagerGrid.refreshData("ec/purchase/applymaterial/audit/query/data?type=material&businessKey="+webUtil.uuIdReplaceID(businessKey));
+        deptManagerGrid.setEnabled(true);
         deptManagerGrid.initTableColumnEditor('click-cell',{editDataChanged:saveEditVal});
     }
     function saveEditVal($cell,obj){
@@ -68,6 +68,7 @@
             data:{purchasePrice:obj.rowData.purchasePrice?obj.rowData.purchasePrice:"",
                 purchaseArrivalTime:obj.rowData.purchaseArrivalTime?obj.rowData.purchaseArrivalTime:"",
                 purchaseNum:obj.rowData.purchaseNum,
+                arrivalTime:obj.rowData.arrivalTime?obj.rowData.arrivalTime:"",
                 id:obj.rowData.id},
             async:false,
             success:function(data){

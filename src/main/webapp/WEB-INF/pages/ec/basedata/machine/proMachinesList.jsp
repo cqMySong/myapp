@@ -24,7 +24,7 @@
 								<th data-field="operator">操作人员</th>
 								<th data-field="maintenancer">维修人员</th>
 								<th data-field="checkContent" data-width="300">验收情况</th>
-								<th data-field="attachs">附件数</th>
+								<th data-field="attachs" data-type='attach'>附件数</th>
 							</tr>
 						</thead>
 					</table>

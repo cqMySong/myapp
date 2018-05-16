@@ -27,7 +27,7 @@
 								<th data-field="skillClass_name">分类</th>
 								<th data-field="number">编码</th>
 								<th data-field="name">名称</th>
-								<th data-field="attachs">附件</th>
+								<th data-field="attachs" data-type='attach'>附件</th>
 								<th data-field="disclosurer_name">交底人</th>
 								<th data-field="finishTime" data-type="date">交底时间</th>
 								<th data-field="createDate" data-type="date">创建时间</th>

@@ -24,6 +24,7 @@
 								<th data-field="number">编码</th>
 								<th data-field="name">名称</th>
 								<th data-field="imageDataType" data-type="select">资料类型</th>
+								<th data-field="attachs" data-type='attach'>附件数</th>
 								<th data-field="createUser_name" >创建人</th>
 								<th data-field="createDate" data-type="datetime">创建时间</th>
 								<th data-field="remark" >备注</th>

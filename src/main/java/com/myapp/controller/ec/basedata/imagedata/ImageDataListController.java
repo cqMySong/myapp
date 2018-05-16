@@ -66,6 +66,7 @@ public class ImageDataListController extends BaseListController {
 		cols.add(new ColumnModel("proStructure",DataTypeEnum.F7,ProStructureInfo.class));
 		cols.add(new ColumnModel("proBaseWbs",DataTypeEnum.F7,ProBaseWbsInfo.class));
 		cols.add(new ColumnModel("createDate",DataTypeEnum.DATE));
+		cols.add(new ColumnModel("attachs",DataTypeEnum.NUMBER));
 		return cols;
 	}
 	@Override

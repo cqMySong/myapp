@@ -37,6 +37,8 @@
 					<th data-field="stockCount" rowspan="2" data-locked="true">库存量</th>
 					<th data-field="purchasePlan" colspan="4" data-locked="true">材料申购计划</th>
 					<th data-field="submitDate" rowspan="2" data-type="datetime" data-locked="true">提交时间</th>
+					<th data-field="purchasePrice" rowspan="2" data-type="text">预计采购单价</th>
+					<th data-field="purchaseArrivalTime" rowspan="2" data-type="date" >预计到货时间</th>
 				</tr>
 				<tr>
 					<th data-field="applyNumber" data-locked="true">申购单号</th>

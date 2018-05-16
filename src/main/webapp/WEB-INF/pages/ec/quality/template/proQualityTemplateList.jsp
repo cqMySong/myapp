@@ -32,7 +32,7 @@
 								<th data-field="acceptanceDate" data-type="date">验收时间</th>
 								<th data-field="billState" data-type="select">状态</th>
 								<th data-field="createUser_name">创建人</th>
-								<th data-field="attachs">附件数</th>
+								<th data-field="attachs" data-type='attach'>附件数</th>
 							</tr>
 						</thead>
 					</table>

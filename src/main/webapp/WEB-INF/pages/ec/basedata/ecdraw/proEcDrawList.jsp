@@ -28,7 +28,7 @@
 								<th data-field="group_displayName" data-width="350" data-align="left">资料目录</th>
 								<th data-field="number">编码</th>
 								<th data-field="name">名称</th>
-								<th data-field="attachs">附件</th>
+								<th data-field="attachs" data-type='attach'>附件</th>
 							</tr>
 						</thead>
 					</table>

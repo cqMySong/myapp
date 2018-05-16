@@ -96,7 +96,8 @@ public class ApplyMaterialDetailService extends BaseInterfaceService<ApplyMateri
         return executeSQLQuery(sql,new Object[]{businessKey});
     }
 
-    public void editAuditData(String purchasePrice,String purchaseArrivalTime,String id,String purchaseNum) throws SaveException {
+    public void editAuditData(String purchasePrice,String purchaseArrivalTime,String id,
+                              String purchaseNum,String arrivalTime) throws SaveException {
         ApplyMaterialDetailInfo applyMaterialDetailInfo = loadEntity(id);
         if(!StringUtils.isEmpty(purchasePrice)){
             applyMaterialDetailInfo.setPurchasePrice(new BigDecimal(purchasePrice));
@@ -106,6 +107,9 @@ public class ApplyMaterialDetailService extends BaseInterfaceService<ApplyMateri
         }
         if(!StringUtils.isEmpty(purchaseNum)){
             applyMaterialDetailInfo.setPurchaseNum(new BigDecimal(purchaseNum));
+        }
+        if(!StringUtils.isEmpty(arrivalTime)){
+            applyMaterialDetailInfo.setArrivalTime(DateUtil.parseDate(arrivalTime));
         }
         saveEntity(applyMaterialDetailInfo);
     }

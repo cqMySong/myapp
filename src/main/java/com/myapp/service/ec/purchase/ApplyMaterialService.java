@@ -1,6 +1,7 @@
 package com.myapp.service.ec.purchase;
 
 import com.myapp.core.enums.BillState;
+import com.myapp.core.exception.db.DeleteException;
 import com.myapp.core.exception.db.QueryException;
 import com.myapp.core.exception.db.SaveException;
 import com.myapp.core.model.PageModel;
@@ -38,21 +39,45 @@ public class ApplyMaterialService extends BaseInterfaceService<ApplyMaterialInfo
      * 审批事项
      */
     private FixedValue auditState;
+
+    @Override
+    public void deleteEntity(String businessId) throws DeleteException {
+        ApplyMaterialInfo applyMaterialInfo = (ApplyMaterialInfo) loadEntity(businessId);
+        if(!applyMaterialInfo.getBillState().getValue().equals(BillState.SAVE.getValue())
+                &&!applyMaterialInfo.getBillState().getValue().equals(BillState.ADDNEW.getValue())
+                &&!applyMaterialInfo.getBillState().getValue().equals(BillState.SUBMIT.getValue())){
+            throw new RuntimeException("申购单业务状态为【"+applyMaterialInfo.getBillState().getName()+"】,不能删除");
+        }
+        super.deleteEntity(businessId);
+    }
+
     @Override
     public Object submitEntity(Object entity) throws SaveException {
+        ApplyMaterialInfo applyMaterialInfo = (ApplyMaterialInfo) entity;
+        if(!applyMaterialInfo.getBillState().getValue().equals(BillState.SAVE.getValue())
+            &&!applyMaterialInfo.getBillState().getValue().equals(BillState.ADDNEW.getValue())
+            &&!applyMaterialInfo.getBillState().getValue().equals(BillState.SUBMIT.getValue())){
+            throw new RuntimeException("申购单业务状态为【"+applyMaterialInfo.getBillState().getName()+"】,不需再提交");
+        }
         Object returnObj = super.submitEntity(entity);
-        ApplyMaterialInfo applyMaterialInfo = (ApplyMaterialInfo) returnObj;
+        applyMaterialInfo = (ApplyMaterialInfo) returnObj;
         applyMaterialInfo.setBizDate(new Date());
         String processInstanceId = actTaskService.startProcess(ApplyMaterialInfo.class,applyMaterialInfo.getId(),
                 applyMaterialInfo.getName(),null,applyMaterialInfo.getCreateUser().getNumber());
         applyMaterialInfo.setProcessInstanceId(processInstanceId);
         applyMaterialInfo.setAuditState(BillState.AUDITING);
+        applyMaterialInfo.setBillState(BillState.AUDITING);
         return returnObj;
     }
 
     @Override
     public Object saveEntity(Object entity) throws SaveException {
         ApplyMaterialInfo applyMaterialInfo = (ApplyMaterialInfo) entity;
+        if(!applyMaterialInfo.getBillState().getValue().equals(BillState.SAVE.getValue())
+                &&!applyMaterialInfo.getBillState().getValue().equals(BillState.ADDNEW.getValue())
+                &&!applyMaterialInfo.getBillState().getValue().equals(BillState.SUBMIT.getValue())){
+            throw new RuntimeException("申购单业务状态为【"+applyMaterialInfo.getBillState().getName()+"】,不能修改");
+        }
         if(applyMaterialInfo.getApplyMaterialDetailInfos()!=null){
             Iterator<ApplyMaterialDetailInfo> detailInfoIterator = applyMaterialInfo.getApplyMaterialDetailInfos().iterator();
             while (detailInfoIterator.hasNext()){
@@ -86,7 +111,7 @@ public class ApplyMaterialService extends BaseInterfaceService<ApplyMaterialInfo
                 "union all " +
                 "select b.fMaterialId,0 as stockCount,sum(b.fPurchaseNum) as purchaseNum from t_ec_apply_material a,t_ec_apply_material_detail b " +
                 "where a.fid = b.fprentid and b.fMaterialId in ("+materialIdStr.toString().substring(0,materialIdStr.toString().length()-1)+") " +
-                "and a.fProjectId = ? and a.fcreateDate<= sysdate() " +
+                "and a.fProjectId = ? and a.fBillState = 'AUDIT' and a.fcreateDate<= sysdate() " +
                 "group by b.fMaterialId " +
                 ") b group by b.fMaterialId";
         List<Map> result = executeSQLQuery(sql,new Object[]{projectId,projectId});
@@ -158,7 +183,8 @@ public class ApplyMaterialService extends BaseInterfaceService<ApplyMaterialInfo
         String businessKey =  delegateExecution.getProcessBusinessKey();
         ApplyMaterialInfo applyMaterialInfo = loadEntity(businessKey);
         applyMaterialInfo.setAuditState(EnumUtil.getEnum(BillState.class.getName(),auditState.getExpressionText()));
-        saveEntity(applyMaterialInfo);
+        applyMaterialInfo.setBillState(EnumUtil.getEnum(BillState.class.getName(),auditState.getExpressionText()));
+        super.saveEntity(applyMaterialInfo);
     }
 
     public FixedValue getAuditState() {

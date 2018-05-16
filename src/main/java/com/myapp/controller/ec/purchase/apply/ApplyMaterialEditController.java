@@ -210,10 +210,11 @@ public class ApplyMaterialEditController extends BaseBillEditController {
     @AuthorAnn(doLongin=true,doPermission=false)
     @RequestMapping(value="/audit/edit/data")
     @ResponseBody
-    public WebDataModel auditEditData(String purchasePrice,String purchaseArrivalTime,String id,String purchaseNum) {
+    public WebDataModel auditEditData(String purchasePrice,String purchaseArrivalTime,
+                                      String id,String purchaseNum,String arrivalTime) {
         init();
         try {
-            applyMaterialDetailService.editAuditData(purchasePrice,purchaseArrivalTime,id,purchaseNum);
+            applyMaterialDetailService.editAuditData(purchasePrice,purchaseArrivalTime,id,purchaseNum,arrivalTime);
         } catch (SaveException e) {
             e.printStackTrace();
             setMesg(-1,e.getMessage());

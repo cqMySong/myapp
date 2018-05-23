@@ -7,7 +7,7 @@
 <script type="text/javascript">
 </script>
 <body style="padding: 5px;">
-<div id="table-toolbar" class="panel" style="height:42px;padding-top: 2px;">
+<div id="table-toolbar" class="panel" style="height:40px;padding-top: 1px;margin-bottom: 5px;">
 </div>
 <div class="mainContrainer">
 	<div class="leftContainer" id="tree_container"></div>
@@ -19,8 +19,8 @@
 				<table id="tblMain">
 					<thead >
 					<tr>
-						<th data-field="number" >编号</th>
-						<th data-field="name" >名称</th>
+						<th data-field="number">编号</th>
+						<th data-field="name">名称</th>
 						<th data-field="orgUnit">受检查单位</th>
 						<th data-field="orgUnitPerson">受检人</th>
 						<th data-field="type">类别</th>
@@ -68,10 +68,10 @@
                     simpleData: {enable:true,idKey: "id", pIdKey: "parentId",rootPId: ''}
                 }
             }};
-        var height = window.outerHeight-305;
-        thisOrgList = $('body').treeListUI({tableEl:'#tblMain',treeUrl:'ec/basedata/projects/projectTree',baseUrl:'ec/other/rectifyNotices',title:'项目工程',height:(height+40),
+        var height = top.getTopMainHeight()-50;
+        thisOrgList = $('body').treeListUI({tableEl:'#tblMain',treeUrl:'ec/basedata/projects/projectTree',baseUrl:'ec/other/rectifyNotices',title:'项目工程',height:height,
             treeContainer:"#tree_container",editWin:editWin,toolbar:"#table-toolbar",searchParams:{includeChild:true},treeOpt:treeOpt
-            ,treeNode2QueryProp:treeNode2QueryProp,extendTableOptions:{toolbar:'#tblMain_toolbar',height:height-25,sortStable:false}});
+            ,treeNode2QueryProp:treeNode2QueryProp,extendTableOptions:{toolbar:'#tblMain_toolbar',height:height-45,sortStable:false}});
         thisOrgList.onLoad();
     });
 

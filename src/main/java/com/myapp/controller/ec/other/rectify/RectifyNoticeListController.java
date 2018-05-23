@@ -40,6 +40,7 @@ public class RectifyNoticeListController extends BaseListController{
 	public List<ColumnModel> getDataBinding() {
 		List<ColumnModel> cols = super.getDataBinding();
 		cols.add(new ColumnModel("number"));
+		cols.add(new ColumnModel("name"));
 		cols.add(new ColumnModel("type"));
 		cols.add(new ColumnModel("orgUnit"));
 		cols.add(new ColumnModel("orgUnitPerson"));

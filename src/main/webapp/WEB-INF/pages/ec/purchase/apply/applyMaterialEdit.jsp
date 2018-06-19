@@ -128,6 +128,7 @@
         if(webUtil.isEmpty(applyMaterialDetailInfosEntry)) return;
         if(obj.field=='budgetingDetailInfo'){
             if(!webUtil.isEmpty(applyMaterialDetailInfosEntry)){
+                console.log(obj);
                 var budgetDetailArr = obj.rowData[obj.field];
                 if(budgetDetailArr&&budgetDetailArr.length>0) {
                     var budgetDetailInfoFirst = null;
@@ -151,8 +152,10 @@
                             applyMaterialDetailInfosEntry.setTableCellValue(obj.rowIndex, 'specification', budgetDetailInfo.specification);
                             applyMaterialDetailInfosEntry.setTableCellValue(obj.rowIndex, 'quantity', budgetDetailInfo.quantity);
                             applyMaterialDetailInfosEntry.setTableCellValue(obj.rowIndex, 'budgetaryPrice', budgetDetailInfo.budgetaryPrice);
-                            applyMaterialDetailInfosEntry.setTableCellValue(obj.rowIndex, 'stockCount', materialStockCount[budgetDetailInfo.material_id].stockCount);
-                            applyMaterialDetailInfosEntry.setTableCellValue(obj.rowIndex, 'cumulativePurchaseNum', materialStockCount[budgetDetailInfo.material_id].purchaseNum);
+                            applyMaterialDetailInfosEntry.setTableCellValue(obj.rowIndex, 'stockCount',
+								materialStockCount[budgetDetailInfo.material_id]?materialStockCount[budgetDetailInfo.material_id].stockCount:0);
+                            applyMaterialDetailInfosEntry.setTableCellValue(obj.rowIndex, 'cumulativePurchaseNum',
+								materialStockCount[budgetDetailInfo.material_id]?materialStockCount[budgetDetailInfo.material_id].purchaseNum:0);
                             var measureInfo = {
                                 id: budgetDetailInfo.measureUnitInfo_id,
                                 name: budgetDetailInfo.measureUnitInfo_name
@@ -160,7 +163,7 @@
                             applyMaterialDetailInfosEntry.setTableCellValue(obj.rowIndex, 'measureUnit', measureInfo);
                             var materialInfo = {
                                 id: budgetDetailInfo.material_id,
-                                name: budgetDetailInfo.mmaterial_name
+                                name: budgetDetailInfo.material_name
                             };
                             applyMaterialDetailInfosEntry.setTableCellValue(obj.rowIndex, 'materialInfo', materialInfo);
                             budgetDetailInfoFirst = budgetDetailInfo;
@@ -173,9 +176,11 @@
                                 measureUnit:{id:budgetDetailInfo.measureUnitInfo_id,
                                     name:budgetDetailInfo.measureUnitInfo_name},
 								materialInfo:{id: budgetDetailInfo.material_id,
-                                    name: budgetDetailInfo.mmaterial_name},
-								stockCount: materialStockCount[budgetDetailInfo.material_id].stockCount,
-                                cumulativePurchaseNum: materialStockCount[budgetDetailInfo.material_id].purchaseNum
+                                    name: budgetDetailInfo.material_name},
+								stockCount: materialStockCount[budgetDetailInfo.material_id]?
+									materialStockCount[budgetDetailInfo.material_id].stockCount:0,
+                                cumulativePurchaseNum: materialStockCount[budgetDetailInfo.material_id]?
+									materialStockCount[budgetDetailInfo.material_id].purchaseNum:0
 								};
                             applyMaterialDetailInfosEntry.insertRow(obj.rowIndex+i,rowData);
                         }
@@ -228,7 +233,7 @@
     $(document).ready(function() {
         var height = top.getTopMainHeight()+100;
         height = height>760?760:height;
-        var winHeight = height-480;
+        var winHeight = height-350;
         var entryOption = "{type:'entry',height:"+(winHeight<260?260:winHeight)+",tableOpt:{editDataChanged:applyMaterialDetailInfos_dataChanged}"+
             ",toolbar:{title:'材料申购明细'}}";
 		$("table.input-entry").attr("data-opt",entryOption);
